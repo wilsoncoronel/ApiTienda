@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SistemaTienda.BLL\SistemaTienda.BLL.csproj" />
+    <ProjectReference Include="..\SistemaTienda.DAL\SistemaTienda.DAL.csproj" />
+    <ProjectReference Include="..\SistemaTienda.Utility\SistemaTienda.Utility.csproj" />
+  </ItemGroup>
+
+</Project>

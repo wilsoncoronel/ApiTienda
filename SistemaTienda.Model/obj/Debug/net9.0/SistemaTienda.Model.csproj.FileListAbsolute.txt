@@ -1,0 +1,14 @@
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\bin\Debug\net9.0\SistemaTienda.Model.deps.json
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\bin\Debug\net9.0\SistemaTienda.Model.runtimeconfig.json
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\bin\Debug\net9.0\SistemaTienda.Model.dll
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\bin\Debug\net9.0\SistemaTienda.Model.pdb
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\SistemaTienda.Model.csproj.AssemblyReference.cache
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\SistemaTienda.Model.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\SistemaTienda.Model.AssemblyInfoInputs.cache
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\SistemaTienda.Model.AssemblyInfo.cs
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\SistemaTienda.Model.csproj.CoreCompileInputs.cache
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\SistemaTienda.Model.dll
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\refint\SistemaTienda.Model.dll
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\SistemaTienda.Model.pdb
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\SistemaTienda.Model.genruntimeconfig.cache
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\ref\SistemaTienda.Model.dll
