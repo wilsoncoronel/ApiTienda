@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SistemaTienda.DAL.DBContext;
+using SistemaTienda.DAL.Repositorios;
+using SistemaTienda.DAL.Repositorios.Contrato;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +19,8 @@ namespace SistemaTienda.IOC
             services.AddDbContext<AplicationDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-            });
+            }); 
+            services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         }
     }
 }

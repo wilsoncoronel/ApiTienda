@@ -20,8 +20,4 @@
     <ProjectReference Include="..\SistemaTienda.IOC\SistemaTienda.IOC.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>

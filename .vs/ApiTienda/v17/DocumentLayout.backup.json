@@ -3,8 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{D3662B04-160C-415F-AD23-0C7CC526B097}|SistemaTienda.DAL\\SistemaTienda.DAL.csproj|c:\\users\\doomslayer\\desktop\\apitienda\\sistematienda.dal\\repositorios\\genericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3662B04-160C-415F-AD23-0C7CC526B097}|SistemaTienda.DAL\\SistemaTienda.DAL.csproj|solutionrelative:sistematienda.dal\\repositorios\\genericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D3662B04-160C-415F-AD23-0C7CC526B097}|SistemaTienda.DAL\\SistemaTienda.DAL.csproj|c:\\users\\doomslayer\\desktop\\apitienda\\sistematienda.dal\\repositorios\\contrato\\igenericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3662B04-160C-415F-AD23-0C7CC526B097}|SistemaTienda.DAL\\SistemaTienda.DAL.csproj|solutionrelative:sistematienda.dal\\repositorios\\contrato\\igenericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4FBD4E81-F202-4CCB-BF32-B79C9E75A8BB}|SistemaTienda.IOC\\SistemaTienda.IOC.csproj|c:\\users\\doomslayer\\desktop\\apitienda\\sistematienda.ioc\\dependencias.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4FBD4E81-F202-4CCB-BF32-B79C9E75A8BB}|SistemaTienda.IOC\\SistemaTienda.IOC.csproj|solutionrelative:sistematienda.ioc\\dependencias.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{C99DA164-F8DF-4217-8803-6239F2F30272}|SistemaTienda.Model\\SistemaTienda.Model.csproj|c:\\users\\doomslayer\\desktop\\apitienda\\sistematienda.model\\detallepedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C99DA164-F8DF-4217-8803-6239F2F30272}|SistemaTienda.Model\\SistemaTienda.Model.csproj|solutionrelative:sistematienda.model\\detallepedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EE7BBF53-EBF1-44C2-B9C4-4F3A20051C10}|SistemaTienda.API\\SistemaTienda.API.csproj|c:\\users\\doomslayer\\desktop\\apitienda\\sistematienda.api\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EE7BBF53-EBF1-44C2-B9C4-4F3A20051C10}|SistemaTienda.API\\SistemaTienda.API.csproj|solutionrelative:sistematienda.api\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|c:\\users\\doomslayer\\desktop\\apitienda\\sistematienda.dto\\detallepedidodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -78,7 +94,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -86,20 +102,59 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "ImpuestoArticuloDTO.cs",
-              "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\ImpuestoArticuloDTO.cs",
-              "RelativeDocumentMoniker": "SistemaTienda.DTO\\ImpuestoArticuloDTO.cs",
-              "ToolTip": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\ImpuestoArticuloDTO.cs",
-              "RelativeToolTip": "SistemaTienda.DTO\\ImpuestoArticuloDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAKAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "GenericRepository.cs",
+              "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DAL\\Repositorios\\GenericRepository.cs",
+              "RelativeDocumentMoniker": "SistemaTienda.DAL\\Repositorios\\GenericRepository.cs",
+              "ToolTip": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DAL\\Repositorios\\GenericRepository.cs",
+              "RelativeToolTip": "SistemaTienda.DAL\\Repositorios\\GenericRepository.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T23:03:36.822Z",
+              "WhenOpened": "2025-07-09T23:00:33.01Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "IGenericRepository.cs",
+              "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DAL\\Repositorios\\Contrato\\IGenericRepository.cs",
+              "RelativeDocumentMoniker": "SistemaTienda.DAL\\Repositorios\\Contrato\\IGenericRepository.cs",
+              "ToolTip": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DAL\\Repositorios\\Contrato\\IGenericRepository.cs",
+              "RelativeToolTip": "SistemaTienda.DAL\\Repositorios\\Contrato\\IGenericRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAABSAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-09T19:53:56.951Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Dependencias.cs",
+              "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.IOC\\Dependencias.cs",
+              "RelativeDocumentMoniker": "SistemaTienda.IOC\\Dependencias.cs",
+              "ToolTip": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.IOC\\Dependencias.cs",
+              "RelativeToolTip": "SistemaTienda.IOC\\Dependencias.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAABYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-09T19:44:52.972Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "LoginController.cs",
+              "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.API\\Controllers\\LoginController.cs",
+              "RelativeDocumentMoniker": "SistemaTienda.API\\Controllers\\LoginController.cs",
+              "ToolTip": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.API\\Controllers\\LoginController.cs",
+              "RelativeToolTip": "SistemaTienda.API\\Controllers\\LoginController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-09T19:30:21.352Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "ArticuloCreacionDTO.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\ArticuloCreacionDTO.cs",
               "RelativeDocumentMoniker": "SistemaTienda.DTO\\ArticuloCreacionDTO.cs",
@@ -107,12 +162,11 @@
               "RelativeToolTip": "SistemaTienda.DTO\\ArticuloCreacionDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T22:49:56.758Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-04T22:49:56.758Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 10,
               "Title": "UsuarioDTO.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\UsuarioDTO.cs",
               "RelativeDocumentMoniker": "SistemaTienda.DTO\\UsuarioDTO.cs",
@@ -120,12 +174,11 @@
               "RelativeToolTip": "SistemaTienda.DTO\\UsuarioDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T22:49:22.027Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-04T22:49:22.027Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 11,
               "Title": "Marca.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\Marca.cs",
               "RelativeDocumentMoniker": "SistemaTienda.Model\\Marca.cs",
@@ -133,12 +186,11 @@
               "RelativeToolTip": "SistemaTienda.Model\\Marca.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T22:48:04.248Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-04T22:48:04.248Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 12,
               "Title": "MarcaDTO.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\MarcaDTO.cs",
               "RelativeDocumentMoniker": "SistemaTienda.DTO\\MarcaDTO.cs",
@@ -146,12 +198,11 @@
               "RelativeToolTip": "SistemaTienda.DTO\\MarcaDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T22:47:54.084Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-04T22:47:54.084Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 7,
               "Title": "ArticuloDTO.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\ArticuloDTO.cs",
               "RelativeDocumentMoniker": "SistemaTienda.DTO\\ArticuloDTO.cs",
@@ -159,12 +210,36 @@
               "RelativeToolTip": "SistemaTienda.DTO\\ArticuloDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T22:47:16.184Z",
+              "WhenOpened": "2025-07-04T22:47:16.184Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DetallePedido.cs",
+              "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\DetallePedido.cs",
+              "RelativeDocumentMoniker": "SistemaTienda.Model\\DetallePedido.cs",
+              "ToolTip": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\DetallePedido.cs",
+              "RelativeToolTip": "SistemaTienda.Model\\DetallePedido.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-04T22:25:12.294Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 9,
+              "Title": "ImpuestoArticuloDTO.cs",
+              "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\ImpuestoArticuloDTO.cs",
+              "RelativeDocumentMoniker": "SistemaTienda.DTO\\ImpuestoArticuloDTO.cs",
+              "ToolTip": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\ImpuestoArticuloDTO.cs",
+              "RelativeToolTip": "SistemaTienda.DTO\\ImpuestoArticuloDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-04T23:03:36.822Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
               "Title": "VentaCreacionDTO.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\VentaCreacionDTO.cs",
               "RelativeDocumentMoniker": "SistemaTienda.DTO\\VentaCreacionDTO.cs",
@@ -172,25 +247,11 @@
               "RelativeToolTip": "SistemaTienda.DTO\\VentaCreacionDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T22:41:29.774Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-04T22:41:29.774Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "DetallePedido.cs",
-              "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\DetallePedido.cs",
-              "RelativeDocumentMoniker": "SistemaTienda.Model\\DetallePedido.cs",
-              "ToolTip": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\DetallePedido.cs",
-              "RelativeToolTip": "SistemaTienda.Model\\DetallePedido.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABUAAABAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T22:25:12.294Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
               "Title": "DetallePedidoDTO.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\DetallePedidoDTO.cs",
               "RelativeDocumentMoniker": "SistemaTienda.DTO\\DetallePedidoDTO.cs",
@@ -198,12 +259,11 @@
               "RelativeToolTip": "SistemaTienda.DTO\\DetallePedidoDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T22:24:59.083Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-04T22:24:59.083Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 16,
               "Title": "Pedido.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\Pedido.cs",
               "RelativeDocumentMoniker": "SistemaTienda.Model\\Pedido.cs",
@@ -211,12 +271,11 @@
               "RelativeToolTip": "SistemaTienda.Model\\Pedido.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAAA4AAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T22:23:47.445Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-04T22:23:47.445Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 14,
               "Title": "PedidoDTO.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\PedidoDTO.cs",
               "RelativeDocumentMoniker": "SistemaTienda.DTO\\PedidoDTO.cs",
@@ -224,12 +283,11 @@
               "RelativeToolTip": "SistemaTienda.DTO\\PedidoDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T22:23:32.488Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-04T22:23:32.488Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 19,
               "Title": "Persona.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\Persona.cs",
               "RelativeDocumentMoniker": "SistemaTienda.Model\\Persona.cs",
@@ -237,12 +295,11 @@
               "RelativeToolTip": "SistemaTienda.Model\\Persona.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T22:01:02.595Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-04T22:01:02.595Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 17,
               "Title": "Direccion.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\Direccion.cs",
               "RelativeDocumentMoniker": "SistemaTienda.Model\\Direccion.cs",
@@ -250,12 +307,11 @@
               "RelativeToolTip": "SistemaTienda.Model\\Direccion.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T22:01:00.179Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-04T22:01:00.179Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 18,
               "Title": "Usuario.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\Usuario.cs",
               "RelativeDocumentMoniker": "SistemaTienda.Model\\Usuario.cs",
@@ -263,12 +319,11 @@
               "RelativeToolTip": "SistemaTienda.Model\\Usuario.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T22:00:44.296Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-04T22:00:44.296Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 15,
               "Title": "UsuarioCreacionDTO.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\UsuarioCreacionDTO.cs",
               "RelativeDocumentMoniker": "SistemaTienda.DTO\\UsuarioCreacionDTO.cs",
@@ -276,12 +331,11 @@
               "RelativeToolTip": "SistemaTienda.DTO\\UsuarioCreacionDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAA4AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T21:58:21.586Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-04T21:58:21.586Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
               "Title": "Mapeos.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Utility\\Mapeos.cs",
               "RelativeDocumentMoniker": "SistemaTienda.Utility\\Mapeos.cs",
@@ -289,12 +343,11 @@
               "RelativeToolTip": "SistemaTienda.Utility\\Mapeos.cs",
               "ViewState": "AgIAAB8AAAAAAAAAAAAAAEcAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T21:34:14.499Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-04T21:34:14.499Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 20,
               "Title": "Inventario.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\Inventario.cs",
               "RelativeDocumentMoniker": "SistemaTienda.Model\\Inventario.cs",
@@ -302,8 +355,7 @@
               "RelativeToolTip": "SistemaTienda.Model\\Inventario.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T00:21:10.642Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-04T00:21:10.642Z"
             }
           ]
         }
