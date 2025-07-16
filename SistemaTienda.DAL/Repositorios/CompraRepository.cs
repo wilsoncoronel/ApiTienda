@@ -1,4 +1,4 @@
-﻿using ApiTienda.Model;
+﻿using SistemaTienda.Model;
 using SistemaTienda.DAL.DBContext;
 using SistemaTienda.DAL.Repositorios.Contrato;
 using System;
@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 
 namespace SistemaTienda.DAL.Repositorios
 {
-    public class CompraRepository : GenericRepository<Compra>, ICompraRepository
+    public class CompraRepository : GenericRepository<TbCompra>, ICompraRepository
     {
-        private readonly AplicationDbContext _context;
-        public CompraRepository(AplicationDbContext context): base(context) {
+        private readonly TiendaDbContext _context;
+        public CompraRepository(TiendaDbContext context): base(context) {
             this._context = context;
         }
-        public async Task<Compra> Registrar(Compra modelo)
+        public async Task<TbCompra> Registrar(TbCompra modelo)
         {
-            Compra compra = new Compra();
+            TbCompra compra = new TbCompra();
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try

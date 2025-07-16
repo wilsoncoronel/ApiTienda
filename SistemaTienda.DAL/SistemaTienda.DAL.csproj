@@ -10,8 +10,4 @@
     <ProjectReference Include="..\SistemaTienda.Model\SistemaTienda.Model.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DBContext\" />
-  </ItemGroup>
-
 </Project>

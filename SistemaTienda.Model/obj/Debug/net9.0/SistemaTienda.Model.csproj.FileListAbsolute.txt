@@ -7,6 +7,7 @@ C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\Siste
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\SistemaTienda.Model.AssemblyInfoInputs.cache
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\SistemaTienda.Model.AssemblyInfo.cs
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\SistemaTienda.Model.csproj.CoreCompileInputs.cache
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\SistemaTienda.Model.sourcelink.json
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\SistemaTienda.Model.dll
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\refint\SistemaTienda.Model.dll
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\SistemaTienda.Model.pdb

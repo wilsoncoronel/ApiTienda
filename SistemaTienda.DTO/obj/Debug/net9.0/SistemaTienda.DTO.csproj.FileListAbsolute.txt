@@ -5,6 +5,7 @@ C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.DTO\obj\Debug\net9.0\Sistema
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.DTO\obj\Debug\net9.0\SistemaTienda.DTO.AssemblyInfoInputs.cache
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.DTO\obj\Debug\net9.0\SistemaTienda.DTO.AssemblyInfo.cs
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.DTO\obj\Debug\net9.0\SistemaTienda.DTO.csproj.CoreCompileInputs.cache
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.DTO\obj\Debug\net9.0\SistemaTienda.DTO.sourcelink.json
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.DTO\obj\Debug\net9.0\SistemaTienda.DTO.dll
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.DTO\obj\Debug\net9.0\refint\SistemaTienda.DTO.dll
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.DTO\obj\Debug\net9.0\SistemaTienda.DTO.pdb

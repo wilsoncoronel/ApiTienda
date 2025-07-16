@@ -10,6 +10,7 @@ C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Utility\obj\Debug\net9.0\Sis
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Utility\obj\Debug\net9.0\SistemaTienda.Utility.AssemblyInfoInputs.cache
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Utility\obj\Debug\net9.0\SistemaTienda.Utility.AssemblyInfo.cs
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Utility\obj\Debug\net9.0\SistemaTienda.Utility.csproj.CoreCompileInputs.cache
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Utility\obj\Debug\net9.0\SistemaTienda.Utility.sourcelink.json
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Utility\obj\Debug\net9.0\SistemaT.73FFBCB9.Up2Date
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Utility\obj\Debug\net9.0\SistemaTienda.Utility.dll
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.Utility\obj\Debug\net9.0\refint\SistemaTienda.Utility.dll

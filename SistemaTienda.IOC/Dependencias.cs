@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SistemaTienda.BLL.Servicios;
+using SistemaTienda.BLL.Servicios.Contrato;
 using SistemaTienda.DAL.DBContext;
 using SistemaTienda.DAL.Repositorios;
 using SistemaTienda.DAL.Repositorios.Contrato;
+using SistemaTienda.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +19,13 @@ namespace SistemaTienda.IOC
     {
         public static void InyectarDependecias(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AplicationDbContext>(options =>
+            services.AddDbContext<TiendaDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             }); 
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddTransient<IMapeos, Mapeos>();
+            services.AddScoped<ILogginService, LogginService>();
         }
     }
 }

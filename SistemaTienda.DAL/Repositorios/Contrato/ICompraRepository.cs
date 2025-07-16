@@ -1,4 +1,5 @@
-﻿using ApiTienda.Model;
+﻿
+using SistemaTienda.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace SistemaTienda.DAL.Repositorios.Contrato
 {
-    public interface ICompraRepository:IGenericRepository<Compra> 
+    public interface ICompraRepository:IGenericRepository<TbCompra> 
     {
-        Task<Compra> Registrar(Compra modelo);
+        Task<TbCompra> Registrar(TbCompra modelo);
     }
 }

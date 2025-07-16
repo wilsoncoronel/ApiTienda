@@ -12,8 +12,8 @@ namespace SistemaTienda.DAL.Repositorios
 {
     public class GenericRepository<TModelo> : IGenericRepository<TModelo> where TModelo : class
     {
-        private readonly AplicationDbContext _context;
-        public GenericRepository(AplicationDbContext context)
+        private readonly TiendaDbContext _context;
+        public GenericRepository(TiendaDbContext context)
         {
             this._context = context;
         }

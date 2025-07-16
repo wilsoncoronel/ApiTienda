@@ -1,0 +1,39 @@
+[
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.LoginController",
+    "Method": "Loggin",
+    "RelativePath": "api/Login/IniciarSesion",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "usuario",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "password",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.LoginController",
+    "Method": "ObtenerPerfil",
+    "RelativePath": "api/Login/ObtenerPerfil",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

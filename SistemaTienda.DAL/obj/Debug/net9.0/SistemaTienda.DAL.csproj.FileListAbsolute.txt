@@ -8,6 +8,7 @@ C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.DAL\obj\Debug\net9.0\Sistema
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.DAL\obj\Debug\net9.0\SistemaTienda.DAL.AssemblyInfoInputs.cache
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.DAL\obj\Debug\net9.0\SistemaTienda.DAL.AssemblyInfo.cs
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.DAL\obj\Debug\net9.0\SistemaTienda.DAL.csproj.CoreCompileInputs.cache
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.DAL\obj\Debug\net9.0\SistemaTienda.DAL.sourcelink.json
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.DAL\obj\Debug\net9.0\SistemaT.6A70DF64.Up2Date
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.DAL\obj\Debug\net9.0\SistemaTienda.DAL.dll
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.DAL\obj\Debug\net9.0\refint\SistemaTienda.DAL.dll

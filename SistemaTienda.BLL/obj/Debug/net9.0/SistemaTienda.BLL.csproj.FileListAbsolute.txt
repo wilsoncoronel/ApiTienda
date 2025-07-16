@@ -14,6 +14,7 @@ C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.BLL\obj\Debug\net9.0\Sistema
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.BLL\obj\Debug\net9.0\SistemaTienda.BLL.AssemblyInfoInputs.cache
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.BLL\obj\Debug\net9.0\SistemaTienda.BLL.AssemblyInfo.cs
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.BLL\obj\Debug\net9.0\SistemaTienda.BLL.csproj.CoreCompileInputs.cache
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.BLL\obj\Debug\net9.0\SistemaTienda.BLL.sourcelink.json
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.BLL\obj\Debug\net9.0\SistemaT.316E4235.Up2Date
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.BLL\obj\Debug\net9.0\SistemaTienda.BLL.dll
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.BLL\obj\Debug\net9.0\refint\SistemaTienda.BLL.dll

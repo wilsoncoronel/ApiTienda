@@ -19,7 +19,9 @@ namespace SistemaTienda.DTO
         public string Descripcion { get; set; }
         public DateTime FechaActualizacion { get; set; }
         public string Unidad { get; set; }
-        public double UnidadValor { get; set; }
+        public decimal UnidadValor { get; set; }
+
+        public decimal ValorCompra { get; set; }
         public int IdMarca { get; set; }
         public MarcaDTO MarcaDTO { get; set; }
         public int IdTipoArticulo { get; set; }

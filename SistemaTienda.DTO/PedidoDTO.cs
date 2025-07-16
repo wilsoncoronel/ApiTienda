@@ -18,7 +18,7 @@ namespace SistemaTienda.DTO
         [Required(ErrorMessage = "El campo {0} es requerido!!")]
         public DateTime FechaEntrega { get; set; }
         public UsuarioDTO UsuarioCreadorDto { get; set; }
-        public int UsuarioId { get; set; }
+        public int IdUsuarioCreador { get; set; }
         [Required(ErrorMessage = "El campo {0} es requerido!!")]
         public bool Estado { get; set; }
         public List<DetallePedidoDTO> DetallePedidoDto { get; set; } = [];
