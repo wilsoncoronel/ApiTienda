@@ -3,24 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{7C5A0A11-0F22-4EB4-ABB0-088374B058C6}|SistemaTienda.Utility\\SistemaTienda.Utility.csproj|c:\\users\\doomslayer\\desktop\\apitienda\\sistematienda.utility\\mapeos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7C5A0A11-0F22-4EB4-ABB0-088374B058C6}|SistemaTienda.Utility\\SistemaTienda.Utility.csproj|solutionrelative:sistematienda.utility\\mapeos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{92EA695A-2B7A-4742-A3BE-3D12B6914C13}|SistemaTienda.BLL\\SistemaTienda.BLL.csproj|c:\\users\\doomslayer\\desktop\\apitienda\\sistematienda.bll\\servicios\\logginservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{92EA695A-2B7A-4742-A3BE-3D12B6914C13}|SistemaTienda.BLL\\SistemaTienda.BLL.csproj|solutionrelative:sistematienda.bll\\servicios\\logginservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{EE7BBF53-EBF1-44C2-B9C4-4F3A20051C10}|SistemaTienda.API\\SistemaTienda.API.csproj|c:\\users\\doomslayer\\desktop\\apitienda\\sistematienda.api\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EE7BBF53-EBF1-44C2-B9C4-4F3A20051C10}|SistemaTienda.API\\SistemaTienda.API.csproj|solutionrelative:sistematienda.api\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7C5A0A11-0F22-4EB4-ABB0-088374B058C6}|SistemaTienda.Utility\\SistemaTienda.Utility.csproj|c:\\users\\doomslayer\\desktop\\apitienda\\sistematienda.utility\\mapeos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C5A0A11-0F22-4EB4-ABB0-088374B058C6}|SistemaTienda.Utility\\SistemaTienda.Utility.csproj|solutionrelative:sistematienda.utility\\mapeos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|c:\\users\\doomslayer\\desktop\\apitienda\\sistematienda.dto\\pedidodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|solutionrelative:sistematienda.dto\\pedidodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|c:\\users\\doomslayer\\desktop\\apitienda\\sistematienda.dto\\usuariodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|solutionrelative:sistematienda.dto\\usuariodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|c:\\users\\doomslayer\\desktop\\apitienda\\sistematienda.dto\\usuariocreaciondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|solutionrelative:sistematienda.dto\\usuariocreaciondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|c:\\users\\doomslayer\\desktop\\apitienda\\sistematienda.dto\\articulodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -29,6 +25,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{C99DA164-F8DF-4217-8803-6239F2F30272}|SistemaTienda.Model\\SistemaTienda.Model.csproj|c:\\users\\doomslayer\\desktop\\apitienda\\sistematienda.model\\tbcomarticulo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C99DA164-F8DF-4217-8803-6239F2F30272}|SistemaTienda.Model\\SistemaTienda.Model.csproj|solutionrelative:sistematienda.model\\tbcomarticulo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|c:\\users\\doomslayer\\desktop\\apitienda\\sistematienda.dto\\usuariodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|solutionrelative:sistematienda.dto\\usuariodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|c:\\users\\doomslayer\\desktop\\apitienda\\sistematienda.dto\\usuariocreaciondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|solutionrelative:sistematienda.dto\\usuariocreaciondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -41,8 +45,25 @@
           "SelectedChildIndex": 7,
           "Children": [
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
+              "Title": "LoginController.cs",
+              "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.API\\Controllers\\LoginController.cs",
+              "RelativeDocumentMoniker": "SistemaTienda.API\\Controllers\\LoginController.cs",
+              "ToolTip": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.API\\Controllers\\LoginController.cs",
+              "RelativeToolTip": "SistemaTienda.API\\Controllers\\LoginController.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAiwB0AAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-17T21:19:08.956Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "PedidoDTO.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\PedidoDTO.cs",
               "RelativeDocumentMoniker": "SistemaTienda.DTO\\PedidoDTO.cs",
@@ -55,7 +76,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 7,
               "Title": "UsuarioCreacionDTO.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\UsuarioCreacionDTO.cs",
               "RelativeDocumentMoniker": "SistemaTienda.DTO\\UsuarioCreacionDTO.cs",
@@ -63,12 +84,11 @@
               "RelativeToolTip": "SistemaTienda.DTO\\UsuarioCreacionDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-16T17:56:21.818Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-16T17:56:21.818Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "UsuarioDTO.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\UsuarioDTO.cs",
               "RelativeDocumentMoniker": "SistemaTienda.DTO\\UsuarioDTO.cs",
@@ -76,12 +96,11 @@
               "RelativeToolTip": "SistemaTienda.DTO\\UsuarioDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-16T17:56:10.963Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-16T17:56:10.963Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 4,
               "Title": "ArticuloDTO.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\ArticuloDTO.cs",
               "RelativeDocumentMoniker": "SistemaTienda.DTO\\ArticuloDTO.cs",
@@ -93,44 +112,40 @@
               "EditorCaption": ""
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 5,
               "Title": "TbComArticulo.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\TbComArticulo.cs",
               "RelativeDocumentMoniker": "SistemaTienda.Model\\TbComArticulo.cs",
               "ToolTip": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\TbComArticulo.cs",
               "RelativeToolTip": "SistemaTienda.Model\\TbComArticulo.cs",
-              "ViewState": "AgIAABEAAAAAAAAAAAAIwCMAAAAtAAAAAAAAAA==",
+              "ViewState": "AgIAABEAAAAAAAAAAAAwwCMAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-16T17:37:42.884Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "LogginService.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.BLL\\Servicios\\LogginService.cs",
               "RelativeDocumentMoniker": "SistemaTienda.BLL\\Servicios\\LogginService.cs",
               "ToolTip": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.BLL\\Servicios\\LogginService.cs",
               "RelativeToolTip": "SistemaTienda.BLL\\Servicios\\LogginService.cs",
-              "ViewState": "AgIAABEAAAAAAAAAAAAQwCIAAAAkAAAAAAAAAA==",
+              "ViewState": "AgIAABQAAAAAAAAAAAAqwCoAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-16T17:33:20.015Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Mapeos.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Utility\\Mapeos.cs",
               "RelativeDocumentMoniker": "SistemaTienda.Utility\\Mapeos.cs",
               "ToolTip": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Utility\\Mapeos.cs",
               "RelativeToolTip": "SistemaTienda.Utility\\Mapeos.cs",
-              "ViewState": "AgIAAGIAAAAAAAAAAAAqwIEAAAAvAAAAAAAAAA==",
+              "ViewState": "AgIAAA4AAAAAAAAAAAArwBkAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-16T17:33:11.522Z",
               "EditorCaption": ""

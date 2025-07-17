@@ -46,10 +46,12 @@ namespace SistemaTienda.BLL.Servicios
          {
              try
              {
-                 var usuario = await this._usuarioRepositorio.Consultar(u => u.IdPersonaNavigation.Mail == user && u.Password == clave);
-                 if (usuario.First() == null)
-                     throw new Exception("No se encuentra ningun usuario con esas credenciales");
-                 return this._mapeos.MapeoUsuarioDtoASesionDto(usuario.First());
+                var usuario = await this._usuarioRepositorio.Consultar(u => u.IdPersonaNavigation.Mail == user && u.Password == clave);
+                if (usuario.FirstOrDefault() == null)
+                    throw new TaskCanceledException("Usuario no existe o esta desactivado");
+                TbSisUsuario userTb = usuario.Include(p => p.IdPersonaNavigation)
+                    .Include(r => r.IdRolNavigation).First();
+                 return this._mapeos.MapeoUsuarioDtoASesionDto(userTb);
              }
              catch
              {
