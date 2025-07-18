@@ -19,6 +19,7 @@ namespace SistemaTienda.DTO
         public int IdPersona { get; set; }
         public int IdCiudad { get; set; }
         public int IdRol { get; set; }
+        public int IdTipoIdentificacion { get; set; }
         public DireccionCreacionDTO DireccionCreacionDTO { get; set; }
     }
 }

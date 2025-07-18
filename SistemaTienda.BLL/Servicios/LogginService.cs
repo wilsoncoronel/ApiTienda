@@ -32,9 +32,13 @@ namespace SistemaTienda.BLL.Servicios
             try
             {
                 var usuario = await this._usuarioRepositorio.Consultar(u => u.Id == id);
-                if (usuario == null)
+                TbSisUsuario user = usuario
+                    .Include(p => p.IdPersonaNavigation)
+                        .ThenInclude(t => t.IdTipoIdentificacionNavigation)
+                    .Include(r => r.IdRolNavigation).First();
+                if (user == null)
                     throw new Exception("No se encuentra ningun usuario con esas credenciales");
-                return this._mapeos.MapeoUsuarioTbAUsuarioDto((TbSisUsuario)usuario);
+                return this._mapeos.MapeoUsuarioTbAUsuarioDto(user);
             }
             catch
             {

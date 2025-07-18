@@ -11,16 +11,17 @@ namespace SistemaTienda.Utility
 {
     public interface IMapeos
     {
-        TbSisUsuario MapeoUsuarioCreacionDtoAUsuario(UsuarioCreacionDTO usuarioCreacionDto);
         TbVenta MapeoVentaAVentaCreacion(VentaCreacionDTO ventaCreacionDto);
         TbVenDetalleVenta MapeoDetalleVentaCreacionDtoADetalleVenta(DetalleVentaCreacionDTO detalleVentaCreacionDto);
         UsuarioDTO MapeoUsuarioTbAUsuarioDto(TbSisUsuario usuarioTb);
 
         SesionDTO MapeoUsuarioDtoASesionDto(TbSisUsuario usuarioTb);
+        TbSisUsuario MapeoUsuarioCreacionDtoATbUsuario(UsuarioCreacionDTO usuarioCreacionDto);
     }
     public class Mapeos : IMapeos
     {
 
+         
          public SesionDTO MapeoUsuarioDtoASesionDto(TbSisUsuario usuarioTb)
          {
              var sesionDto = new SesionDTO {
@@ -131,34 +132,32 @@ namespace SistemaTienda.Utility
              };
          }
         
-        /*
-
-         public Usuario MapeoUsuarioCreacionDtoAUsuario(UsuarioCreacionDTO usuarioCreacionDto) {
-             return new Usuario
+         public TbSisUsuario MapeoUsuarioCreacionDtoATbUsuario(UsuarioCreacionDTO usuarioCreacionDto) {
+             return new TbSisUsuario
              {
                  IdPersona = usuarioCreacionDto.IdPersona,
                  NombreUsuario = usuarioCreacionDto.NombreUsuario,
-                 Persona = new Persona
+                 IdPersonaNavigation = new TbGrlPersona
                  {
                      Apellidos = usuarioCreacionDto.Apellidos,
                      Nombres = usuarioCreacionDto.Nombres,
-                     EstadoVisual = usuarioCreacionDto.EstadoVisual,
                      Identificacion = usuarioCreacionDto.Identificacion,
                      Mail = usuarioCreacionDto.Mail,
-                     Telefono = usuarioCreacionDto.Telefono,
-                     Direccion = new Direccion
+                     TbGrlDireccione = new TbGrlDirecciones
                      {
+
                          IdCiudad = usuarioCreacionDto.DireccionCreacionDTO.IdCiudad,
+                         EstadoVisual = true,
                          Descripcion = usuarioCreacionDto.DireccionCreacionDTO.Descripcion,
                      },
+                     IdTipoIdentificacion = usuarioCreacionDto.IdTipoIdentificacion,
+                     
                  },
                  Password = usuarioCreacionDto.Password,
                  IdRol = usuarioCreacionDto.IdRol,
-
-
              };
          }
-
+        /*
          public TbVenDetalleVenta MapeoDetalleVentaCreacionDtoADetalleVenta(DetalleVentaCreacionDTO detalleVentaCreacionDto) {
              return new TbVenDetalleVenta
              {
@@ -206,10 +205,7 @@ namespace SistemaTienda.Utility
             throw new NotImplementedException();
         }
 
-        public TbSisUsuario MapeoUsuarioCreacionDtoAUsuario(UsuarioCreacionDTO usuarioCreacionDto)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public TbVenta MapeoVentaAVentaCreacion(VentaCreacionDTO ventaCreacionDto)
         {
