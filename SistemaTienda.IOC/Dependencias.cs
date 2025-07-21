@@ -26,6 +26,7 @@ namespace SistemaTienda.IOC
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddTransient<IMapeos, Mapeos>();
             services.AddTransient<ILogginService, LogginService>();
+            services.AddTransient<IUsuarioService, UsuarioService>();
         }
     }
 }
