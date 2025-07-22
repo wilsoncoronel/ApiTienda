@@ -7,6 +7,8 @@ public partial class TbGrlPersona
 {
     public int Id { get; set; }
 
+    public int IdTipoIdentificacion { get; set; }
+
     public string Nombres { get; set; } = null!;
 
     public string Apellidos { get; set; } = null!;
@@ -15,7 +17,9 @@ public partial class TbGrlPersona
 
     public string Identificacion { get; set; } = null!;
 
-    public int IdTipoIdentificacion { get; set; }
+    public DateOnly? FechaCreacion { get; set; }
+
+    public DateOnly? FechaModificacion { get; set; }
 
     public virtual TbGrlTipoIdentificacion IdTipoIdentificacionNavigation { get; set; } = null!;
 

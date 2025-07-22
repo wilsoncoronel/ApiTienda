@@ -30,6 +30,8 @@ namespace SistemaTienda.BLL.Servicios
         {
             try {
                 var articuloTb = this._mapper.MapeoArticuloCreacionDtoAArticuloTb(articuloCreacionDto);
+                DateTime fechaCreacion = DateTime.Now;
+                articuloTb.FechaCreacion = fechaCreacion;
                    var articuloCreado =  await this._articuloRepository.Crear(articuloTb);
                 if (articuloCreado.Id == null)
                     throw new Exception("No se pudo crear el artículo!!!");

@@ -27,6 +27,7 @@ namespace SistemaTienda.IOC
             services.AddTransient<IMapeos, Mapeos>();
             services.AddTransient<ILogginService, LogginService>();
             services.AddTransient<IUsuarioService, UsuarioService>();
+            services.AddTransient<IArticuloService, ArticuloService>();
         }
     }
 }

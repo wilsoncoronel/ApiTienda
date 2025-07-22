@@ -19,9 +19,9 @@ public partial class TbComArticulo
 
     public string? Codigo { get; set; }
 
-    public DateOnly FechaCreacion { get; set; }
+    public DateTime FechaCreacion { get; set; }
 
-    public DateOnly? FechaCaducidad { get; set; }
+    public DateTime? FechaCaducidad { get; set; }
 
     public bool EstadoVisual { get; set; }
 
@@ -29,7 +29,7 @@ public partial class TbComArticulo
 
     public string? Descripcion { get; set; }
 
-    public DateOnly? FechaActualizacion { get; set; }
+    public DateTime? FechaActualizacion { get; set; }
 
     public string? Unidad { get; set; }
 

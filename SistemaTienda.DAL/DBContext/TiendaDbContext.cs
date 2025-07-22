@@ -5,7 +5,6 @@ using SistemaTienda.Model;
 
 namespace SistemaTienda.DAL.DBContext;
 
-
 public partial class TiendaDbContext : DbContext
 {
     public TiendaDbContext()
@@ -76,6 +75,9 @@ public partial class TiendaDbContext : DbContext
         modelBuilder.Entity<TbComArticulo>(entity =>
         {
             entity.Property(e => e.Descripcion).HasMaxLength(500);
+            entity.Property(e => e.FechaActualizacion).HasColumnType("datetime");
+            entity.Property(e => e.FechaCaducidad).HasColumnType("datetime");
+            entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
             entity.Property(e => e.Nombre).HasMaxLength(200);
             entity.Property(e => e.Unidad).HasMaxLength(100);
             entity.Property(e => e.UnidadValor).HasColumnType("numeric(18, 4)");

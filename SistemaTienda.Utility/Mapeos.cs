@@ -18,15 +18,17 @@ namespace SistemaTienda.Utility
         TbSisUsuario MapeoUsuarioCreacionDtoATbUsuario(UsuarioCreacionDTO usuarioCreacionDto);
         List<UsuarioDTO> MapeoArrayUsuarioTbAUsuarioDto(IEnumerable<TbSisUsuario> usuariosListTb);
         TbComArticulo MapeoArticuloCreacionDtoAArticuloTb(ArticuloCreacionDTO articuloCreacionDto);
+        TbComArticulo MapeoArticuloDtoAArticuloTb(ArticuloDTO articuloDto);
     }
     public class Mapeos : IMapeos
     {
 
         public TbComArticulo MapeoArticuloCreacionDtoAArticuloTb(ArticuloCreacionDTO articuloCreacionDto){
-            var articuloTb = new TbComArticulo { 
-                Id = articuloCreacionDto.Id,
+            var articuloTb = new TbComArticulo {
                 Codigo = articuloCreacionDto.Codigo,
                 Descripcion = articuloCreacionDto.Descripcion,
+                FechaCaducidad = articuloCreacionDto.FechaCaducidad,
+                FechaCreacion = articuloCreacionDto.FechaCreacion,
                 Estado = articuloCreacionDto.Estado,
                 EstadoVisual = articuloCreacionDto.EstadoVisual,
                 IdImpuesto = articuloCreacionDto.IdImpuesto,
@@ -37,38 +39,39 @@ namespace SistemaTienda.Utility
                 ValorVenta = articuloCreacionDto.UnidadValor,
                 IdTipoArticulo = articuloCreacionDto.IdTipoArticulo,
                 IdMarca = articuloCreacionDto.IdMarca,
+                IdUsuarioCreador = articuloCreacionDto.IdUsuarioCreador,
             };
             return articuloTb;
         }
 
-        //public TbComArticulo MapeoArticuloDtoAArticuloTb(ArticuloCreacionDTO articuloCreacionDto)
-        //{
-        //    var articuloTb = new TbComArticulo
-        //    {
-        //        Id = articuloDto.Id,
-        //        Codigo = articuloDto.Codigo,
-        //        Descripcion = articuloDto.Descripcion,
-        //        Estado = articuloDto.Estado,
-        //        EstadoVisual = articuloDto.EstadoVisual,
-        //        IdImpuestoNavigation = new TbComImpuestosArticulo
-        //        {
-        //            Id = articuloDto.ImpuestoArticuloDto.Id,
-        //            ValorImpuesto = articuloDto.ImpuestoArticuloDto.ValorImpuesto,
-        //        },
-        //        Nombre = articuloDto.Nombre,
-        //        Unidad = articuloDto.Unidad,
-        //        ValorCompra = articuloDto.ValorCompra,
-        //        UnidadValor = articuloDto.UnidadValor,
-        //        ValorVenta = articuloDto.UnidadValor,
-        //        IdTipoArticuloNavigation = new TbComTiposArticulo
-        //        {
-        //            Id = articuloDto.IdTipoArticulo,
-        //            Descripcion = articuloDto.TipoArticuloDTO.Descripcion,
-        //            Nombre = articuloDto.TipoArticuloDTO.Nombre,
-        //        },
-        //    };
-        //    return articuloTb;
-        //}
+        public TbComArticulo MapeoArticuloDtoAArticuloTb(ArticuloDTO articuloDto)
+        {
+            var articuloTb = new TbComArticulo
+            {
+                Id = articuloDto.Id,
+                Codigo = articuloDto.Codigo,
+                Descripcion = articuloDto.Descripcion,
+                Estado = articuloDto.Estado,
+                EstadoVisual = articuloDto.EstadoVisual,
+                IdImpuestoNavigation = new TbComImpuestosArticulo
+                {
+                    Id = articuloDto.ImpuestoArticuloDto.Id,
+                    ValorImpuesto = articuloDto.ImpuestoArticuloDto.ValorImpuesto,
+                },
+                Nombre = articuloDto.Nombre,
+                Unidad = articuloDto.Unidad,
+                ValorCompra = articuloDto.ValorCompra,
+                UnidadValor = articuloDto.UnidadValor,
+                ValorVenta = articuloDto.UnidadValor,
+                IdTipoArticuloNavigation = new TbComTiposArticulo
+                {
+                    Id = articuloDto.IdTipoArticulo,
+                    Descripcion = articuloDto.TipoArticuloDTO.Descripcion,
+                    Nombre = articuloDto.TipoArticuloDTO.Nombre,
+                },
+            };
+            return articuloTb;
+        }
         public SesionDTO MapeoUsuarioDtoASesionDto(TbSisUsuario usuarioTb)
          {
              var sesionDto = new SesionDTO {
