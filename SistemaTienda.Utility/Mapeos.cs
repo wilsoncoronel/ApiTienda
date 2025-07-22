@@ -14,16 +14,62 @@ namespace SistemaTienda.Utility
         TbVenta MapeoVentaAVentaCreacion(VentaCreacionDTO ventaCreacionDto);
         TbVenDetalleVenta MapeoDetalleVentaCreacionDtoADetalleVenta(DetalleVentaCreacionDTO detalleVentaCreacionDto);
         UsuarioDTO MapeoUsuarioTbAUsuarioDto(TbSisUsuario usuarioTb);
-
         SesionDTO MapeoUsuarioDtoASesionDto(TbSisUsuario usuarioTb);
         TbSisUsuario MapeoUsuarioCreacionDtoATbUsuario(UsuarioCreacionDTO usuarioCreacionDto);
         List<UsuarioDTO> MapeoArrayUsuarioTbAUsuarioDto(IEnumerable<TbSisUsuario> usuariosListTb);
+        TbComArticulo MapeoArticuloCreacionDtoAArticuloTb(ArticuloCreacionDTO articuloCreacionDto);
     }
     public class Mapeos : IMapeos
     {
 
-         
-         public SesionDTO MapeoUsuarioDtoASesionDto(TbSisUsuario usuarioTb)
+        public TbComArticulo MapeoArticuloCreacionDtoAArticuloTb(ArticuloCreacionDTO articuloCreacionDto){
+            var articuloTb = new TbComArticulo { 
+                Id = articuloCreacionDto.Id,
+                Codigo = articuloCreacionDto.Codigo,
+                Descripcion = articuloCreacionDto.Descripcion,
+                Estado = articuloCreacionDto.Estado,
+                EstadoVisual = articuloCreacionDto.EstadoVisual,
+                IdImpuesto = articuloCreacionDto.IdImpuesto,
+                Nombre = articuloCreacionDto.Nombre,
+                Unidad = articuloCreacionDto.Unidad,
+                ValorCompra = articuloCreacionDto.ValorCompra,
+                UnidadValor = articuloCreacionDto.UnidadValor,
+                ValorVenta = articuloCreacionDto.UnidadValor,
+                IdTipoArticulo = articuloCreacionDto.IdTipoArticulo,
+                IdMarca = articuloCreacionDto.IdMarca,
+            };
+            return articuloTb;
+        }
+
+        //public TbComArticulo MapeoArticuloDtoAArticuloTb(ArticuloCreacionDTO articuloCreacionDto)
+        //{
+        //    var articuloTb = new TbComArticulo
+        //    {
+        //        Id = articuloDto.Id,
+        //        Codigo = articuloDto.Codigo,
+        //        Descripcion = articuloDto.Descripcion,
+        //        Estado = articuloDto.Estado,
+        //        EstadoVisual = articuloDto.EstadoVisual,
+        //        IdImpuestoNavigation = new TbComImpuestosArticulo
+        //        {
+        //            Id = articuloDto.ImpuestoArticuloDto.Id,
+        //            ValorImpuesto = articuloDto.ImpuestoArticuloDto.ValorImpuesto,
+        //        },
+        //        Nombre = articuloDto.Nombre,
+        //        Unidad = articuloDto.Unidad,
+        //        ValorCompra = articuloDto.ValorCompra,
+        //        UnidadValor = articuloDto.UnidadValor,
+        //        ValorVenta = articuloDto.UnidadValor,
+        //        IdTipoArticuloNavigation = new TbComTiposArticulo
+        //        {
+        //            Id = articuloDto.IdTipoArticulo,
+        //            Descripcion = articuloDto.TipoArticuloDTO.Descripcion,
+        //            Nombre = articuloDto.TipoArticuloDTO.Nombre,
+        //        },
+        //    };
+        //    return articuloTb;
+        //}
+        public SesionDTO MapeoUsuarioDtoASesionDto(TbSisUsuario usuarioTb)
          {
              var sesionDto = new SesionDTO {
                  Id = usuarioTb.Id,
