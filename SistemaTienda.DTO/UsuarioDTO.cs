@@ -20,5 +20,6 @@ namespace SistemaTienda.DTO
         public int IdPersona { get; set; }
         public RolDTO Rol { get; set; }
         public int IdRol { get; set; }
+        public DireccionDTO DireccionDto { get; set; }
     }
 }

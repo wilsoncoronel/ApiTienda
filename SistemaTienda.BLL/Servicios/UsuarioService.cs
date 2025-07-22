@@ -1,15 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.EntityFrameworkCore;
 using SistemaTienda.BLL.Servicios.Contrato;
 using SistemaTienda.DAL.DBContext;
 using SistemaTienda.DAL.Repositorios.Contrato;
 using SistemaTienda.DTO;
 using SistemaTienda.Model;
 using SistemaTienda.Utility;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SistemaTienda.BLL.Servicios
 {
@@ -48,13 +43,29 @@ namespace SistemaTienda.BLL.Servicios
 
                 }
             }
-                
-
         }
 
-        public Task<IEnumerable<UsuarioDTO>> ListarUsuario()
+        public async Task<List<UsuarioDTO>> ListarUsuario()
         {
-            throw new NotImplementedException();
+            var queryUsuarios = await this._usuarioRepository.Consultar();
+            queryUsuarios.Include(p => p.IdPersonaNavigation)
+                .Include(r => r.IdRolNavigation).ToList();
+            return this._mapper.MapeoArrayUsuarioTbAUsuarioDto(queryUsuarios);
+        }
+
+
+        public async Task<UsuarioDTO> ListarUsuarioId(int idUsuario)
+        {
+            var queryUsuarios = await this._usuarioRepository.Consultar();
+
+            TbSisUsuario user =  queryUsuarios.Where(u => u.Id == idUsuario)
+                .Include(p => p.IdPersonaNavigation)
+                        .ThenInclude(t => t.IdTipoIdentificacionNavigation)
+                    .Include(p => p.IdPersonaNavigation)
+                        .ThenInclude(d => d.TbGrlDireccione)
+                            .ThenInclude(c => c.IdCiudadNavigation)
+                    .Include(r => r.IdRolNavigation).First();
+            return this._mapper.MapeoUsuarioTbAUsuarioDto(user);
         }
     }
 }

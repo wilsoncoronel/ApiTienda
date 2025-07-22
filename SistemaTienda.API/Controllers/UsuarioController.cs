@@ -33,5 +33,43 @@ namespace SistemaTienda.API.Controllers
             }
             return Ok(resp);
         }
+
+        [HttpGet]
+        [Route("ListarUsuarios")]
+        public async Task<IActionResult> ListarUsuarios()
+        {
+            var resp = new Response<List<UsuarioDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._usuarioService.ListarUsuario();
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
+
+        [HttpGet]
+        [Route("ListarUsuarioId")]
+        public async Task<IActionResult> ListarUsuarioId(int IdUsuario)
+        {
+            var resp = new Response<UsuarioDTO>();
+            int Id = IdUsuario;
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._usuarioService.ListarUsuarioId(Id);
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
     }
 }

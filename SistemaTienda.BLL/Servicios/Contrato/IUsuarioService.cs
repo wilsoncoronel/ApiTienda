@@ -10,6 +10,8 @@ namespace SistemaTienda.BLL.Servicios.Contrato
     public interface IUsuarioService
     {
         Task<int> CrearUsuario(UsuarioCreacionDTO userDto);
-        Task<IEnumerable<UsuarioDTO>> ListarUsuario();
+        Task<List<UsuarioDTO>> ListarUsuario();
+
+        Task<UsuarioDTO> ListarUsuarioId(int idUsuario);
     }
 }

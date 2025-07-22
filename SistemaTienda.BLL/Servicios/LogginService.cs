@@ -35,6 +35,9 @@ namespace SistemaTienda.BLL.Servicios
                 TbSisUsuario user = usuario
                     .Include(p => p.IdPersonaNavigation)
                         .ThenInclude(t => t.IdTipoIdentificacionNavigation)
+                    .Include(p => p.IdPersonaNavigation)
+                        .ThenInclude(d => d.TbGrlDireccione)
+                            .ThenInclude(c => c.IdCiudadNavigation)
                     .Include(r => r.IdRolNavigation).First();
                 if (user == null)
                     throw new Exception("No se encuentra ningun usuario con esas credenciales");

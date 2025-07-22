@@ -17,6 +17,7 @@ namespace SistemaTienda.Utility
 
         SesionDTO MapeoUsuarioDtoASesionDto(TbSisUsuario usuarioTb);
         TbSisUsuario MapeoUsuarioCreacionDtoATbUsuario(UsuarioCreacionDTO usuarioCreacionDto);
+        List<UsuarioDTO> MapeoArrayUsuarioTbAUsuarioDto(IEnumerable<TbSisUsuario> usuariosListTb);
     }
     public class Mapeos : IMapeos
     {
@@ -115,13 +116,27 @@ namespace SistemaTienda.Utility
              };
          }*/
          public UsuarioDTO MapeoUsuarioTbAUsuarioDto(TbSisUsuario usuarioTb){
-             return new UsuarioDTO{
+
+
+             var usuarioDto =  new UsuarioDTO{
                  Id = usuarioTb.Id,
                  Apellidos = usuarioTb.IdPersonaNavigation.Apellidos,
                  Nombres = usuarioTb.IdPersonaNavigation.Nombres,
                  Identificacion = usuarioTb.IdPersonaNavigation.Identificacion,
                  NombreUsuario = usuarioTb.NombreUsuario,
+                 IdPersona = usuarioTb.IdPersona,
                  Mail = usuarioTb.IdPersonaNavigation.Mail,
+                 DireccionDto = new DireccionDTO
+                 {
+                     Id = usuarioTb.IdPersonaNavigation.TbGrlDireccione.Id,
+                     Ciudad = new CiudadDTO
+                     {
+                         Id = usuarioTb.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Id,
+                         Nombre = usuarioTb.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Nombre,
+                     },
+                     Descripcion = usuarioTb.IdPersonaNavigation.TbGrlDireccione.Descripcion,
+                     EstadoVisual = usuarioTb.IdPersonaNavigation.TbGrlDireccione.EstadoVisual,
+                 },
                  EstadoVisual = true,
                  Rol = new RolDTO
                  {
@@ -130,9 +145,15 @@ namespace SistemaTienda.Utility
                  },
                  Password = usuarioTb.Password,
              };
+
+            return usuarioDto;
          }
-        
-         public TbSisUsuario MapeoUsuarioCreacionDtoATbUsuario(UsuarioCreacionDTO usuarioCreacionDto) {
+
+        public List<UsuarioDTO> MapeoArrayUsuarioTbAUsuarioDto(IEnumerable<TbSisUsuario> usuariosListTb) {
+            return usuariosListTb.Select(u => this.MapeoUsuarioTbAUsuarioDto(u)).ToList();
+        }
+
+        public TbSisUsuario MapeoUsuarioCreacionDtoATbUsuario(UsuarioCreacionDTO usuarioCreacionDto) {
              return new TbSisUsuario
              {
                  IdPersona = usuarioCreacionDto.IdPersona,

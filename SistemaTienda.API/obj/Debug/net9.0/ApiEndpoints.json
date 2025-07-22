@@ -51,5 +51,31 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.UsuarioController",
+    "Method": "ListarUsuarioId",
+    "RelativePath": "api/Usuario/ListarUsuarioId",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "IdUsuario",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.UsuarioController",
+    "Method": "ListarUsuarios",
+    "RelativePath": "api/Usuario/ListarUsuarios",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   }
 ]
