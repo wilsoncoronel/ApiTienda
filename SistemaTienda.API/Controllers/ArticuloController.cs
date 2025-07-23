@@ -33,5 +33,23 @@ namespace SistemaTienda.API.Controllers
             }
             return Ok(resp);
         }
+
+        [HttpPut]
+        [Route("EditarArticulo")]
+        public async Task<ActionResult<int>> EditarArticulo([FromBody] ArticuloEdicionDTO articuloEdicionDto)
+        {
+            var resp = new Response<bool>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._articuloService.EditarArticulo(articuloEdicionDto);
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
     }
 }

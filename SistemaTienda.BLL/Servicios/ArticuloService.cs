@@ -1,4 +1,5 @@
-﻿using SistemaTienda.BLL.Servicios.Contrato;
+﻿using Microsoft.EntityFrameworkCore;
+using SistemaTienda.BLL.Servicios.Contrato;
 using SistemaTienda.DAL.DBContext;
 using SistemaTienda.DAL.Repositorios.Contrato;
 using SistemaTienda.DTO;
@@ -46,9 +47,37 @@ namespace SistemaTienda.BLL.Servicios
             throw new NotImplementedException();
         }
 
-        public Task<int> EditarArticulo(ArticuloDTO articuloEditarDto)
+        public async Task<bool> EditarArticulo(ArticuloEdicionDTO articuloEditarDto)
         {
-            throw new NotImplementedException();
+            try
+            {
+                DateTime fechaActualizacion = DateTime.Now;
+                var articuloTb = await this._articuloRepository.ListarId(a => a.Id == articuloEditarDto.Id);
+
+                if (articuloTb.Id == null)
+                    throw new Exception("No se pudo editar el articulo , no existen en la bd!!");
+                articuloTb.IdImpuesto = articuloEditarDto.IdImpuesto;
+                articuloTb.IdMarca = articuloEditarDto.IdMarca;
+                articuloTb.Nombre = articuloEditarDto.Nombre;
+                articuloTb.IdImpuesto = articuloEditarDto.IdImpuesto;
+                articuloTb.Codigo = articuloEditarDto.Codigo;
+                articuloTb.FechaActualizacion = fechaActualizacion;
+                articuloTb.Unidad = articuloEditarDto.Unidad;
+                articuloTb.UnidadValor = articuloEditarDto.UnidadValor;
+                articuloTb.ValorCompra = articuloEditarDto.ValorCompra;
+                articuloTb.ValorVenta = articuloEditarDto.ValorVenta;
+                articuloTb.Descripcion = articuloEditarDto.Descripcion;
+                articuloTb.Estado = articuloEditarDto.Estado;
+                articuloTb.FechaCaducidad = articuloEditarDto.FechaCaducidad;
+
+                var resp = await this._articuloRepository.Editar(articuloTb);
+                if (resp == false)
+                    throw new Exception("No se pudo editar el artículo");
+                return resp;
+            }
+            catch {
+                throw;
+            }
         }
 
         public Task<List<ArticuloDTO>> ListarUsuarios()
