@@ -11,7 +11,7 @@ namespace SistemaTienda.BLL.Servicios.Contrato
     {
         Task<int> CrearUsuario(UsuarioCreacionDTO userDto);
         Task<List<UsuarioDTO>> ListarUsuario();
-
         Task<UsuarioDTO> ListarUsuarioId(int idUsuario);
+        Task<int> EditarUsuario(UsuarioEditarDTO userEditarDto);
     }
 }

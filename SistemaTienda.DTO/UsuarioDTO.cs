@@ -21,5 +21,7 @@ namespace SistemaTienda.DTO
         public RolDTO Rol { get; set; }
         public int IdRol { get; set; }
         public DireccionDTO DireccionDto { get; set; }
+        public TipoIdentificacionDTO TipoIdentificacionDTO { get; set; }
+        public bool? Estado { get; set; }
     }
 }

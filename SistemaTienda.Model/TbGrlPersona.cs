@@ -17,9 +17,9 @@ public partial class TbGrlPersona
 
     public string Identificacion { get; set; } = null!;
 
-    public DateOnly? FechaCreacion { get; set; }
+    public DateTime? FechaCreacion { get; set; }
 
-    public DateOnly? FechaModificacion { get; set; }
+    public DateTime? FechaModificacion { get; set; }
 
     public virtual TbGrlTipoIdentificacion IdTipoIdentificacionNavigation { get; set; } = null!;
 

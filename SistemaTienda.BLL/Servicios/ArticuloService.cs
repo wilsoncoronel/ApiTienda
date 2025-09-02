@@ -42,9 +42,23 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
-        public Task<bool> DesactivarArticulo(int idArticulo)
+        public async Task<bool> DesactivarArticulo(int idArticulo)
         {
-            throw new NotImplementedException();
+            try
+            {
+                DateTime fechaActualizacion = DateTime.Now;
+                var articuloTb = await this._articuloRepository.ListarId(a => a.Id == idArticulo);
+                articuloTb.Estado = false;
+                articuloTb.FechaActualizacion = fechaActualizacion;
+                var resp = await this._articuloRepository.Editar(articuloTb);
+                if (resp == false)
+                    throw new Exception("No se pudo desactivar el artículo!!");
+                return resp;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public async Task<bool> EditarArticulo(ArticuloEdicionDTO articuloEditarDto)

@@ -49,7 +49,15 @@ namespace SistemaTienda.BLL.Servicios
         {
             var queryUsuarios = await this._usuarioRepository.Consultar();
             queryUsuarios.Include(p => p.IdPersonaNavigation)
-                .Include(r => r.IdRolNavigation).ToList();
+                    .ThenInclude(t => t.IdTipoIdentificacionNavigation)
+                .Include(p => p.IdPersonaNavigation)
+                    .ThenInclude(d => d.TbGrlDireccione)
+                .Include(p => p.IdPersonaNavigation)
+                .ThenInclude(d => d.TbGrlDireccione)
+                .ThenInclude(c => c.IdCiudadNavigation)
+                .Include(r => r.IdRolNavigation)
+                .ToList();
+            
             return this._mapper.MapeoArrayUsuarioTbAUsuarioDto(queryUsuarios);
         }
 
@@ -66,6 +74,32 @@ namespace SistemaTienda.BLL.Servicios
                             .ThenInclude(c => c.IdCiudadNavigation)
                     .Include(r => r.IdRolNavigation).First();
             return this._mapper.MapeoUsuarioTbAUsuarioDto(user);
+        }
+
+        public async Task<int> EditarUsuario(UsuarioEditarDTO userEditarDto)
+        {
+            using (var transaction = _tiendaDbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var usuarioDb = await this._tiendaDbContext.TbSisUsuarios.Include(p => p.IdPersonaNavigation)
+                        .ThenInclude(d => d.TbGrlDireccione)
+                            .ThenInclude(c => c.IdCiudadNavigation)
+                        .Include(r => r.IdRolNavigation)
+                            .FirstOrDefaultAsync(x => x.Id == userEditarDto.Id);
+                    if (usuarioDb.Id == null)
+                        throw new Exception("No se modificó el usuario con Id: " + userEditarDto.Id);
+                    this._mapper.MapeoUsuarioEdicionDtoATbUsuario(userEditarDto, usuarioDb);
+                    await this._usuarioRepository.Editar(usuarioDb);
+                    transaction.Commit();
+                    return usuarioDb.Id;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
     }
 }

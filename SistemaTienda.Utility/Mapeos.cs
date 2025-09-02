@@ -19,10 +19,11 @@ namespace SistemaTienda.Utility
         List<UsuarioDTO> MapeoArrayUsuarioTbAUsuarioDto(IEnumerable<TbSisUsuario> usuariosListTb);
         TbComArticulo MapeoArticuloCreacionDtoAArticuloTb(ArticuloCreacionDTO articuloCreacionDto);
         TbComArticulo MapeoArticuloDtoAArticuloTb(ArticuloDTO articuloDto);
+        void MapeoUsuarioEdicionDtoATbUsuario(UsuarioEditarDTO usuarioEditarDTO, TbSisUsuario usuarioTb);
     }
     public class Mapeos : IMapeos
     {
-
+        private DateTime FechaGrl = DateTime.Now;
         public TbComArticulo MapeoArticuloCreacionDtoAArticuloTb(ArticuloCreacionDTO articuloCreacionDto){
             var articuloTb = new TbComArticulo {
                 Codigo = articuloCreacionDto.Codigo,
@@ -175,14 +176,17 @@ namespace SistemaTienda.Utility
                  NombreUsuario = usuarioTb.NombreUsuario,
                  IdPersona = usuarioTb.IdPersona,
                  Mail = usuarioTb.IdPersonaNavigation.Mail,
+                 Estado = usuarioTb.Estado,
                  DireccionDto = new DireccionDTO
                  {
                      Id = usuarioTb.IdPersonaNavigation.TbGrlDireccione.Id,
+                     IdPersona = usuarioTb.IdPersona,
                      Ciudad = new CiudadDTO
                      {
                          Id = usuarioTb.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Id,
                          Nombre = usuarioTb.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Nombre,
                      },
+                     IdCiudad = usuarioTb.IdPersonaNavigation.TbGrlDireccione.IdCiudad,
                      Descripcion = usuarioTb.IdPersonaNavigation.TbGrlDireccione.Descripcion,
                      EstadoVisual = usuarioTb.IdPersonaNavigation.TbGrlDireccione.EstadoVisual,
                  },
@@ -193,6 +197,11 @@ namespace SistemaTienda.Utility
                      Nombre = usuarioTb.IdRolNavigation.Nombre,
                  },
                  Password = usuarioTb.Password,
+                 TipoIdentificacionDTO = new TipoIdentificacionDTO
+                 {
+                     Id = usuarioTb.IdPersonaNavigation.IdTipoIdentificacionNavigation.Id,
+                     Nombre = usuarioTb.IdPersonaNavigation.IdTipoIdentificacionNavigation.Nombre,
+                 } 
              };
 
             return usuarioDto;
@@ -203,30 +212,62 @@ namespace SistemaTienda.Utility
         }
 
         public TbSisUsuario MapeoUsuarioCreacionDtoATbUsuario(UsuarioCreacionDTO usuarioCreacionDto) {
-             return new TbSisUsuario
-             {
-                 IdPersona = usuarioCreacionDto.IdPersona,
-                 NombreUsuario = usuarioCreacionDto.NombreUsuario,
-                 IdPersonaNavigation = new TbGrlPersona
-                 {
-                     Apellidos = usuarioCreacionDto.Apellidos,
-                     Nombres = usuarioCreacionDto.Nombres,
-                     Identificacion = usuarioCreacionDto.Identificacion,
+            return new TbSisUsuario
+            {
+                IdPersona = usuarioCreacionDto.IdPersona,
+                NombreUsuario = usuarioCreacionDto.NombreUsuario,
+                Estado = usuarioCreacionDto.Estado,
+              
+                IdPersonaNavigation = new TbGrlPersona
+                {
+                    Apellidos = usuarioCreacionDto.Apellidos,
+                    Nombres = usuarioCreacionDto.Nombres,
+                    Identificacion = usuarioCreacionDto.Identificacion,
+                    FechaCreacion = FechaGrl,
                      Mail = usuarioCreacionDto.Mail,
-                     TbGrlDireccione = new TbGrlDirecciones
-                     {
+                    TbGrlDireccione = new TbGrlDirecciones
+                    {
 
-                         IdCiudad = usuarioCreacionDto.DireccionCreacionDTO.IdCiudad,
-                         EstadoVisual = true,
-                         Descripcion = usuarioCreacionDto.DireccionCreacionDTO.Descripcion,
-                     },
-                     IdTipoIdentificacion = usuarioCreacionDto.IdTipoIdentificacion,
-                     
-                 },
-                 Password = usuarioCreacionDto.Password,
-                 IdRol = usuarioCreacionDto.IdRol,
-             };
+                        IdCiudad = usuarioCreacionDto.DireccionCreacionDTO.IdCiudad,
+                        EstadoVisual = true,
+                        Descripcion = usuarioCreacionDto.DireccionCreacionDTO.Descripcion,
+                    },
+                    IdTipoIdentificacion = usuarioCreacionDto.IdTipoIdentificacion,
+
+                },
+                Password = usuarioCreacionDto.Password,
+                IdRol = usuarioCreacionDto.IdRol,
+            };
          }
+
+        public void MapeoUsuarioEdicionDtoATbUsuario(UsuarioEditarDTO usuarioEditarDTO, TbSisUsuario usuarioTb)
+        {
+            usuarioTb.NombreUsuario = usuarioEditarDTO.NombreUsuario;
+            usuarioTb.Estado = usuarioEditarDTO.Estado;
+            usuarioTb.IdPersona = usuarioEditarDTO.IdPersona;
+
+            // ⚡️ actualizar sobre la entidad ya existente
+            if (usuarioTb.IdPersonaNavigation != null)
+            {
+                usuarioTb.IdPersonaNavigation.Apellidos = usuarioEditarDTO.Apellidos;
+                usuarioTb.IdPersonaNavigation.Nombres = usuarioEditarDTO.Nombres;
+                usuarioTb.IdPersonaNavigation.Identificacion = usuarioEditarDTO.Identificacion;
+                usuarioTb.IdPersonaNavigation.Mail = usuarioEditarDTO.Mail;
+                usuarioTb.IdPersonaNavigation.FechaModificacion = FechaGrl;
+                usuarioTb.IdPersonaNavigation.IdTipoIdentificacion = usuarioEditarDTO.IdTipoIdentificacion;
+
+                // actualizar dirección
+                if (usuarioTb.IdPersonaNavigation.TbGrlDireccione != null)
+                {
+                    usuarioTb.IdPersonaNavigation.TbGrlDireccione.IdCiudad = usuarioEditarDTO.DireccionEdicionDto.IdCiudad;
+                    usuarioTb.IdPersonaNavigation.TbGrlDireccione.EstadoVisual = true;
+                    usuarioTb.IdPersonaNavigation.TbGrlDireccione.Descripcion = usuarioEditarDTO.DireccionEdicionDto.Descripcion;
+                }
+            }
+
+            usuarioTb.Password = usuarioEditarDTO.Password;
+            usuarioTb.IdRol = usuarioEditarDTO.IdRol;
+        }
         /*
          public TbVenDetalleVenta MapeoDetalleVentaCreacionDtoADetalleVenta(DetalleVentaCreacionDTO detalleVentaCreacionDto) {
              return new TbVenDetalleVenta

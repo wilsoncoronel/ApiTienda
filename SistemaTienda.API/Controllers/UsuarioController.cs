@@ -71,5 +71,23 @@ namespace SistemaTienda.API.Controllers
             }
             return Ok(resp);
         }
+
+        [HttpPut]
+        [Route("EditarUsuario")]
+        public async Task<IActionResult> EditarUsuario([FromBody] UsuarioEditarDTO usuarioEditarDto)
+        {
+            var resp = new Response<int>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._usuarioService.EditarUsuario(usuarioEditarDto);
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
     }
 }

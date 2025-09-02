@@ -51,5 +51,23 @@ namespace SistemaTienda.API.Controllers
             }
             return Ok(resp);
         }
+
+        [HttpPut]
+        [Route("DesactivarArticulo")]
+        public async Task<ActionResult<bool>> DesactivarArticulo([FromBody] int idArticulo)
+        {
+            var resp = new Response<bool>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._articuloService.DesactivarArticulo(idArticulo);
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
     }
 }

@@ -174,3 +174,4 @@ C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\Sistema
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\SistemaTienda.API.genruntimeconfig.cache
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\ref\SistemaTienda.API.dll
 C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\SistemaTienda.API.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\DOOMSLAYER\Desktop\ApiTienda\SistemaTienda.API\bin\Debug\net9.0\Scalar.AspNetCore.dll

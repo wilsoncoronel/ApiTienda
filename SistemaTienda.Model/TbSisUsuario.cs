@@ -15,6 +15,8 @@ public partial class TbSisUsuario
 
     public string Password { get; set; } = null!;
 
+    public bool? Estado { get; set; }
+
     public virtual TbGrlPersona IdPersonaNavigation { get; set; } = null!;
 
     public virtual TbSisRol IdRolNavigation { get; set; } = null!;

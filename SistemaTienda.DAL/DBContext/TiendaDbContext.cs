@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using SistemaTienda.Model;
 
 namespace SistemaTienda.DAL.DBContext;
-
 public partial class TiendaDbContext : DbContext
 {
     public TiendaDbContext()
@@ -69,7 +68,6 @@ public partial class TiendaDbContext : DbContext
     public virtual DbSet<TbVenta> TbVentas { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<TbComArticulo>(entity =>
@@ -223,6 +221,8 @@ public partial class TiendaDbContext : DbContext
         modelBuilder.Entity<TbGrlPersona>(entity =>
         {
             entity.Property(e => e.Apellidos).HasMaxLength(500);
+            entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+            entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
             entity.Property(e => e.Identificacion)
                 .HasMaxLength(15)
                 .IsFixedLength();

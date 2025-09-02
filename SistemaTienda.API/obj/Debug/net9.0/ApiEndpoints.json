@@ -27,6 +27,32 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
+    "Method": "DesactivarArticulo",
+    "RelativePath": "api/Articulo/DesactivarArticulo",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idArticulo",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Boolean",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
     "Method": "EditarArticulo",
     "RelativePath": "api/Articulo/EditarArticulo",
     "HttpMethod": "PUT",
@@ -99,6 +125,22 @@
       {
         "Name": "usuario",
         "Type": "SistemaTienda.DTO.UsuarioCreacionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.UsuarioController",
+    "Method": "EditarUsuario",
+    "RelativePath": "api/Usuario/EditarUsuario",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "usuarioEditarDto",
+        "Type": "SistemaTienda.DTO.UsuarioEditarDTO",
         "IsRequired": true
       }
     ],
