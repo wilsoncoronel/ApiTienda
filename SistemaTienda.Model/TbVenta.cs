@@ -15,9 +15,11 @@ public partial class TbVenta
 
     public string? Documento { get; set; }
 
-    public DateOnly? FechaVenta { get; set; }
+    public DateTime? FechaVenta { get; set; }
 
-    public DateOnly? FechaCreacion { get; set; }
+    public DateTime? FechaCreacion { get; set; }
+
+    public DateTime? FechaModificacion { get; set; }
 
     public decimal? ValorIva { get; set; }
 

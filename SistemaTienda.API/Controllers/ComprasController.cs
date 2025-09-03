@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SistemaTienda.API.Utilidad;
+using SistemaTienda.BLL.Servicios.Contrato;
 using SistemaTienda.DTO;
 
 namespace SistemaTienda.API.Controllers
@@ -8,17 +9,24 @@ namespace SistemaTienda.API.Controllers
     [ApiController]
     public class ComprasController : ControllerBase
     {
+        private readonly ICompraServicio _compraService;
+        public ComprasController(ICompraServicio compraService )
+        {
+            this._compraService = compraService;
+        }
         [HttpPost]
         [Route("RegistrarCompra")]
-        public async Task<IActionResult> RegistrarCompra(VentaCreacionDTO ventaCreacionDto)
+        public async Task<IActionResult> RegistrarCompra(CompraCreacionDTO compraCreacionDto)
         {
+           
             var resp = new Response<int>();
             try
             {
                 // Aquí iría la lógica para registrar la compra utilizando un servicio
                 // Por ejemplo: resp.Value = await this._compraService.RegistrarCompra(ventaCreacionDto);
+                
                 resp.status = true;
-                resp.Value = 1; // Simulación de ID de compra registrada
+                resp.Value = await this._compraService.RegistrarCompra(compraCreacionDto); // Simulación de ID de compra registrada
             }
             catch
             {

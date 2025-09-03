@@ -68,6 +68,7 @@ public partial class TiendaDbContext : DbContext
     public virtual DbSet<TbVenta> TbVentas { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<TbComArticulo>(entity =>
@@ -181,6 +182,9 @@ public partial class TiendaDbContext : DbContext
         modelBuilder.Entity<TbCompra>(entity =>
         {
             entity.Property(e => e.Documento).HasMaxLength(50);
+            entity.Property(e => e.FechaCompra).HasColumnType("datetime");
+            entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+            entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
             entity.Property(e => e.SubTotal).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.Total).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.ValorIva).HasColumnType("numeric(18, 4)");
@@ -291,6 +295,9 @@ public partial class TiendaDbContext : DbContext
         modelBuilder.Entity<TbPedidos>(entity =>
         {
             entity.Property(e => e.Descripcion).HasMaxLength(500);
+            entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+            entity.Property(e => e.FechaEntrega).HasColumnType("datetime");
+            entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
             entity.HasOne(d => d.IdEstadoPedidoNavigation).WithMany(p => p.TbPedidos)
                 .HasForeignKey(d => d.IdEstadoPedido)
@@ -382,6 +389,9 @@ public partial class TiendaDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK_TbVenta");
 
             entity.Property(e => e.Documento).HasMaxLength(50);
+            entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+            entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+            entity.Property(e => e.FechaVenta).HasColumnType("datetime");
             entity.Property(e => e.SubTotal).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.Total).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.ValorIva).HasColumnType("numeric(18, 4)");

@@ -15,9 +15,11 @@ public partial class TbCompra
 
     public string Documento { get; set; } = null!;
 
-    public DateOnly FechaCompra { get; set; }
+    public DateTime FechaCompra { get; set; }
 
-    public DateOnly FechaCreacion { get; set; }
+    public DateTime FechaCreacion { get; set; }
+
+    public DateTime? FechaModificacion { get; set; }
 
     public bool EstadoVisual { get; set; }
 

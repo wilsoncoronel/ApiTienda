@@ -1,0 +1,19 @@
+﻿using SistemaTienda.DTO;
+using SistemaTienda.Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SistemaTienda.BLL.Servicios.Contrato
+{
+    public interface ICompraServicio
+    {
+        Task<int> RegistrarCompra(CompraCreacionDTO compraDto);
+        Task<bool> EditarCompra(CompraEditarDTO compraDto);
+        Task<List<CompraDTO>> ListarCompras();
+        Task<CompraDTO> ObtenerCompra(int idCompra);
+        Task<bool> ReversarCompra(int id);
+    }
+}

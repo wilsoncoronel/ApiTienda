@@ -78,6 +78,22 @@
     ]
   },
   {
+    "ContainingType": "SistemaTienda.API.Controllers.ComprasController",
+    "Method": "RegistrarCompra",
+    "RelativePath": "api/Compras/RegistrarCompra",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "compraCreacionDto",
+        "Type": "SistemaTienda.DTO.CompraCreacionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaTienda.API.Controllers.LoginController",
     "Method": "Loggin",
     "RelativePath": "api/Login/IniciarSesion",
@@ -110,6 +126,22 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ProveedorController",
+    "Method": "CrearProveedor",
+    "RelativePath": "api/Proveedor/CrearProveedor",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "proveedor",
+        "Type": "SistemaTienda.DTO.ProveedorCreacionDTO",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []

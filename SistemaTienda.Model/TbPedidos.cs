@@ -15,7 +15,11 @@ public partial class TbPedidos
 
     public string? Descripcion { get; set; }
 
-    public DateOnly FechaEntrega { get; set; }
+    public DateTime FechaEntrega { get; set; }
+
+    public DateTime? FechaCreacion { get; set; }
+
+    public DateTime? FechaModificacion { get; set; }
 
     public bool Estado { get; set; }
 

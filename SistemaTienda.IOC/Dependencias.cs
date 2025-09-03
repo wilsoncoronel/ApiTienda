@@ -28,6 +28,7 @@ namespace SistemaTienda.IOC
             services.AddTransient<ILogginService, LogginService>();
             services.AddTransient<IUsuarioService, UsuarioService>();
             services.AddTransient<IArticuloService, ArticuloService>();
+            services.AddTransient<IProveedorService, ProveedorService>();
         }
     }
 }

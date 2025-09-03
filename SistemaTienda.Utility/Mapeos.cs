@@ -20,6 +20,10 @@ namespace SistemaTienda.Utility
         TbComArticulo MapeoArticuloCreacionDtoAArticuloTb(ArticuloCreacionDTO articuloCreacionDto);
         TbComArticulo MapeoArticuloDtoAArticuloTb(ArticuloDTO articuloDto);
         void MapeoUsuarioEdicionDtoATbUsuario(UsuarioEditarDTO usuarioEditarDTO, TbSisUsuario usuarioTb);
+        TbCompra MapeoCompraCreacionDtoACompraTb(CompraCreacionDTO compraCreacionDto);
+        TbComDetallesCompra MapeoDetalleCompraCreacionDtoADetalleCompraDto(DetalleCompraCreacionDTO detalleComraCreacionDto);
+
+        TbComProveedores MapeoProveedorDtoAProveedorTb(ProveedorCreacionDTO provedorCreacion);
     }
     public class Mapeos : IMapeos
     {
@@ -268,6 +272,26 @@ namespace SistemaTienda.Utility
             usuarioTb.Password = usuarioEditarDTO.Password;
             usuarioTb.IdRol = usuarioEditarDTO.IdRol;
         }
+
+        public TbVenDetalleVenta MapeoDetalleVentaCreacionDtoADetalleVenta(DetalleVentaCreacionDTO detalleVentaCreacionDto)
+        {
+            return new TbVenDetalleVenta
+            {
+                IdArticulo = detalleVentaCreacionDto.ArticuloId,
+                Cantidad = detalleVentaCreacionDto.Cantidad,
+                Descripcion = detalleVentaCreacionDto.Descripcion,
+                ImpuestoValor = detalleVentaCreacionDto.ImpuestoValor,
+                ValorCompra = detalleVentaCreacionDto.ValorCompra,
+                ValorTotal = detalleVentaCreacionDto.ValorTotal,
+                IdVenta = detalleVentaCreacionDto.IdVenta,
+            };
+        }
+
+        public TbVenta MapeoVentaAVentaCreacion(VentaCreacionDTO ventaCreacionDto)
+        {
+            throw new NotImplementedException();
+        }
+
         /*
          public TbVenDetalleVenta MapeoDetalleVentaCreacionDtoADetalleVenta(DetalleVentaCreacionDTO detalleVentaCreacionDto) {
              return new TbVenDetalleVenta
@@ -311,16 +335,63 @@ namespace SistemaTienda.Utility
                  ValorIva = ventaCreacionDto.ValorIva,
              };
          }*/
-        public TbVenDetalleVenta MapeoDetalleVentaCreacionDtoADetalleVenta(DetalleVentaCreacionDTO detalleVentaCreacionDto)
+        public TbCompra MapeoCompraCreacionDtoACompraTb(CompraCreacionDTO compraCreacionDto)
         {
-            throw new NotImplementedException();
+            return new TbCompra
+            {
+                IdProveedor = compraCreacionDto.IdProveedor,
+                Documento = compraCreacionDto.Documento,
+                IdEstadoCompra = compraCreacionDto.IdEstado,
+                EstadoVisual = true,
+                SubTotal = compraCreacionDto.SubTotal,
+                Total = compraCreacionDto.Total,
+                IdUsuarioCreador = compraCreacionDto.IdUsuarioCreador,
+                TbComDetallesCompras = compraCreacionDto.DetalleComprasCreacionDto.Select(this.MapeoDetalleCompraCreacionDtoADetalleCompraDto).ToList(),
+                FechaCreacion = FechaGrl,
+                FechaCompra = FechaGrl,
+                ValorIva = compraCreacionDto.ValorIva,
+            };
         }
 
-        
-
-        public TbVenta MapeoVentaAVentaCreacion(VentaCreacionDTO ventaCreacionDto)
+        public TbComDetallesCompra MapeoDetalleCompraCreacionDtoADetalleCompraDto(DetalleCompraCreacionDTO detalleComraCreacionDto)
         {
-            throw new NotImplementedException();
+            return new TbComDetallesCompra
+            {
+                IdArticulo = detalleComraCreacionDto.ArticuloId,
+                Cantidad = detalleComraCreacionDto.Cantidad,
+                Descripcion = detalleComraCreacionDto.Descripcion,
+                ImpuestoValor = detalleComraCreacionDto.ImpuestoValor,
+                ValorCompra = detalleComraCreacionDto.ValorCompra,
+                ValorTotal = detalleComraCreacionDto.ValorTotal,
+            };
+
+        }
+
+        public TbComProveedores MapeoProveedorDtoAProveedorTb(ProveedorCreacionDTO provedorCreacion)
+        {
+            return new TbComProveedores
+            {
+               
+                Descripcion = provedorCreacion.Descripcion,
+                Estado = true,
+                EstadoVisual = true,
+                IdPersonaNavigation = new TbGrlPersona
+                {
+                    Apellidos = provedorCreacion.Apellidos,
+                    Nombres = provedorCreacion.Nombres,
+                    Identificacion = provedorCreacion.Identificacion,
+                    FechaCreacion = FechaGrl,
+                    Mail = provedorCreacion.Mail,
+                    TbGrlDireccione = new TbGrlDirecciones
+                    {
+                        IdCiudad = provedorCreacion.DireccionCreacionDto.IdCiudad,
+                        EstadoVisual = true,
+                        Descripcion = provedorCreacion.DireccionCreacionDto.Descripcion,
+                    },
+                    IdTipoIdentificacion = 1,
+                },
+                RazonSocial = provedorCreacion.RazonSocial,
+            };
         }
     }
 }

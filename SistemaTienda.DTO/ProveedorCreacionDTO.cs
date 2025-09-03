@@ -16,5 +16,7 @@ namespace SistemaTienda.DTO
         public bool EstadoVisual { get; set; }
         public string RazonSocial { get; set; }
         public string Descripcion { get; set; }
+        public bool Estado { get; set; }
+        public DireccionCreacionDTO DireccionCreacionDto { get; set; }
     }
 }
