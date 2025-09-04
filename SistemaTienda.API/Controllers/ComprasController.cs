@@ -35,5 +35,27 @@ namespace SistemaTienda.API.Controllers
             }
             return Ok(resp);
         }
+
+        [HttpPost]
+        [Route("EditarCompra")]
+        public async Task<IActionResult> EditarCompra(CompraEditarDTO compraEditarDto)
+        {
+
+            var resp = new Response<bool>();
+            try
+            {
+                // Aquí iría la lógica para registrar la compra utilizando un servicio
+                // Por ejemplo: resp.Value = await this._compraService.RegistrarCompra(ventaCreacionDto);
+
+                resp.status = true;
+                resp.Value = await this._compraService.EditarCompra(compraEditarDto); // Simulación de ID de compra registrada
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
     }
 }

@@ -79,6 +79,22 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ComprasController",
+    "Method": "EditarCompra",
+    "RelativePath": "api/Compras/EditarCompra",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "compraEditarDto",
+        "Type": "SistemaTienda.DTO.CompraEditarDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ComprasController",
     "Method": "RegistrarCompra",
     "RelativePath": "api/Compras/RegistrarCompra",
     "HttpMethod": "POST",
@@ -141,6 +157,22 @@
       {
         "Name": "proveedor",
         "Type": "SistemaTienda.DTO.ProveedorCreacionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ProveedorController",
+    "Method": "EditarProveedor",
+    "RelativePath": "api/Proveedor/EditarProveedor",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "proveedor",
+        "Type": "SistemaTienda.DTO.ProveedorEditarDTO",
         "IsRequired": true
       }
     ],

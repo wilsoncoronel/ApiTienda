@@ -1,4 +1,5 @@
-﻿using SistemaTienda.BLL.Servicios.Contrato;
+﻿using Microsoft.EntityFrameworkCore;
+using SistemaTienda.BLL.Servicios.Contrato;
 using SistemaTienda.DAL.DBContext;
 using SistemaTienda.DAL.Repositorios.Contrato;
 using SistemaTienda.DTO;
@@ -6,6 +7,7 @@ using SistemaTienda.Model;
 using SistemaTienda.Utility;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,6 +44,35 @@ namespace SistemaTienda.BLL.Servicios
                 {
                     transaccion.Rollback();
                     throw new Exception("Error ha ocurrido un error creando el proveedor, comuniquese con el administrador del sistema!!!");
+                }
+            }
+        }
+
+        public async Task<bool> EditarProveedor(ProveedorEditarDTO proveedorEditarDto)
+        {
+            using (var transaction = _tiendaDbContext.Database.BeginTransaction())
+            {
+                try
+                {
+
+                    var proveedor = await this._tiendaDbContext.TbComProveedores
+                        .Include(p => p.IdPersonaNavigation)
+                        .ThenInclude(t => t.IdTipoIdentificacionNavigation)
+                        .Include(p => p.IdPersonaNavigation)
+                        .ThenInclude(d => d.TbGrlDireccione)
+                        .ThenInclude(c => c.IdCiudadNavigation)
+                        .FirstOrDefaultAsync(p => p.Id == proveedorEditarDto.Id);
+                    this.mapper.MapeoProveedorEditarDtoAProveedorTb(proveedorEditarDto, proveedor);
+                    var resp = await this._proveedorRepository.Editar(proveedor);
+                    if (resp == false)
+                        throw new Exception("No se pudo editar el proveedor");
+                    transaction.Commit();
+                    return resp;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw new Exception("Ha ocurrido un error editando el proveedor, comuníquese con el administrador del sistema!!!");
                 }
             }
         }

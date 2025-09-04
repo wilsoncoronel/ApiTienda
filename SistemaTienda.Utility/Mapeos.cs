@@ -24,6 +24,8 @@ namespace SistemaTienda.Utility
         TbComDetallesCompra MapeoDetalleCompraCreacionDtoADetalleCompraDto(DetalleCompraCreacionDTO detalleComraCreacionDto);
 
         TbComProveedores MapeoProveedorDtoAProveedorTb(ProveedorCreacionDTO provedorCreacion);
+        void MapeoProveedorEditarDtoAProveedorTb(ProveedorEditarDTO provedorEditar, TbComProveedores proveedoresTb);
+        void MapeoCompraEdicionDtoACompraTb(CompraEditarDTO compraEditarDto, TbCompra compraTb);
     }
     public class Mapeos : IMapeos
     {
@@ -348,7 +350,7 @@ namespace SistemaTienda.Utility
                 IdUsuarioCreador = compraCreacionDto.IdUsuarioCreador,
                 TbComDetallesCompras = compraCreacionDto.DetalleComprasCreacionDto.Select(this.MapeoDetalleCompraCreacionDtoADetalleCompraDto).ToList(),
                 FechaCreacion = FechaGrl,
-                FechaCompra = FechaGrl,
+                FechaCompra = compraCreacionDto.FechaCompra,
                 ValorIva = compraCreacionDto.ValorIva,
             };
         }
@@ -388,10 +390,46 @@ namespace SistemaTienda.Utility
                         EstadoVisual = true,
                         Descripcion = provedorCreacion.DireccionCreacionDto.Descripcion,
                     },
-                    IdTipoIdentificacion = 1,
+                    IdTipoIdentificacion = provedorCreacion.IdIdentificacion,
                 },
                 RazonSocial = provedorCreacion.RazonSocial,
             };
+        }
+
+        public void MapeoProveedorEditarDtoAProveedorTb(ProveedorEditarDTO provedorEditar, TbComProveedores proveedoresTb)
+        {
+            proveedoresTb.Estado = provedorEditar.Estado;
+            proveedoresTb.RazonSocial = provedorEditar.RazonSocial;
+            proveedoresTb.Descripcion = provedorEditar.Descripcion;
+            // ⚡️ actualizar sobre la entidad ya existente
+            if (proveedoresTb.IdPersonaNavigation != null)
+            {
+                proveedoresTb.IdPersonaNavigation.Apellidos = provedorEditar.Apellidos;
+                proveedoresTb.IdPersonaNavigation.Nombres = provedorEditar.Nombres;
+                proveedoresTb.IdPersonaNavigation.Identificacion = provedorEditar.Identificacion;
+                proveedoresTb.IdPersonaNavigation.Mail = provedorEditar.Mail;
+                proveedoresTb.IdPersonaNavigation.FechaModificacion = FechaGrl;
+                proveedoresTb.IdPersonaNavigation.IdTipoIdentificacion = provedorEditar.IdIdentificacion;
+                // actualizar dirección
+                if (proveedoresTb.IdPersonaNavigation.TbGrlDireccione != null)
+                {
+                    proveedoresTb.IdPersonaNavigation.TbGrlDireccione.IdCiudad = provedorEditar.DireccionEdicionDto.IdCiudad;
+                    proveedoresTb.IdPersonaNavigation.TbGrlDireccione.EstadoVisual = true;
+                    proveedoresTb.IdPersonaNavigation.TbGrlDireccione.Descripcion = provedorEditar.DireccionEdicionDto.Descripcion;
+                }
+            }
+        }
+
+        public void MapeoCompraEdicionDtoACompraTb(CompraEditarDTO compraEditarDto, TbCompra compraTb)
+        {
+            compraTb.FechaModificacion = FechaGrl;
+            compraTb.IdEstadoCompra = compraEditarDto.IdEstado;
+            compraTb.Documento = compraEditarDto.Documento;
+            compraTb.SubTotal = compraEditarDto.SubTotal;
+            compraTb.ValorIva = compraEditarDto.ValorIva;
+            compraTb.Total = compraEditarDto.Total;
+            compraTb.FechaModificacion = FechaGrl;
+            
         }
     }
 }

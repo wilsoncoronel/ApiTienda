@@ -1,4 +1,5 @@
-﻿using SistemaTienda.BLL.Servicios.Contrato;
+﻿using Microsoft.EntityFrameworkCore;
+using SistemaTienda.BLL.Servicios.Contrato;
 using SistemaTienda.DAL.DBContext;
 using SistemaTienda.DAL.Repositorios.Contrato;
 using SistemaTienda.DTO;
@@ -26,14 +27,74 @@ namespace SistemaTienda.BLL.Servicios
             _mapper = mapper;
         }
 
-        public Task<bool> EditarCompra(CompraEditarDTO compraDto)
+        public async Task<bool> EditarCompra(CompraEditarDTO compraDto)
         {
-            throw new NotImplementedException();
+            using (var transaction = _tiendaDbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var tbCompra = await this._tiendaDbContext.TbCompras.Include(c => c.IdEstadoCompraNavigation)
+                        .Include(d => d.TbComDetallesCompras)
+                        .FirstOrDefaultAsync(c => c.Id == compraDto.Id);
+                    var idsDto = compraDto.DetalleComprasEditarDto.Select(x => x.Id).ToList();
+                    var eliminados = tbCompra.TbComDetallesCompras
+                        .Where(x => !idsDto.Contains(x.Id)).ToList();
+
+                    foreach(var e in eliminados)
+                    {
+                        _tiendaDbContext.TbComDetallesCompras.Remove(e);
+                    }
+
+                    foreach (var detDto in compraDto.DetalleComprasEditarDto)
+                    {
+                        var existente = tbCompra.TbComDetallesCompras.FirstOrDefault(x => x.Id == detDto.Id);
+                        if (existente != null)
+                        {
+                            // actualizar
+                            existente.IdArticulo = detDto.ArticuloId;
+                            existente.Cantidad = detDto.Cantidad;
+                            existente.Descripcion = detDto.Descripcion;
+                            existente.ImpuestoValor = detDto.ImpuestoValor;
+                            existente.ValorCompra = detDto.ValorCompra;
+                            existente.ValorTotal = detDto.ValorTotal;
+                        }
+                        else
+                        {
+                            // nuevo
+                            tbCompra.TbComDetallesCompras.Add(new TbComDetallesCompra
+                            {
+                                IdArticulo = detDto.ArticuloId,
+                                Cantidad = detDto.Cantidad,
+                                Descripcion = detDto.Descripcion,
+                                ImpuestoValor = detDto.ImpuestoValor,
+                                ValorCompra = detDto.ValorCompra,
+                                ValorTotal = detDto.ValorTotal
+                            });
+                        }
+                    }
+                    this._mapper.MapeoCompraEdicionDtoACompraTb(compraDto, tbCompra);
+                    var resp = await this._compraRepository.Editar(tbCompra);
+                    if (resp == false)
+                        throw new Exception("No se pudo editar la compra!!!");
+                    transaction.Commit();
+                    return resp;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
 
-        public Task<List<CompraDTO>> ListarCompras()
+        public async Task<List<CompraDTO>> ListarCompras(DateOnly fechaInicial, DateOnly fechaFinal)
         {
-            throw new NotImplementedException();
+            try {
+                var tbCompras = await this._compraRepository.Consultar(c => c.FechaCompra >= Convert.ToDateTime(fechaInicial) && c.FechaCompra <= Convert.ToDateTime(fechaFinal));
+            }
+            catch { 
+                throw;
+            }
         }
 
         public Task<CompraDTO> ObtenerCompra(int idCompra)

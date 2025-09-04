@@ -34,5 +34,25 @@ namespace SistemaTienda.API.Controllers
             }
             return Ok(resp);
         }
+
+        [HttpPut]
+        [Route("EditarProveedor")]
+        public async Task<IActionResult> EditarProveedor([FromBody] ProveedorEditarDTO proveedor)
+        {
+            var resp = new Response<bool>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this.proveedorService.EditarProveedor(proveedor);
+                resp.msg = "Proveedor editado exitosamente";
+            }
+            catch
+            {
+                resp.status = false;
+                resp.msg = "Error al crear el proveedor, comuniquese con el administrador del sistema!!!";
+                throw;
+            }
+            return Ok(resp);
+        }
     }
 }

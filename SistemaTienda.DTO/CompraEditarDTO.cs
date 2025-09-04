@@ -12,13 +12,13 @@ namespace SistemaTienda.DTO
         public int IdProveedor { get; set; }
         public string Documento { get; set; }
         public DateTime FechaCompra { get; set; }
-        public DateTime FechaCreacion { get; set; }
+        public DateTime FechaModificacion { get; set; }
         public int IdEstado { get; set; }
         public bool EstadoVisual { get; set; }
-        public List<DetalleCompraCreacionDTO> DetalleComprasCreacionDto { get; set; } = [];
-        public double ValorIva { get; set; }
-        public double SubTotal { get; set; }
-        public double Total { get; set; }
+        public List<DetalleCompraEditarDTO> DetalleComprasEditarDto { get; set; } = [];
+        public decimal ValorIva { get; set; }
+        public decimal SubTotal { get; set; }
+        public decimal Total { get; set; }
         public int IdUsuarioCreador { get; set; }
     }
 }
