@@ -76,5 +76,25 @@ namespace SistemaTienda.API.Controllers
             }
             return Ok(resp);
         }
+
+
+        [HttpGet]
+        [Route("ObtenerCompra")]
+        public async Task<IActionResult> ObtenerCompra(int idCompra)
+        {
+
+            var resp = new Response<CompraDTO>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._compraService.ObtenerCompra(idCompra);
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
     }
 }

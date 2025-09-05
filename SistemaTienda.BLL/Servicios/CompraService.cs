@@ -111,9 +111,37 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
-        public Task<CompraDTO> ObtenerCompra(int idCompra)
-        {
-            throw new NotImplementedException();
+        public async Task<CompraDTO> ObtenerCompra(int idCompra)
+        {   
+            try
+            {
+                TbCompra tbCompra = await this._tiendaDbContext.TbCompras
+                    .Include(u => u.IdUsuarioCreadorNavigation)
+                    .ThenInclude(p => p.IdPersonaNavigation)
+                    .ThenInclude(id => id.IdTipoIdentificacionNavigation)
+                    .Include(prov => prov.IdProveedorNavigation)
+                    .ThenInclude(per => per.IdPersonaNavigation)
+                    .Include(est => est.IdEstadoCompraNavigation)
+                    .Include(det => det.TbComDetallesCompras)
+                    .ThenInclude(art => art.IdArticuloNavigation)
+                    .ThenInclude(imp => imp.IdImpuestoNavigation)
+                    .Include(det => det.TbComDetallesCompras)
+                    .ThenInclude(art=> art.IdArticuloNavigation)
+                    .ThenInclude(mar => mar.IdMarcaNavigation)
+                    .Include(det => det.TbComDetallesCompras)
+                    .ThenInclude(art => art.IdArticuloNavigation)
+                    .ThenInclude(tp => tp.IdTipoArticuloNavigation)
+                    .FirstOrDefaultAsync(c => c.Id == idCompra);
+
+                if (tbCompra == null)
+                    throw new Exception("No se encontró la compra");
+                
+                var compraDto = this._mapper.MapeoCompraTbACompraCompletaDto(tbCompra);
+                return compraDto;
+            }
+            catch {
+                throw;
+            }
         }
 
         public async Task<int> RegistrarCompra(CompraCreacionDTO compraDto)

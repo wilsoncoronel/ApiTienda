@@ -28,6 +28,7 @@ namespace SistemaTienda.Utility
         void MapeoCompraEdicionDtoACompraTb(CompraEditarDTO compraEditarDto, TbCompra compraTb);
         List<CompraMinDTO> MapeoListaCompraTbAListaCompraDto(List<TbCompra> listaResultado);
         CompraMinDTO MapeoCompraTbACompraDto(TbCompra compraTb);
+        CompraDTO MapeoCompraTbACompraCompletaDto(TbCompra compraTb);
     }
     public class Mapeos : IMapeos
     {
@@ -71,7 +72,7 @@ namespace SistemaTienda.Utility
                 Unidad = articuloDto.Unidad,
                 ValorCompra = articuloDto.ValorCompra,
                 UnidadValor = articuloDto.UnidadValor,
-                ValorVenta = articuloDto.UnidadValor,
+                ValorVenta = articuloDto.ValorVenta,
                 IdTipoArticuloNavigation = new TbComTiposArticulo
                 {
                     Id = articuloDto.IdTipoArticulo,
@@ -472,6 +473,77 @@ namespace SistemaTienda.Utility
 
             };
 
+            return compra;
+        }
+
+        public CompraDTO MapeoCompraTbACompraCompletaDto(TbCompra compraTb)
+        {
+
+            var compra = new CompraDTO
+            {
+                Id = compraTb.Id,
+                IdProveedor = compraTb.IdProveedor,
+                UsuarioCreador = new UsuarioDTO
+                {
+                    Id = compraTb.IdUsuarioCreadorNavigation.Id,
+                    Apellidos = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Apellidos,
+                    Nombres = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Nombres,
+                },
+                ProveedorDto = new ProveedorDTO
+                {
+                    Id = compraTb.IdProveedorNavigation.Id,
+                    RazonSocial = compraTb.IdProveedorNavigation.RazonSocial,
+                    Descripcion = compraTb.IdProveedorNavigation.Descripcion,
+                    Identificacion = compraTb.IdProveedorNavigation.IdPersonaNavigation.Identificacion,
+                    Mail = compraTb.IdProveedorNavigation.IdPersonaNavigation.Mail,
+                },
+                Documento = compraTb.Documento,
+                FechaCompra = compraTb.FechaCompra,
+                IdEstado = compraTb.IdEstadoCompra,
+                EstadoCompra = new EstadoCompraDTO
+                {
+                    Id = compraTb.IdEstadoCompraNavigation.Id,
+                    Nombre = compraTb.IdEstadoCompraNavigation.Nombre,
+                },
+                Total = compraTb.Total,
+                DetalleCompras = compraTb.TbComDetallesCompras.Select(d => new DetalleCompraDTO
+                {
+                    Id = d.Id,
+                    Articulo = new ArticuloDTO
+                    {
+                        Id = d.IdArticuloNavigation.Id,
+                        Codigo = d.IdArticuloNavigation.Codigo,
+                        Descripcion = d.IdArticuloNavigation.Descripcion,
+                        Nombre = d.IdArticuloNavigation.Nombre,
+                        Unidad = d.IdArticuloNavigation.Unidad,
+                        UnidadValor = d.IdArticuloNavigation.UnidadValor,
+                        ImpuestoArticuloDto = new ImpuestoArticuloDTO
+                        {
+                            Id = d.IdArticuloNavigation.IdImpuestoNavigation.Id,
+                            Nombre = d.IdArticuloNavigation.IdImpuestoNavigation.Nombre,
+                            ValorImpuesto = d.IdArticuloNavigation.IdImpuestoNavigation.ValorImpuesto,
+                        },
+                        TipoArticuloDTO = new TipoArticuloDTO
+                        {
+                            Id = d.IdArticuloNavigation.IdTipoArticuloNavigation.Id,
+                            Nombre = d.IdArticuloNavigation.IdTipoArticuloNavigation.Nombre,
+                            Descripcion = d.IdArticuloNavigation.IdTipoArticuloNavigation.Descripcion,
+                        },
+                        MarcaDTO = new MarcaDTO
+                        {
+                            Id = d.IdArticuloNavigation.IdMarcaNavigation.Id,
+                            Nombre = d.IdArticuloNavigation.IdMarcaNavigation.Nombre,
+                            Descripcion = d.IdArticuloNavigation.IdMarcaNavigation.Descripcion,
+                        }
+                    },
+                    Cantidad = d.Cantidad,
+                    Descripcion = d.Descripcion,
+                    ImpuestoValor = d.ImpuestoValor,
+                    ValorCompra = d.ValorCompra,
+                    ValorTotal = d.ValorTotal,
+                }).ToList(),
+
+            };
             return compra;
         }
     }
