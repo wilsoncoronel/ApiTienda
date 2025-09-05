@@ -87,12 +87,26 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
-        public async Task<List<CompraDTO>> ListarCompras(DateOnly fechaInicial, DateOnly fechaFinal)
+        public async Task<List<CompraMinDTO>> ListarCompras(DateOnly fechaInicial, DateOnly fechaFinal)
         {
-            try {
-                var tbCompras = await this._compraRepository.Consultar(c => c.FechaCompra >= Convert.ToDateTime(fechaInicial) && c.FechaCompra <= Convert.ToDateTime(fechaFinal));
+            var inicio = fechaInicial.ToDateTime(TimeOnly.MinValue);
+            var fin = fechaFinal.ToDateTime(TimeOnly.MaxValue);
+            IQueryable<TbCompra> tbCompras = await this._compraRepository.Consultar();
+            var listaResultado = new List<TbCompra>();
+            try
+            {
+                listaResultado = await tbCompras.Where(c => c.FechaCompra >= inicio && c.FechaCompra <= fin)
+                    .Include(u => u.IdUsuarioCreadorNavigation)
+                    .ThenInclude(per => per.IdPersonaNavigation)
+                    .Include(e => e.IdEstadoCompraNavigation)
+                    .Include(p => p.IdProveedorNavigation)
+                    .ThenInclude(per => per.IdPersonaNavigation)
+                    .ToListAsync();
+                var listaComprasDto = this._mapper.MapeoListaCompraTbAListaCompraDto(listaResultado);
+                return listaComprasDto;
             }
-            catch { 
+            catch
+            {
                 throw;
             }
         }
@@ -127,5 +141,6 @@ namespace SistemaTienda.BLL.Servicios
         {
             throw new NotImplementedException();
         }
+        
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SistemaTienda.Model;
 
 namespace SistemaTienda.DAL.DBContext;
+
 public partial class TiendaDbContext : DbContext
 {
     public TiendaDbContext()
@@ -193,6 +194,11 @@ public partial class TiendaDbContext : DbContext
                 .HasForeignKey(d => d.IdEstadoCompra)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbCompras_TbComEstadosCompras");
+
+            entity.HasOne(d => d.IdProveedorNavigation).WithMany(p => p.TbCompras)
+                .HasForeignKey(d => d.IdProveedor)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbCompras_TbComProveedores");
 
             entity.HasOne(d => d.IdUsuarioCreadorNavigation).WithMany(p => p.TbCompras)
                 .HasForeignKey(d => d.IdUsuarioCreador)

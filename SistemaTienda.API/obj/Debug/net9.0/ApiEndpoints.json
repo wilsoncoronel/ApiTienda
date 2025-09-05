@@ -95,6 +95,27 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ComprasController",
+    "Method": "ListarCompras",
+    "RelativePath": "api/Compras/ListarCompras",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fechaInicial",
+        "Type": "System.DateOnly",
+        "IsRequired": false
+      },
+      {
+        "Name": "fechaFinal",
+        "Type": "System.DateOnly",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ComprasController",
     "Method": "RegistrarCompra",
     "RelativePath": "api/Compras/RegistrarCompra",
     "HttpMethod": "POST",

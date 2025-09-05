@@ -57,5 +57,24 @@ namespace SistemaTienda.API.Controllers
             }
             return Ok(resp);
         }
+
+        [HttpGet]
+        [Route("ListarCompras")]
+        public async Task<IActionResult> ListarCompras(DateOnly fechaInicial, DateOnly fechaFinal)
+        {
+
+            var resp = new Response<List<CompraMinDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._compraService.ListarCompras(fechaInicial, fechaFinal);
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
     }
 }

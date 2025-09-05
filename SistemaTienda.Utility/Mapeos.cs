@@ -26,6 +26,8 @@ namespace SistemaTienda.Utility
         TbComProveedores MapeoProveedorDtoAProveedorTb(ProveedorCreacionDTO provedorCreacion);
         void MapeoProveedorEditarDtoAProveedorTb(ProveedorEditarDTO provedorEditar, TbComProveedores proveedoresTb);
         void MapeoCompraEdicionDtoACompraTb(CompraEditarDTO compraEditarDto, TbCompra compraTb);
+        List<CompraMinDTO> MapeoListaCompraTbAListaCompraDto(List<TbCompra> listaResultado);
+        CompraMinDTO MapeoCompraTbACompraDto(TbCompra compraTb);
     }
     public class Mapeos : IMapeos
     {
@@ -430,6 +432,47 @@ namespace SistemaTienda.Utility
             compraTb.Total = compraEditarDto.Total;
             compraTb.FechaModificacion = FechaGrl;
             
+        }
+
+        public List<CompraMinDTO> MapeoListaCompraTbAListaCompraDto(List<TbCompra> listaResultado)
+        {
+            return listaResultado.Select(this.MapeoCompraTbACompraDto).ToList();
+        }
+
+        public CompraMinDTO MapeoCompraTbACompraDto(TbCompra compraTb)
+        {
+            
+            var compra = new CompraMinDTO
+            {
+                Id = compraTb.Id,
+                IdProveedor = compraTb.IdProveedor,
+                UsuarioCreadorMinDTO = new UsuarioMinDTO
+                {
+                    Id = compraTb.IdUsuarioCreadorNavigation.Id,
+                    Apellidos = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Apellidos,
+                    Nombres = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Nombres,
+                },
+                ProveedorMinDto = new ProveedorMinDTO
+                {
+                    Id = compraTb.IdProveedorNavigation.Id,
+                    RazonSocial = compraTb.IdProveedorNavigation.RazonSocial,
+                    Descripcion = compraTb.IdProveedorNavigation.Descripcion,
+                    Identificacion = compraTb.IdProveedorNavigation.IdPersonaNavigation.Identificacion,
+                    Mail = compraTb.IdProveedorNavigation.IdPersonaNavigation.Mail,
+                },
+                Documento = compraTb.Documento,
+                FechaCompra = compraTb.FechaCompra,
+                IdEstado = compraTb.IdEstadoCompra,
+                EstadoCompra = new EstadoCompraDTO
+                {
+                    Id = compraTb.IdEstadoCompraNavigation.Id,
+                    Nombre = compraTb.IdEstadoCompraNavigation.Nombre,
+                },
+                Total = compraTb.Total,
+
+            };
+
+            return compra;
         }
     }
 }

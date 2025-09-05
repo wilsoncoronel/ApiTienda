@@ -19,5 +19,7 @@ public partial class TbComProveedores
 
     public virtual TbGrlPersona IdPersonaNavigation { get; set; } = null!;
 
+    public virtual ICollection<TbCompra> TbCompras { get; set; } = new List<TbCompra>();
+
     public virtual ICollection<TbPedidos> TbPedidos { get; set; } = new List<TbPedidos>();
 }

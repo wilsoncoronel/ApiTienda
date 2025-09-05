@@ -12,7 +12,7 @@ namespace SistemaTienda.BLL.Servicios.Contrato
     {
         Task<int> RegistrarCompra(CompraCreacionDTO compraDto);
         Task<bool> EditarCompra(CompraEditarDTO compraDto);
-        Task<List<CompraDTO>> ListarCompras();
+        Task<List<CompraMinDTO>> ListarCompras(DateOnly fechaInicial, DateOnly fechaFinal);
         Task<CompraDTO> ObtenerCompra(int idCompra);
         Task<bool> ReversarCompra(int id);
     }
