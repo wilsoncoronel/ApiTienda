@@ -36,4 +36,6 @@ public partial class TbCompra
     public virtual TbSisUsuario IdUsuarioCreadorNavigation { get; set; } = null!;
 
     public virtual ICollection<TbComDetallesCompra> TbComDetallesCompras { get; set; } = new List<TbComDetallesCompra>();
+
+    public virtual TbContAsientoContable? TbContAsientoContable { get; set; }
 }

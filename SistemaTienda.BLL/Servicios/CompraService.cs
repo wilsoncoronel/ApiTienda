@@ -17,13 +17,15 @@ namespace SistemaTienda.BLL.Servicios
     {
         private readonly TiendaDbContext _tiendaDbContext;
         public readonly IGenericRepository<TbCompra> _compraRepository;
+        public readonly IGenericRepository<TbInventario> _inventarioRepository;
         public readonly IGenericRepository<TbComDetallesCompra> _detalleRepository;
         private readonly IMapeos _mapper;
-        public CompraService(TiendaDbContext tiendaDbContext, IGenericRepository<TbCompra> compraRepository, IGenericRepository<TbComDetallesCompra> detalleRepository, IMapeos mapper)
+        public CompraService(TiendaDbContext tiendaDbContext, IGenericRepository<TbCompra> compraRepository, IGenericRepository<TbComDetallesCompra> detalleRepository, IGenericRepository<TbInventario> inventarioRepository, IMapeos mapper)
         {
             _tiendaDbContext = tiendaDbContext;
             _compraRepository = compraRepository;
             _detalleRepository = detalleRepository;
+            _inventarioRepository = inventarioRepository;
             _mapper = mapper;
         }
 
@@ -154,6 +156,12 @@ namespace SistemaTienda.BLL.Servicios
                     await this._compraRepository.Crear(tbCompra);
                     if (tbCompra.Id == 0)
                         throw new Exception("No se pudo registrar la compra");
+                    tbCompra = await this._tiendaDbContext.TbCompras.Where(c => c.Id == tbCompra.Id)
+                        .Include(det => det.TbComDetallesCompras)
+                        .ThenInclude(art => art.IdArticuloNavigation).FirstOrDefaultAsync();
+                    var respInv = await this.AlimentarInventario(tbCompra);
+                    if (respInv == false)
+                        throw new Exception("No se pudo actualizar el inventario");
                     transaction.Commit();
                     return tbCompra.Id;
                 }
@@ -165,10 +173,74 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
-        public Task<bool> ReversarCompra(int id)
+        private async Task<bool> AlimentarInventario(TbCompra compraTb){
+            
+            if(compraTb.TbComDetallesCompras == null)
+            {
+                throw new Exception("La compra no tiene detalles para actualizar el inventario");
+                return false;
+            }
+
+            int idTransaccion = compraTb.Id;
+            var listInventario = new List<TbDetallesInventario>();
+            foreach (var detalle in compraTb.TbComDetallesCompras){
+                var nuevoInventario = new TbDetallesInventario{
+                    IdArticulo = detalle.IdArticulo,
+                    Cantidad = detalle.Cantidad,
+                    PrecioUnitario = detalle.IdArticuloNavigation.ValorVenta,
+                    IdTransaccionInventario = 1,
+                };
+                listInventario.Add(nuevoInventario);
+            }
+            await this._tiendaDbContext.TbDetallesInventarios.AddRangeAsync(listInventario);
+            await this._tiendaDbContext.SaveChangesAsync();
+            return true;
+
+        }
+        public async Task<bool> ReversarCompra(int id)
         {
-            throw new NotImplementedException();
+            using (var transaction = _tiendaDbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var tbCompra = await this._tiendaDbContext.TbCompras.Where(c => c.Id == id)
+                        .FirstOrDefaultAsync();
+                    if (tbCompra.IdEstadoCompra == 2)
+                    {
+                        throw new Exception("No se puede reversar una compra ya reversada!!!");
+                    }
+                    if (tbCompra is null)
+                        throw new Exception("No existe una compra con el id Indicado!!!!");
+                    tbCompra.IdEstadoCompra = 2;
+                    tbCompra.FechaModificacion = DateTime.Now;
+
+                    var resp = await this._compraRepository.Editar(tbCompra);
+                    if (!resp) throw new Exception("No se reverso la compra, el inventario no fue afectado!!!");
+                    var respInv = await this.ReversarInventario(tbCompra.Id);
+                    if(!respInv) throw new Exception("No se reverso el inventario, el inventario no fue afectado!!!");
+                    transaction.Commit();
+                    return respInv;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
         
+        private async Task<bool> ReversarInventario(int idCompra)
+        {
+            var transacciones = await this._tiendaDbContext.TbInventarios.Where(inv => inv.IdTransaccion == idCompra).ToListAsync();
+            var signo = await this._tiendaDbContext.TbInvTransacciones.Where(inv => inv.Nombre == "Reversion").FirstOrDefaultAsync();
+            foreach (var item in transacciones)
+            {
+                item.IdTransaccionInventario = signo.Id;
+                item.Cantidad = item.Cantidad * signo.Signo;
+            }
+            this._tiendaDbContext.UpdateRange(transacciones);
+            await this._tiendaDbContext.SaveChangesAsync();
+            return true;
+        }
     }
 }

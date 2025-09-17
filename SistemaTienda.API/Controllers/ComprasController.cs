@@ -96,5 +96,25 @@ namespace SistemaTienda.API.Controllers
             }
             return Ok(resp);
         }
+
+        [HttpGet]
+        [Route("ReversarCompra")]
+        public async Task<IActionResult> ReversarCompra(int idCompra)
+        {
+
+            var resp = new Response<bool>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._compraService.ReversarCompra(idCompra);
+                resp.msg = "Reversion de la comra exitosa";
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
     }
 }

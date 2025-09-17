@@ -147,6 +147,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SistemaTienda.API.Controllers.ComprasController",
+    "Method": "ReversarCompra",
+    "RelativePath": "api/Compras/ReversarCompra",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idCompra",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaTienda.API.Controllers.LoginController",
     "Method": "Loggin",
     "RelativePath": "api/Login/IniciarSesion",

@@ -9,7 +9,6 @@ namespace SistemaTienda.DTO
 {
     public class DetalleCompraCreacionDTO
     {
-        public int IdCompra { get; set; }
         public string Descripcion { get; set; }
         public int Cantidad { get; set; }
         public decimal ValorCompra { get; set; }
