@@ -38,4 +38,6 @@ public partial class TbCompra
     public virtual ICollection<TbComDetallesCompra> TbComDetallesCompras { get; set; } = new List<TbComDetallesCompra>();
 
     public virtual TbContAsientoContable? TbContAsientoContable { get; set; }
+
+    public virtual TbInvInventario? TbInvInventario { get; set; }
 }

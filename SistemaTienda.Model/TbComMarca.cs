@@ -14,6 +14,4 @@ public partial class TbComMarca
     public bool EstadoVisual { get; set; }
 
     public virtual ICollection<TbComArticulo> TbComArticulos { get; set; } = new List<TbComArticulo>();
-
-    public virtual ICollection<TbInvInventario> TbInvInventarios { get; set; } = new List<TbInvInventario>();
 }

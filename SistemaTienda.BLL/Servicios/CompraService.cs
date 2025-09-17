@@ -17,10 +17,10 @@ namespace SistemaTienda.BLL.Servicios
     {
         private readonly TiendaDbContext _tiendaDbContext;
         public readonly IGenericRepository<TbCompra> _compraRepository;
-        public readonly IGenericRepository<TbInventario> _inventarioRepository;
+        public readonly IGenericRepository<TbInvInventario> _inventarioRepository;
         public readonly IGenericRepository<TbComDetallesCompra> _detalleRepository;
         private readonly IMapeos _mapper;
-        public CompraService(TiendaDbContext tiendaDbContext, IGenericRepository<TbCompra> compraRepository, IGenericRepository<TbComDetallesCompra> detalleRepository, IGenericRepository<TbInventario> inventarioRepository, IMapeos mapper)
+        public CompraService(TiendaDbContext tiendaDbContext, IGenericRepository<TbCompra> compraRepository, IGenericRepository<TbComDetallesCompra> detalleRepository, IGenericRepository<TbInvInventario> inventarioRepository, IMapeos mapper)
         {
             _tiendaDbContext = tiendaDbContext;
             _compraRepository = compraRepository;
@@ -174,28 +174,18 @@ namespace SistemaTienda.BLL.Servicios
         }
 
         private async Task<bool> AlimentarInventario(TbCompra compraTb){
-            
-            if(compraTb.TbComDetallesCompras == null)
-            {
-                throw new Exception("La compra no tiene detalles para actualizar el inventario");
-                return false;
-            }
-
-            int idTransaccion = compraTb.Id;
-            var listInventario = new List<TbDetallesInventario>();
-            foreach (var detalle in compraTb.TbComDetallesCompras){
-                var nuevoInventario = new TbDetallesInventario{
-                    IdArticulo = detalle.IdArticulo,
-                    Cantidad = detalle.Cantidad,
-                    PrecioUnitario = detalle.IdArticuloNavigation.ValorVenta,
-                    IdTransaccionInventario = 1,
-                };
-                listInventario.Add(nuevoInventario);
-            }
-            await this._tiendaDbContext.TbDetallesInventarios.AddRangeAsync(listInventario);
-            await this._tiendaDbContext.SaveChangesAsync();
+            var inv = new TbInvInventario{
+                IdCompra = compraTb.Id,
+                FechaCreacion = DateTime.Now,
+                TbDetallesInventarios = compraTb.TbComDetallesCompras.Select(d => new TbDetallesInventario{
+                    IdArticulo = d.IdArticulo,
+                    Cantidad = d.Cantidad,
+                    PrecioUnitario = d.ValorCompra,
+                    IdTransaccionInventario = 1, // Asumiendo que 1 es el ID para "Entrada" en la tabla de transacciones de inventario
+                }).ToList(),
+            };
+            await this._inventarioRepository.Crear(inv);
             return true;
-
         }
         public async Task<bool> ReversarCompra(int id)
         {
@@ -231,7 +221,7 @@ namespace SistemaTienda.BLL.Servicios
         
         private async Task<bool> ReversarInventario(int idCompra)
         {
-            var transacciones = await this._tiendaDbContext.TbInventarios.Where(inv => inv.IdTransaccion == idCompra).ToListAsync();
+            var transacciones = await this._tiendaDbContext.TbDetallesInventarios.Where(inv => inv.IdInventario == idCompra).ToListAsync();
             var signo = await this._tiendaDbContext.TbInvTransacciones.Where(inv => inv.Nombre == "Reversion").FirstOrDefaultAsync();
             foreach (var item in transacciones)
             {

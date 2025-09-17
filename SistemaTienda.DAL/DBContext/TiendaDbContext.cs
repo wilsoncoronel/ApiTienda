@@ -334,13 +334,15 @@ public partial class TiendaDbContext : DbContext
         {
             entity.ToTable("TbInvInventario");
 
+            entity.HasIndex(e => e.IdCompra, "UQ_Inventario_Compra").IsUnique();
+
             entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
             entity.Property(e => e.FechaReversion).HasColumnType("datetime");
 
-            entity.HasOne(d => d.IdCompraNavigation).WithMany(p => p.TbInvInventarios)
-                .HasForeignKey(d => d.IdCompra)
+            entity.HasOne(d => d.IdCompraNavigation).WithOne(p => p.TbInvInventario)
+                .HasForeignKey<TbInvInventario>(d => d.IdCompra)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TbInvInventario_TbComMarca");
+                .HasConstraintName("FK_TbInvInventario_TbCompras");
         });
 
         modelBuilder.Entity<TbInvTransacciones>(entity =>
@@ -490,3 +492,4 @@ public partial class TiendaDbContext : DbContext
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
+
