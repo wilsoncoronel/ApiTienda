@@ -57,16 +57,18 @@ namespace SistemaTienda.BLL.Servicios
         {
             try
             {
-                IQueryable<TbSisUsuario> usuario = await this._usuarioRepositorio.Consultar(u => u.NombreUsuario == us);
-                if (usuario.IsNullOrEmpty())
-                    throw new Exception("No se encuentra ningun usuario con esas credenciales");
-                TbSisUsuario user = usuario
-                    .Include(p => p.IdPersonaNavigation)
+                var  query = await this._usuarioRepositorio.Consultar(u => u.NombreUsuario == us);
+
+                var user = query.Include(p => p.IdPersonaNavigation)
                         .ThenInclude(t => t.IdTipoIdentificacionNavigation)
                     .Include(p => p.IdPersonaNavigation)
                         .ThenInclude(d => d.TbGrlDireccione)
                             .ThenInclude(c => c.IdCiudadNavigation)
-                    .Include(r => r.IdRolNavigation).FirstOrDefault();
+                    .Include(r => r.IdRolNavigation).First();
+
+                if (user is null)
+                    throw new Exception("No se encuentra ningun usuario con esas credenciales");
+                
 
                 SesionDTO sesion = this._mapeos.MapeoUsuarioDtoASesionDto(user);
 

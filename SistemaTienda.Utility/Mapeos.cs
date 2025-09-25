@@ -140,6 +140,21 @@ namespace SistemaTienda.Utility
              };
              return sesionDto;
          }
+        public SesionDTO MapeoUsuarioTbASesionDto(TbSisUsuario usuarioTb)
+        {
+            var sesionDto = new SesionDTO
+            {
+                Id = usuarioTb.Id,
+                Usuario = usuarioTb.IdPersonaNavigation.Mail,
+                Clave = usuarioTb.Password,
+                RolDto = new RolDTO
+                {
+                    Id = usuarioTb.IdRol,
+                    Nombre = usuarioTb.IdRolNavigation.Nombre
+                },
+            };
+            return sesionDto;
+        }
         public TbPedidos MapeoPedidoDtoATbPedido(PedidoDTO pedidoDto){
              return new TbPedidos
              {
