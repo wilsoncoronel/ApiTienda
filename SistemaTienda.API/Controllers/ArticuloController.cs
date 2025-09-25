@@ -16,6 +16,79 @@ namespace SistemaTienda.API.Controllers
             this._articuloService = articuloService;
         }
 
+        [HttpGet]
+        [Route("CargarListaTiposArticulos")]
+        public async Task<ActionResult<List<TipoArticuloDTO>>> CargarListaTiposArticulos()
+        {
+            var resp = new Response<List<TipoArticuloDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._articuloService.CargarListaTiposArticulos();
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
+        [HttpGet]
+        [Route("CargarListaImpuestosArticulos")]
+        public async Task<ActionResult<List<ImpuestoArticuloDTO>>> CargarListaImpuestos()
+        {
+            var resp = new Response<List<ImpuestoArticuloDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._articuloService.CargarListaImpuestos();
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
+        [HttpGet]
+        [Route("CargarListaMarcasArticulos")]
+        public async Task<ActionResult<List<MarcaDTO>>> CargarListaMarcas()
+        {
+            var resp = new Response<List<MarcaDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._articuloService.CargarListaMarca();
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
+        [HttpGet]
+        [Route("ListaArticulos")]
+        public async Task<ActionResult<List<ArticuloDTO>>> ListaArticulos(DateTime fechaInicial, DateTime fechaFinal)
+        {
+            var resp = new Response<List<ArticuloDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._articuloService.ListarArticulos(fechaInicial, fechaFinal);
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
+
         [HttpPost]
         [Route("CrearArticulo")]
         public async Task<ActionResult<int>> CrearArticulo([FromBody] ArticuloCreacionDTO articuloCreacionDto)

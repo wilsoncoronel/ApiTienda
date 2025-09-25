@@ -10,6 +10,7 @@ namespace SistemaTienda.BLL.Servicios.Contrato
     public interface ILogginService
     {
         Task<UsuarioDTO> ObtenerPerfil(int id);
-        Task<SesionDTO> ValidarCredenciales(string usuario, string clave);
+        Task<SesionDTO> ExtraerPerfil(string usuario);
+        Task<List<PermisosRolDTO>> ValidarCredenciales(string usuario, string clave);
     }
 }

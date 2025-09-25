@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using SistemaTienda.Utility;
 using SistemaTienda.DAL.DBContext;
 using SistemaTienda.Model;
+using Microsoft.IdentityModel.Tokens;
 
 namespace SistemaTienda.BLL.Servicios
 {
@@ -20,11 +21,14 @@ namespace SistemaTienda.BLL.Servicios
         public readonly IGenericRepository<TbSisUsuario> _usuarioRepositorio;
         public readonly IMapeos _mapeos;
         public readonly TiendaDbContext _dbContext;
-        public LogginService(IGenericRepository<TbSisUsuario> usuarioRepositorio,IMapeos mapeos, TiendaDbContext dbContext)
+        private readonly IMenuService menuService;
+
+        public LogginService(IGenericRepository<TbSisUsuario> usuarioRepositorio,IMapeos mapeos, TiendaDbContext dbContext, IMenuService menuService)
         {
             this._usuarioRepositorio = usuarioRepositorio;
             this._mapeos = mapeos;
             this._dbContext = dbContext;
+            this.menuService = menuService;
         }
 
         public async Task<UsuarioDTO> ObtenerPerfil(int id)
@@ -49,7 +53,32 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
-        public async Task<SesionDTO> ValidarCredenciales(string user, string clave)
+        public async Task<SesionDTO> ExtraerPerfil(string us)
+        {
+            try
+            {
+                IQueryable<TbSisUsuario> usuario = await this._usuarioRepositorio.Consultar(u => u.NombreUsuario == us);
+                if (usuario.IsNullOrEmpty())
+                    throw new Exception("No se encuentra ningun usuario con esas credenciales");
+                TbSisUsuario user = usuario
+                    .Include(p => p.IdPersonaNavigation)
+                        .ThenInclude(t => t.IdTipoIdentificacionNavigation)
+                    .Include(p => p.IdPersonaNavigation)
+                        .ThenInclude(d => d.TbGrlDireccione)
+                            .ThenInclude(c => c.IdCiudadNavigation)
+                    .Include(r => r.IdRolNavigation).FirstOrDefault();
+
+                SesionDTO sesion = this._mapeos.MapeoUsuarioDtoASesionDto(user);
+
+                return sesion;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<PermisosRolDTO>> ValidarCredenciales(string user, string clave)
          {
              try
              {
@@ -58,12 +87,13 @@ namespace SistemaTienda.BLL.Servicios
                     throw new TaskCanceledException("Usuario no existe o esta desactivado");
                 TbSisUsuario userTb = usuario.Include(p => p.IdPersonaNavigation)
                     .Include(r => r.IdRolNavigation).First();
-                 return this._mapeos.MapeoUsuarioDtoASesionDto(userTb);
-             }
+                return await this.menuService.ObtenerMenu(userTb.IdRol);
+            }
              catch
-             {
+             { 
                  throw;
              }
          }
     }
 }
+

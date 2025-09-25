@@ -94,9 +94,51 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
-        public Task<List<ArticuloDTO>> ListarUsuarios()
+        public async Task<List<ArticuloDTO>> ListarArticulos(DateTime fechaInicial, DateTime fechaFinal)
         {
-            throw new NotImplementedException();
+            IQueryable<TbComArticulo> listaArticulos = await this._articuloRepository.Consultar(a => a.FechaCreacion >= fechaInicial && a.FechaCreacion <= fechaFinal);
+            var listaArt = listaArticulos.Where(art => art.Estado == true && art.EstadoVisual == true)
+                .Include(a => a.IdMarcaNavigation)
+                .Include(a => a.IdTipoArticuloNavigation)
+                .Include(a => a.IdImpuestoNavigation).ToList();
+            return this._mapper.MapeoListaArticulosDto(listaArt);
+        }
+
+        public async Task<List<TipoArticuloDTO>> CargarListaTiposArticulos()
+        {
+            var listaTiposArticulos = await this.tiendaDbContext.TbComTiposArticulos
+                .Where(t => t.EstadoVisual == true)
+                .Select(t => new TipoArticuloDTO
+                {
+                    Id = t.Id,
+                    Nombre = t.Nombre
+                }).ToListAsync();
+            return listaTiposArticulos;
+        }
+
+        public async Task<List<ImpuestoArticuloDTO>> CargarListaImpuestos()
+        {
+            var listaImpuestosArticulos = await this.tiendaDbContext.TbComImpuestosArticulos
+                .Where(t => t.IdEstadoImpuestoNavigation.EstadoVisual == true)
+                .Select(t => new ImpuestoArticuloDTO
+                {
+                    Id = t.Id,
+                    Nombre = t.Nombre
+                }).ToListAsync();
+            return listaImpuestosArticulos;
+        }
+
+        public async Task<List<MarcaDTO>> CargarListaMarca()
+        {
+            var listaMarcasArticulos = await this.tiendaDbContext.TbComMarcas
+            .Where(t => t.EstadoVisual == true)
+            .Select(t => new MarcaDTO
+            {
+                Id = t.Id,
+                Nombre = t.Nombre
+            }).ToListAsync();
+            return listaMarcasArticulos;
+
         }
     }
 }

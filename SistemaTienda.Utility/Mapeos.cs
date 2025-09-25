@@ -29,6 +29,10 @@ namespace SistemaTienda.Utility
         List<CompraMinDTO> MapeoListaCompraTbAListaCompraDto(List<TbCompra> listaResultado);
         CompraMinDTO MapeoCompraTbACompraDto(TbCompra compraTb);
         CompraDTO MapeoCompraTbACompraCompletaDto(TbCompra compraTb);
+        PermisosRolDTO MapeoTbSisPermisorRolAPermisosRolDTO(TbSisPermisosRol permisosRolTb);
+        List<PermisosRolDTO> MapeoListaTbSisPermisosRolAPermisosRolDTO(IEnumerable<TbSisPermisosRol> listaPermisosRolTb);
+        List<ArticuloDTO> MapeoListaArticulosDto(List<TbComArticulo> listaArticulosTb);
+        ArticuloDTO MapeoArticuloTbAArticuloDto(TbComArticulo articuloTb);
     }
     public class Mapeos : IMapeos
     {
@@ -82,6 +86,47 @@ namespace SistemaTienda.Utility
             };
             return articuloTb;
         }
+
+        public ArticuloDTO MapeoArticuloTbAArticuloDto(TbComArticulo articuloTb)
+        {
+            var articuloDto = new ArticuloDTO
+            {
+                Id = articuloTb.Id,
+                Codigo = articuloTb.Codigo,
+                Descripcion = articuloTb.Descripcion,
+                Estado = articuloTb.Estado,
+                EstadoVisual = articuloTb.EstadoVisual,
+                ImpuestoArticuloDto = new ImpuestoArticuloDTO
+                {
+                    Id = articuloTb.IdImpuestoNavigation.Id,
+                    ValorImpuesto = articuloTb.IdImpuestoNavigation.ValorImpuesto,
+                },
+                Nombre = articuloTb.Nombre,
+                Unidad = articuloTb.Unidad,
+                ValorCompra = articuloTb.ValorCompra,
+                UnidadValor = articuloTb.UnidadValor,
+                ValorVenta = articuloTb.ValorVenta,
+                TipoArticuloDTO = new TipoArticuloDTO
+                {
+                    Id = articuloTb.IdTipoArticulo,
+                    Descripcion = articuloTb.IdTipoArticuloNavigation.Descripcion,
+                    Nombre = articuloTb.IdTipoArticuloNavigation.Nombre,
+                },
+                MarcaDTO = new MarcaDTO
+                {
+                    Id = articuloTb.IdMarcaNavigation.Id,
+                    Descripcion = articuloTb.IdMarcaNavigation.Descripcion,
+                    Nombre = articuloTb.IdMarcaNavigation.Nombre,
+                },
+            };
+            return articuloDto;
+        }
+
+        public List<ArticuloDTO> MapeoListaArticulosDto(List<TbComArticulo> listaArticulosTb)
+        {
+            return listaArticulosTb.Select(a => this.MapeoArticuloTbAArticuloDto(a)).ToList();
+        }
+
         public SesionDTO MapeoUsuarioDtoASesionDto(TbSisUsuario usuarioTb)
          {
              var sesionDto = new SesionDTO {
@@ -545,6 +590,25 @@ namespace SistemaTienda.Utility
 
             };
             return compra;
+        }
+
+        public PermisosRolDTO MapeoTbSisPermisorRolAPermisosRolDTO(TbSisPermisosRol permisosRolTb)
+        {
+            return new PermisosRolDTO
+            {
+                Id = permisosRolTb.Id,
+                IdMenu = permisosRolTb.IdMenu,
+                IdRol = permisosRolTb.IdRol,
+                Menu = new MenuDTO
+                {
+                    Id = permisosRolTb.IdMenuNavigation.Id,
+                    Nombre = permisosRolTb.IdMenuNavigation.Nombre,
+                },
+            };
+        }
+        public List<PermisosRolDTO> MapeoListaTbSisPermisosRolAPermisosRolDTO(IEnumerable<TbSisPermisosRol> listaPermisosRolTb)
+        {
+            return listaPermisosRolTb.Select(this.MapeoTbSisPermisorRolAPermisosRolDTO).ToList();
         }
     }
 }

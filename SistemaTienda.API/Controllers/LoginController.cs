@@ -18,11 +18,29 @@ namespace SistemaTienda.API.Controllers
         [HttpGet]
         [Route("IniciarSesion")]
         public async Task<IActionResult> Loggin(string usuario, string password) {
-            var resp = new Response<SesionDTO>();
+            var resp = new Response<List<PermisosRolDTO>>();
             try
             {
                 resp.status = true;
                 resp.Value = await this._loginService.ValidarCredenciales(usuario, password);
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
+        [HttpGet]
+        [Route("ExtraerSesion")]
+        public async Task<IActionResult> ExtraerSesion(string usuario)
+        {
+            var resp = new Response<SesionDTO>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._loginService.ExtraerPerfil(usuario);
             }
             catch
             {
