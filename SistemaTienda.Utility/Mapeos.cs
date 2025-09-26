@@ -106,6 +106,9 @@ namespace SistemaTienda.Utility
                 ValorCompra = articuloTb.ValorCompra,
                 UnidadValor = articuloTb.UnidadValor,
                 ValorVenta = articuloTb.ValorVenta,
+                FechaActualizacion = articuloTb.FechaActualizacion ?? articuloTb.FechaCreacion,
+                FechaCaducidad = articuloTb.FechaCaducidad,
+                FechaCreacion = articuloTb.FechaCreacion,
                 TipoArticuloDTO = new TipoArticuloDTO
                 {
                     Id = articuloTb.IdTipoArticulo,
