@@ -15,6 +15,27 @@ namespace SistemaTienda.API.Controllers
         {
             this.proveedorService = proveedorService;
         }
+
+        [HttpGet]
+        [Route("BuscarProveedorCI")]
+        public async Task<IActionResult> BuscarProveedorCI(string identificacion)
+        {
+            var resp = new Response<ProveedorDTO>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this.proveedorService.BuscarProveedorCI(identificacion);
+                resp.msg = "";
+            }
+            catch
+            {
+                resp.status = false;
+                resp.msg = "Error al crear el proveedor, comuniquese con el administrador del sistema!!!";
+                throw;
+            }
+            return Ok(resp);
+        }
+
         [HttpPost]
         [Route("CrearProveedor")]
         public async Task<IActionResult> CrearProveedor([FromBody] ProveedorCreacionDTO proveedor)

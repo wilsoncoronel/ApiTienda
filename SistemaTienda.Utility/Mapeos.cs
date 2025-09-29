@@ -33,6 +33,7 @@ namespace SistemaTienda.Utility
         List<PermisosRolDTO> MapeoListaTbSisPermisosRolAPermisosRolDTO(IEnumerable<TbSisPermisosRol> listaPermisosRolTb);
         List<ArticuloDTO> MapeoListaArticulosDto(List<TbComArticulo> listaArticulosTb);
         ArticuloDTO MapeoArticuloTbAArticuloDto(TbComArticulo articuloTb);
+        ProveedorDTO MapeoProveedorTbAProveedorDto(TbComProveedores provedorTb);
     }
     public class Mapeos : IMapeos
     {
@@ -100,6 +101,7 @@ namespace SistemaTienda.Utility
                 {
                     Id = articuloTb.IdImpuestoNavigation.Id,
                     ValorImpuesto = articuloTb.IdImpuestoNavigation.ValorImpuesto,
+                    Nombre = articuloTb.IdImpuestoNavigation.Nombre,
                 },
                 Nombre = articuloTb.Nombre,
                 Unidad = articuloTb.Unidad,
@@ -459,6 +461,22 @@ namespace SistemaTienda.Utility
                     IdTipoIdentificacion = provedorCreacion.IdIdentificacion,
                 },
                 RazonSocial = provedorCreacion.RazonSocial,
+            };
+        }
+
+        public ProveedorDTO MapeoProveedorTbAProveedorDto(TbComProveedores provedorTb)
+        {
+            return new ProveedorDTO
+            {
+                Descripcion = provedorTb.Descripcion,
+                EstadoVisual = true,
+                Nombres = provedorTb.IdPersonaNavigation.Nombres,
+                Apellidos = provedorTb.IdPersonaNavigation.Apellidos,
+                Identificacion = provedorTb.IdPersonaNavigation.Identificacion,
+                Mail = provedorTb.IdPersonaNavigation.Mail,
+                Telefono = provedorTb.IdPersonaNavigation.TbGrlDireccione.Descripcion,
+                RazonSocial = provedorTb.RazonSocial,
+                Id = provedorTb.Id,
             };
         }
 

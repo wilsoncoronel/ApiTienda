@@ -48,6 +48,29 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
+        public async Task<ProveedorDTO> BuscarProveedorCI(string identificacion)
+        {
+            
+            try
+            {
+
+                var proveedor = await this._tiendaDbContext.TbComProveedores
+                    .Include(p => p.IdPersonaNavigation)
+                    .ThenInclude(t => t.IdTipoIdentificacionNavigation)
+                    .Include(p => p.IdPersonaNavigation)
+                    .ThenInclude(d => d.TbGrlDireccione)
+                    .ThenInclude(c => c.IdCiudadNavigation)
+                    .FirstOrDefaultAsync(p => p.IdPersonaNavigation.Identificacion == identificacion);
+                return this.mapper.MapeoProveedorTbAProveedorDto(proveedor);
+
+            }
+            catch
+            {
+                throw new Exception("Ha ocurrido un error editando el proveedor, comuníquese con el administrador del sistema!!!");
+            }
+            
+        }
+
         public async Task<bool> EditarProveedor(ProveedorEditarDTO proveedorEditarDto)
         {
             using (var transaction = _tiendaDbContext.Database.BeginTransaction())

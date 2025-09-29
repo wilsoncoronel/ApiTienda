@@ -308,6 +308,22 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ProveedorController",
+    "Method": "BuscarProveedorCI",
+    "RelativePath": "api/Proveedor/BuscarProveedorCI",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "identificacion",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ProveedorController",
     "Method": "CrearProveedor",
     "RelativePath": "api/Proveedor/CrearProveedor",
     "HttpMethod": "POST",
