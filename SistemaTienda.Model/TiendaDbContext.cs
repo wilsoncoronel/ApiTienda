@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using SistemaTienda.Model;
 
-namespace SistemaTienda.Model;
+namespace SistemaTienda.DAL.DBContext;
 
 public partial class TiendaDbContext : DbContext
 {
@@ -29,7 +30,7 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbComMarca> TbComMarcas { get; set; }
 
-    public virtual DbSet<TbComProveedore> TbComProveedores { get; set; }
+    public virtual DbSet<TbComProveedores> TbComProveedores { get; set; }
 
     public virtual DbSet<TbComTiposArticulo> TbComTiposArticulos { get; set; }
 
@@ -43,9 +44,9 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbDetallesInventario> TbDetallesInventarios { get; set; }
 
-    public virtual DbSet<TbGrlCiudade> TbGrlCiudades { get; set; }
+    public virtual DbSet<TbGrlCiudades> TbGrlCiudades { get; set; }
 
-    public virtual DbSet<TbGrlDireccione> TbGrlDirecciones { get; set; }
+    public virtual DbSet<TbGrlDirecciones> TbGrlDirecciones { get; set; }
 
     public virtual DbSet<TbGrlPersona> TbGrlPersonas { get; set; }
 
@@ -53,13 +54,13 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbInvInventario> TbInvInventarios { get; set; }
 
-    public virtual DbSet<TbInvTransaccione> TbInvTransacciones { get; set; }
+    public virtual DbSet<TbInvTransacciones> TbInvTransacciones { get; set; }
 
     public virtual DbSet<TbPedDetallesPedido> TbPedDetallesPedidos { get; set; }
 
     public virtual DbSet<TbPedEstadosPedido> TbPedEstadosPedidos { get; set; }
 
-    public virtual DbSet<TbPedido> TbPedidos { get; set; }
+    public virtual DbSet<TbPedidos> TbPedidos { get; set; }
 
     public virtual DbSet<TbSisMenu> TbSisMenus { get; set; }
 
@@ -69,7 +70,7 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbSisUsuario> TbSisUsuarios { get; set; }
 
-    public virtual DbSet<TbVenDetalleVentum> TbVenDetalleVenta { get; set; }
+    public virtual DbSet<TbVenDetalleVenta> TbVenDetalleVenta { get; set; }
 
     public virtual DbSet<TbVenEstadosVenta> TbVenEstadosVentas { get; set; }
 
@@ -173,7 +174,7 @@ public partial class TiendaDbContext : DbContext
             entity.Property(e => e.Nombre).HasMaxLength(100);
         });
 
-        modelBuilder.Entity<TbComProveedore>(entity =>
+        modelBuilder.Entity<TbComProveedores>(entity =>
         {
             entity.Property(e => e.Descripcion).HasMaxLength(500);
             entity.Property(e => e.RazonSocial).HasMaxLength(250);
@@ -287,12 +288,12 @@ public partial class TiendaDbContext : DbContext
                 .HasConstraintName("FK_TbInventario_TbInvTransacciones");
         });
 
-        modelBuilder.Entity<TbGrlCiudade>(entity =>
+        modelBuilder.Entity<TbGrlCiudades>(entity =>
         {
             entity.Property(e => e.Nombre).HasMaxLength(200);
         });
 
-        modelBuilder.Entity<TbGrlDireccione>(entity =>
+        modelBuilder.Entity<TbGrlDirecciones>(entity =>
         {
             entity.HasIndex(e => e.IdPersona, "UQ_DireccionPersona_IdPersona").IsUnique();
 
@@ -304,7 +305,7 @@ public partial class TiendaDbContext : DbContext
                 .HasConstraintName("FK_TbGrlDirecciones_TbGrlCiudades");
 
             entity.HasOne(d => d.IdPersonaNavigation).WithOne(p => p.TbGrlDireccione)
-                .HasForeignKey<TbGrlDireccione>(d => d.IdPersona)
+                .HasForeignKey<TbGrlDirecciones>(d => d.IdPersona)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbGrlDirecciones_TbGrlPersonas");
         });
@@ -349,7 +350,7 @@ public partial class TiendaDbContext : DbContext
                 .HasConstraintName("FK_TbInvInventario_TbCompras");
         });
 
-        modelBuilder.Entity<TbInvTransaccione>(entity =>
+        modelBuilder.Entity<TbInvTransacciones>(entity =>
         {
             entity.Property(e => e.Nombre).HasMaxLength(200);
         });
@@ -378,7 +379,7 @@ public partial class TiendaDbContext : DbContext
             entity.Property(e => e.Nombre).HasMaxLength(100);
         });
 
-        modelBuilder.Entity<TbPedido>(entity =>
+        modelBuilder.Entity<TbPedidos>(entity =>
         {
             entity.Property(e => e.Descripcion).HasMaxLength(500);
             entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
@@ -446,7 +447,7 @@ public partial class TiendaDbContext : DbContext
                 .HasConstraintName("FK_TbSisUsuarios_TbSisRol");
         });
 
-        modelBuilder.Entity<TbVenDetalleVentum>(entity =>
+        modelBuilder.Entity<TbVenDetalleVenta>(entity =>
         {
             entity.Property(e => e.Descripcion).HasMaxLength(200);
             entity.Property(e => e.ImpuestoValor).HasColumnType("numeric(18, 4)");

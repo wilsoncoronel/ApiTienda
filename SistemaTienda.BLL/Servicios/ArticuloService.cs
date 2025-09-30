@@ -44,6 +44,7 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
+        
         public async Task<bool> DesactivarArticulo(int idArticulo)
         {
             try
@@ -94,6 +95,16 @@ namespace SistemaTienda.BLL.Servicios
             catch {
                 throw;
             }
+        }
+
+        public async Task<List<ArticuloDTO>> ListarTodosArticulos()
+        {
+            IQueryable<TbComArticulo> listaArticulos = await this._articuloRepository.Consultar(a => a.Estado == true && a.EstadoVisual == true);
+            var listaArt = listaArticulos.Where(art => art.Estado == true && art.EstadoVisual == true)
+                .Include(a => a.IdMarcaNavigation)
+                .Include(a => a.IdTipoArticuloNavigation)
+                .Include(a => a.IdImpuestoNavigation).ToList();
+            return this._mapper.MapeoListaArticulosDto(listaArt);
         }
 
         public async Task<List<ArticuloDTO>> ListarArticulos(DateTime fechaInicial, DateTime fechaFinal)

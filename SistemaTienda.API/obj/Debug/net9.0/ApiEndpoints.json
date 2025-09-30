@@ -169,6 +169,26 @@
     ]
   },
   {
+    "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
+    "Method": "ListarTodosArticulos",
+    "RelativePath": "api/Articulo/ListarTodosArticulos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[SistemaTienda.DTO.ArticuloDTO, SistemaTienda.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "SistemaTienda.API.Controllers.ComprasController",
     "Method": "EditarCompra",
     "RelativePath": "api/Compras/EditarCompra",

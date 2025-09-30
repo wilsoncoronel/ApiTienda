@@ -18,5 +18,6 @@ namespace SistemaTienda.DTO
         public ArticuloDTO Articulo { get; set; }
         public decimal ValorTotal { get; set; }
         public decimal ImpuestoValor { get; set; }
+        public decimal? ValorVenta { get; set; }
     }
 }

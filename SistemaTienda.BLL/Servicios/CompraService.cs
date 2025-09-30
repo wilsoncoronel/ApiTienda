@@ -58,6 +58,7 @@ namespace SistemaTienda.BLL.Servicios
                             existente.Descripcion = detDto.Descripcion;
                             existente.ImpuestoValor = detDto.ImpuestoValor;
                             existente.ValorCompra = detDto.ValorCompra;
+                            existente.ValorVenta = detDto.ValorVenta;
                             existente.ValorTotal = detDto.ValorTotal;
                         }
                         else
@@ -70,6 +71,7 @@ namespace SistemaTienda.BLL.Servicios
                                 Descripcion = detDto.Descripcion,
                                 ImpuestoValor = detDto.ImpuestoValor,
                                 ValorCompra = detDto.ValorCompra,
+                                ValorVenta = detDto.ValorVenta,
                                 ValorTotal = detDto.ValorTotal
                             });
                         }

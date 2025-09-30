@@ -30,7 +30,7 @@ namespace SistemaTienda.API.Controllers
             catch
             {
                 resp.status = false;
-                resp.msg = "Error al crear el proveedor, comuniquese con el administrador del sistema!!!";
+                resp.msg = "Error al buscar el proveedor, comuniquese con el administrador del sistema!!!";
                 throw;
             }
             return Ok(resp);

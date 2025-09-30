@@ -53,24 +53,26 @@ namespace SistemaTienda.BLL.Servicios
             
             try
             {
-
                 var proveedor = await this._tiendaDbContext.TbComProveedores
                     .Include(p => p.IdPersonaNavigation)
                     .ThenInclude(t => t.IdTipoIdentificacionNavigation)
                     .Include(p => p.IdPersonaNavigation)
                     .ThenInclude(d => d.TbGrlDireccione)
                     .ThenInclude(c => c.IdCiudadNavigation)
-                    .FirstOrDefaultAsync(p => p.IdPersonaNavigation.Identificacion == identificacion);
+                    .Where(p => p.IdPersonaNavigation.Identificacion.Trim() == identificacion.Trim()).FirstOrDefaultAsync();
+                if(proveedor is null)
+                {
+                    throw new Exception("No se encontró ningún proveedor con la identificación proporcionada");
+                }
                 return this.mapper.MapeoProveedorTbAProveedorDto(proveedor);
 
             }
-            catch
+            catch(Exception ex)
             {
-                throw new Exception("Ha ocurrido un error editando el proveedor, comuníquese con el administrador del sistema!!!");
+                throw new Exception("Erro buscando el proveedor", ex);
             }
-            
         }
-
+        
         public async Task<bool> EditarProveedor(ProveedorEditarDTO proveedorEditarDto)
         {
             using (var transaction = _tiendaDbContext.Database.BeginTransaction())

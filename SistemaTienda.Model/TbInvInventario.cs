@@ -13,6 +13,8 @@ public partial class TbInvInventario
 
     public DateTime? FechaReversion { get; set; }
 
+    public DateTime? FechaActualizacion { get; set; }
+
     public virtual TbCompra IdCompraNavigation { get; set; } = null!;
 
     public virtual ICollection<TbDetallesInventario> TbDetallesInventarios { get; set; } = new List<TbDetallesInventario>();

@@ -476,6 +476,7 @@ namespace SistemaTienda.Utility
                 Mail = provedorTb.IdPersonaNavigation.Mail,
                 Telefono = provedorTb.IdPersonaNavigation.TbGrlDireccione.Descripcion,
                 RazonSocial = provedorTb.RazonSocial,
+                Direccion = $"Dirección: {provedorTb.IdPersonaNavigation.TbGrlDireccione.Descripcion} Ciudad: {provedorTb.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Nombre}",
                 Id = provedorTb.Id,
             };
         }
@@ -621,6 +622,7 @@ namespace SistemaTienda.Utility
                     Descripcion = d.Descripcion,
                     ImpuestoValor = d.ImpuestoValor,
                     ValorCompra = d.ValorCompra,
+                    ValorVenta = d.ValorVenta,
                     ValorTotal = d.ValorTotal,
                 }).ToList(),
 

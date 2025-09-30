@@ -88,6 +88,24 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
+        [HttpGet]
+        [Route("ListarTodosArticulos")]
+        public async Task<ActionResult<List<ArticuloDTO>>> ListarTodosArticulos()
+        {
+            var resp = new Response<List<ArticuloDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._articuloService.ListarTodosArticulos();
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
 
         [HttpPost]
         [Route("CrearArticulo")]

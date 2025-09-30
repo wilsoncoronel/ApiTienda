@@ -16,5 +16,6 @@ namespace SistemaTienda.BLL.Servicios.Contrato
         Task<List<TipoArticuloDTO>> CargarListaTiposArticulos();
         Task<List<ImpuestoArticuloDTO>> CargarListaImpuestos();
         Task<List<MarcaDTO>> CargarListaMarca();
+        Task<List<ArticuloDTO>> ListarTodosArticulos();
     }
 }
