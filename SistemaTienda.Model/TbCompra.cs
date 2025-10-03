@@ -23,12 +23,6 @@ public partial class TbCompra
 
     public bool EstadoVisual { get; set; }
 
-    public decimal ValorIva { get; set; }
-
-    public decimal SubTotal { get; set; }
-
-    public decimal Total { get; set; }
-
     public virtual TbComEstadosCompra IdEstadoCompraNavigation { get; set; } = null!;
 
     public virtual TbComProveedores IdProveedorNavigation { get; set; } = null!;

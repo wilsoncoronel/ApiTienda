@@ -183,6 +183,7 @@ namespace SistemaTienda.BLL.Servicios
                     IdArticulo = d.IdArticulo,
                     Cantidad = d.Cantidad,
                     PrecioUnitario = d.ValorCompra,
+                    PrecioCompra = d.ValorCompra,
                     IdTransaccionInventario = 1, // Asumiendo que 1 es el ID para "Entrada" en la tabla de transacciones de inventario
                 }).ToList(),
             };

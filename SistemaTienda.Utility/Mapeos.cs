@@ -413,13 +413,10 @@ namespace SistemaTienda.Utility
                 Documento = compraCreacionDto.Documento,
                 IdEstadoCompra = compraCreacionDto.IdEstado,
                 EstadoVisual = true,
-                SubTotal = compraCreacionDto.SubTotal,
-                Total = compraCreacionDto.Total,
                 IdUsuarioCreador = compraCreacionDto.IdUsuarioCreador,
                 TbComDetallesCompras = compraCreacionDto.DetalleComprasCreacionDto.Select(this.MapeoDetalleCompraCreacionDtoADetalleCompraDto).ToList(),
                 FechaCreacion = FechaGrl,
                 FechaCompra = compraCreacionDto.FechaCompra,
-                ValorIva = compraCreacionDto.ValorIva,
             };
         }
 
@@ -510,9 +507,6 @@ namespace SistemaTienda.Utility
             compraTb.FechaModificacion = FechaGrl;
             compraTb.IdEstadoCompra = compraEditarDto.IdEstado;
             compraTb.Documento = compraEditarDto.Documento;
-            compraTb.SubTotal = compraEditarDto.SubTotal;
-            compraTb.ValorIva = compraEditarDto.ValorIva;
-            compraTb.Total = compraEditarDto.Total;
             compraTb.FechaModificacion = FechaGrl;
             
         }
@@ -551,7 +545,6 @@ namespace SistemaTienda.Utility
                     Id = compraTb.IdEstadoCompraNavigation.Id,
                     Nombre = compraTb.IdEstadoCompraNavigation.Nombre,
                 },
-                Total = compraTb.Total,
 
             };
 
@@ -587,7 +580,6 @@ namespace SistemaTienda.Utility
                     Id = compraTb.IdEstadoCompraNavigation.Id,
                     Nombre = compraTb.IdEstadoCompraNavigation.Nombre,
                 },
-                Total = compraTb.Total,
                 DetalleCompras = compraTb.TbComDetallesCompras.Select(d => new DetalleCompraDTO
                 {
                     Id = d.Id,

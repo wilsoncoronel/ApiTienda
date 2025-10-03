@@ -17,9 +17,6 @@ namespace SistemaTienda.DTO
         public EstadoCompraDTO EstadoCompra { get; set; }
         public bool EstadoVisual { get; set; }
         public List<DetalleCompraDTO> DetalleCompras { get; set; } = [];
-        public decimal ValorIva { get; set; }
-        public decimal SubTotal { get; set; }
-        public decimal Total { get; set; }
         public int IdUsuarioCreador { get; set; }
         public UsuarioDTO UsuarioCreador { get; set; }
 

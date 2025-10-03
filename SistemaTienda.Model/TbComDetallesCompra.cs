@@ -17,7 +17,7 @@ public partial class TbComDetallesCompra
 
     public decimal ValorCompra { get; set; }
 
-    public decimal? ValorVenta { get; set; }
+    public decimal ValorVenta { get; set; }
 
     public decimal ValorTotal { get; set; }
 
