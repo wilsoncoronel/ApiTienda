@@ -59,10 +59,27 @@ namespace SistemaTienda.API.Controllers
         }
 
         [HttpGet]
+        [Route("ListarEstadosCompra")]
+        public async Task<IActionResult> ListarEstadosCompra()
+        {
+            var resp = new Response<List<EstadoCompraDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._compraService.ListarEstadosCompras();
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
+        [HttpGet]
         [Route("ListarCompras")]
         public async Task<IActionResult> ListarCompras(DateOnly fechaInicial, DateOnly fechaFinal)
         {
-
             var resp = new Response<List<CompraMinDTO>>();
             try
             {

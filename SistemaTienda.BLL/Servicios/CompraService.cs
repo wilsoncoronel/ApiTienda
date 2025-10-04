@@ -90,7 +90,21 @@ namespace SistemaTienda.BLL.Servicios
                 }
             }
         }
-
+        public async Task<List<EstadoCompraDTO>> ListarEstadosCompras()
+        {
+            List<TbComEstadosCompra> tbComEstadosCompras = await this._tiendaDbContext.TbComEstadosCompras.Where(est => est.EstadoVisual == true).ToListAsync();
+            var listaResultado = new List<TbCompra>();
+            try
+            {
+                
+                var listaComprasDto = this._mapper.MapeoListaEstadosCompraTbaAListaEstadosCompraDto(tbComEstadosCompras);
+                return listaComprasDto;
+            }
+            catch
+            {
+                throw;
+            }
+        }
         public async Task<List<CompraMinDTO>> ListarCompras(DateOnly fechaInicial, DateOnly fechaFinal)
         {
             var inicio = fechaInicial.ToDateTime(TimeOnly.MinValue);

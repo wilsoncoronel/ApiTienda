@@ -34,10 +34,27 @@ namespace SistemaTienda.Utility
         List<ArticuloDTO> MapeoListaArticulosDto(List<TbComArticulo> listaArticulosTb);
         ArticuloDTO MapeoArticuloTbAArticuloDto(TbComArticulo articuloTb);
         ProveedorDTO MapeoProveedorTbAProveedorDto(TbComProveedores provedorTb);
+        EstadoCompraDTO MapeoEstadosCompraTbaAEstadosCompraDto(TbComEstadosCompra EstadosTb);
+        List<EstadoCompraDTO> MapeoListaEstadosCompraTbaAListaEstadosCompraDto(List<TbComEstadosCompra> ListaEstadosDto);
     }
     public class Mapeos : IMapeos
     {
         private DateTime FechaGrl = DateTime.Now;
+
+        public EstadoCompraDTO MapeoEstadosCompraTbaAEstadosCompraDto(TbComEstadosCompra EstadosTb)
+        {
+            return new EstadoCompraDTO
+            {
+                Id = EstadosTb.Id,
+                Nombre = EstadosTb.Nombre,
+            };
+        }
+
+        public List<EstadoCompraDTO> MapeoListaEstadosCompraTbaAListaEstadosCompraDto(List<TbComEstadosCompra> ListaEstadosDto)
+        {
+
+            return ListaEstadosDto.Select( est =>this.MapeoEstadosCompraTbaAEstadosCompraDto(est)).ToList();
+        }
         public TbComArticulo MapeoArticuloCreacionDtoAArticuloTb(ArticuloCreacionDTO articuloCreacionDto){
             var articuloTb = new TbComArticulo {
                 Codigo = articuloCreacionDto.Codigo,

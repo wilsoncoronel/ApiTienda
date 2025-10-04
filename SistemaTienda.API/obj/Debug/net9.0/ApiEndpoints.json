@@ -227,6 +227,16 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ComprasController",
+    "Method": "ListarEstadosCompra",
+    "RelativePath": "api/Compras/ListarEstadosCompra",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ComprasController",
     "Method": "ObtenerCompra",
     "RelativePath": "api/Compras/ObtenerCompra",
     "HttpMethod": "GET",
