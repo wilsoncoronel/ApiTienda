@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj",
+      "projectUniqueName": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj",
       "projectName": "SistemaTienda.DTO",
-      "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj",
+      "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj",
       "packagesPath": "C:\\Users\\DOOMSLAYER\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\obj\\",
+      "outputPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DTO\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

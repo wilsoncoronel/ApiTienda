@@ -446,6 +446,7 @@ namespace SistemaTienda.Utility
                 Descripcion = detalleComraCreacionDto.Descripcion,
                 ImpuestoValor = detalleComraCreacionDto.ImpuestoValor,
                 ValorCompra = detalleComraCreacionDto.ValorCompra,
+                ValorVenta = detalleComraCreacionDto.ValorVenta,
                 ValorTotal = detalleComraCreacionDto.ValorTotal,
             };
 
@@ -580,6 +581,8 @@ namespace SistemaTienda.Utility
                     Id = compraTb.IdUsuarioCreadorNavigation.Id,
                     Apellidos = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Apellidos,
                     Nombres = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Nombres,
+                    Identificacion = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Identificacion,
+                    Mail = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Mail,
                 },
                 ProveedorDto = new ProveedorDTO
                 {
@@ -587,10 +590,12 @@ namespace SistemaTienda.Utility
                     RazonSocial = compraTb.IdProveedorNavigation.RazonSocial,
                     Descripcion = compraTb.IdProveedorNavigation.Descripcion,
                     Identificacion = compraTb.IdProveedorNavigation.IdPersonaNavigation.Identificacion,
-                    Mail = compraTb.IdProveedorNavigation.IdPersonaNavigation.Mail,
+                    Direccion = compraTb.IdProveedorNavigation.IdPersonaNavigation.TbGrlDireccione.Descripcion,
                 },
                 Documento = compraTb.Documento,
                 FechaCompra = compraTb.FechaCompra,
+                FechaCreacion = compraTb.FechaCreacion,
+                FechaModificacion = compraTb.FechaModificacion,
                 IdEstado = compraTb.IdEstadoCompra,
                 EstadoCompra = new EstadoCompraDTO
                 {
@@ -608,6 +613,9 @@ namespace SistemaTienda.Utility
                         Nombre = d.IdArticuloNavigation.Nombre,
                         Unidad = d.IdArticuloNavigation.Unidad,
                         UnidadValor = d.IdArticuloNavigation.UnidadValor,
+                        FechaActualizacion = d.IdArticuloNavigation.FechaActualizacion,
+                        FechaCreacion = d.IdArticuloNavigation.FechaCreacion,
+                        FechaCaducidad = d.IdArticuloNavigation.FechaCaducidad,
                         ImpuestoArticuloDto = new ImpuestoArticuloDTO
                         {
                             Id = d.IdArticuloNavigation.IdImpuestoNavigation.Id,

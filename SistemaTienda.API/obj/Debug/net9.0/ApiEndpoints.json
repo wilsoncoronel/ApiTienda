@@ -192,7 +192,7 @@
     "ContainingType": "SistemaTienda.API.Controllers.ComprasController",
     "Method": "EditarCompra",
     "RelativePath": "api/Compras/EditarCompra",
-    "HttpMethod": "POST",
+    "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [

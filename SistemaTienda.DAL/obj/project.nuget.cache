@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "oVuh+JXV3Rw=",
+  "dgSpecHash": "3ow02COudpM=",
   "success": true,
-  "projectFilePath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DAL\\SistemaTienda.DAL.csproj",
+  "projectFilePath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DAL\\SistemaTienda.DAL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\DOOMSLAYER\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\DOOMSLAYER\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

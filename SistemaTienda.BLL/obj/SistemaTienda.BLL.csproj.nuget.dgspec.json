@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.BLL\\SistemaTienda.BLL.csproj": {}
+    "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.BLL\\SistemaTienda.BLL.csproj": {}
   },
   "projects": {
-    "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.BLL\\SistemaTienda.BLL.csproj": {
+    "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.BLL\\SistemaTienda.BLL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.BLL\\SistemaTienda.BLL.csproj",
+        "projectUniqueName": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.BLL\\SistemaTienda.BLL.csproj",
         "projectName": "SistemaTienda.BLL",
-        "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.BLL\\SistemaTienda.BLL.csproj",
+        "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.BLL\\SistemaTienda.BLL.csproj",
         "packagesPath": "C:\\Users\\DOOMSLAYER\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.BLL\\obj\\",
+        "outputPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.BLL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -33,17 +33,17 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DAL\\SistemaTienda.DAL.csproj": {
-                "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DAL\\SistemaTienda.DAL.csproj"
+              "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DAL\\SistemaTienda.DAL.csproj": {
+                "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DAL\\SistemaTienda.DAL.csproj"
               },
-              "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj": {
-                "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj"
+              "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj": {
+                "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj"
               },
-              "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\SistemaTienda.Model.csproj": {
-                "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\SistemaTienda.Model.csproj"
+              "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.Model\\SistemaTienda.Model.csproj": {
+                "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.Model\\SistemaTienda.Model.csproj"
               },
-              "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Utility\\SistemaTienda.Utility.csproj": {
-                "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Utility\\SistemaTienda.Utility.csproj"
+              "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.Utility\\SistemaTienda.Utility.csproj": {
+                "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.Utility\\SistemaTienda.Utility.csproj"
               }
             }
           }
@@ -89,14 +89,14 @@
         }
       }
     },
-    "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DAL\\SistemaTienda.DAL.csproj": {
+    "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DAL\\SistemaTienda.DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DAL\\SistemaTienda.DAL.csproj",
+        "projectUniqueName": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DAL\\SistemaTienda.DAL.csproj",
         "projectName": "SistemaTienda.DAL",
-        "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DAL\\SistemaTienda.DAL.csproj",
+        "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DAL\\SistemaTienda.DAL.csproj",
         "packagesPath": "C:\\Users\\DOOMSLAYER\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DAL\\obj\\",
+        "outputPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DAL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -118,8 +118,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\SistemaTienda.Model.csproj": {
-                "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\SistemaTienda.Model.csproj"
+              "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.Model\\SistemaTienda.Model.csproj": {
+                "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.Model\\SistemaTienda.Model.csproj"
               }
             }
           }
@@ -159,14 +159,14 @@
         }
       }
     },
-    "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj": {
+    "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj",
+        "projectUniqueName": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj",
         "projectName": "SistemaTienda.DTO",
-        "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj",
+        "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj",
         "packagesPath": "C:\\Users\\DOOMSLAYER\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\obj\\",
+        "outputPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DTO\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -225,14 +225,14 @@
         }
       }
     },
-    "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\SistemaTienda.Model.csproj": {
+    "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.Model\\SistemaTienda.Model.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\SistemaTienda.Model.csproj",
+        "projectUniqueName": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.Model\\SistemaTienda.Model.csproj",
         "projectName": "SistemaTienda.Model",
-        "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\SistemaTienda.Model.csproj",
+        "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.Model\\SistemaTienda.Model.csproj",
         "packagesPath": "C:\\Users\\DOOMSLAYER\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\obj\\",
+        "outputPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.Model\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -303,14 +303,14 @@
         }
       }
     },
-    "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Utility\\SistemaTienda.Utility.csproj": {
+    "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.Utility\\SistemaTienda.Utility.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Utility\\SistemaTienda.Utility.csproj",
+        "projectUniqueName": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.Utility\\SistemaTienda.Utility.csproj",
         "projectName": "SistemaTienda.Utility",
-        "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Utility\\SistemaTienda.Utility.csproj",
+        "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.Utility\\SistemaTienda.Utility.csproj",
         "packagesPath": "C:\\Users\\DOOMSLAYER\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Utility\\obj\\",
+        "outputPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.Utility\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -332,11 +332,11 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj": {
-                "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj"
+              "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj": {
+                "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj"
               },
-              "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\SistemaTienda.Model.csproj": {
-                "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\ApiTienda\\SistemaTienda.Model\\SistemaTienda.Model.csproj"
+              "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.Model\\SistemaTienda.Model.csproj": {
+                "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.Model\\SistemaTienda.Model.csproj"
               }
             }
           }

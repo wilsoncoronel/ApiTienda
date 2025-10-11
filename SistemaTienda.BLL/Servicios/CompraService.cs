@@ -139,6 +139,7 @@ namespace SistemaTienda.BLL.Servicios
                     .ThenInclude(id => id.IdTipoIdentificacionNavigation)
                     .Include(prov => prov.IdProveedorNavigation)
                     .ThenInclude(per => per.IdPersonaNavigation)
+                    .ThenInclude(dir => dir.TbGrlDireccione)
                     .Include(est => est.IdEstadoCompraNavigation)
                     .Include(det => det.TbComDetallesCompras)
                     .ThenInclude(art => art.IdArticuloNavigation)
@@ -197,8 +198,8 @@ namespace SistemaTienda.BLL.Servicios
                     IdArticulo = d.IdArticulo,
                     Cantidad = d.Cantidad,
                     PrecioUnitario = d.ValorCompra,
-                    PrecioCompra = d.ValorCompra,
-                    IdTransaccionInventario = 1, // Asumiendo que 1 es el ID para "Entrada" en la tabla de transacciones de inventario
+                    PrecioCompra = d.ValorVenta,
+                    IdTransaccionInventario = 1, // Asumiendo que 1 es el ID para "Entrada" en la tabla de transacciones de inventario 
                 }).ToList(),
             };
             await this._inventarioRepository.Crear(inv);

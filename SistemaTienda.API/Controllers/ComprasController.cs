@@ -36,7 +36,7 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("EditarCompra")]
         public async Task<IActionResult> EditarCompra(CompraEditarDTO compraEditarDto)
         {
