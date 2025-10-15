@@ -16,7 +16,7 @@ namespace SistemaTienda.DTO
         public DateTime FechaVenta { get; set; }
         public DateTime FechaCreacion { get; set; }
         public int IdEstado { get; set; }
-        public EstadoVenta EstadoVenta { get; set; }
+        public EstadoVentaDTO EstadoVenta { get; set; }
         public bool EstadoVisual { get; set; }
         public List<DetalleVentaDTO> DetalleVenta { get; set; } = [];
         public double ValorIva { get; set; }

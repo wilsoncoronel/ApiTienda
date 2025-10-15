@@ -13,6 +13,8 @@ public partial class TbGrlPersona
 
     public string Apellidos { get; set; } = null!;
 
+    public string? Telefono { get; set; }
+
     public string Mail { get; set; } = null!;
 
     public string Identificacion { get; set; } = null!;

@@ -266,7 +266,7 @@ public partial class TiendaDbContext : DbContext
             entity.ToTable("TbDetallesInventario");
 
             entity.Property(e => e.PrecioCompra).HasColumnType("numeric(18, 4)");
-            entity.Property(e => e.PrecioUnitario).HasColumnType("numeric(18, 4)");
+            entity.Property(e => e.PrecioVenta).HasColumnType("numeric(18, 4)");
 
             entity.HasOne(d => d.IdArticuloNavigation).WithMany(p => p.TbDetallesInventarios)
                 .HasForeignKey(d => d.IdArticulo)
@@ -316,6 +316,7 @@ public partial class TiendaDbContext : DbContext
                 .IsFixedLength();
             entity.Property(e => e.Mail).HasMaxLength(200);
             entity.Property(e => e.Nombres).HasMaxLength(500);
+            entity.Property(e => e.Telefono).HasMaxLength(10);
 
             entity.HasOne(d => d.IdTipoIdentificacionNavigation).WithMany(p => p.TbGrlPersonas)
                 .HasForeignKey(d => d.IdTipoIdentificacion)
@@ -342,8 +343,11 @@ public partial class TiendaDbContext : DbContext
 
             entity.HasOne(d => d.IdCompraNavigation).WithOne(p => p.TbInvInventario)
                 .HasForeignKey<TbInvInventario>(d => d.IdCompra)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbInvInventario_TbCompras");
+
+            entity.HasOne(d => d.IdVentaNavigation).WithMany(p => p.TbInvInventarios)
+                .HasForeignKey(d => d.IdVenta)
+                .HasConstraintName("FK_TbInvInventario_Venta");
         });
 
         modelBuilder.Entity<TbInvTransacciones>(entity =>

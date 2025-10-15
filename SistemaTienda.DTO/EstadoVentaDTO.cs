@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SistemaTienda.DTO
 {
-    public class EstadoVenta
+    public class EstadoVentaDTO
     {
         public int Id { get; set; }
         public string Nombre { get; set; }

@@ -189,6 +189,22 @@
     ]
   },
   {
+    "ContainingType": "SistemaTienda.API.Controllers.ClienteController",
+    "Method": "BuscarClienteCI",
+    "RelativePath": "api/Cliente/BuscarProveedorCI",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "identificacion",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaTienda.API.Controllers.ComprasController",
     "Method": "EditarCompra",
     "RelativePath": "api/Compras/EditarCompra",
@@ -440,6 +456,48 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.VentasController",
+    "Method": "EditarVenta",
+    "RelativePath": "api/Ventas/EditarVenta",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ventaEditarDto",
+        "Type": "SistemaTienda.DTO.VentaEditarDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.VentasController",
+    "Method": "ListarEstadosVenta",
+    "RelativePath": "api/Ventas/ListarEstadosVenta",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.VentasController",
+    "Method": "RegistrarVenta",
+    "RelativePath": "api/Ventas/RegistrarVenta",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ventaCreacionDto",
+        "Type": "SistemaTienda.DTO.VentaCreacionDTO",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   }
 ]

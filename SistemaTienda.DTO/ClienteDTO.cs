@@ -16,5 +16,6 @@ namespace SistemaTienda.DTO
         public string Telefono { get; set; }
         public bool EstadoVisual { get; set; }
         public bool Estado { get; set; }
+        public DireccionDTO DireccionDto { get; set; }
     }
 }

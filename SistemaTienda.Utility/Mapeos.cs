@@ -36,6 +36,12 @@ namespace SistemaTienda.Utility
         ProveedorDTO MapeoProveedorTbAProveedorDto(TbComProveedores provedorTb);
         EstadoCompraDTO MapeoEstadosCompraTbaAEstadosCompraDto(TbComEstadosCompra EstadosTb);
         List<EstadoCompraDTO> MapeoListaEstadosCompraTbaAListaEstadosCompraDto(List<TbComEstadosCompra> ListaEstadosDto);
+        TbVenta MapeoVentaCreacionDtoAVentaTb(VentaCreacionDTO ventaCreacionDto);
+        TbVenDetalleVenta MapeoDetalleVentaCreacionDtoADetalleVentaDto(DetalleVentaCreacionDTO detalleVentaCreacionDto);
+        EstadoVentaDTO MapeoEstadosVentaTbaAEstadosVentaDto(TbVenEstadosVenta EstadosTb);
+        List<EstadoVentaDTO> MapeoListaEstadosVentaTbaAListaEstadosVentaDto(List<TbVenEstadosVenta> ListaEstadosDto);
+        void MapeoVentaEdicionDtoAVentaTb(VentaEditarDTO ventaEditarDto, TbVenta ventaTb);
+        ClienteDTO MapeoClienteTbAClienteDto(TbComCliente clienteTb);
     }
     public class Mapeos : IMapeos
     {
@@ -54,6 +60,22 @@ namespace SistemaTienda.Utility
         {
 
             return ListaEstadosDto.Select( est =>this.MapeoEstadosCompraTbaAEstadosCompraDto(est)).ToList();
+        }
+
+
+        public EstadoVentaDTO MapeoEstadosVentaTbaAEstadosVentaDto(TbVenEstadosVenta EstadosTb)
+        {
+            return new EstadoVentaDTO
+            {
+                Id = EstadosTb.Id,
+                Nombre = EstadosTb.Nombre,
+            };
+        }
+
+        public List<EstadoVentaDTO> MapeoListaEstadosVentaTbaAListaEstadosVentaDto(List<TbVenEstadosVenta> ListaEstadosDto)
+        {
+
+            return ListaEstadosDto.Select(est => this.MapeoEstadosVentaTbaAEstadosVentaDto(est)).ToList();
         }
         public TbComArticulo MapeoArticuloCreacionDtoAArticuloTb(ArticuloCreacionDTO articuloCreacionDto){
             var articuloTb = new TbComArticulo {
@@ -437,6 +459,9 @@ namespace SistemaTienda.Utility
             };
         }
 
+
+
+
         public TbComDetallesCompra MapeoDetalleCompraCreacionDtoADetalleCompraDto(DetalleCompraCreacionDTO detalleComraCreacionDto)
         {
             return new TbComDetallesCompra
@@ -452,6 +477,33 @@ namespace SistemaTienda.Utility
 
         }
 
+        public TbVenta MapeoVentaCreacionDtoAVentaTb(VentaCreacionDTO ventaCreacionDto)
+        {
+            return new TbVenta
+            {
+                IdCliente = ventaCreacionDto.IdCliente,
+                Documento = ventaCreacionDto.Documento,
+                IdEstadoVenta = ventaCreacionDto.IdEstado,
+                EstadoVisual = true,
+                IdUsuarioCreador = ventaCreacionDto.UsuarioCreadorId,
+                TbVenDetalleVenta = ventaCreacionDto.DetalleVentaCreacionDto.Select(this.MapeoDetalleVentaCreacionDtoADetalleVentaDto).ToList(),
+                FechaCreacion = FechaGrl,
+                FechaVenta = ventaCreacionDto.FechaCompra,
+            };
+        }
+
+        public TbVenDetalleVenta MapeoDetalleVentaCreacionDtoADetalleVentaDto(DetalleVentaCreacionDTO detalleVentaCreacionDto)
+        {
+            return new TbVenDetalleVenta
+            {
+                IdArticulo = detalleVentaCreacionDto.ArticuloId,
+                Cantidad = detalleVentaCreacionDto.Cantidad,
+                Descripcion = detalleVentaCreacionDto.Descripcion,
+                ImpuestoValor = detalleVentaCreacionDto.ImpuestoValor,
+                ValorCompra = detalleVentaCreacionDto.ValorCompra,
+                ValorTotal = detalleVentaCreacionDto.ValorTotal,
+            };
+        }
         public TbComProveedores MapeoProveedorDtoAProveedorTb(ProveedorCreacionDTO provedorCreacion)
         {
             return new TbComProveedores
@@ -496,6 +548,30 @@ namespace SistemaTienda.Utility
             };
         }
 
+        public ClienteDTO MapeoClienteTbAClienteDto(TbComCliente clienteTb)
+        {
+            return new ClienteDTO
+            {
+                EstadoVisual = true,
+                Nombres = clienteTb.IdPersonaNavigation.Nombres,
+                Apellidos = clienteTb.IdPersonaNavigation.Apellidos,
+                Identificacion = clienteTb.IdPersonaNavigation.Identificacion,
+                Mail = clienteTb.IdPersonaNavigation.Mail,
+                Telefono = clienteTb.IdPersonaNavigation.Telefono,
+                DireccionDto = new DireccionDTO
+                {
+                    Descripcion = clienteTb.IdPersonaNavigation.TbGrlDireccione.Descripcion,
+                    IdCiudad = clienteTb.IdPersonaNavigation.TbGrlDireccione.IdCiudad,
+                    Ciudad = new CiudadDTO
+                    {
+                        Id = clienteTb.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Id,
+                        Nombre = clienteTb.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Nombre,
+                    },
+                },
+                Id = clienteTb.Id,
+            };
+        }
+
         public void MapeoProveedorEditarDtoAProveedorTb(ProveedorEditarDTO provedorEditar, TbComProveedores proveedoresTb)
         {
             proveedoresTb.Estado = provedorEditar.Estado;
@@ -527,6 +603,15 @@ namespace SistemaTienda.Utility
             compraTb.Documento = compraEditarDto.Documento;
             compraTb.FechaModificacion = FechaGrl;
             
+        }
+
+        public void MapeoVentaEdicionDtoAVentaTb(VentaEditarDTO ventaEditarDto, TbVenta ventaTb)
+        {
+            ventaTb.FechaModificacion = FechaGrl;
+            ventaTb.IdEstadoVenta = ventaEditarDto.IdEstado;
+            ventaTb.Documento = ventaEditarDto.Documento;
+            ventaTb.FechaModificacion = FechaGrl;
+
         }
 
         public List<CompraMinDTO> MapeoListaCompraTbAListaCompraDto(List<TbCompra> listaResultado)

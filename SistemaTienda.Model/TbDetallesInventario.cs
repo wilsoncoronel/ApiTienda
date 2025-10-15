@@ -15,9 +15,9 @@ public partial class TbDetallesInventario
 
     public int Cantidad { get; set; }
 
-    public decimal? PrecioCompra { get; set; }
+    public decimal PrecioCompra { get; set; }
 
-    public decimal PrecioUnitario { get; set; }
+    public decimal PrecioVenta { get; set; }
 
     public virtual TbComArticulo IdArticuloNavigation { get; set; } = null!;
 

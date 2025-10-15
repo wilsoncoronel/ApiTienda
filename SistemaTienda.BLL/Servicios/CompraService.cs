@@ -93,7 +93,6 @@ namespace SistemaTienda.BLL.Servicios
         public async Task<List<EstadoCompraDTO>> ListarEstadosCompras()
         {
             List<TbComEstadosCompra> tbComEstadosCompras = await this._tiendaDbContext.TbComEstadosCompras.Where(est => est.EstadoVisual == true).ToListAsync();
-            var listaResultado = new List<TbCompra>();
             try
             {
                 
@@ -197,8 +196,8 @@ namespace SistemaTienda.BLL.Servicios
                 TbDetallesInventarios = compraTb.TbComDetallesCompras.Select(d => new TbDetallesInventario{
                     IdArticulo = d.IdArticulo,
                     Cantidad = d.Cantidad,
-                    PrecioUnitario = d.ValorCompra,
-                    PrecioCompra = d.ValorVenta,
+                    PrecioCompra = d.ValorCompra,
+                    PrecioVenta = d.ValorVenta,
                     IdTransaccionInventario = 1, // Asumiendo que 1 es el ID para "Entrada" en la tabla de transacciones de inventario 
                 }).ToList(),
             };
