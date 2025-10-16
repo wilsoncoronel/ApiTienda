@@ -76,7 +76,9 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbVenta> TbVentas { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=DESKTOP-QO2URC6\\SQLEXPRESS;Database=TiendaDb;User Id=sa;Password=wili199308; TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -479,9 +481,6 @@ public partial class TiendaDbContext : DbContext
             entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
             entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
             entity.Property(e => e.FechaVenta).HasColumnType("datetime");
-            entity.Property(e => e.SubTotal).HasColumnType("numeric(18, 4)");
-            entity.Property(e => e.Total).HasColumnType("numeric(18, 4)");
-            entity.Property(e => e.ValorIva).HasColumnType("numeric(18, 4)");
 
             entity.HasOne(d => d.IdEstadoVentaNavigation).WithMany(p => p.TbVenta)
                 .HasForeignKey(d => d.IdEstadoVenta)

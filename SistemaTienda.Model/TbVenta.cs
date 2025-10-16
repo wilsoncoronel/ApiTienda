@@ -21,12 +21,6 @@ public partial class TbVenta
 
     public DateTime? FechaModificacion { get; set; }
 
-    public decimal? ValorIva { get; set; }
-
-    public decimal? SubTotal { get; set; }
-
-    public decimal? Total { get; set; }
-
     public bool? EstadoVisual { get; set; }
 
     public virtual TbVenEstadosVenta? IdEstadoVentaNavigation { get; set; }

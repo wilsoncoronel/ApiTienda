@@ -191,7 +191,7 @@
   {
     "ContainingType": "SistemaTienda.API.Controllers.ClienteController",
     "Method": "BuscarClienteCI",
-    "RelativePath": "api/Cliente/BuscarProveedorCI",
+    "RelativePath": "api/Cliente/BuscarClienteCI",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
