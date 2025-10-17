@@ -13,9 +13,9 @@ namespace SistemaTienda.DTO
         public string Descripcion { get; set; }
         public int Cantidad { get; set; }
         public decimal ValorCompra { get; set; }
+        public decimal ValorVenta { get; set; }
         public int ArticuloId { get; set; }
         public decimal ValorTotal { get; set; }
         public decimal ImpuestoValor { get; set; }
-        public ArticuloDTO ArticuloDetalleDto { get; set; }
     }
 }

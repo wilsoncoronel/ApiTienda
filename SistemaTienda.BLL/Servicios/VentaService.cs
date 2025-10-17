@@ -58,7 +58,8 @@ namespace SistemaTienda.BLL.Servicios
                             existente.Descripcion = detDto.Descripcion;
                             existente.ImpuestoValor = detDto.ImpuestoValor;
                             existente.ValorCompra = detDto.ValorCompra;
-                            existente.ValorTotal = detDto.ValorTotal;
+                            existente.ValorVenta = detDto.ValorVenta;   
+                            existente.ValotTotal = detDto.ValorTotal;
                         }
                         else
                         {
@@ -70,7 +71,8 @@ namespace SistemaTienda.BLL.Servicios
                                 Descripcion = detDto.Descripcion,
                                 ImpuestoValor = detDto.ImpuestoValor,
                                 ValorCompra = detDto.ValorCompra,
-                                ValorTotal = detDto.ValorTotal
+                                ValorVenta = detDto.ValorVenta,
+                                ValotTotal = detDto.ValorTotal
                             });
                         }
                     }
@@ -146,12 +148,13 @@ namespace SistemaTienda.BLL.Servicios
             {
                 IdVenta = ventaTb.Id,
                 FechaCreacion = DateTime.Now,
+                IdCompra = null,
                 TbDetallesInventarios = ventaTb.TbVenDetalleVenta.Select(d => new TbDetallesInventario
                 {
                     IdArticulo = d.IdArticulo,
                     Cantidad = d.Cantidad,
                     PrecioCompra = d.ValorCompra,
-                    PrecioVenta = d.ValorTotal,
+                    PrecioVenta = d.ValorVenta,
                     IdTransaccionInventario = 2, // Asumiendo que 1 es el ID para "Entrada" en la tabla de transacciones de inventario 
                 }).ToList(),
             };

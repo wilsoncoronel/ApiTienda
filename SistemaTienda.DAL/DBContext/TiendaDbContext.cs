@@ -54,7 +54,7 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbInvInventario> TbInvInventarios { get; set; }
 
-    public virtual DbSet<TbInvTransacciones> TbInvTransacciones { get; set; }
+    public virtual DbSet<TbInvTransaccione> TbInvTransacciones { get; set; }
 
     public virtual DbSet<TbPedDetallesPedido> TbPedDetallesPedidos { get; set; }
 
@@ -76,9 +76,7 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbVenta> TbVentas { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-QO2URC6\\SQLEXPRESS;Database=TiendaDb;User Id=sa;Password=wili199308; TrustServerCertificate=True;");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -337,7 +335,13 @@ public partial class TiendaDbContext : DbContext
         {
             entity.ToTable("TbInvInventario");
 
-            entity.HasIndex(e => e.IdCompra, "UQ_Inventario_Compra").IsUnique();
+            entity.HasIndex(e => e.IdCompra, "IX_UQ_Inventario_Compra")
+                .IsUnique()
+                .HasFilter("([IdCompra] IS NOT NULL)");
+
+            entity.HasIndex(e => e.IdVenta, "IX_UQ_Inventario_Venta")
+                .IsUnique()
+                .HasFilter("([IdVenta] IS NOT NULL)");
 
             entity.Property(e => e.FechaActualizacion).HasColumnType("datetime");
             entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
@@ -347,12 +351,12 @@ public partial class TiendaDbContext : DbContext
                 .HasForeignKey<TbInvInventario>(d => d.IdCompra)
                 .HasConstraintName("FK_TbInvInventario_TbCompras");
 
-            entity.HasOne(d => d.IdVentaNavigation).WithMany(p => p.TbInvInventarios)
-                .HasForeignKey(d => d.IdVenta)
+            entity.HasOne(d => d.IdVentaNavigation).WithOne(p => p.TbInvInventario)
+                .HasForeignKey<TbInvInventario>(d => d.IdVenta)
                 .HasConstraintName("FK_TbInvInventario_Venta");
         });
 
-        modelBuilder.Entity<TbInvTransacciones>(entity =>
+        modelBuilder.Entity<TbInvTransaccione>(entity =>
         {
             entity.Property(e => e.Nombre).HasMaxLength(200);
         });
@@ -454,7 +458,8 @@ public partial class TiendaDbContext : DbContext
             entity.Property(e => e.Descripcion).HasMaxLength(200);
             entity.Property(e => e.ImpuestoValor).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.ValorCompra).HasColumnType("numeric(18, 4)");
-            entity.Property(e => e.ValorTotal).HasColumnType("numeric(18, 4)");
+            entity.Property(e => e.ValorVenta).HasColumnType("numeric(18, 4)");
+            entity.Property(e => e.ValotTotal).HasColumnType("numeric(18, 4)");
 
             entity.HasOne(d => d.IdArticuloNavigation).WithMany(p => p.TbVenDetalleVenta)
                 .HasForeignKey(d => d.IdArticulo)

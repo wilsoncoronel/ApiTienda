@@ -29,7 +29,7 @@ public partial class TbVenta
 
     public virtual TbContAsientoContable? TbContAsientoContable { get; set; }
 
-    public virtual ICollection<TbInvInventario> TbInvInventarios { get; set; } = new List<TbInvInventario>();
+    public virtual TbInvInventario? TbInvInventario { get; set; }
 
     public virtual ICollection<TbVenDetalleVenta> TbVenDetalleVenta { get; set; } = new List<TbVenDetalleVenta>();
 }

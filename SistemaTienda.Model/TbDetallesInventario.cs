@@ -23,5 +23,5 @@ public partial class TbDetallesInventario
 
     public virtual TbInvInventario IdInventarioNavigation { get; set; } = null!;
 
-    public virtual TbInvTransacciones IdTransaccionInventarioNavigation { get; set; } = null!;
+    public virtual TbInvTransaccione IdTransaccionInventarioNavigation { get; set; } = null!;
 }

@@ -17,7 +17,9 @@ public partial class TbVenDetalleVenta
 
     public decimal ValorCompra { get; set; }
 
-    public decimal ValorTotal { get; set; }
+    public decimal ValorVenta { get; set; }
+
+    public decimal ValotTotal { get; set; }
 
     public decimal ImpuestoValor { get; set; }
 

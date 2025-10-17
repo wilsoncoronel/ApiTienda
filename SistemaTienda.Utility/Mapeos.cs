@@ -391,7 +391,7 @@ namespace SistemaTienda.Utility
                 Descripcion = detalleVentaCreacionDto.Descripcion,
                 ImpuestoValor = detalleVentaCreacionDto.ImpuestoValor,
                 ValorCompra = detalleVentaCreacionDto.ValorCompra,
-                ValorTotal = detalleVentaCreacionDto.ValorTotal,
+                ValotTotal = detalleVentaCreacionDto.ValorTotal,
                 IdVenta = detalleVentaCreacionDto.IdVenta,
             };
         }
@@ -501,7 +501,8 @@ namespace SistemaTienda.Utility
                 Descripcion = detalleVentaCreacionDto.Descripcion,
                 ImpuestoValor = detalleVentaCreacionDto.ImpuestoValor,
                 ValorCompra = detalleVentaCreacionDto.ValorCompra,
-                ValorTotal = detalleVentaCreacionDto.ValorTotal,
+                ValorVenta = detalleVentaCreacionDto.ValorVenta,
+                ValotTotal = detalleVentaCreacionDto.ValorTotal,
             };
         }
         public TbComProveedores MapeoProveedorDtoAProveedorTb(ProveedorCreacionDTO provedorCreacion)

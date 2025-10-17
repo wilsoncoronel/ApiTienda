@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,9 +14,9 @@ namespace SistemaTienda.DTO
         public DateTime FechaCompra { get; set; }
         public DateTime FechaCreacion { get; set; }
         public int IdEstado { get; set; }
-        public EstadoVentaDTO EstadoVenta { get; set; }
         public bool EstadoVisual { get; set; }
-        public List<DetalleVentaCreacionDTO> DetalleVentaCreacionDto { get; set; } = [];
+        [Required]
+        public List<DetalleVentaCreacionDTO> DetalleVentaCreacionDto { get; set; }
         public int UsuarioCreadorId { get; set; }
     }
 }

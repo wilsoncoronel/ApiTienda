@@ -13,10 +13,11 @@ namespace SistemaTienda.DTO
         public int IdVenta { get; set; }
         public string Descripcion { get; set; }
         public int Cantidad { get; set; }
-        public double ValorCompra { get; set; }
+        public decimal ValorCompra { get; set; }
+        public decimal ValorVenta { get; set; }
         public int ArticuloId { get; set; }
         public ArticuloDTO Articulo { get; set; }
-        public double ValorTotal { get; set; }
-        public double ImpuestoValor { get; set; }
+        public decimal ValorTotal { get; set; }
+        public decimal ImpuestoValor { get; set; }
     }
 }
