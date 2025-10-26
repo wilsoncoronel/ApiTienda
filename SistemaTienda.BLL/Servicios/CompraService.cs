@@ -104,6 +104,8 @@ namespace SistemaTienda.BLL.Servicios
                 throw;
             }
         }
+
+       
         public async Task<List<CompraMinDTO>> ListarCompras(DateOnly fechaInicial, DateOnly fechaFinal)
         {
             var inicio = fechaInicial.ToDateTime(TimeOnly.MinValue);

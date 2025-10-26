@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using SistemaTienda.Model;
-
 namespace SistemaTienda.DAL.DBContext;
 
 public partial class TiendaDbContext : DbContext
@@ -54,7 +53,7 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbInvInventario> TbInvInventarios { get; set; }
 
-    public virtual DbSet<TbInvTransaccione> TbInvTransacciones { get; set; }
+    public virtual DbSet<TbInvTransacciones> TbInvTransacciones { get; set; }
 
     public virtual DbSet<TbPedDetallesPedido> TbPedDetallesPedidos { get; set; }
 
@@ -356,7 +355,7 @@ public partial class TiendaDbContext : DbContext
                 .HasConstraintName("FK_TbInvInventario_Venta");
         });
 
-        modelBuilder.Entity<TbInvTransaccione>(entity =>
+        modelBuilder.Entity<TbInvTransacciones>(entity =>
         {
             entity.Property(e => e.Nombre).HasMaxLength(200);
         });
@@ -487,12 +486,19 @@ public partial class TiendaDbContext : DbContext
             entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
             entity.Property(e => e.FechaVenta).HasColumnType("datetime");
 
+            entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.TbVenta)
+                .HasForeignKey(d => d.IdCliente)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbVentas_TbComClientes");
+
             entity.HasOne(d => d.IdEstadoVentaNavigation).WithMany(p => p.TbVenta)
                 .HasForeignKey(d => d.IdEstadoVenta)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbVentas_TbVenEstadosVentas");
 
             entity.HasOne(d => d.IdUsuarioCreadorNavigation).WithMany(p => p.TbVenta)
                 .HasForeignKey(d => d.IdUsuarioCreador)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbVentas_TbSisUsuarios");
         });
 

@@ -72,5 +72,42 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
+        [HttpGet]
+        [Route("ListarVentas")]
+        public async Task<IActionResult> ListarVentas(DateOnly fechaInicial, DateOnly fechaFinal)
+        {
+            var resp = new Response<List<VentaMinDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._ventasService.ListarVentas(fechaInicial, fechaFinal);
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
+        [HttpGet]
+        [Route("ObtenerVenta")]
+        public async Task<IActionResult> ObtenerVenta(int idVenta)
+        {
+
+            var resp = new Response<VentaDTO>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._ventasService.ObtenerVenta(idVenta);
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
     }
 }

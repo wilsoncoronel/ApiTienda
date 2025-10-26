@@ -50,14 +50,59 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
-        public Task<int> CrearCliente(ClienteCreacionDTO proveedorCreacionDto)
+        public async Task<List<CiudadDTO>> ListarCiudades()
         {
-            throw new NotImplementedException();
+            List<TbGrlCiudades> tbCiudades = await this._tiendaDbContext.TbGrlCiudades.Where(est => est.EstadoVisual == true).ToListAsync();
+            try
+            {
+                var listaCiudadesDto = this._mapper.MapeoListaCiudadesTbaAListaCiudadesDto(tbCiudades);
+                return listaCiudadesDto;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<int> CrearCliente(ClienteCreacionDTO clienteCreacionDto)
+        {
+            using (var transaccion = _tiendaDbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var cliente = this._mapper.MapeoCLienteDtoAClienteTb(clienteCreacionDto);
+                    await this._clienteRepository.Crear(cliente);
+                    if (cliente.Id == 0)
+                        throw new Exception("No se pudo crear el cliente");
+                    transaccion.Commit();
+                    return cliente.Id;
+                }
+                catch
+                {
+                    transaccion.Rollback();
+                    throw new Exception("Error ha ocurrido un error creando el cliente, comuníquese con el administrador del sistema!!!");
+                }
+            }
         }
 
         public Task<bool> EditarCliente(ClienteEditarDTO proveedorEditarDto)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<List<TipoIdentificacionDTO>> ListarTiposIdentificacion()
+        {
+            List<TbGrlTipoIdentificacion> tbTiposIdentificacion= await this._tiendaDbContext.TbGrlTipoIdentificacions.Where(est => est.EstadoVisual == true).ToListAsync();
+            try
+            {
+
+                var listaTiposIndeitifiacionesDto = this._mapper.MapeoListTiposIdentificacionTbaAListaTiposIDentificacionDto(tbTiposIdentificacion);
+                return listaTiposIndeitifiacionesDto;
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }

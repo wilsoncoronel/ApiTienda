@@ -38,27 +38,46 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
-        /*[HttpPost]
-        [Route("CrearProveedor")]
-        public async Task<IActionResult> CrearProveedor([FromBody] ProveedorCreacionDTO proveedor)
+        [HttpPost]
+        [Route("CrearCliente")]
+        public async Task<IActionResult> CrearCliente([FromBody] ClienteCreacionDTO cliente)
         {
             var resp = new Response<int>();
             try
             {
                 resp.status = true;
-                resp.Value = await this.proveedorService.CrearProveedor(proveedor);
-                resp.msg = "Proveedor creado exitosamente";
+                resp.Value = await this._clienteService.CrearCliente(cliente);
+                resp.msg = "Cliente creado exitosamente";
             }
             catch
             {
                 resp.status = false;
-                resp.msg = "Error al crear el proveedor, comuniquese con el administrador del sistema!!!";
+                resp.msg = "Error al crear el cliente, comuníquese con el administrador del sistema!!!"; 
                 throw;
             }
             return Ok(resp);
         }
 
-        [HttpPut]
+        [HttpGet]
+        [Route("ListarTiposIdentificacion")]
+        public async Task<IActionResult> ListarTiposIdentificacion()
+        {
+            var resp = new Response<List<TipoIdentificacionDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._clienteService.ListarTiposIdentificacion();
+                resp.msg = "Tipos de identificación listados exitosamente";
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
+        /*[HttpPut]
         [Route("EditarProveedor")]
         public async Task<IActionResult> EditarProveedor([FromBody] ProveedorEditarDTO proveedor)
         {

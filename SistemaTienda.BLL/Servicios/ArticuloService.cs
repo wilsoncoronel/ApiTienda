@@ -77,6 +77,7 @@ namespace SistemaTienda.BLL.Servicios
                 articuloTb.IdMarca = articuloEditarDto.IdMarca;
                 articuloTb.Nombre = articuloEditarDto.Nombre;
                 articuloTb.IdImpuesto = articuloEditarDto.IdImpuesto;
+                articuloTb.IdTipoArticulo = articuloEditarDto.IdTipoArticulo;
                 articuloTb.Codigo = articuloEditarDto.Codigo;
                 articuloTb.FechaActualizacion = fechaActualizacion;
                 articuloTb.Unidad = articuloEditarDto.Unidad;

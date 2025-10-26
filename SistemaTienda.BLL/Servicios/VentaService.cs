@@ -105,14 +105,65 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
-        public Task<List<VentaMinDTO>> ListarVentas(DateOnly fechaInicial, DateOnly fechaFinal)
+        public async Task<List<VentaMinDTO>> ListarVentas(DateOnly fechaInicial, DateOnly fechaFinal)
         {
+            var inicio = fechaInicial.ToDateTime(TimeOnly.MinValue);
+            var fin = fechaFinal.ToDateTime(TimeOnly.MaxValue);
+            IQueryable<TbVenta> tbVentas = await this._ventaRepository.Consultar();
+            var listaResultado = new List<TbVenta>();
+            try
+            {
+                listaResultado = await tbVentas.Where(c => c.FechaVenta >= inicio && c.FechaVenta <= fin)
+                    .Include(u => u.IdUsuarioCreadorNavigation)
+                    .ThenInclude(per => per.IdPersonaNavigation)
+                    .Include(e => e.IdEstadoVentaNavigation)
+                    .Include(p => p.IdClienteNavigation)
+                    .ThenInclude(per => per.IdPersonaNavigation)
+                    .ToListAsync();
+                var listaVentasDto = this._mapper.MapeoListaVentasTbAListaVentasDto(listaResultado);
+                return listaVentasDto;
+            }
+            catch
+            {
+                throw;
+            }
             throw new NotImplementedException();
         }
 
-        public Task<VentaDTO> ObtenerVenta(int idVenta)
+        public async Task<VentaDTO> ObtenerVenta(int idVenta)
         {
-            throw new NotImplementedException();
+            try
+            {
+                TbVenta tbVenta= await this._tiendaDbContext.TbVentas
+                    .Include(u => u.IdUsuarioCreadorNavigation)
+                    .ThenInclude(p => p.IdPersonaNavigation)
+                    .ThenInclude(id => id.IdTipoIdentificacionNavigation)
+                    .Include(prov => prov.IdClienteNavigation)
+                    .ThenInclude(per => per.IdPersonaNavigation)
+                    .ThenInclude(dir => dir.TbGrlDireccione)
+                    .ThenInclude(ciu => ciu.IdCiudadNavigation)
+                    .Include(est => est.IdEstadoVentaNavigation)
+                    .Include(det => det.TbVenDetalleVenta)
+                    .ThenInclude(art => art.IdArticuloNavigation)
+                    .ThenInclude(imp => imp.IdImpuestoNavigation)
+                    .Include(det => det.TbVenDetalleVenta)
+                    .ThenInclude(art => art.IdArticuloNavigation)
+                    .ThenInclude(mar => mar.IdMarcaNavigation)
+                    .Include(det => det.TbVenDetalleVenta)
+                    .ThenInclude(art => art.IdArticuloNavigation)
+                    .ThenInclude(tp => tp.IdTipoArticuloNavigation)
+                    .FirstOrDefaultAsync(c => c.Id == idVenta);
+
+                if (tbVenta == null)
+                    throw new Exception("No se encontró la venta!!");
+
+                var ventaDto = this._mapper.MapeoVentaTbAVentaCompletaDto(tbVenta);
+                return ventaDto;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public async Task<int> RegistrarVenta(VentaCreacionDTO ventaDto)

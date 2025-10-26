@@ -14,4 +14,6 @@ public partial class TbComCliente
     public bool Estado { get; set; }
 
     public virtual TbGrlPersona IdPersonaNavigation { get; set; } = null!;
+
+    public virtual ICollection<TbVenta> TbVenta { get; set; } = new List<TbVenta>();
 }

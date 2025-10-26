@@ -10,6 +10,7 @@ namespace SistemaTienda.BLL.Servicios.Contrato
     public interface IClienteService
     {
         Task<int> CrearCliente(ClienteCreacionDTO proveedorCreacionDto);
+        Task<List<TipoIdentificacionDTO>> ListarTiposIdentificacion();
         Task<bool> EditarCliente(ClienteEditarDTO proveedorEditarDto);
         Task<ClienteDTO> BuscarClienteCI(string identificacion);
     }

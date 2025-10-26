@@ -42,10 +42,40 @@ namespace SistemaTienda.Utility
         List<EstadoVentaDTO> MapeoListaEstadosVentaTbaAListaEstadosVentaDto(List<TbVenEstadosVenta> ListaEstadosDto);
         void MapeoVentaEdicionDtoAVentaTb(VentaEditarDTO ventaEditarDto, TbVenta ventaTb);
         ClienteDTO MapeoClienteTbAClienteDto(TbComCliente clienteTb);
-    }
+        List<VentaMinDTO> MapeoListaVentasTbAListaVentasDto(List<TbVenta> listaResultado);
+        VentaMinDTO MapeoVentaTbAVentaDto(TbVenta ventaTb);
+        VentaDTO MapeoVentaTbAVentaCompletaDto(TbVenta ventaTb);
+        TbComCliente MapeoCLienteDtoAClienteTb(ClienteCreacionDTO clienteCreacion);
+        List<TipoIdentificacionDTO> MapeoListTiposIdentificacionTbaAListaTiposIDentificacionDto(List<TbGrlTipoIdentificacion> listaTiposIden);
+        TipoIdentificacionDTO MapeoTipoIdentificacionTbaATipoIdentificacionDto(TbGrlTipoIdentificacion TipoIdentificacionTb);
+
+        CiudadDTO MapeoCiudadTbaACiudadDto(TbGrlCiudades CiudadTb);
+        List<CiudadDTO>  MapeoListaCiudadesTbaAListaCiudadesDto(List<TbGrlCiudades> ListaCiudadesDto);
+    } 
     public class Mapeos : IMapeos
     {
         private DateTime FechaGrl = DateTime.Now;
+
+        public CiudadDTO MapeoCiudadTbaACiudadDto(TbGrlCiudades CiudadTb)
+        {
+            return new CiudadDTO
+            {
+                Id = CiudadTb.Id,
+                Nombre = CiudadTb.Nombre,
+            };
+        }
+
+        public List<CiudadDTO> MapeoListaCiudadesTbaAListaCiudadesDto(List<TbGrlCiudades> ListaCiudadesDto)
+        {
+
+            return ListaCiudadesDto.Select(est => this.MapeoCiudadTbaACiudadDto(est)).ToList();
+        }
+
+        public List<EstadoCompraDTO> MapeoListaEstadosCompraTbaAListaEstadosCompraDto(List<TbComEstadosCompra> ListaEstadosDto)
+        {
+
+            return ListaEstadosDto.Select( est =>this.MapeoEstadosCompraTbaAEstadosCompraDto(est)).ToList();
+        }
 
         public EstadoCompraDTO MapeoEstadosCompraTbaAEstadosCompraDto(TbComEstadosCompra EstadosTb)
         {
@@ -56,19 +86,28 @@ namespace SistemaTienda.Utility
             };
         }
 
-        public List<EstadoCompraDTO> MapeoListaEstadosCompraTbaAListaEstadosCompraDto(List<TbComEstadosCompra> ListaEstadosDto)
-        {
-
-            return ListaEstadosDto.Select( est =>this.MapeoEstadosCompraTbaAEstadosCompraDto(est)).ToList();
-        }
-
-
         public EstadoVentaDTO MapeoEstadosVentaTbaAEstadosVentaDto(TbVenEstadosVenta EstadosTb)
         {
             return new EstadoVentaDTO
             {
                 Id = EstadosTb.Id,
                 Nombre = EstadosTb.Nombre,
+            };
+        }
+
+        public List<TipoIdentificacionDTO> MapeoListTiposIdentificacionTbaAListaTiposIDentificacionDto(List<TbGrlTipoIdentificacion> listaTiposIden)
+        {
+
+            return listaTiposIden.Select(tip => this.MapeoTipoIdentificacionTbaATipoIdentificacionDto(tip)).ToList();
+        }
+
+
+        public TipoIdentificacionDTO MapeoTipoIdentificacionTbaATipoIdentificacionDto(TbGrlTipoIdentificacion TipoIdentificacionTb)
+        {
+            return new TipoIdentificacionDTO
+            {
+                Id = TipoIdentificacionTb.Id,
+                Nombre = TipoIdentificacionTb.Nombre,
             };
         }
 
@@ -532,6 +571,32 @@ namespace SistemaTienda.Utility
             };
         }
 
+        public TbComCliente MapeoCLienteDtoAClienteTb(ClienteCreacionDTO clienteCreacion)
+        {
+            return new TbComCliente
+            {
+
+                Estado = true,
+                EstadoVisual = true,
+                IdPersonaNavigation = new TbGrlPersona
+                {
+                    Apellidos = clienteCreacion.Apellidos,
+                    Nombres = clienteCreacion.Nombres,
+                    Identificacion = clienteCreacion.Identificacion,
+                    FechaCreacion = FechaGrl,
+                    Mail = clienteCreacion.Mail,
+                    Telefono = clienteCreacion.Telefono,
+                    TbGrlDireccione = new TbGrlDirecciones
+                    {
+                        IdCiudad = clienteCreacion.DireccionCreacionDto.IdCiudad,
+                        EstadoVisual = true,
+                        Descripcion = clienteCreacion.DireccionCreacionDto.Descripcion,
+                    },
+                    IdTipoIdentificacion = clienteCreacion.IdTipoIdentificacion,
+                },
+            };
+        }
+
         public ProveedorDTO MapeoProveedorTbAProveedorDto(TbComProveedores provedorTb)
         {
             return new ProveedorDTO
@@ -614,7 +679,41 @@ namespace SistemaTienda.Utility
             ventaTb.FechaModificacion = FechaGrl;
 
         }
+        public List<VentaMinDTO> MapeoListaVentasTbAListaVentasDto(List<TbVenta> listaResultado)
+        {
+            return listaResultado.Select(this.MapeoVentaTbAVentaDto).ToList();
+        }
 
+        public VentaMinDTO MapeoVentaTbAVentaDto(TbVenta ventaTb)
+        {
+
+            var venta = new VentaMinDTO
+            {
+                Id = ventaTb.Id,
+                UsuarioMinDTO = new UsuarioMinDTO
+                {
+                    Id = ventaTb.IdUsuarioCreadorNavigation.Id,
+                    Apellidos = ventaTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Apellidos,
+                    Nombres = ventaTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Nombres,
+                },
+                ClienteMinDTO = new ClienteMinDTO
+                {
+                    Id = ventaTb.IdClienteNavigation.Id,
+                    Nombres = ventaTb.IdClienteNavigation.IdPersonaNavigation.Nombres,
+                    Identificacion = ventaTb.IdClienteNavigation.IdPersonaNavigation.Identificacion,
+                    Mail = ventaTb.IdClienteNavigation.IdPersonaNavigation.Mail,
+                },
+                Documento = ventaTb.Documento,
+                FechaVenta = ventaTb.FechaVenta,
+                EstadoVentaDTO = new EstadoVentaDTO
+                {
+                    Id = ventaTb.IdEstadoVentaNavigation.Id,
+                    Nombre = ventaTb.IdEstadoVentaNavigation.Nombre,
+                },
+
+            };
+            return venta;
+        }
         public List<CompraMinDTO> MapeoListaCompraTbAListaCompraDto(List<TbCompra> listaResultado)
         {
             return listaResultado.Select(this.MapeoCompraTbACompraDto).ToList();
@@ -731,6 +830,92 @@ namespace SistemaTienda.Utility
 
             };
             return compra;
+        }
+
+        public VentaDTO MapeoVentaTbAVentaCompletaDto(TbVenta ventaTb)
+        {
+
+            var venta = new VentaDTO
+            {
+                Id = ventaTb.Id,
+                IdCliente = ventaTb.IdCliente,
+                UsuarioCreador = new UsuarioDTO
+                {
+                    Id = ventaTb.IdUsuarioCreadorNavigation.Id,
+                    Apellidos = ventaTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Apellidos,
+                    Nombres = ventaTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Nombres,
+                    Identificacion = ventaTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Identificacion,
+                    Mail = ventaTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Mail,
+                },
+                Cliente = new ClienteDTO
+                {
+                    Id = ventaTb.IdClienteNavigation.Id,
+                    Nombres = ventaTb.IdClienteNavigation.IdPersonaNavigation.Nombres,
+                    Identificacion = ventaTb.IdClienteNavigation.IdPersonaNavigation.Identificacion,
+                    DireccionDto = new DireccionDTO
+                    {
+                        Id = ventaTb.IdClienteNavigation.IdPersonaNavigation.TbGrlDireccione.Id,
+                        Descripcion = ventaTb.IdClienteNavigation.IdPersonaNavigation.TbGrlDireccione.Descripcion,
+                        Ciudad = new CiudadDTO
+                        {
+                            Id = ventaTb.IdClienteNavigation.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Id,
+                            Nombre = ventaTb.IdClienteNavigation.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Nombre
+                        },
+                    },
+                },
+                Documento = ventaTb.Documento,
+                FechaVenta = ventaTb.FechaVenta,
+                FechaCreacion = ventaTb.FechaCreacion,
+                FechaModificacion = ventaTb.FechaModificacion,
+                IdEstado = ventaTb.IdEstadoVenta,
+                EstadoVenta = new EstadoVentaDTO
+                {
+                    Id = ventaTb.IdEstadoVentaNavigation.Id,
+                    Nombre = ventaTb.IdEstadoVentaNavigation.Nombre,
+                },
+                DetalleVenta = ventaTb.TbVenDetalleVenta.Select(d => new DetalleVentaDTO
+                {
+                    Id = d.Id,
+                    Articulo = new ArticuloDTO
+                    {
+                        Id = d.IdArticuloNavigation.Id,
+                        Codigo = d.IdArticuloNavigation.Codigo,
+                        Descripcion = d.IdArticuloNavigation.Descripcion,
+                        Nombre = d.IdArticuloNavigation.Nombre,
+                        Unidad = d.IdArticuloNavigation.Unidad,
+                        UnidadValor = d.IdArticuloNavigation.UnidadValor,
+                        FechaActualizacion = d.IdArticuloNavigation.FechaActualizacion,
+                        FechaCreacion = d.IdArticuloNavigation.FechaCreacion,
+                        FechaCaducidad = d.IdArticuloNavigation.FechaCaducidad,
+                        ImpuestoArticuloDto = new ImpuestoArticuloDTO
+                        {
+                            Id = d.IdArticuloNavigation.IdImpuestoNavigation.Id,
+                            Nombre = d.IdArticuloNavigation.IdImpuestoNavigation.Nombre,
+                            ValorImpuesto = d.IdArticuloNavigation.IdImpuestoNavigation.ValorImpuesto,
+                        },
+                        TipoArticuloDTO = new TipoArticuloDTO
+                        {
+                            Id = d.IdArticuloNavigation.IdTipoArticuloNavigation.Id,
+                            Nombre = d.IdArticuloNavigation.IdTipoArticuloNavigation.Nombre,
+                            Descripcion = d.IdArticuloNavigation.IdTipoArticuloNavigation.Descripcion,
+                        },
+                        MarcaDTO = new MarcaDTO
+                        {
+                            Id = d.IdArticuloNavigation.IdMarcaNavigation.Id,
+                            Nombre = d.IdArticuloNavigation.IdMarcaNavigation.Nombre,
+                            Descripcion = d.IdArticuloNavigation.IdMarcaNavigation.Descripcion,
+                        }
+                    },
+                    Cantidad = d.Cantidad,
+                    Descripcion = d.Descripcion,
+                    ImpuestoValor = d.ImpuestoValor,
+                    ValorCompra = d.ValorCompra,
+                    ValorVenta = d.ValorVenta,
+                    ValorTotal = d.ValotTotal
+                }).ToList(),
+
+            };
+            return venta;
         }
 
         public PermisosRolDTO MapeoTbSisPermisorRolAPermisosRolDTO(TbSisPermisosRol permisosRolTb)

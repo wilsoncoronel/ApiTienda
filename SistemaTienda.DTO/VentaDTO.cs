@@ -15,6 +15,7 @@ namespace SistemaTienda.DTO
         public string Documento { get; set; }
         public DateTime FechaVenta { get; set; }
         public DateTime FechaCreacion { get; set; }
+        public DateTime? FechaModificacion { get; set; }
         public int IdEstado { get; set; }
         public EstadoVentaDTO EstadoVenta { get; set; }
         public bool EstadoVisual { get; set; }
