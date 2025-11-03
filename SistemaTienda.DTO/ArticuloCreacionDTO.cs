@@ -16,6 +16,7 @@ namespace SistemaTienda.DTO
         public bool EstadoVisual { get; set; }
         public bool Estado { get; set; }
         public decimal ValorCompra { get; set; }
+        public decimal ValorVenta { get; set; }
         public decimal UnidadValor { get; set; }
         public string Descripcion { get; set; }
         public DateTime FechaActualizacion { get; set; }

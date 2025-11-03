@@ -77,6 +77,24 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
+        [HttpGet]
+        [Route("ListarClientes")]
+        public async Task<IActionResult> ListarClientes()
+        {
+            var resp = new Response<List<ClienteDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._clienteService.ListarClientes();
+                resp.msg = "Clientes listados listados exitosamente";
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
 
         [HttpGet]
         [Route("ListarCiudades")]
@@ -97,24 +115,28 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
-        /*[HttpPut]
-        [Route("EditarProveedor")]
-        public async Task<IActionResult> EditarProveedor([FromBody] ProveedorEditarDTO proveedor)
+        [HttpPut]
+        [Route("EditarCliente")]
+        public async Task<IActionResult> EditarCliente(ClienteEditarDTO Cliente)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var resp = new Response<bool>();
             try
             {
                 resp.status = true;
-                resp.Value = await this.proveedorService.EditarProveedor(proveedor);
-                resp.msg = "Proveedor editado exitosamente";
+                resp.Value = await this._clienteService.EditarCliente(Cliente);
+                resp.msg = "Cliente editado exitosamente";
             }
             catch
             {
                 resp.status = false;
-                resp.msg = "Error al crear el proveedor, comuniquese con el administrador del sistema!!!";
+                resp.msg = "Error al editar el cliente, comuniquese con el administrador del sistema!!!";
                 throw;
             }
             return Ok(resp);
-        }*/
+        }
     }
 }

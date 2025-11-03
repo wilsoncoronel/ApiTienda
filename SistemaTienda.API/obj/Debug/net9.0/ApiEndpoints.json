@@ -222,6 +222,42 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ClienteController",
+    "Method": "EditarCliente",
+    "RelativePath": "api/Cliente/EditarCliente",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Cliente",
+        "Type": "SistemaTienda.DTO.ClienteEditarDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ClienteController",
+    "Method": "ListarCiudades",
+    "RelativePath": "api/Cliente/ListarCiudades",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ClienteController",
+    "Method": "ListarClientes",
+    "RelativePath": "api/Cliente/ListarClientes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ClienteController",
     "Method": "ListarTiposIdentificacion",
     "RelativePath": "api/Cliente/ListarTiposIdentificacion",
     "HttpMethod": "GET",
@@ -323,6 +359,16 @@
         "IsRequired": false
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
+    "Method": "ExistenciasInventario",
+    "RelativePath": "api/Inventario/ExistenciasInventario",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

@@ -10,6 +10,7 @@ namespace SistemaTienda.DTO
     {
         public int Id { get; set; }
         public string Nombres { get; set; }
+
         public string Apellidos { get; set; }
         public string Mail { get; set; }
         public string Identificacion { get; set; }
@@ -17,5 +18,6 @@ namespace SistemaTienda.DTO
         public bool EstadoVisual { get; set; }
         public bool Estado { get; set; }
         public DireccionDTO DireccionDto { get; set; }
+        public TipoIdentificacionDTO TipoIdentificacionDto { get; set; }
     }
 }

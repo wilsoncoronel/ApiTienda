@@ -51,11 +51,16 @@ namespace SistemaTienda.Utility
 
         CiudadDTO MapeoCiudadTbaACiudadDto(TbGrlCiudades CiudadTb);
         List<CiudadDTO>  MapeoListaCiudadesTbaAListaCiudadesDto(List<TbGrlCiudades> ListaCiudadesDto);
+        List<ClienteDTO> MapeoListaClientesTbaAListaClientesDto(List<TbComCliente> clientesListTb);
     } 
     public class Mapeos : IMapeos
     {
         private DateTime FechaGrl = DateTime.Now;
 
+        public List<ClienteDTO> MapeoListaClientesTbaAListaClientesDto(List<TbComCliente> clientesListTb)
+        {
+            return clientesListTb.Select(cli => this.MapeoClienteTbAClienteDto(cli)).ToList();
+        }
         public CiudadDTO MapeoCiudadTbaACiudadDto(TbGrlCiudades CiudadTb)
         {
             return new CiudadDTO
@@ -129,7 +134,7 @@ namespace SistemaTienda.Utility
                 Unidad = articuloCreacionDto.Unidad,
                 ValorCompra = articuloCreacionDto.ValorCompra,
                 UnidadValor = articuloCreacionDto.UnidadValor,
-                ValorVenta = articuloCreacionDto.UnidadValor,
+                ValorVenta = articuloCreacionDto.ValorVenta,
                 IdTipoArticulo = articuloCreacionDto.IdTipoArticulo,
                 IdMarca = articuloCreacionDto.IdMarca,
                 IdUsuarioCreador = articuloCreacionDto.IdUsuarioCreador,
@@ -597,6 +602,32 @@ namespace SistemaTienda.Utility
             };
         }
 
+        public TbComCliente MapeoCLienteEditarDtoAClienteTb(ClienteCreacionDTO clienteCreacion)
+        {
+            return new TbComCliente
+            {
+
+                Estado = true,
+                EstadoVisual = true,
+                IdPersonaNavigation = new TbGrlPersona
+                {
+                    Apellidos = clienteCreacion.Apellidos,
+                    Nombres = clienteCreacion.Nombres,
+                    Identificacion = clienteCreacion.Identificacion,
+                    FechaCreacion = FechaGrl,
+                    Mail = clienteCreacion.Mail,
+                    Telefono = clienteCreacion.Telefono,
+                    TbGrlDireccione = new TbGrlDirecciones
+                    {
+                        IdCiudad = clienteCreacion.DireccionCreacionDto.IdCiudad,
+                        EstadoVisual = true,
+                        Descripcion = clienteCreacion.DireccionCreacionDto.Descripcion,
+                    },
+                    IdTipoIdentificacion = clienteCreacion.IdTipoIdentificacion,
+                },
+            };
+        }
+
         public ProveedorDTO MapeoProveedorTbAProveedorDto(TbComProveedores provedorTb)
         {
             return new ProveedorDTO
@@ -621,11 +652,16 @@ namespace SistemaTienda.Utility
                 EstadoVisual = true,
                 Nombres = clienteTb.IdPersonaNavigation.Nombres,
                 Apellidos = clienteTb.IdPersonaNavigation.Apellidos,
+                TipoIdentificacionDto = new TipoIdentificacionDTO{
+                    Id = clienteTb.IdPersonaNavigation.IdTipoIdentificacionNavigation.Id,
+                    Nombre = clienteTb.IdPersonaNavigation.IdTipoIdentificacionNavigation.Nombre,
+                },
                 Identificacion = clienteTb.IdPersonaNavigation.Identificacion,
                 Mail = clienteTb.IdPersonaNavigation.Mail,
                 Telefono = clienteTb.IdPersonaNavigation.Telefono,
                 DireccionDto = new DireccionDTO
                 {
+                    Id = clienteTb.IdPersonaNavigation.TbGrlDireccione.Id,
                     Descripcion = clienteTb.IdPersonaNavigation.TbGrlDireccione.Descripcion,
                     IdCiudad = clienteTb.IdPersonaNavigation.TbGrlDireccione.IdCiudad,
                     Ciudad = new CiudadDTO
@@ -635,6 +671,7 @@ namespace SistemaTienda.Utility
                     },
                 },
                 Id = clienteTb.Id,
+                Estado = clienteTb.Estado
             };
         }
 

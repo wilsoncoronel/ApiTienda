@@ -50,6 +50,7 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
+
         public async Task<List<CiudadDTO>> ListarCiudades()
         {
             List<TbGrlCiudades> tbCiudades = await this._tiendaDbContext.TbGrlCiudades.Where(est => est.EstadoVisual == true).ToListAsync();
@@ -85,9 +86,46 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
-        public Task<bool> EditarCliente(ClienteEditarDTO proveedorEditarDto)
+        public async Task<bool> EditarCliente(ClienteEditarDTO clienteEditarDto)
         {
-            throw new NotImplementedException();
+
+            IQueryable<TbComCliente>  clientesTb = await this._clienteRepository.Consultar();
+            using (var transaccion = _tiendaDbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var cliente = clientesTb.Where(c => c.Id == clienteEditarDto.Id)
+                        .Include(per =>per.IdPersonaNavigation)
+                        .ThenInclude(ti => ti.IdTipoIdentificacionNavigation)
+                        .Include(per => per.IdPersonaNavigation)
+                        .ThenInclude(dir => dir.TbGrlDireccione)
+                            .ThenInclude(ciu => ciu.IdCiudadNavigation)
+                        .FirstOrDefault();
+                    if(cliente is null)
+                        throw new Exception("No se encontró el cliente a editar");
+                    cliente.IdPersonaNavigation.Telefono = clienteEditarDto.Telefono;
+                    cliente.IdPersonaNavigation.Mail = clienteEditarDto.Mail;
+                    cliente.IdPersonaNavigation.FechaModificacion = DateTime.Now;
+                    cliente.IdPersonaNavigation.TbGrlDireccione.IdCiudad = clienteEditarDto.DireccionEdicionDto.IdCiudad;
+                    cliente.IdPersonaNavigation.TbGrlDireccione.Descripcion = clienteEditarDto.DireccionEdicionDto.Descripcion;
+                    cliente.IdPersonaNavigation.Nombres = clienteEditarDto.Nombres;
+                    cliente.IdPersonaNavigation.Apellidos = clienteEditarDto.Apellidos;
+                    cliente.IdPersonaNavigation.Identificacion = clienteEditarDto.Identificacion;
+                    cliente.EstadoVisual = clienteEditarDto.EstadoVisual;
+                    cliente.Estado = clienteEditarDto.Estado;
+                    cliente.IdPersonaNavigation.IdTipoIdentificacion = clienteEditarDto.IdTipoIdentificacion;
+                    var resp = await this._clienteRepository.Editar(cliente);
+                    if (resp == false)
+                        throw new Exception("No se pudo editar el cliente");
+                    transaccion.Commit();
+                    return resp;
+                }
+                catch
+                {
+                    transaccion.Rollback();
+                    throw new Exception("Error ha ocurrido un error creando el cliente, comuníquese con el administrador del sistema!!!");
+                }
+            }
         }
 
         public async Task<List<TipoIdentificacionDTO>> ListarTiposIdentificacion()
@@ -98,6 +136,26 @@ namespace SistemaTienda.BLL.Servicios
 
                 var listaTiposIndeitifiacionesDto = this._mapper.MapeoListTiposIdentificacionTbaAListaTiposIDentificacionDto(tbTiposIdentificacion);
                 return listaTiposIndeitifiacionesDto;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<ClienteDTO>> ListarClientes()
+        {
+            try
+            {
+                IQueryable<TbComCliente> clientesList = await this._clienteRepository.Consultar();
+                var clientesListConIncludes = clientesList
+                    .Include(p => p.IdPersonaNavigation)
+                    .ThenInclude(t => t.IdTipoIdentificacionNavigation)
+                    .Include(p => p.IdPersonaNavigation)
+                    .ThenInclude(d => d.TbGrlDireccione)
+                    .ThenInclude(c => c.IdCiudadNavigation);
+                var listaClientesDto = this._mapper.MapeoListaClientesTbaAListaClientesDto(clientesListConIncludes.ToList());
+                return listaClientesDto;
             }
             catch
             {

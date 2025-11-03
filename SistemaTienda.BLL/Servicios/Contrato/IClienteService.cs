@@ -9,9 +9,10 @@ namespace SistemaTienda.BLL.Servicios.Contrato
 {
     public interface IClienteService
     {
-        Task<int> CrearCliente(ClienteCreacionDTO proveedorCreacionDto);
+        Task<List<ClienteDTO>> ListarClientes();
+        Task<int> CrearCliente(ClienteCreacionDTO clienteCreacionDto);
         Task<List<TipoIdentificacionDTO>> ListarTiposIdentificacion();
-        Task<bool> EditarCliente(ClienteEditarDTO proveedorEditarDto);
+        Task<bool> EditarCliente(ClienteEditarDTO clienteEditarDto);
         Task<ClienteDTO> BuscarClienteCI(string identificacion);
         Task<List<CiudadDTO>> ListarCiudades();
     }
