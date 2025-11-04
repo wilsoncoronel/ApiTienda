@@ -473,6 +473,36 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SistemaTienda.API.Controllers.ProveedorController",
+    "Method": "ListarCiudades",
+    "RelativePath": "api/Proveedor/ListarCiudades",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ProveedorController",
+    "Method": "ListarProveedores",
+    "RelativePath": "api/Proveedor/ListarProveedores",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ProveedorController",
+    "Method": "ListarTiposIdentificacion",
+    "RelativePath": "api/Proveedor/ListarTiposIdentificacion",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaTienda.API.Controllers.UsuarioController",
     "Method": "CrearUsuario",
     "RelativePath": "api/Usuario/CrearUsuario",

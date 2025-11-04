@@ -52,10 +52,14 @@ namespace SistemaTienda.Utility
         CiudadDTO MapeoCiudadTbaACiudadDto(TbGrlCiudades CiudadTb);
         List<CiudadDTO>  MapeoListaCiudadesTbaAListaCiudadesDto(List<TbGrlCiudades> ListaCiudadesDto);
         List<ClienteDTO> MapeoListaClientesTbaAListaClientesDto(List<TbComCliente> clientesListTb);
+        List<ProveedorDTO> MapeoProveedorTbListaAProveedorDtoLista(List<TbComProveedores> listProvedorTb);
     } 
     public class Mapeos : IMapeos
     {
         private DateTime FechaGrl = DateTime.Now;
+
+
+
 
         public List<ClienteDTO> MapeoListaClientesTbaAListaClientesDto(List<TbComCliente> clientesListTb)
         {
@@ -637,12 +641,36 @@ namespace SistemaTienda.Utility
                 Nombres = provedorTb.IdPersonaNavigation.Nombres,
                 Apellidos = provedorTb.IdPersonaNavigation.Apellidos,
                 Identificacion = provedorTb.IdPersonaNavigation.Identificacion,
+                TipoIdentificacionDto = new TipoIdentificacionDTO
+                {
+                    Id = provedorTb.IdPersonaNavigation.IdTipoIdentificacionNavigation.Id,
+                    Nombre = provedorTb.IdPersonaNavigation.IdTipoIdentificacionNavigation.Nombre,
+                },
                 Mail = provedorTb.IdPersonaNavigation.Mail,
                 Telefono = provedorTb.IdPersonaNavigation.TbGrlDireccione.Descripcion,
                 RazonSocial = provedorTb.RazonSocial,
-                Direccion = $"Dirección: {provedorTb.IdPersonaNavigation.TbGrlDireccione.Descripcion} Ciudad: {provedorTb.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Nombre}",
+                Estado = provedorTb.Estado,
+                DireccionDto = new DireccionDTO
+                {
+                    Id = provedorTb.IdPersonaNavigation.TbGrlDireccione.Id,
+                    Descripcion = provedorTb.IdPersonaNavigation.TbGrlDireccione.Descripcion,
+                    IdCiudad = provedorTb.IdPersonaNavigation.TbGrlDireccione.IdCiudad,
+                    Ciudad = new CiudadDTO
+                    {
+                        Id = provedorTb.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Id,
+                        Nombre = provedorTb.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Nombre,
+                    },
+                },
                 Id = provedorTb.Id,
+                FechaCreacion = provedorTb.IdPersonaNavigation.FechaCreacion,
+                FechaModificacion = provedorTb.IdPersonaNavigation.FechaModificacion,
+
             };
+        }
+
+        public List<ProveedorDTO> MapeoProveedorTbListaAProveedorDtoLista(List<TbComProveedores> listProvedorTb)
+        {
+            return listProvedorTb.Select(this.MapeoProveedorTbAProveedorDto).ToList();
         }
 
         public ClienteDTO MapeoClienteTbAClienteDto(TbComCliente clienteTb)
@@ -812,7 +840,15 @@ namespace SistemaTienda.Utility
                     RazonSocial = compraTb.IdProveedorNavigation.RazonSocial,
                     Descripcion = compraTb.IdProveedorNavigation.Descripcion,
                     Identificacion = compraTb.IdProveedorNavigation.IdPersonaNavigation.Identificacion,
-                    Direccion = compraTb.IdProveedorNavigation.IdPersonaNavigation.TbGrlDireccione.Descripcion,
+                    DireccionDto = new DireccionDTO
+                    {
+                        Descripcion = compraTb.IdProveedorNavigation.IdPersonaNavigation.TbGrlDireccione.Descripcion,
+                        Ciudad = new CiudadDTO
+                        {
+                            Id = compraTb.IdProveedorNavigation.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Id,
+                            Nombre = compraTb.IdProveedorNavigation.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Nombre,
+                        },
+                    },
                 },
                 Documento = compraTb.Documento,
                 FechaCompra = compraTb.FechaCompra,

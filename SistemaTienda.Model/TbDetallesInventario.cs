@@ -19,6 +19,8 @@ public partial class TbDetallesInventario
 
     public decimal PrecioVenta { get; set; }
 
+    public bool? Papeleria { get; set; }
+
     public virtual TbComArticulo IdArticuloNavigation { get; set; } = null!;
 
     public virtual TbInvInventario IdInventarioNavigation { get; set; } = null!;

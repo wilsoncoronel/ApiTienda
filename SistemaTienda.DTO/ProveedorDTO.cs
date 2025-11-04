@@ -12,11 +12,16 @@ namespace SistemaTienda.DTO
         public string Nombres { get; set; }
         public string Apellidos { get; set; }
         public string Mail { get; set; }
+        public int IdIdentificacion { get; set; }
         public string Identificacion { get; set; }
         public string Telefono { get; set; }
         public bool EstadoVisual { get; set; }
         public string RazonSocial { get; set; }
         public string Descripcion { get; set; }
-        public string Direccion { get; set; }
+        public bool Estado { get; set; }
+        public DateTime? FechaCreacion { get; set; }
+        public DateTime? FechaModificacion { get; set; }
+        public DireccionDTO DireccionDto { get; set; }
+        public TipoIdentificacionDTO TipoIdentificacionDto { get; set; }
     }
 }

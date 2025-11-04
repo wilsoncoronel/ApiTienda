@@ -19,6 +19,7 @@ namespace SistemaTienda.DTO
         public string Descripcion { get; set; }
         public bool Estado { get; set; }
         public int IdIdentificacion { get; set; }
+        public DateTime? FechaModificacion { get; set; }
         public DireccionEdicionDTO DireccionEdicionDto { get; set; }
     }
 }

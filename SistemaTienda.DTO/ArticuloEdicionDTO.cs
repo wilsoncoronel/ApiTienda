@@ -39,5 +39,6 @@ namespace SistemaTienda.DTO
         public decimal ValorCompra { get; set; }
 
         public decimal ValorVenta { get; set; }
+        public bool? Papeleria { get; set; }
     }
 }

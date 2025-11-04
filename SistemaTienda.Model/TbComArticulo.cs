@@ -39,6 +39,8 @@ public partial class TbComArticulo
 
     public decimal ValorVenta { get; set; }
 
+    public bool? Papeleria { get; set; }
+
     public virtual TbComImpuestosArticulo IdImpuestoNavigation { get; set; } = null!;
 
     public virtual TbComMarca IdMarcaNavigation { get; set; } = null!;

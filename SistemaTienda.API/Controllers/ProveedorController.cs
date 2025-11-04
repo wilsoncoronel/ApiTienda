@@ -56,6 +56,64 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
+        [HttpGet]
+        [Route("ListarProveedores")]
+        public async Task<IActionResult> ListarProveedores()
+        {
+            var resp = new Response<List<ProveedorDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this.proveedorService.ListarProveedores();
+                resp.msg = "Proveedores listados listados exitosamente";
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
+        [HttpGet]
+        [Route("ListarCiudades")]
+        public async Task<IActionResult> ListarCiudades()
+        {
+            var resp = new Response<List<CiudadDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this.proveedorService.ListarCiudades();
+                resp.msg = "Ciudades listadas exitosamente";
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
+        [HttpGet]
+        [Route("ListarTiposIdentificacion")]
+        public async Task<IActionResult> ListarTiposIdentificacion()
+        {
+            var resp = new Response<List<TipoIdentificacionDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this.proveedorService.ListarTiposIdentificacion();
+                resp.msg = "Tipos identificación listadas exitosamente";
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
+
         [HttpPut]
         [Route("EditarProveedor")]
         public async Task<IActionResult> EditarProveedor([FromBody] ProveedorEditarDTO proveedor)

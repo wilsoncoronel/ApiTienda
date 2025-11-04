@@ -76,7 +76,6 @@ public partial class TiendaDbContext : DbContext
     public virtual DbSet<TbVenta> TbVentas { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<TbComArticulo>(entity =>

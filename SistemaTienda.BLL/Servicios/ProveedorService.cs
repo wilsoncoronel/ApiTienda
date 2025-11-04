@@ -101,5 +101,54 @@ namespace SistemaTienda.BLL.Servicios
                 }
             }
         }
+
+        public async Task<List<ProveedorDTO>> ListarProveedores()
+        {
+            try
+            {
+                IQueryable<TbComProveedores> proveedoresList = await this._proveedorRepository.Consultar();
+                var proveedoresListConIncludes = proveedoresList
+                    .Include(p => p.IdPersonaNavigation)
+                    .ThenInclude(t => t.IdTipoIdentificacionNavigation)
+                    .Include(p => p.IdPersonaNavigation)
+                    .ThenInclude(d => d.TbGrlDireccione)
+                    .ThenInclude(c => c.IdCiudadNavigation).ToList();
+                var listaProveedoresDto = this.mapper.MapeoProveedorTbListaAProveedorDtoLista(proveedoresListConIncludes);
+                return listaProveedoresDto;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<CiudadDTO>> ListarCiudades()
+        {
+            List<TbGrlCiudades> tbCiudades = await this._tiendaDbContext.TbGrlCiudades.Where(est => est.EstadoVisual == true).ToListAsync();
+            try
+            {
+                var listaCiudadesDto = this.mapper.MapeoListaCiudadesTbaAListaCiudadesDto(tbCiudades);
+                return listaCiudadesDto;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<TipoIdentificacionDTO>> ListarTiposIdentificacion()
+        {
+            List<TbGrlTipoIdentificacion> tbTiposIdentificacion = await this._tiendaDbContext.TbGrlTipoIdentificacions.Where(est => est.EstadoVisual == true).ToListAsync();
+            try
+            {
+
+                var listaTiposIndeitifiacionesDto = this.mapper.MapeoListTiposIdentificacionTbaAListaTiposIDentificacionDto(tbTiposIdentificacion);
+                return listaTiposIndeitifiacionesDto;
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }
