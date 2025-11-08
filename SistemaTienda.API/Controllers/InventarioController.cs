@@ -25,6 +25,7 @@ namespace SistemaTienda.API.Controllers
             try
             {
                 resp.status = true;
+                
                 resp.Value = await this._inventarioService.ExistenciasInventario();
             }
             catch

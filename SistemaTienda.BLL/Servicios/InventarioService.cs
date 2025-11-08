@@ -22,21 +22,31 @@ namespace SistemaTienda.BLL.Servicios
         public async Task<List<ExistenciaDTO>> ExistenciasInventario()
         {
             IQueryable<TbDetallesInventario> listainventario = await this._inventarioRepo.Consultar();
-            var existencias = listainventario.Where(tra => tra.IdTransaccionInventario != 3).Include(art => art.IdArticuloNavigation)
-                .Include(tra => tra.IdTransaccionInventarioNavigation).ToList();
 
-            var resultado = existencias.GroupBy(det => new
+            try
             {
-                det.IdArticuloNavigation.Nombre
-            }).Select(g => new ExistenciaDTO
-            {
-                IdArticulo = g.First().IdArticulo,
-                NombreArticulo = g.Key.Nombre,
-                TotalCantidad = g.Sum(d => d.Cantidad * d.IdTransaccionInventarioNavigation.Signo),
-      
-            }).ToList();
+                var existencias = listainventario.Where(tra => tra.IdTransaccionInventario != 3).Include(art => art.IdArticuloNavigation)
+                    .Include(tra => tra.IdTransaccionInventarioNavigation).ToList();
 
-            return resultado;
+                var resultado = existencias.GroupBy(det => new
+                {
+                    det.IdArticuloNavigation.Nombre
+                }).Select(g => new ExistenciaDTO
+                {
+                    IdArticulo = g.First().IdArticulo,
+                    NombreArticulo = g.Key.Nombre,
+                    TotalCantidad = g.Sum(d => d.Cantidad * d.IdTransaccionInventarioNavigation.Signo),
+
+                }).ToList();
+                return resultado;
+            }
+            catch
+            {
+                throw;
+            }
+            
+
+            
             
         }
     }

@@ -125,6 +125,24 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
+        [HttpPost]
+        [Route("CrearArticulosLista")]
+        public async Task<ActionResult<bool>> CrearArticulosLista([FromBody] List<ArticuloCreacionDTO> articulosCreacionDto)
+        {
+            var resp = new Response<bool>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._articuloService.CrearArticulosLista(articulosCreacionDto);
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
         [HttpPut]
         [Route("EditarArticulo")]
         public async Task<ActionResult<int>> EditarArticulo([FromBody] ArticuloEdicionDTO articuloEdicionDto)

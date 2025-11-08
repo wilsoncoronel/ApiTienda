@@ -53,12 +53,24 @@ namespace SistemaTienda.Utility
         List<CiudadDTO>  MapeoListaCiudadesTbaAListaCiudadesDto(List<TbGrlCiudades> ListaCiudadesDto);
         List<ClienteDTO> MapeoListaClientesTbaAListaClientesDto(List<TbComCliente> clientesListTb);
         List<ProveedorDTO> MapeoProveedorTbListaAProveedorDtoLista(List<TbComProveedores> listProvedorTb);
+        List<TbComArticulo> MapeoListaArticulosCreacionAListaArticulosTb(List<ArticuloCreacionDTO> articulosCreacionDto);
+        List<ArticuloDTO> MapeoListaArticulosDtoVentas(List<TbComArticulo> listaArticulosTb);
+        ArticuloDTO MapeoArticuloTbAArticuloDtoVentas(TbComArticulo articuloTb);
+        TbComMarca MapeoMarcaCreacionDtoAMarcaTb(MarcaCreacionDTO marcaDto);
     } 
     public class Mapeos : IMapeos
     {
         private DateTime FechaGrl = DateTime.Now;
 
-
+        public TbComMarca MapeoMarcaCreacionDtoAMarcaTb(MarcaCreacionDTO marcaDto)
+        {
+            return new TbComMarca
+            {
+                Nombre = marcaDto.Nombre,
+                Descripcion = marcaDto.Descripcion,
+                EstadoVisual = marcaDto.EstadoVisual,
+            };
+        }
 
 
         public List<ClienteDTO> MapeoListaClientesTbaAListaClientesDto(List<TbComCliente> clientesListTb)
@@ -125,6 +137,11 @@ namespace SistemaTienda.Utility
 
             return ListaEstadosDto.Select(est => this.MapeoEstadosVentaTbaAEstadosVentaDto(est)).ToList();
         }
+
+        public List<TbComArticulo> MapeoListaArticulosCreacionAListaArticulosTb(List<ArticuloCreacionDTO> articulosCreacionDto){
+            return articulosCreacionDto.Select(a => this.MapeoArticuloCreacionDtoAArticuloTb(a)).ToList();
+        }
+
         public TbComArticulo MapeoArticuloCreacionDtoAArticuloTb(ArticuloCreacionDTO articuloCreacionDto){
             var articuloTb = new TbComArticulo {
                 Codigo = articuloCreacionDto.Codigo,
@@ -142,6 +159,7 @@ namespace SistemaTienda.Utility
                 IdTipoArticulo = articuloCreacionDto.IdTipoArticulo,
                 IdMarca = articuloCreacionDto.IdMarca,
                 IdUsuarioCreador = articuloCreacionDto.IdUsuarioCreador,
+                Papeleria = articuloCreacionDto.Papeleria
             };
             return articuloTb;
         }
@@ -171,8 +189,52 @@ namespace SistemaTienda.Utility
                     Descripcion = articuloDto.TipoArticuloDTO.Descripcion,
                     Nombre = articuloDto.TipoArticuloDTO.Nombre,
                 },
+                Papeleria = articuloDto.Papeleria
             };
             return articuloTb;
+        }
+        public List<ArticuloDTO> MapeoListaArticulosDtoVentas(List<TbComArticulo> listaArticulosTb)
+        {
+            return listaArticulosTb.Select(a => this.MapeoArticuloTbAArticuloDtoVentas(a)).ToList();
+        }
+        public ArticuloDTO MapeoArticuloTbAArticuloDtoVentas(TbComArticulo articuloTb)
+        {
+            var articuloDto = new ArticuloDTO
+            {
+                Id = articuloTb.Id,
+                Codigo = articuloTb.Codigo,
+                Descripcion = articuloTb.Descripcion,
+                Estado = articuloTb.Estado,
+                EstadoVisual = articuloTb.EstadoVisual,
+                ImpuestoArticuloDto = new ImpuestoArticuloDTO
+                {
+                    Id = articuloTb.IdImpuestoNavigation.Id,
+                    ValorImpuesto = articuloTb.IdImpuestoNavigation.ValorImpuesto,
+                    Nombre = articuloTb.IdImpuestoNavigation.Nombre,
+                },
+                Nombre = $"{articuloTb.Nombre} {articuloTb.Unidad} {articuloTb.UnidadValor} {articuloTb.IdMarcaNavigation.Nombre} PRECIO {articuloTb.ValorVenta}$",
+                Unidad = articuloTb.Unidad,
+                ValorCompra = articuloTb.ValorCompra,
+                UnidadValor = articuloTb.UnidadValor,
+                ValorVenta = articuloTb.ValorVenta,
+                FechaActualizacion = articuloTb.FechaActualizacion ?? articuloTb.FechaCreacion,
+                FechaCaducidad = articuloTb.FechaCaducidad,
+                FechaCreacion = articuloTb.FechaCreacion,
+                TipoArticuloDTO = new TipoArticuloDTO
+                {
+                    Id = articuloTb.IdTipoArticulo,
+                    Descripcion = articuloTb.IdTipoArticuloNavigation.Descripcion,
+                    Nombre = articuloTb.IdTipoArticuloNavigation.Nombre,
+                },
+                MarcaDTO = new MarcaDTO
+                {
+                    Id = articuloTb.IdMarcaNavigation.Id,
+                    Descripcion = articuloTb.IdMarcaNavigation.Descripcion,
+                    Nombre = articuloTb.IdMarcaNavigation.Nombre,
+                },
+                Papeleria = articuloTb.Papeleria
+            };
+            return articuloDto;
         }
 
         public ArticuloDTO MapeoArticuloTbAArticuloDto(TbComArticulo articuloTb)
@@ -210,6 +272,7 @@ namespace SistemaTienda.Utility
                     Descripcion = articuloTb.IdMarcaNavigation.Descripcion,
                     Nombre = articuloTb.IdMarcaNavigation.Nombre,
                 },
+                Papeleria = articuloTb.Papeleria
             };
             return articuloDto;
         }
@@ -939,7 +1002,7 @@ namespace SistemaTienda.Utility
                 Documento = ventaTb.Documento,
                 FechaVenta = ventaTb.FechaVenta,
                 FechaCreacion = ventaTb.FechaCreacion,
-                FechaModificacion = ventaTb.FechaModificacion,
+                FechaModificacion = ventaTb.FechaModificacion?? DateTime.Now,
                 IdEstado = ventaTb.IdEstadoVenta,
                 EstadoVenta = new EstadoVentaDTO
                 {
@@ -957,9 +1020,9 @@ namespace SistemaTienda.Utility
                         Nombre = d.IdArticuloNavigation.Nombre,
                         Unidad = d.IdArticuloNavigation.Unidad,
                         UnidadValor = d.IdArticuloNavigation.UnidadValor,
-                        FechaActualizacion = d.IdArticuloNavigation.FechaActualizacion,
+                        FechaActualizacion = d.IdArticuloNavigation.FechaActualizacion ?? DateTime.Now,
                         FechaCreacion = d.IdArticuloNavigation.FechaCreacion,
-                        FechaCaducidad = d.IdArticuloNavigation.FechaCaducidad,
+                        FechaCaducidad = d.IdArticuloNavigation.FechaCaducidad ?? DateTime.Now,
                         ImpuestoArticuloDto = new ImpuestoArticuloDTO
                         {
                             Id = d.IdArticuloNavigation.IdImpuestoNavigation.Id,

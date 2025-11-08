@@ -19,5 +19,6 @@ namespace SistemaTienda.DTO
         public TransaccionInventarioDTO TransaccionInventario { get; set; }
 
         public int IdTransaccion { get; set; }
+        public bool Papeleria { get; set; }
     }
 }

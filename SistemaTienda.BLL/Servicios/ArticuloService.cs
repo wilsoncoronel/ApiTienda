@@ -8,6 +8,7 @@ using SistemaTienda.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -87,7 +88,7 @@ namespace SistemaTienda.BLL.Servicios
                 articuloTb.Descripcion = articuloEditarDto.Descripcion;
                 articuloTb.Estado = articuloEditarDto.Estado;
                 articuloTb.FechaCaducidad = articuloEditarDto.FechaCaducidad;
-
+                articuloTb.Papeleria = articuloEditarDto.Papeleria;
                 var resp = await this._articuloRepository.Editar(articuloTb);
                 if (resp == false)
                     throw new Exception("No se pudo editar el artículo");
@@ -105,7 +106,7 @@ namespace SistemaTienda.BLL.Servicios
                 .Include(a => a.IdMarcaNavigation)
                 .Include(a => a.IdTipoArticuloNavigation)
                 .Include(a => a.IdImpuestoNavigation).ToList();
-            return this._mapper.MapeoListaArticulosDto(listaArt);
+            return this._mapper.MapeoListaArticulosDtoVentas(listaArt);
         }
 
         public async Task<List<ArticuloDTO>> ListarArticulos(DateTime fechaInicial, DateTime fechaFinal)
@@ -153,6 +154,27 @@ namespace SistemaTienda.BLL.Servicios
             }).ToListAsync();
             return listaMarcasArticulos;
 
+        }
+
+        public async Task<bool> CrearArticulosLista(List<ArticuloCreacionDTO> articulosCreacionDto)
+        {
+            using (var transaction = tiendaDbContext.Database.BeginTransaction())
+            {
+                try {
+                    var articulosTb = this._mapper.MapeoListaArticulosCreacionAListaArticulosTb(articulosCreacionDto);
+                    this.tiendaDbContext.TbComArticulos.AddRange(articulosTb);
+                    await this.tiendaDbContext.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+                
+            }
+                
+            return true;
         }
     }
 }

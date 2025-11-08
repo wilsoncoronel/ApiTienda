@@ -87,6 +87,32 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
+    "Method": "CrearArticulosLista",
+    "RelativePath": "api/Articulo/CrearArticulosLista",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "articulosCreacionDto",
+        "Type": "System.Collections.Generic.List\u00601[[SistemaTienda.DTO.ArticuloCreacionDTO, SistemaTienda.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Boolean",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
     "Method": "DesactivarArticulo",
     "RelativePath": "api/Articulo/DesactivarArticulo",
     "HttpMethod": "PUT",

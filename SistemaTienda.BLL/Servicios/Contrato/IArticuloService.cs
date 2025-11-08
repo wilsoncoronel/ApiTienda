@@ -10,6 +10,7 @@ namespace SistemaTienda.BLL.Servicios.Contrato
     public interface IArticuloService
     {
         Task<int> CrearArticulo(ArticuloCreacionDTO articuloCreacionDto);
+        Task<bool> CrearArticulosLista(List<ArticuloCreacionDTO> articulosCreacionDto);
         Task<List<ArticuloDTO>> ListarArticulos(DateTime fechaInicio, DateTime fechaFinal);
         Task<bool> EditarArticulo(ArticuloEdicionDTO articuloEditarDto);
         Task<bool> DesactivarArticulo(int idArticulo);
