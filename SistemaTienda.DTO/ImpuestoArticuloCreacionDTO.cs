@@ -9,8 +9,8 @@ namespace SistemaTienda.DTO
     public class ImpuestoArticuloCreacionDTO
     {
         public string Nombre { get; set; }
-        public double ValorImpuesto { get; set; }
+        public decimal ValorImpuesto { get; set; }
         public string Descripcion { get; set; }
-        public int IdEstado { get; set; }
+        public int IdEstadoImpuesto { get; set; }
     }
 }

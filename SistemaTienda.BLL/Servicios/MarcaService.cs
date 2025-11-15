@@ -60,14 +60,24 @@ namespace SistemaTienda.BLL.Servicios
                 catch
                 {
                    
-                    throw new Exception("Error ha ocurrido un error creando el cliente, comuníquese con el administrador del sistema!!!");
+                    throw new Exception("Error ha ocurrido un error editando la marca, comuníquese con el administrador del sistema!!!");
                 }
             
         }
 
-        public Task<List<MarcaDTO>> ListarMarcas()
+        public async Task<List<MarcaDTO>> ListarMarcas()
         {
-            throw new NotImplementedException();
+            try
+            {
+                IQueryable<TbComMarca> marcasList = await this.marcaRepository.Consultar();
+                var listaMarcas = marcasList.ToList();
+                var listaMarcasDto = this.mapeos.MapeoListasMarcaTbAListaMarcaDto(listaMarcas);
+                return listaMarcasDto;
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }

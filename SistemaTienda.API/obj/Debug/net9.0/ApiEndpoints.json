@@ -388,6 +388,126 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
+    "Method": "CrearImpuesto",
+    "RelativePath": "api/Configuraciones/CrearImpuesto",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "marcaDto",
+        "Type": "SistemaTienda.DTO.MarcaCreacionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
+    "Method": "CrearMarca",
+    "RelativePath": "api/Configuraciones/CrearMarca",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "marcaDto",
+        "Type": "SistemaTienda.DTO.MarcaCreacionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
+    "Method": "EditarImpuesto",
+    "RelativePath": "api/Configuraciones/EditarImpuesto",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "marcaDto",
+        "Type": "SistemaTienda.DTO.MarcaEditarDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
+    "Method": "EditarMarca",
+    "RelativePath": "api/Configuraciones/EditarMarca",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "marcaDto",
+        "Type": "SistemaTienda.DTO.MarcaEditarDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
+    "Method": "EditarTipoArticulo",
+    "RelativePath": "api/Configuraciones/EditarTipoArticulo",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tipoDto",
+        "Type": "SistemaTienda.DTO.TipoArticuloEditarDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
+    "Method": "ListarEstados",
+    "RelativePath": "api/Configuraciones/ListarEstados",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
+    "Method": "ListarImpuestosArticulos",
+    "RelativePath": "api/Configuraciones/ListarImpuestosArticulos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
+    "Method": "ListarMarcas",
+    "RelativePath": "api/Configuraciones/ListarMarcas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
+    "Method": "ListarTiposArticulos",
+    "RelativePath": "api/Configuraciones/ListarTiposArticulos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
     "Method": "ExistenciasInventario",
     "RelativePath": "api/Inventario/ExistenciasInventario",

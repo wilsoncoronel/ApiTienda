@@ -22,7 +22,6 @@ namespace SistemaTienda.Utility
         void MapeoUsuarioEdicionDtoATbUsuario(UsuarioEditarDTO usuarioEditarDTO, TbSisUsuario usuarioTb);
         TbCompra MapeoCompraCreacionDtoACompraTb(CompraCreacionDTO compraCreacionDto);
         TbComDetallesCompra MapeoDetalleCompraCreacionDtoADetalleCompraDto(DetalleCompraCreacionDTO detalleComraCreacionDto);
-
         TbComProveedores MapeoProveedorDtoAProveedorTb(ProveedorCreacionDTO provedorCreacion);
         void MapeoProveedorEditarDtoAProveedorTb(ProveedorEditarDTO provedorEditar, TbComProveedores proveedoresTb);
         void MapeoCompraEdicionDtoACompraTb(CompraEditarDTO compraEditarDto, TbCompra compraTb);
@@ -48,7 +47,6 @@ namespace SistemaTienda.Utility
         TbComCliente MapeoCLienteDtoAClienteTb(ClienteCreacionDTO clienteCreacion);
         List<TipoIdentificacionDTO> MapeoListTiposIdentificacionTbaAListaTiposIDentificacionDto(List<TbGrlTipoIdentificacion> listaTiposIden);
         TipoIdentificacionDTO MapeoTipoIdentificacionTbaATipoIdentificacionDto(TbGrlTipoIdentificacion TipoIdentificacionTb);
-
         CiudadDTO MapeoCiudadTbaACiudadDto(TbGrlCiudades CiudadTb);
         List<CiudadDTO>  MapeoListaCiudadesTbaAListaCiudadesDto(List<TbGrlCiudades> ListaCiudadesDto);
         List<ClienteDTO> MapeoListaClientesTbaAListaClientesDto(List<TbComCliente> clientesListTb);
@@ -57,10 +55,76 @@ namespace SistemaTienda.Utility
         List<ArticuloDTO> MapeoListaArticulosDtoVentas(List<TbComArticulo> listaArticulosTb);
         ArticuloDTO MapeoArticuloTbAArticuloDtoVentas(TbComArticulo articuloTb);
         TbComMarca MapeoMarcaCreacionDtoAMarcaTb(MarcaCreacionDTO marcaDto);
+        MarcaDTO MapeoMarcaTbAMarcaDto(TbComMarca marcaTb);
+        List<MarcaDTO> MapeoListasMarcaTbAListaMarcaDto(List<TbComMarca> listaMarcasTb);
+        TbComTiposArticulo MapeoTipoArticuloDtoATipoArticuloTb(TipoArticuloCreacionDTO tipoArticuloDto);
+        TipoArticuloDTO MapeoTipoArticuloTbATipoArticuloDto(TbComTiposArticulo tipoArticuloTb);
+        List<TipoArticuloDTO> MapeoListasTipoArticulosTbAListaTipoArticulosDto(List<TbComTiposArticulo> listaTiposArticulosTb);
+        List<ImpuestoArticuloDTO> MapeoListaImpuestosTbAListaImpuestosDto(List<TbComImpuestosArticulo> listaImpuestosTb);
+        ImpuestoArticuloDTO MapeoImpuestoTbAImpuestoDto(TbComImpuestosArticulo impuestoTb);
+        List<EstadoImpuestoDTO> MapeoListaEstadosImpuestosTbAListaEstadosImpuestosDto(List<TbComEstadosImpuesto> listaEstadImpDTO);
+        EstadoImpuestoDTO MapeoEstadoImpuestoTbAEstadoImpuestoDto(TbComEstadosImpuesto estaTb);
     } 
     public class Mapeos : IMapeos
     {
         private DateTime FechaGrl = DateTime.Now;
+
+
+        public List<EstadoImpuestoDTO> MapeoListaEstadosImpuestosTbAListaEstadosImpuestosDto(List<TbComEstadosImpuesto> listaEstadImpDTO) {
+            return listaEstadImpDTO.Select(est => this.MapeoEstadoImpuestoTbAEstadoImpuestoDto(est)).ToList();
+        }
+
+        public EstadoImpuestoDTO MapeoEstadoImpuestoTbAEstadoImpuestoDto(TbComEstadosImpuesto estaTb){
+            return new EstadoImpuestoDTO
+            {
+                Id = estaTb.Id,
+                Nombre = estaTb.Nombre,
+                EstadoVisual = estaTb.EstadoVisual,
+            };
+        }
+
+        public List<ImpuestoArticuloDTO> MapeoListaImpuestosTbAListaImpuestosDto(List<TbComImpuestosArticulo> listaImpuestosTb) {
+            return listaImpuestosTb.Select(imp => this.MapeoImpuestoTbAImpuestoDto(imp)).ToList();
+        }
+
+        public ImpuestoArticuloDTO MapeoImpuestoTbAImpuestoDto(TbComImpuestosArticulo impuestoTb) {
+            return new ImpuestoArticuloDTO {
+                Id = impuestoTb.Id,
+                Nombre = impuestoTb.Nombre,
+                ValorImpuesto = impuestoTb.ValorImpuesto,
+                Descripcion = impuestoTb.Descripcion,
+                IdEstadoImpuesto = impuestoTb.IdEstadoImpuesto,
+                EstadoImpuesto = new EstadoImpuestoDTO {
+                    Id = impuestoTb.IdEstadoImpuestoNavigation.Id,
+                    Nombre = impuestoTb.IdEstadoImpuestoNavigation.Nombre,
+                }
+            };
+        }
+
+        public TbComTiposArticulo  MapeoTipoArticuloDtoATipoArticuloTb(TipoArticuloCreacionDTO tipoArticuloDto)
+        {
+            return new TbComTiposArticulo
+            {
+                Nombre = tipoArticuloDto.Nombre,
+                Descripcion = tipoArticuloDto.Descripcion,
+                EstadoVisual = tipoArticuloDto.EstadoVisual,
+            };
+        }
+
+        public TipoArticuloDTO MapeoTipoArticuloTbATipoArticuloDto(TbComTiposArticulo tipoArticuloTb)
+        {
+            return new TipoArticuloDTO
+            {
+                Id = tipoArticuloTb.Id,
+                Nombre = tipoArticuloTb.Nombre,
+                Descripcion = tipoArticuloTb.Descripcion,
+                EstadoVisual = tipoArticuloTb.EstadoVisual,
+            };
+        }
+        public List<TipoArticuloDTO> MapeoListasTipoArticulosTbAListaTipoArticulosDto(List<TbComTiposArticulo> listaTiposArticulosTb)
+        {
+            return listaTiposArticulosTb.Select(mar => this.MapeoTipoArticuloTbATipoArticuloDto(mar)).ToList();
+        }
 
         public TbComMarca MapeoMarcaCreacionDtoAMarcaTb(MarcaCreacionDTO marcaDto)
         {
@@ -69,6 +133,20 @@ namespace SistemaTienda.Utility
                 Nombre = marcaDto.Nombre,
                 Descripcion = marcaDto.Descripcion,
                 EstadoVisual = marcaDto.EstadoVisual,
+            };
+        }
+        public List<MarcaDTO> MapeoListasMarcaTbAListaMarcaDto(List<TbComMarca> listaMarcasTb)
+        {
+            return listaMarcasTb.Select(mar => this.MapeoMarcaTbAMarcaDto(mar)).ToList();
+        }
+        public MarcaDTO MapeoMarcaTbAMarcaDto(TbComMarca marcaTb)
+        {
+            return new MarcaDTO
+            {
+                Id = marcaTb.Id,
+                Nombre = marcaTb.Nombre,
+                Descripcion = marcaTb.Descripcion,
+                EstadoVisual = marcaTb.EstadoVisual,
             };
         }
 

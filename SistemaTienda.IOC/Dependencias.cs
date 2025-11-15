@@ -27,7 +27,10 @@ namespace SistemaTienda.IOC
             services.AddTransient<IMapeos, Mapeos>();
             services.AddTransient<ILogginService, LogginService>();
             services.AddTransient<IInventarioService, InventarioService>();
+            services.AddTransient<ITipoArticuloService, TipoArticuloService>();
+            services.AddTransient<IImpuestoArticuloService, ImpuestoArticuloService>();
             services.AddTransient<IUsuarioService, UsuarioService>();
+            services.AddTransient<IMarcaService, MarcaService>();
             services.AddTransient<IArticuloService, ArticuloService>();
             services.AddTransient<IProveedorService, ProveedorService>();
             services.AddTransient<IMenuService, MenuService>();
