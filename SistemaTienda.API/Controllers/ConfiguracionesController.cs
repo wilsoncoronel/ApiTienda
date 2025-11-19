@@ -155,14 +155,14 @@ namespace SistemaTienda.API.Controllers
 
         [HttpPost]
         [Route("CrearImpuesto")]
-        public async Task<IActionResult> CrearImpuesto(MarcaCreacionDTO marcaDto)
+        public async Task<IActionResult> CrearImpuesto(ImpuestoArticuloCreacionDTO impuestoCrearDto)
         {
             var resp = new Response<int>();
             try
             {
                 resp.status = true;
-                resp.Value = await this._marcaService.CrearMarca(marcaDto);
-                resp.msg = "Marca creada exitosamente";
+                resp.Value = await this._impuestoArticuloService.CrearImpuestos(impuestoCrearDto);
+                resp.msg = "Impuesto creado exitosamente";
             }
             catch
             {
@@ -174,13 +174,13 @@ namespace SistemaTienda.API.Controllers
 
         [HttpPut]
         [Route("EditarImpuesto")]
-        public async Task<IActionResult> EditarImpuesto(MarcaEditarDTO marcaDto)
+        public async Task<IActionResult> EditarImpuesto(ImpuestoArticuloEditarDTO impuestoEditarDto)
         {
             var resp = new Response<bool>();
             try
             {
                 resp.status = true;
-                resp.Value = await this._marcaService.EditarMarca(marcaDto);
+                resp.Value = await this._impuestoArticuloService.EditarImpuesto(impuestoEditarDto);
                 resp.msg = "Marca editada exitosamente";
             }
             catch

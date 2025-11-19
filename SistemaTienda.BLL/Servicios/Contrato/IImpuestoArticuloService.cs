@@ -10,7 +10,7 @@ namespace SistemaTienda.BLL.Servicios.Contrato
     public interface IImpuestoArticuloService
     {
         Task<int> CrearImpuestos(ImpuestoArticuloCreacionDTO impuestoArticuloCreacionDto);
-        Task<bool> EditarImpuesto(ImpuestoArticuloDTO impuestoArticuloEditarDto);
+        Task<bool> EditarImpuesto(ImpuestoArticuloEditarDTO impuestoArticuloEditarDto);
         Task<List<ImpuestoArticuloDTO>> ListarImpuestos();
         Task<List<EstadoImpuestoDTO>> ListarEstados();
     }

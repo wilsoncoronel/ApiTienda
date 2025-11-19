@@ -27,14 +27,51 @@ namespace SistemaTienda.BLL.Servicios
             _estadosImpuestosRepository = estadosImpuestosRepository;
         }
 
-        public Task<int> CrearImpuestos(ImpuestoArticuloCreacionDTO impuestoArticuloCreacionDto)
+        public async Task<int> CrearImpuestos(ImpuestoArticuloCreacionDTO impuestoArticuloCreacionDto)
         {
-            throw new NotImplementedException();
+            using (var transaccion = _tiendaDbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var impuesto = this._mapeos.MapeoImpuestoDtoAImpuestoTb(impuestoArticuloCreacionDto);
+                    await this._impuestosArticulosRepsitory.Crear(impuesto);
+                    if (impuesto.Id == 0)
+                        throw new Exception("No se pudo crear el impuesto!!");
+                    transaccion.Commit();
+                    return impuesto.Id;
+                }
+                catch
+                {
+                    transaccion.Rollback();
+                    throw new Exception("Error ha ocurrido un error creando el impuesto, comuníquese con el administrador del sistema!!!");
+                }
+            }
         }
 
-        public Task<bool> EditarImpuesto(ImpuestoArticuloDTO impuestoArticuloEditarDto)
+        public async Task<bool> EditarImpuesto(ImpuestoArticuloEditarDTO impuestoArticuloEditarDto)
         {
-            throw new NotImplementedException();
+            IQueryable<TbComImpuestosArticulo> impuestosTb = await this._impuestosArticulosRepsitory.Consultar();
+
+            try
+            {
+                var imp = impuestosTb.Where(c => c.Id == impuestoArticuloEditarDto.Id)
+                    .FirstOrDefault();
+                if (imp is null)
+                    throw new Exception("No se encontró el impuesto a editar!!");
+                imp.IdEstadoImpuesto = impuestoArticuloEditarDto.IdEstadoImpuesto;
+                imp.Nombre = impuestoArticuloEditarDto.Nombre;
+                imp.Descripcion = impuestoArticuloEditarDto.Descripcion;
+                imp.ValorImpuesto = impuestoArticuloEditarDto.ValorImpuesto;
+                var resp = await this._impuestosArticulosRepsitory.Editar(imp);
+                if (resp == false)
+                    throw new Exception("No se pudo editar el impuesto!!");
+                return resp;
+            }
+            catch
+            {
+
+                throw new Exception("Error ha ocurrido un error editando el impuesto, comuníquese con el administrador del sistema!!!");
+            }
         }
 
         public async Task<List<EstadoImpuestoDTO>> ListarEstados()

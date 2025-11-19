@@ -13,6 +13,6 @@ namespace SistemaTienda.DTO
         public decimal ValorImpuesto { get; set; }
         public string Descripcion { get; set; }
         public int IdEstadoImpuesto { get; set; }
-        public EstadoImpuestoDTO EstadoImpuesto { get; set; }
     }
 }
+ 

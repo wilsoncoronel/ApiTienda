@@ -10,7 +10,7 @@ namespace SistemaTienda.DTO
     public class TransaccionInventarioDTO
     {
         public int Id { get; set; }
-        public int Nombre { get; set; }
+        public string Nombre { get; set; }
         public int Signo { get; set; }
         public bool Estado { get; set; }
     }

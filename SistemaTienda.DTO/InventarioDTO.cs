@@ -9,16 +9,19 @@ namespace SistemaTienda.DTO
     public class InventarioDTO
     {
         public int Id { get; set; }
-        public int IdArticulo { get; set; }
-        public ArticuloDTO Articulo { get; set; }
-        public int Cantidad { get; set; }
+
         public DateTime FechaCreacion { get; set; }
 
-        public double PrecioUnitario { get; set; }
+        public int? IdCompra { get; set; }
 
-        public TransaccionInventarioDTO TransaccionInventario { get; set; }
+        public int? IdVenta { get; set; }
 
-        public int IdTransaccion { get; set; }
-        public bool Papeleria { get; set; }
+        public DateTime? FechaReversion { get; set; }
+
+        public DateTime? FechaActualizacion { get; set; }
+
+        public CompraMinDTO? CompraDTO { get; set; }
+
+        public VentaMinDTO? VentaDTO { get; set; }
     }
 }

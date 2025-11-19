@@ -396,8 +396,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "marcaDto",
-        "Type": "SistemaTienda.DTO.MarcaCreacionDTO",
+        "Name": "impuestoCrearDto",
+        "Type": "SistemaTienda.DTO.ImpuestoArticuloCreacionDTO",
         "IsRequired": true
       }
     ],
@@ -428,8 +428,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "marcaDto",
-        "Type": "SistemaTienda.DTO.MarcaEditarDTO",
+        "Name": "impuestoEditarDto",
+        "Type": "SistemaTienda.DTO.ImpuestoArticuloEditarDTO",
         "IsRequired": true
       }
     ],
@@ -511,6 +511,53 @@
     "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
     "Method": "ExistenciasInventario",
     "RelativePath": "api/Inventario/ExistenciasInventario",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
+    "Method": "ListaDetallesInventario",
+    "RelativePath": "api/Inventario/ListaDetallesInventario",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "IdInventario",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
+    "Method": "ListaInventario",
+    "RelativePath": "api/Inventario/ListaInventario",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fechaInicio",
+        "Type": "System.DateOnly",
+        "IsRequired": false
+      },
+      {
+        "Name": "fechaFin",
+        "Type": "System.DateOnly",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
+    "Method": "ListaTransaccionesInventario",
+    "RelativePath": "api/Inventario/ListaTransaccionesInventario",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
