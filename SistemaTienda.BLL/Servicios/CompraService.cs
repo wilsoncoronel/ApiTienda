@@ -141,6 +141,7 @@ namespace SistemaTienda.BLL.Servicios
                     .Include(prov => prov.IdProveedorNavigation)
                     .ThenInclude(per => per.IdPersonaNavigation)
                     .ThenInclude(dir => dir.TbGrlDireccione)
+                        .ThenInclude(ciu => ciu.IdCiudadNavigation)
                     .Include(est => est.IdEstadoCompraNavigation)
                     .Include(det => det.TbComDetallesCompras)
                     .ThenInclude(art => art.IdArticuloNavigation)

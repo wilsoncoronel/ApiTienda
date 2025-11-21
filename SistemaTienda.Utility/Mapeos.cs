@@ -73,8 +73,6 @@ namespace SistemaTienda.Utility
         public class Mapeos : IMapeos
         {
             private DateTime FechaGrl = DateTime.Now;
-
-
             public List<DetalleInventarioDTO> MapeoListaDetallesInventarioTbAListaDetallesInventarioDto(List<TbDetallesInventario> ListaDetallesInv)
             {
                 return ListaDetallesInv.Select(det => this.MapeoDetalleInventarioTbADetalleInventarioDto(det)).ToList();
@@ -91,11 +89,12 @@ namespace SistemaTienda.Utility
                         Id = detalleInvTb.IdTransaccionInventario,
                         Nombre = detalleInvTb.IdTransaccionInventarioNavigation.Nombre,
                     },
-                    ArticuloDTO = new ArticuloDTO
+                    ArticuloDTO = new ArticuloMinDTO
                     {
                         Id = detalleInvTb.IdArticuloNavigation.Id,
                         Nombre = detalleInvTb.IdArticuloNavigation.Nombre,
                         Codigo = detalleInvTb.IdArticuloNavigation.Codigo,
+                        Descripcion = detalleInvTb.IdArticuloNavigation.Descripcion,
                         ImpuestoArticuloDto = new ImpuestoArticuloDTO
                         {
                             Id = detalleInvTb.IdArticuloNavigation.IdImpuestoNavigation.Id,
@@ -1091,7 +1090,7 @@ namespace SistemaTienda.Utility
                     Documento = compraTb.Documento,
                     FechaCompra = compraTb.FechaCompra,
                     FechaCreacion = compraTb.FechaCreacion,
-                    FechaModificacion = compraTb.FechaModificacion,
+                    FechaModificacion = compraTb.FechaModificacion?? compraTb.FechaCompra,
                     IdEstado = compraTb.IdEstadoCompra,
                     EstadoCompra = new EstadoCompraDTO
                     {
