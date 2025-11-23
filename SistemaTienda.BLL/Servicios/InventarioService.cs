@@ -52,7 +52,6 @@ namespace SistemaTienda.BLL.Servicios
                 throw;
             }
         }
-
         public async Task<List<InventarioDTO>> ListaInventario(DateOnly FechaInicio, DateOnly FechaFinal)
         {
             var inicio = FechaInicio.ToDateTime(TimeOnly.MinValue);
@@ -111,6 +110,95 @@ namespace SistemaTienda.BLL.Servicios
                 }).ToList();
 
                 return resultado;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<ResumenVentasDiarioDTO>> ResumenVentasDiario(DateOnly fecha)
+        {
+            //DateTime fechaActual = DateTime.Now.Date;
+            DateTime desde = fecha.ToDateTime(TimeOnly.MinValue);  // 00:00
+            DateTime hasta = desde.AddDays(1);
+            List<ResumenVentasDiarioDTO> resumen = new List<ResumenVentasDiarioDTO>();
+            IQueryable <TbInvInventario> tbInventarios = await this._inventarioRepo.Consultar(inv =>
+            inv.FechaCreacion >= desde &&
+            inv.FechaCreacion < hasta);
+            if(!tbInventarios.Any())
+            {
+                resumen = [];
+                return resumen;
+            }
+            var listaResultado = new List<TbDetallesInventario>();
+            try
+            {
+                listaResultado = await tbInventarios.Where(inv => inv.IdVenta != null)
+                   .SelectMany(det => det.TbDetallesInventarios).Include(art => art.IdArticuloNavigation).ThenInclude(imp => imp.IdImpuestoNavigation).ToListAsync();
+                resumen = listaResultado.GroupBy(det => new
+                {
+                    det.IdArticulo,
+                    det.IdArticuloNavigation.Nombre
+                }).Select(
+                        res => new ResumenVentasDiarioDTO
+                        {
+                            Articulo = new ArticuloMinDTO
+                            {
+                                Id = res.Key.IdArticulo,
+                                Nombre = res.Key.Nombre,
+                            },
+                            CantidadVendida = res.Sum(d => d.Cantidad),
+                            ValorCompra = res.Sum(d => d.Cantidad * d.PrecioCompra),
+                            ValorVenta = res.Sum(d => d.Cantidad * d.PrecioVenta),
+                            UtilidadBruta = res.Sum(d => d.Cantidad * d.PrecioVenta) - res.Sum(d => d.Cantidad * d.PrecioCompra)
+                        }
+                    ).ToList();
+                return resumen;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<ResumenVentasDiarioDTO>> ResumenVentasMensual(DateOnly fechaResumen)
+        {
+            DateTime fechaFin = fechaResumen.ToDateTime(TimeOnly.MinValue);  // 00:00
+            DateTime fechaInicio = new DateTime(fechaFin.Year, fechaFin.Month, 1);
+            List<ResumenVentasDiarioDTO> resumen = new List<ResumenVentasDiarioDTO>();
+            IQueryable<TbInvInventario> tbInventarios = await this._inventarioRepo.Consultar(inv =>
+            inv.FechaCreacion >= fechaInicio &&
+            inv.FechaCreacion <= fechaFin);
+            if (!tbInventarios.Any())
+            {
+                resumen = [];
+                return resumen;
+            }
+            var listaResultado = new List<TbDetallesInventario>();
+            try
+            {
+                listaResultado = await tbInventarios.Where(inv => inv.IdVenta != null)
+                   .SelectMany(det => det.TbDetallesInventarios).Include(art => art.IdArticuloNavigation).ThenInclude(imp => imp.IdImpuestoNavigation).ToListAsync();
+                resumen = listaResultado.GroupBy(det => new
+                {
+                    det.IdArticulo,
+                    det.IdArticuloNavigation.Nombre
+                }).Select(
+                        res => new ResumenVentasDiarioDTO
+                        {
+                            Articulo = new ArticuloMinDTO
+                            {
+                                Id = res.Key.IdArticulo,
+                                Nombre = res.Key.Nombre,
+                            },
+                            CantidadVendida = res.Sum(d => d.Cantidad),
+                            ValorCompra = res.Sum(d => d.Cantidad * d.PrecioCompra),
+                            ValorVenta = res.Sum(d => d.Cantidad * d.PrecioVenta),
+                            UtilidadBruta = res.Sum(d => d.Cantidad * d.PrecioVenta) - res.Sum(d => d.Cantidad * d.PrecioCompra)
+                        }
+                    ).ToList();
+                return resumen;
             }
             catch
             {

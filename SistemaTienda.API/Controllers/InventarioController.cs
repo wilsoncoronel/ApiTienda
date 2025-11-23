@@ -89,5 +89,41 @@ namespace SistemaTienda.API.Controllers
             }
             return Ok(resp);
         }
+
+        [HttpGet]
+        [Route("ResumenVentasDiario")]
+        public async Task<IActionResult> ResumenVentasDiario(DateOnly fechaResumen)
+        {
+            var resp = new Response<List<ResumenVentasDiarioDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._inventarioService.ResumenVentasDiario(fechaResumen);
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
+        [HttpGet]
+        [Route("ResumenVentasMensual")]
+        public async Task<IActionResult> ResumenVentasMensual(DateOnly fechaResumen)
+        {
+            var resp = new Response<List<ResumenVentasDiarioDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._inventarioService.ResumenVentasMensual(fechaResumen);
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
     }
 }

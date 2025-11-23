@@ -1108,9 +1108,9 @@ namespace SistemaTienda.Utility
                             Nombre = d.IdArticuloNavigation.Nombre,
                             Unidad = d.IdArticuloNavigation.Unidad,
                             UnidadValor = d.IdArticuloNavigation.UnidadValor,
-                            FechaActualizacion = d.IdArticuloNavigation.FechaActualizacion,
+                            FechaActualizacion = d.IdArticuloNavigation.FechaActualizacion?? d.IdArticuloNavigation.FechaCreacion,
                             FechaCreacion = d.IdArticuloNavigation.FechaCreacion,
-                            FechaCaducidad = d.IdArticuloNavigation.FechaCaducidad,
+                            FechaCaducidad = d.IdArticuloNavigation.FechaCaducidad?? d.IdArticuloNavigation.FechaCreacion,
                             ImpuestoArticuloDto = new ImpuestoArticuloDTO
                             {
                                 Id = d.IdArticuloNavigation.IdImpuestoNavigation.Id,
