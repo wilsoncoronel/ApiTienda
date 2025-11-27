@@ -421,6 +421,22 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
+    "Method": "CrearTipoArticulo",
+    "RelativePath": "api/Configuraciones/CrearTipoArticulo",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tipoDto",
+        "Type": "SistemaTienda.DTO.TipoArticuloCreacionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
     "Method": "EditarImpuesto",
     "RelativePath": "api/Configuraciones/EditarImpuesto",
     "HttpMethod": "PUT",

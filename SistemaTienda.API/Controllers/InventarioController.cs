@@ -11,10 +11,12 @@ namespace SistemaTienda.API.Controllers
     public class InventarioController : ControllerBase
     {
         private readonly IInventarioService _inventarioService;
+        private readonly ILogger<InventarioController> logger;
 
-        public InventarioController(IInventarioService inventarioService)
+        public InventarioController(IInventarioService inventarioService, ILogger<InventarioController> logger)
         {
             this._inventarioService = inventarioService;
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -28,9 +30,10 @@ namespace SistemaTienda.API.Controllers
                 
                 resp.Value = await this._inventarioService.ExistenciasInventario();
             }
-            catch
+            catch(Exception ex)
             {
                 resp.status = false;
+                this.logger.LogError("Error en la conexion "+ ex);
                 throw;
             }
             return Ok(resp);
@@ -118,9 +121,10 @@ namespace SistemaTienda.API.Controllers
                 resp.status = true;
                 resp.Value = await this._inventarioService.ResumenVentasMensual(fechaResumen);
             }
-            catch
+            catch(Exception ex)
             {
                 resp.status = false;
+                this.logger.LogError("Error en la conexion " + ex.Message);
                 throw;
             }
             return Ok(resp);

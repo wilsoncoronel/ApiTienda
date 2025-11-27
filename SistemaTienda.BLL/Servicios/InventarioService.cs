@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SistemaTienda.BLL.Servicios.Contrato;
 using SistemaTienda.DAL.Repositorios.Contrato;
 using SistemaTienda.DTO;
@@ -18,13 +19,15 @@ namespace SistemaTienda.BLL.Servicios
         private readonly IGenericRepository<TbInvInventario> _inventarioRepo;
         private readonly IMapeos mapeo;
         private readonly IGenericRepository<TbInvTransacciones> _transacRepository;
+        private readonly ILogger<InventarioService> _logger;
 
-        public InventarioService(IGenericRepository<TbDetallesInventario> detInventarioRepo, IGenericRepository<TbInvTransacciones> transacRepository, IGenericRepository<TbInvInventario> _inventarioRepo, IMapeos mapeo)
+        public InventarioService(IGenericRepository<TbDetallesInventario> detInventarioRepo, IGenericRepository<TbInvTransacciones> transacRepository, IGenericRepository<TbInvInventario> _inventarioRepo, IMapeos mapeo, ILogger<InventarioService> logger)
         {
             this._detInventarioRepo = detInventarioRepo;
             this._transacRepository = transacRepository;
             this._inventarioRepo = _inventarioRepo;
             this.mapeo = mapeo;
+            this._logger = logger;
         }
         public async Task<List<ExistenciaDTO>> ExistenciasInventario()
         {
@@ -172,6 +175,7 @@ namespace SistemaTienda.BLL.Servicios
             inv.FechaCreacion <= fechaFin);
             if (!tbInventarios.Any())
             {
+                this._logger.LogInformation("No se encontraron inventarios en el rango de fechas {FechaInicio} - {FechaFin}", fechaInicio, fechaFin);
                 resumen = [];
                 return resumen;
             }
@@ -202,6 +206,7 @@ namespace SistemaTienda.BLL.Servicios
             }
             catch
             {
+                this._logger.LogError("Error al generar el resumen de ventas mensual para el rango de fechas {FechaInicio} - {FechaFin}", fechaInicio, fechaFin);
                 throw;
             }
         }

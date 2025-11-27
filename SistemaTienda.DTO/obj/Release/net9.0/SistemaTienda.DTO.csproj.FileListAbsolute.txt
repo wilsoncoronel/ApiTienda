@@ -1,0 +1,12 @@
+C:\Users\DOOMSLAYER\Desktop\api\SistemaTienda.DTO\bin\Release\net9.0\SistemaTienda.DTO.deps.json
+C:\Users\DOOMSLAYER\Desktop\api\SistemaTienda.DTO\bin\Release\net9.0\SistemaTienda.DTO.dll
+C:\Users\DOOMSLAYER\Desktop\api\SistemaTienda.DTO\bin\Release\net9.0\SistemaTienda.DTO.pdb
+C:\Users\DOOMSLAYER\Desktop\api\SistemaTienda.DTO\obj\Release\net9.0\SistemaTienda.DTO.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\DOOMSLAYER\Desktop\api\SistemaTienda.DTO\obj\Release\net9.0\SistemaTienda.DTO.AssemblyInfoInputs.cache
+C:\Users\DOOMSLAYER\Desktop\api\SistemaTienda.DTO\obj\Release\net9.0\SistemaTienda.DTO.AssemblyInfo.cs
+C:\Users\DOOMSLAYER\Desktop\api\SistemaTienda.DTO\obj\Release\net9.0\SistemaTienda.DTO.csproj.CoreCompileInputs.cache
+C:\Users\DOOMSLAYER\Desktop\api\SistemaTienda.DTO\obj\Release\net9.0\SistemaTienda.DTO.sourcelink.json
+C:\Users\DOOMSLAYER\Desktop\api\SistemaTienda.DTO\obj\Release\net9.0\SistemaTienda.DTO.dll
+C:\Users\DOOMSLAYER\Desktop\api\SistemaTienda.DTO\obj\Release\net9.0\refint\SistemaTienda.DTO.dll
+C:\Users\DOOMSLAYER\Desktop\api\SistemaTienda.DTO\obj\Release\net9.0\SistemaTienda.DTO.pdb
+C:\Users\DOOMSLAYER\Desktop\api\SistemaTienda.DTO\obj\Release\net9.0\ref\SistemaTienda.DTO.dll

@@ -96,6 +96,25 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
+        [HttpPost]
+        [Route("CrearTipoArticulo")]
+        public async Task<IActionResult> CrearTipoArticulo(TipoArticuloCreacionDTO tipoDto)
+        {
+            var resp = new Response<int>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._tipoArticuloService.CrearTipoArticulo(tipoDto);
+                resp.msg = "Tipo Articulo creado exitosamente";
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
         [HttpPut]
         [Route("EditarTipoArticulo")]
         public async Task<IActionResult> EditarTipoArticulo(TipoArticuloEditarDTO tipoDto)
