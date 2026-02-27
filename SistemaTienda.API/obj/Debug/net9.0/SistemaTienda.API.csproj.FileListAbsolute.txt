@@ -352,3 +352,4 @@ C:\Users\DOOMSLAYER\Desktop\api\SistemaTienda.API\obj\Debug\net9.0\refint\Sistem
 C:\Users\DOOMSLAYER\Desktop\api\SistemaTienda.API\obj\Debug\net9.0\SistemaTienda.API.pdb
 C:\Users\DOOMSLAYER\Desktop\api\SistemaTienda.API\obj\Debug\net9.0\SistemaTienda.API.genruntimeconfig.cache
 C:\Users\DOOMSLAYER\Desktop\api\SistemaTienda.API\obj\Debug\net9.0\ref\SistemaTienda.API.dll
+C:\Users\DOOMSLAYER\Desktop\api\SistemaTienda.API\obj\Debug\net9.0\swae.build.ex.cache

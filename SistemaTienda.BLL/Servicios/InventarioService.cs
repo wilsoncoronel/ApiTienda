@@ -99,12 +99,12 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<List<TransaccionInventarioDTO>> ListaTransaccionesInventario()
         {
-            IQueryable<TbInvTransacciones> listaTranInventario = await this._transacRepository.Consultar();
+            
 
             try
             {
-                var existencias = listaTranInventario.ToList();
-                var resultado = existencias.Select(tran => new TransaccionInventarioDTO
+                var listaTranInventario = await this._transacRepository.Consultar();
+                var resultado = listaTranInventario.ToList().Select(tran => new TransaccionInventarioDTO
                 {
                     Id = tran.Id,
                     Nombre = tran.Nombre,

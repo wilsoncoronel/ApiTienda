@@ -78,10 +78,8 @@ namespace SistemaTienda.BLL.Servicios
         {
             try
             {
-                IQueryable<TbComEstadosImpuesto> estadosList = await this._estadosImpuestosRepository.Consultar();
-                var estadosListCon = estadosList.ToList();
-                var listaEstadosImpuestosDto = this._mapeos.MapeoListaEstadosImpuestosTbAListaEstadosImpuestosDto(estadosListCon);
-                return listaEstadosImpuestosDto;
+                var estadosList = await this._tiendaDbContext.TbComEstadosImpuestos.Where(estimp => estimp.EstadoVisual == true).ToListAsync();
+                return this._mapeos.MapeoListaEstadosImpuestosTbAListaEstadosImpuestosDto(estadosList);
             }
             catch
             {
@@ -93,11 +91,8 @@ namespace SistemaTienda.BLL.Servicios
         {
             try
             {
-                IQueryable<TbComImpuestosArticulo> impuestosList = await this._impuestosArticulosRepsitory.Consultar();
-                var impuestosListConIncludes = impuestosList
-                    .Include(est => est.IdEstadoImpuestoNavigation).ToList();
-                var listaImpuestosDto = this._mapeos.MapeoListaImpuestosTbAListaImpuestosDto(impuestosListConIncludes);
-                return listaImpuestosDto;
+                var impuestosList = await this._tiendaDbContext.TbComImpuestosArticulos.Include(est => est.IdEstadoImpuestoNavigation).ToListAsync();
+                return this._mapeos.MapeoListaImpuestosTbAListaImpuestosDto(impuestosList);
             }
             catch
             {

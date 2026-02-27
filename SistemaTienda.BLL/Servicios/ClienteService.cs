@@ -56,8 +56,7 @@ namespace SistemaTienda.BLL.Servicios
             List<TbGrlCiudades> tbCiudades = await this._tiendaDbContext.TbGrlCiudades.Where(est => est.EstadoVisual == true).ToListAsync();
             try
             {
-                var listaCiudadesDto = this._mapper.MapeoListaCiudadesTbaAListaCiudadesDto(tbCiudades);
-                return listaCiudadesDto;
+                return this._mapper.MapeoListaCiudadesTbaAListaCiudadesDto(tbCiudades);
             }
             catch
             {
@@ -133,9 +132,7 @@ namespace SistemaTienda.BLL.Servicios
             List<TbGrlTipoIdentificacion> tbTiposIdentificacion= await this._tiendaDbContext.TbGrlTipoIdentificacions.Where(est => est.EstadoVisual == true).ToListAsync();
             try
             {
-
-                var listaTiposIndeitifiacionesDto = this._mapper.MapeoListTiposIdentificacionTbaAListaTiposIDentificacionDto(tbTiposIdentificacion);
-                return listaTiposIndeitifiacionesDto;
+                return this._mapper.MapeoListTiposIdentificacionTbaAListaTiposIDentificacionDto(tbTiposIdentificacion);
             }
             catch
             {
@@ -147,14 +144,12 @@ namespace SistemaTienda.BLL.Servicios
         {
             try
             {
-                IQueryable<TbComCliente> clientesList = await this._clienteRepository.Consultar();
-                var clientesListConIncludes = clientesList
-                    .Include(p => p.IdPersonaNavigation)
+                var clientesList = await this._tiendaDbContext.TbComClientes.Where(cli => cli.EstadoVisual == true).Include(p => p.IdPersonaNavigation)
                     .ThenInclude(t => t.IdTipoIdentificacionNavigation)
                     .Include(p => p.IdPersonaNavigation)
                     .ThenInclude(d => d.TbGrlDireccione)
-                    .ThenInclude(c => c.IdCiudadNavigation);
-                var listaClientesDto = this._mapper.MapeoListaClientesTbaAListaClientesDto(clientesListConIncludes.ToList());
+                    .ThenInclude(c => c.IdCiudadNavigation).ToListAsync();
+                var listaClientesDto = this._mapper.MapeoListaClientesTbaAListaClientesDto(clientesList);
                 return listaClientesDto;
             }
             catch
