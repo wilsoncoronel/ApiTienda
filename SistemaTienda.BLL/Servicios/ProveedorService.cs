@@ -106,15 +106,13 @@ namespace SistemaTienda.BLL.Servicios
         {
             try
             {
-                IQueryable<TbComProveedores> proveedoresList = await this._proveedorRepository.Consultar();
-                var proveedoresListConIncludes = proveedoresList
+                var proveedoresList = await this._tiendaDbContext.TbComProveedores.Where(prov=> prov.EstadoVisual == true)
                     .Include(p => p.IdPersonaNavigation)
                     .ThenInclude(t => t.IdTipoIdentificacionNavigation)
                     .Include(p => p.IdPersonaNavigation)
                     .ThenInclude(d => d.TbGrlDireccione)
-                    .ThenInclude(c => c.IdCiudadNavigation).ToList();
-                var listaProveedoresDto = this.mapper.MapeoProveedorTbListaAProveedorDtoLista(proveedoresListConIncludes);
-                return listaProveedoresDto;
+                    .ThenInclude(c => c.IdCiudadNavigation).ToListAsync();
+                return this.mapper.MapeoProveedorTbListaAProveedorDtoLista(proveedoresList);
             }
             catch
             {
@@ -127,8 +125,7 @@ namespace SistemaTienda.BLL.Servicios
             List<TbGrlCiudades> tbCiudades = await this._tiendaDbContext.TbGrlCiudades.Where(est => est.EstadoVisual == true).ToListAsync();
             try
             {
-                var listaCiudadesDto = this.mapper.MapeoListaCiudadesTbaAListaCiudadesDto(tbCiudades);
-                return listaCiudadesDto;
+                return this.mapper.MapeoListaCiudadesTbaAListaCiudadesDto(tbCiudades);
             }
             catch
             {
@@ -142,8 +139,7 @@ namespace SistemaTienda.BLL.Servicios
             try
             {
 
-                var listaTiposIndeitifiacionesDto = this.mapper.MapeoListTiposIdentificacionTbaAListaTiposIDentificacionDto(tbTiposIdentificacion);
-                return listaTiposIndeitifiacionesDto;
+                return this.mapper.MapeoListTiposIdentificacionTbaAListaTiposIDentificacionDto(tbTiposIdentificacion);
             }
             catch
             {

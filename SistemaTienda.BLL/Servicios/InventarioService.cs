@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SistemaTienda.BLL.Servicios.Contrato;
+using SistemaTienda.DAL.DBContext;
 using SistemaTienda.DAL.Repositorios.Contrato;
 using SistemaTienda.DTO;
 using SistemaTienda.Model;
@@ -20,25 +21,28 @@ namespace SistemaTienda.BLL.Servicios
         private readonly IMapeos mapeo;
         private readonly IGenericRepository<TbInvTransacciones> _transacRepository;
         private readonly ILogger<InventarioService> _logger;
+        private readonly TiendaDbContext _tiendaDb;
 
-        public InventarioService(IGenericRepository<TbDetallesInventario> detInventarioRepo, IGenericRepository<TbInvTransacciones> transacRepository, IGenericRepository<TbInvInventario> _inventarioRepo, IMapeos mapeo, ILogger<InventarioService> logger)
+        public InventarioService(IGenericRepository<TbDetallesInventario> detInventarioRepo, IGenericRepository<TbInvTransacciones> transacRepository,
+            IGenericRepository<TbInvInventario> _inventarioRepo, IMapeos mapeo, ILogger<InventarioService> logger, TiendaDbContext tiendaDb)
         {
             this._detInventarioRepo = detInventarioRepo;
             this._transacRepository = transacRepository;
             this._inventarioRepo = _inventarioRepo;
             this.mapeo = mapeo;
             this._logger = logger;
+            this._tiendaDb = tiendaDb;
         }
         public async Task<List<ExistenciaDTO>> ExistenciasInventario()
         {
-            IQueryable<TbDetallesInventario> listainventario = await this._detInventarioRepo.Consultar();
+            
 
             try
             {
-                var existencias = listainventario.Where(tra => tra.IdTransaccionInventario != 3).Include(art => art.IdArticuloNavigation)
-                    .Include(tra => tra.IdTransaccionInventarioNavigation).ToList();
+                var listainventario = await this._tiendaDb.TbDetallesInventarios.Where(tra => tra.IdTransaccionInventario != 3).Include(art => art.IdArticuloNavigation)
+                    .Include(tra => tra.IdTransaccionInventarioNavigation).ToListAsync();
 
-                var resultado = existencias.GroupBy(det => new
+                var resultado = listainventario.GroupBy(det => new
                 {
                     det.IdArticuloNavigation.Nombre
                 }).Select(g => new ExistenciaDTO
@@ -59,15 +63,14 @@ namespace SistemaTienda.BLL.Servicios
         {
             var inicio = FechaInicio.ToDateTime(TimeOnly.MinValue);
             var fin = FechaFinal.ToDateTime(TimeOnly.MaxValue);
-            IQueryable<TbInvInventario> tbInventario = await this._inventarioRepo.Consultar();
-            var listaResultado = new List<TbInvInventario>();
+            
             try
             {
-                listaResultado = await tbInventario.Where(c => c.FechaCreacion >= inicio && c.FechaCreacion <= fin)
+                var tbInventario = await this._tiendaDb.TbInvInventarios.Where(c => c.FechaCreacion >= inicio && c.FechaCreacion <= fin)
                     .Include(e => e.IdCompraNavigation)
                     .Include(p => p.IdVentaNavigation)
                     .ToListAsync();
-                var listaIventarioDto = this.mapeo.MapeoListaInventarioTbaListaInventarioDto(listaResultado);
+                var listaIventarioDto = this.mapeo.MapeoListaInventarioTbaListaInventarioDto(tbInventario);
                 return listaIventarioDto;
             }
             catch
@@ -79,10 +82,11 @@ namespace SistemaTienda.BLL.Servicios
         public async Task<List<DetalleInventarioDTO>> ListaDetallesInventario(int IdInventario)
         {
             
-            IQueryable<TbDetallesInventario> tbDetallesInventario = await this._detInventarioRepo.Consultar();
-            var listaResultado = new List<TbDetallesInventario>();
             try
             {
+
+                IQueryable<TbDetallesInventario> tbDetallesInventario = await this._detInventarioRepo.Consultar();
+                var listaResultado = new List<TbDetallesInventario>();
                 listaResultado = tbDetallesInventario.Where(det=> det.IdInventario == IdInventario)
                     .Include(art => art.IdArticuloNavigation)
                     .ThenInclude(imp => imp.IdImpuestoNavigation)

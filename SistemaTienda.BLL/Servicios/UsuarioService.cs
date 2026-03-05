@@ -47,8 +47,7 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<List<UsuarioDTO>> ListarUsuario()
         {
-            var queryUsuarios = await this._usuarioRepository.Consultar();
-            queryUsuarios.Include(p => p.IdPersonaNavigation)
+            var queryUsuarios = await this._tiendaDbContext.TbSisUsuarios.Where(usu => usu.Estado == true).Include(p => p.IdPersonaNavigation)
                     .ThenInclude(t => t.IdTipoIdentificacionNavigation)
                 .Include(p => p.IdPersonaNavigation)
                     .ThenInclude(d => d.TbGrlDireccione)
@@ -56,7 +55,7 @@ namespace SistemaTienda.BLL.Servicios
                 .ThenInclude(d => d.TbGrlDireccione)
                 .ThenInclude(c => c.IdCiudadNavigation)
                 .Include(r => r.IdRolNavigation)
-                .ToList();
+                .ToListAsync();
             
             return this._mapper.MapeoArrayUsuarioTbAUsuarioDto(queryUsuarios);
         }
@@ -64,15 +63,13 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<UsuarioDTO> ListarUsuarioId(int idUsuario)
         {
-            var queryUsuarios = await this._usuarioRepository.Consultar();
-
-            TbSisUsuario user =  queryUsuarios.Where(u => u.Id == idUsuario)
+            var user = await this._tiendaDbContext.TbSisUsuarios.Where(u => u.Id == idUsuario)
                 .Include(p => p.IdPersonaNavigation)
                         .ThenInclude(t => t.IdTipoIdentificacionNavigation)
                     .Include(p => p.IdPersonaNavigation)
                         .ThenInclude(d => d.TbGrlDireccione)
                             .ThenInclude(c => c.IdCiudadNavigation)
-                    .Include(r => r.IdRolNavigation).First();
+                    .Include(r => r.IdRolNavigation).FirstOrDefaultAsync();
             return this._mapper.MapeoUsuarioTbAUsuarioDto(user);
         }
 

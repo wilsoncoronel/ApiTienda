@@ -5081,11 +5081,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.API\\SistemaTienda.API.csproj",
+      "projectUniqueName": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.API\\SistemaTienda.API.csproj",
       "projectName": "SistemaTienda.API",
-      "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.API\\SistemaTienda.API.csproj",
+      "projectPath": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.API\\SistemaTienda.API.csproj",
       "packagesPath": "C:\\Users\\DOOMSLAYER\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.API\\obj\\",
+      "outputPath": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -5107,14 +5107,14 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.BLL\\SistemaTienda.BLL.csproj": {
-              "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.BLL\\SistemaTienda.BLL.csproj"
+            "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.BLL\\SistemaTienda.BLL.csproj": {
+              "projectPath": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.BLL\\SistemaTienda.BLL.csproj"
             },
-            "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj": {
-              "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj"
+            "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj": {
+              "projectPath": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj"
             },
-            "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.IOC\\SistemaTienda.IOC.csproj": {
-              "projectPath": "C:\\Users\\DOOMSLAYER\\Desktop\\api\\SistemaTienda.IOC\\SistemaTienda.IOC.csproj"
+            "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.IOC\\SistemaTienda.IOC.csproj": {
+              "projectPath": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.IOC\\SistemaTienda.IOC.csproj"
             }
           }
         }

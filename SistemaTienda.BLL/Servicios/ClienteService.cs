@@ -88,18 +88,17 @@ namespace SistemaTienda.BLL.Servicios
         public async Task<bool> EditarCliente(ClienteEditarDTO clienteEditarDto)
         {
 
-            IQueryable<TbComCliente>  clientesTb = await this._clienteRepository.Consultar();
             using (var transaccion = _tiendaDbContext.Database.BeginTransaction())
             {
                 try
                 {
-                    var cliente = clientesTb.Where(c => c.Id == clienteEditarDto.Id)
+                    var cliente = await this._tiendaDbContext.TbComClientes.Where(c => c.Id == clienteEditarDto.Id)
                         .Include(per =>per.IdPersonaNavigation)
                         .ThenInclude(ti => ti.IdTipoIdentificacionNavigation)
                         .Include(per => per.IdPersonaNavigation)
                         .ThenInclude(dir => dir.TbGrlDireccione)
                             .ThenInclude(ciu => ciu.IdCiudadNavigation)
-                        .FirstOrDefault();
+                        .FirstOrDefaultAsync();
                     if(cliente is null)
                         throw new Exception("No se encontró el cliente a editar");
                     cliente.IdPersonaNavigation.Telefono = clienteEditarDto.Telefono;

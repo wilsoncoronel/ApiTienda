@@ -96,9 +96,8 @@ namespace SistemaTienda.BLL.Servicios
             List<TbVenEstadosVenta> tbVenEstadosVentas = await this._tiendaDbContext.TbVenEstadosVentas.Where(est => est.EstadoVisual == true).ToListAsync();
             try
             {
-                var listaEstadosDto = this._mapper.MapeoListaEstadosVentaTbaAListaEstadosVentaDto(tbVenEstadosVentas);
-                return listaEstadosDto;
-            }
+                return this._mapper.MapeoListaEstadosVentaTbaAListaEstadosVentaDto(tbVenEstadosVentas);
+             }
             catch
             {
                 throw;
@@ -109,19 +108,17 @@ namespace SistemaTienda.BLL.Servicios
         {
             var inicio = fechaInicial.ToDateTime(TimeOnly.MinValue);
             var fin = fechaFinal.ToDateTime(TimeOnly.MaxValue);
-            IQueryable<TbVenta> tbVentas = await this._ventaRepository.Consultar();
-            var listaResultado = new List<TbVenta>();
             try
             {
-                listaResultado = await tbVentas.Where(c => c.FechaVenta >= inicio && c.FechaVenta <= fin)
+                var tbVentas = await this._tiendaDbContext.TbVentas.Where(c => c.FechaVenta >= inicio && c.FechaVenta <= fin)
                     .Include(u => u.IdUsuarioCreadorNavigation)
                     .ThenInclude(per => per.IdPersonaNavigation)
                     .Include(e => e.IdEstadoVentaNavigation)
                     .Include(p => p.IdClienteNavigation)
                     .ThenInclude(per => per.IdPersonaNavigation)
                     .ToListAsync();
-                var listaVentasDto = this._mapper.MapeoListaVentasTbAListaVentasDto(listaResultado);
-                return listaVentasDto;
+
+                return this._mapper.MapeoListaVentasTbAListaVentasDto(tbVentas);
             }
             catch
             {
@@ -154,7 +151,7 @@ namespace SistemaTienda.BLL.Servicios
                     .ThenInclude(tp => tp.IdTipoArticuloNavigation)
                     .FirstOrDefaultAsync(c => c.Id == idVenta);
 
-                if (tbVenta == null)
+                if (tbVenta is null)
                     throw new Exception("No se encontró la venta!!");
 
                 var ventaDto = this._mapper.MapeoVentaTbAVentaCompletaDto(tbVenta);

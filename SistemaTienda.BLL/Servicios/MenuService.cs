@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SistemaTienda.BLL.Servicios.Contrato;
+using SistemaTienda.DAL.DBContext;
 using SistemaTienda.DAL.Repositorios.Contrato;
 using SistemaTienda.DTO;
 using SistemaTienda.Model;
@@ -16,23 +17,24 @@ namespace SistemaTienda.BLL.Servicios
     {
         private readonly IGenericRepository<TbSisPermisosRol> permisosRolRepositorio;
         private readonly IMapeos mapper;
+        private readonly TiendaDbContext _tienda;
 
-        public MenuService(IGenericRepository<TbSisPermisosRol> permisosRolRepositorio, IMapeos mapper)
+        public MenuService(IGenericRepository<TbSisPermisosRol> permisosRolRepositorio, IMapeos mapper, TiendaDbContext tienda)
         {
             this.permisosRolRepositorio = permisosRolRepositorio;
             this.mapper = mapper;
+            this._tienda = tienda;
         }
 
         public async Task<List<PermisosRolDTO>> ObtenerMenu(int idRol)
         {
             try
             {
-                var menu = await this.permisosRolRepositorio.Consultar(p => p.IdRol == idRol && p.EstadoVisual == true);
-                if (menu.Count() == 0)
+                var menu = await this._tienda.TbSisPermisosRols.Where(p => p.IdRol == idRol && p.EstadoVisual == true).Include(m => m.IdMenuNavigation).ToListAsync();
+                if (menu is null)
                     throw new Exception("No se encontraron permisos asignados a este rol");
-                var tbPermisoRol = menu.Include(m => m.IdMenuNavigation).ToList();
-                var ListMenuDto = this.mapper.MapeoListaTbSisPermisosRolAPermisosRolDTO(tbPermisoRol);
-                return ListMenuDto.OrderBy(m => m.Menu.Nombre).ToList();
+                
+                return this.mapper.MapeoListaTbSisPermisosRolAPermisosRolDTO(menu).OrderBy(m => m.Menu.Nombre).ToList();
             }
             catch
             {

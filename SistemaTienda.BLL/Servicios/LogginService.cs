@@ -84,12 +84,14 @@ namespace SistemaTienda.BLL.Servicios
          {
              try
              {
-                var usuario = await this._usuarioRepositorio.Consultar(u => u.IdPersonaNavigation.Mail == user && u.Password == clave);
-                if (usuario.FirstOrDefault() == null)
+                var usuario = await this._dbContext.TbSisUsuarios.Where(u => u.IdPersonaNavigation.Mail == user && u.Password == clave)
+                    .Include(p => p.IdPersonaNavigation)
+                        .Include(r => r.IdRolNavigation)
+                    .FirstOrDefaultAsync();
+                if (usuario is null)
                     throw new TaskCanceledException("Usuario no existe o esta desactivado");
-                TbSisUsuario userTb = usuario.Include(p => p.IdPersonaNavigation)
-                    .Include(r => r.IdRolNavigation).First();
-                return await this.menuService.ObtenerMenu(userTb.IdRol);
+                
+                return await this.menuService.ObtenerMenu(usuario.IdRol);
             }
              catch
              { 

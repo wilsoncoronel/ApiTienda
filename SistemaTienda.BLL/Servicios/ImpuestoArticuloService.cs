@@ -50,12 +50,10 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<bool> EditarImpuesto(ImpuestoArticuloEditarDTO impuestoArticuloEditarDto)
         {
-            IQueryable<TbComImpuestosArticulo> impuestosTb = await this._impuestosArticulosRepsitory.Consultar();
-
             try
             {
-                var imp = impuestosTb.Where(c => c.Id == impuestoArticuloEditarDto.Id)
-                    .FirstOrDefault();
+                var imp = await this._tiendaDbContext.TbComImpuestosArticulos.Where(c => c.Id == impuestoArticuloEditarDto.Id)
+                    .FirstOrDefaultAsync();
                 if (imp is null)
                     throw new Exception("No se encontró el impuesto a editar!!");
                 imp.IdEstadoImpuesto = impuestoArticuloEditarDto.IdEstadoImpuesto;

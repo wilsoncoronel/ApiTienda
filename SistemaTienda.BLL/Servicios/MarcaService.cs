@@ -17,11 +17,13 @@ namespace SistemaTienda.BLL.Servicios
     {
         private readonly IGenericRepository<TbComMarca> marcaRepository;
         private readonly IMapeos mapeos;
+        private readonly TiendaDbContext _tiendaDb;
 
-        public MarcaService(IGenericRepository<TbComMarca> marcaRepository, IMapeos mapeos)
+        public MarcaService(IGenericRepository<TbComMarca> marcaRepository, IMapeos mapeos, TiendaDbContext tiendaDb)
         {
             this.marcaRepository = marcaRepository;
             this.mapeos = mapeos;
+            this._tiendaDb = tiendaDb;
         }
         public async Task<int> CrearMarca(MarcaCreacionDTO marcaCreacionDto)
         {
@@ -41,12 +43,12 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<bool> EditarMarca(MarcaEditarDTO marcaEditarDto)
         {
-            IQueryable<TbComMarca> marcaTb = await this.marcaRepository.Consultar();
+            
             
                 try
                 {
-                    var marca = marcaTb.Where(c => c.Id == marcaEditarDto.Id)
-                        .FirstOrDefault();
+                    var marca = await this._tiendaDb.TbComMarcas.Where(c => c.Id == marcaEditarDto.Id)
+                        .FirstOrDefaultAsync();
                     if (marca is null)
                         throw new Exception("No se encontró la marca a editar");
                     marca.EstadoVisual = marcaEditarDto.EstadoVisual;
@@ -69,10 +71,8 @@ namespace SistemaTienda.BLL.Servicios
         {
             try
             {
-                IQueryable<TbComMarca> marcasList = await this.marcaRepository.Consultar();
-                var listaMarcas = marcasList.ToList();
-                var listaMarcasDto = this.mapeos.MapeoListasMarcaTbAListaMarcaDto(listaMarcas);
-                return listaMarcasDto;
+                var marcasList = await this._tiendaDb.TbComMarcas.Where(mar => mar.EstadoVisual == true ).ToListAsync();
+                return this.mapeos.MapeoListasMarcaTbAListaMarcaDto(marcasList);
             }
             catch
             {
