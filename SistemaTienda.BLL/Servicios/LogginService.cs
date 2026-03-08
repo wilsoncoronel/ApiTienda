@@ -84,7 +84,7 @@ namespace SistemaTienda.BLL.Servicios
          {
              try
              {
-                var usuario = await this._dbContext.TbSisUsuarios.Where(u => u.IdPersonaNavigation.Mail == user && u.Password == clave)
+                var usuario = await this._dbContext.TbSisUsuarios.Where(u => u.NombreUsuario == user && u.Password == clave)
                     .Include(p => p.IdPersonaNavigation)
                         .Include(r => r.IdRolNavigation)
                     .FirstOrDefaultAsync();
