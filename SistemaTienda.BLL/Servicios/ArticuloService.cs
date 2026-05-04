@@ -32,7 +32,6 @@ namespace SistemaTienda.BLL.Servicios
         {
             try {
                 var articuloTb = this._mapper.MapeoArticuloCreacionDtoAArticuloTb(articuloCreacionDto);
-                
                 articuloTb.FechaCreacion = DateTime.Now;
                 articuloTb.Estado = true;
                 articuloTb.EstadoVisual = true;

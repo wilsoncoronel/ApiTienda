@@ -50,7 +50,6 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<ProveedorDTO> BuscarProveedorCI(string identificacion)
         {
-            
             try
             {
                 var proveedor = await this._tiendaDbContext.TbComProveedores
@@ -69,7 +68,7 @@ namespace SistemaTienda.BLL.Servicios
             }
             catch(Exception ex)
             {
-                throw new Exception("Erro buscando el proveedor", ex);
+                throw new Exception("Error buscando el proveedor", ex);
             }
         }
         
@@ -79,7 +78,6 @@ namespace SistemaTienda.BLL.Servicios
             {
                 try
                 {
-
                     var proveedor = await this._tiendaDbContext.TbComProveedores
                         .Include(p => p.IdPersonaNavigation)
                         .ThenInclude(t => t.IdTipoIdentificacionNavigation)
@@ -138,7 +136,6 @@ namespace SistemaTienda.BLL.Servicios
             List<TbGrlTipoIdentificacion> tbTiposIdentificacion = await this._tiendaDbContext.TbGrlTipoIdentificacions.Where(est => est.EstadoVisual == true).ToListAsync();
             try
             {
-
                 return this.mapper.MapeoListTiposIdentificacionTbaAListaTiposIDentificacionDto(tbTiposIdentificacion);
             }
             catch

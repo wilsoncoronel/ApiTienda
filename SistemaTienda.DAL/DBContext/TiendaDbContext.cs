@@ -19,6 +19,8 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbComCliente> TbComClientes { get; set; }
 
+    public virtual DbSet<TbComCodigosProducto> TbComCodigosProductos { get; set; }
+
     public virtual DbSet<TbComDetallesCompra> TbComDetallesCompras { get; set; }
 
     public virtual DbSet<TbComEstadosCompra> TbComEstadosCompras { get; set; }
@@ -76,6 +78,7 @@ public partial class TiendaDbContext : DbContext
     public virtual DbSet<TbVenta> TbVentas { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<TbComArticulo>(entity =>
@@ -117,6 +120,22 @@ public partial class TiendaDbContext : DbContext
                 .HasForeignKey(d => d.IdPersona)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbComClientes_TbGrlPersonas");
+        });
+
+        modelBuilder.Entity<TbComCodigosProducto>(entity =>
+        {
+            entity.HasNoKey();
+
+            entity.Property(e => e.Codigo)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .IsFixedLength();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.HasOne(d => d.IdProductoNavigation).WithMany()
+                .HasForeignKey(d => d.IdProducto)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbComCodigosProductos_TbComArticulos");
         });
 
         modelBuilder.Entity<TbComDetallesCompra>(entity =>

@@ -11,7 +11,5 @@ public partial class TbContCuentaContable
 
     public string Nombre { get; set; } = null!;
 
-    public int IdTipoCuenta { get; set; }
-
     public virtual ICollection<TbContPartidaContable> TbContPartidaContables { get; set; } = new List<TbContPartidaContable>();
 }

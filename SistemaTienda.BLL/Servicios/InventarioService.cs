@@ -35,8 +35,6 @@ namespace SistemaTienda.BLL.Servicios
         }
         public async Task<List<ExistenciaDTO>> ExistenciasInventario()
         {
-            
-
             try
             {
                 var listainventario = await this._tiendaDb.TbDetallesInventarios.Where(tra => tra.IdTransaccionInventario != 3).Include(art => art.IdArticuloNavigation)
@@ -81,10 +79,8 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<List<DetalleInventarioDTO>> ListaDetallesInventario(int IdInventario)
         {
-            
             try
             {
-
                 IQueryable<TbDetallesInventario> tbDetallesInventario = await this._detInventarioRepo.Consultar();
                 var listaResultado = new List<TbDetallesInventario>();
                 listaResultado = tbDetallesInventario.Where(det=> det.IdInventario == IdInventario)
@@ -103,8 +99,6 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<List<TransaccionInventarioDTO>> ListaTransaccionesInventario()
         {
-            
-
             try
             {
                 var listaTranInventario = await this._transacRepository.Consultar();
