@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SistemaTienda.DTO
 {
-    public class CodigoProductoEdicionDTO: CodigoProductoCreacionDTO
+    public class CodigoArticuloEdicionDTO: CodigoArticuloCreacionDTO
     {
         public int Id { get; set; }
     }

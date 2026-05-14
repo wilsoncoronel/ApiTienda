@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace SistemaTienda.DTO
 {
-    public class CodigoProductoCreacionDTO
+    public class CodigoArticuloCreacionDTO
     {
-        public int IdProducto { get; set; }
         public string? Codigo { get; set; }
     }
 }

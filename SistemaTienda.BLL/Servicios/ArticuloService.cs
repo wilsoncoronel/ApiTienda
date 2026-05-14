@@ -31,6 +31,8 @@ namespace SistemaTienda.BLL.Servicios
         public async Task<int> CrearArticulo(ArticuloCreacionDTO articuloCreacionDto)
         {
             try {
+                if (articuloCreacionDto.ListaCodigosArticulosDTO.Count == 0)
+                    throw new Exception("No se puede crear el artículo sin códigos de artículos!!");
                 var articuloTb = this._mapper.MapeoArticuloCreacionDtoAArticuloTb(articuloCreacionDto);
                 articuloTb.FechaCreacion = DateTime.Now;
                 articuloTb.Estado = true;

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace SistemaTienda.Model;
 
-public partial class TbComCodigosProducto
+public partial class TbComCodigosArticulos
 {
     public int Id { get; set; }
 
-    public int IdProducto { get; set; }
+    public int IdArticulo { get; set; }
 
     public string? Codigo { get; set; }
 
-    public virtual TbComArticulo IdProductoNavigation { get; set; } = null!;
+    public virtual TbComArticulo IdArticuloNavigation { get; set; } = null!;
 }

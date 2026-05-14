@@ -49,6 +49,8 @@ public partial class TbComArticulo
 
     public virtual TbSisUsuario IdUsuarioCreadorNavigation { get; set; } = null!;
 
+    public virtual ICollection<TbComCodigosArticulos> TbComCodigosArticulos { get; set; } = new List<TbComCodigosArticulos>();
+
     public virtual ICollection<TbComDetallesCompra> TbComDetallesCompras { get; set; } = new List<TbComDetallesCompra>();
 
     public virtual ICollection<TbDetallesInventario> TbDetallesInventarios { get; set; } = new List<TbDetallesInventario>();

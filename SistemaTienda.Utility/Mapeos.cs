@@ -322,7 +322,11 @@ namespace SistemaTienda.Utility
                     IdTipoArticulo = articuloCreacionDto.IdTipoArticulo,
                     IdMarca = articuloCreacionDto.IdMarca,
                     IdUsuarioCreador = articuloCreacionDto.IdUsuarioCreador,
-                    Papeleria = articuloCreacionDto.Papeleria
+                    Papeleria = articuloCreacionDto.Papeleria,
+                    TbComCodigosArticulos = articuloCreacionDto.ListaCodigosArticulosDTO.Select(c => new TbComCodigosArticulos
+                    {
+                        Codigo = c.Codigo
+                    }).ToList()
                 };
                 return articuloTb;
             }

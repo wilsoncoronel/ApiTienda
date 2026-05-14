@@ -19,7 +19,7 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbComCliente> TbComClientes { get; set; }
 
-    public virtual DbSet<TbComCodigosProducto> TbComCodigosProductos { get; set; }
+    public virtual DbSet<TbComCodigosArticulos> TbComCodigosArticulos { get; set; }
 
     public virtual DbSet<TbComDetallesCompra> TbComDetallesCompras { get; set; }
 
@@ -122,20 +122,16 @@ public partial class TiendaDbContext : DbContext
                 .HasConstraintName("FK_TbComClientes_TbGrlPersonas");
         });
 
-        modelBuilder.Entity<TbComCodigosProducto>(entity =>
+        modelBuilder.Entity<TbComCodigosArticulos>(entity =>
         {
-            entity.HasNoKey();
-
             entity.Property(e => e.Codigo)
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .IsFixedLength();
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
-            entity.HasOne(d => d.IdProductoNavigation).WithMany()
-                .HasForeignKey(d => d.IdProducto)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TbComCodigosProductos_TbComArticulos");
+            entity.HasOne(d => d.IdArticuloNavigation).WithMany(p => p.TbComCodigosArticulos)
+                .HasForeignKey(d => d.IdArticulo)
+                .HasConstraintName("Fk_TbComCodigosArticulos");
         });
 
         modelBuilder.Entity<TbComDetallesCompra>(entity =>
