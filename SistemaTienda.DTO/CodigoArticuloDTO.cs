@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace SistemaTienda.DTO
 {
-    public class CiudadCreacionDTO
+    public class CodigoArticuloDTO
     {
-        public string Nombre { get; set; }
-        public bool EstadoVisual { get; set; }
+        public int Id { get; set; }
+        public int IdArticulo { get; set; }
+        public string Codigo { get; set; }
     }
 }

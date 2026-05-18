@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.Identity.Client;
 using SistemaTienda.DTO;
 using SistemaTienda.Model;
 using System;
@@ -69,10 +70,28 @@ namespace SistemaTienda.Utility
         InventarioDTO MapeoInventarioTbaAInventarioDto(TbInvInventario inventarioTb);
         List<DetalleInventarioDTO> MapeoListaDetallesInventarioTbAListaDetallesInventarioDto(List<TbDetallesInventario> ListaDetallesInv);
         DetalleInventarioDTO MapeoDetalleInventarioTbADetalleInventarioDto(TbDetallesInventario detalleInvTb);
+        List<CodigoArticuloDTO> MapeoListaArticulosDto(List<TbComCodigosArticulos> ListaCodigos);
+        CodigoArticuloDTO MapeoCodigoTbACodigoDTO(TbComCodigosArticulos codigoTb);
     }
         public class Mapeos : IMapeos
         {
             private DateTime FechaGrl = DateTime.Now;
+
+            public List<CodigoArticuloDTO> MapeoListaArticulosDto(List<TbComCodigosArticulos> ListaCodigos)
+            {
+                return ListaCodigos.Select(cod => this.MapeoCodigoTbACodigoDTO(cod)).ToList();
+            }
+            
+            public CodigoArticuloDTO MapeoCodigoTbACodigoDTO(TbComCodigosArticulos codigoTb)
+            {
+                return new CodigoArticuloDTO
+                {
+                    Id = codigoTb.Id,
+                    IdArticulo = codigoTb.IdArticulo,
+                    Codigo = codigoTb.Codigo
+                };
+            }
+            
             public List<DetalleInventarioDTO> MapeoListaDetallesInventarioTbAListaDetallesInventarioDto(List<TbDetallesInventario> ListaDetallesInv)
             {
                 return ListaDetallesInv.Select(det => this.MapeoDetalleInventarioTbADetalleInventarioDto(det)).ToList();
@@ -278,7 +297,6 @@ namespace SistemaTienda.Utility
 
             public List<TipoIdentificacionDTO> MapeoListTiposIdentificacionTbaAListaTiposIDentificacionDto(List<TbGrlTipoIdentificacion> listaTiposIden)
             {
-
                 return listaTiposIden.Select(tip => this.MapeoTipoIdentificacionTbaATipoIdentificacionDto(tip)).ToList();
             }
 

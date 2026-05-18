@@ -89,6 +89,24 @@ namespace SistemaTienda.API.Controllers
         }
 
         [HttpGet]
+        [Route("ListaCodigosArticulos")]
+        public async Task<ActionResult<List<CodigoArticuloDTO>>> ListaCodigosArticulos(int idArticulo)
+        {
+            var resp = new Response<List<CodigoArticuloDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._articuloService.ListarCodigosArticulos(idArticulo);
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
+        [HttpGet]
         [Route("ListarTodosArticulos")]
         public async Task<ActionResult<List<ArticuloDTO>>> ListarTodosArticulos()
         {

@@ -26,8 +26,6 @@ namespace SistemaTienda.BLL.Servicios
             this._mapper = mapper;
         }
 
-    
-
         public async Task<int> CrearArticulo(ArticuloCreacionDTO articuloCreacionDto)
         {
             try {
@@ -114,6 +112,12 @@ namespace SistemaTienda.BLL.Servicios
                 .Include(a => a.IdTipoArticuloNavigation)
                 .Include(a => a.IdImpuestoNavigation).ToListAsync();
             return this._mapper.MapeoListaArticulosDto(listaArticulos);
+        }
+
+        public async Task<List<CodigoArticuloDTO>> ListarCodigosArticulos(int idArticulo)
+        {
+            var listaCodigos = await this.tiendaDbContext.TbComCodigosArticulos.Where(cod => cod.IdArticulo == idArticulo).ToListAsync();
+            return this._mapper.MapeoListaArticulosDto(listaCodigos);
         }
 
         public async Task<List<TipoArticuloDTO>> CargarListaTiposArticulos()
