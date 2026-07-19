@@ -512,7 +512,6 @@ C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\Si
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\SistemaTienda.API.AssemblyInfoInputs.cache
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\SistemaTienda.API.AssemblyInfo.cs
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\SistemaTienda.API.csproj.CoreCompileInputs.cache
-C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\SistemaTienda.API.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\SistemaTienda.API.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\SistemaTienda.API.sourcelink.json
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\rjimswa.dswa.cache.json
@@ -531,3 +530,4 @@ C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\re
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\SistemaTienda.API.pdb
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\SistemaTienda.API.genruntimeconfig.cache
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\ref\SistemaTienda.API.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\SistemaTienda.API.MvcApplicationPartsAssemblyInfo.cs

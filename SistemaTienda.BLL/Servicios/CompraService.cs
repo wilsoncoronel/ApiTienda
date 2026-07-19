@@ -17,79 +17,18 @@ namespace SistemaTienda.BLL.Servicios
     {
         private readonly TiendaDbContext _tiendaDbContext;
         public readonly IGenericRepository<TbCompra> _compraRepository;
-        public readonly IGenericRepository<TbInvInventario> _inventarioRepository;
+        public readonly IGenericRepository<TbInvMovimiento> _movInventarioRepository;
         public readonly IGenericRepository<TbComDetallesCompra> _detalleRepository;
         private readonly IMapeos _mapper;
-        public CompraService(TiendaDbContext tiendaDbContext, IGenericRepository<TbCompra> compraRepository, IGenericRepository<TbComDetallesCompra> detalleRepository, IGenericRepository<TbInvInventario> inventarioRepository, IMapeos mapper)
+        public CompraService(TiendaDbContext tiendaDbContext, IGenericRepository<TbCompra> compraRepository, IGenericRepository<TbComDetallesCompra> detalleRepository, IGenericRepository<TbInvMovimiento> movInventarioRepository, IMapeos mapper)
         {
             _tiendaDbContext = tiendaDbContext;
             _compraRepository = compraRepository;
             _detalleRepository = detalleRepository;
-            _inventarioRepository = inventarioRepository;
+            _movInventarioRepository = movInventarioRepository;
             _mapper = mapper;
         }
 
-        public async Task<bool> EditarCompra(CompraEditarDTO compraDto)
-        {
-            using (var transaction = _tiendaDbContext.Database.BeginTransaction())
-            {
-                try
-                {
-                    var tbCompra = await this._tiendaDbContext.TbCompras.Include(c => c.IdEstadoCompraNavigation)
-                        .Include(d => d.TbComDetallesCompras)
-                        .FirstOrDefaultAsync(c => c.Id == compraDto.Id);
-                    var idsDto = compraDto.DetalleComprasEditarDto.Select(x => x.Id).ToList();
-                    var eliminados = tbCompra.TbComDetallesCompras
-                        .Where(x => !idsDto.Contains(x.Id)).ToList();
-
-                    foreach(var e in eliminados)
-                    {
-                        _tiendaDbContext.TbComDetallesCompras.Remove(e);
-                    }
-
-                    foreach (var detDto in compraDto.DetalleComprasEditarDto)
-                    {
-                        var existente = tbCompra.TbComDetallesCompras.FirstOrDefault(x => x.Id == detDto.Id);
-                        if (existente != null)
-                        {
-                            // actualizar
-                            existente.IdArticulo = detDto.ArticuloId;
-                            existente.Cantidad = detDto.Cantidad;
-                            existente.Descripcion = detDto.Descripcion;
-                            existente.ImpuestoValor = detDto.ImpuestoValor;
-                            existente.ValorCompra = detDto.ValorCompra;
-                            existente.ValorVenta = detDto.ValorVenta;
-                            existente.ValorTotal = detDto.ValorTotal;
-                        }
-                        else
-                        {
-                            // nuevo
-                            tbCompra.TbComDetallesCompras.Add(new TbComDetallesCompra
-                            {
-                                IdArticulo = detDto.ArticuloId,
-                                Cantidad = detDto.Cantidad,
-                                Descripcion = detDto.Descripcion,
-                                ImpuestoValor = detDto.ImpuestoValor,
-                                ValorCompra = detDto.ValorCompra,
-                                ValorVenta = detDto.ValorVenta,
-                                ValorTotal = detDto.ValorTotal
-                            });
-                        }
-                    }
-                    this._mapper.MapeoCompraEdicionDtoACompraTb(compraDto, tbCompra);
-                    var resp = await this._compraRepository.Editar(tbCompra);
-                    if (resp == false)
-                        throw new Exception("No se pudo editar la compra!!!");
-                    transaction.Commit();
-                    return resp;
-                }
-                catch
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
-        }
         public async Task<List<EstadoCompraDTO>> ListarEstadosCompras()
         {
             List<TbComEstadosCompra> tbComEstadosCompras = await this._tiendaDbContext.TbComEstadosCompras.Where(est => est.EstadoVisual == true).ToListAsync();
@@ -177,6 +116,7 @@ namespace SistemaTienda.BLL.Servicios
                     tbCompra = await this._tiendaDbContext.TbCompras.Where(c => c.Id == tbCompra.Id)
                         .Include(det => det.TbComDetallesCompras)
                         .ThenInclude(art => art.IdArticuloNavigation).FirstOrDefaultAsync();
+                    
                     var respInv = await this.AlimentarInventario(tbCompra);
                     if (respInv == false)
                         throw new Exception("No se pudo actualizar el inventario");
@@ -191,21 +131,36 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
-        private async Task<bool> AlimentarInventario(TbCompra compraTb){
-            var inv = new TbInvInventario{
-                IdCompra = compraTb.Id,
-                FechaCreacion = DateTime.Now,
-                TbDetallesInventarios = compraTb.TbComDetallesCompras.Select(d => new TbDetallesInventario{
-                    IdArticulo = d.IdArticulo,
-                    Cantidad = d.Cantidad,
-                    PrecioCompra = d.ValorCompra,
-                    PrecioVenta = d.ValorVenta,
-                    IdTransaccionInventario = 1, // Asumiendo que 1 es el ID para "Entrada" en la tabla de transacciones de inventario 
-                }).ToList(),
+        private async Task<bool> AlimentarInventario(TbCompra tbCompra) {
+            var tbinvMovimiento = new TbInvMovimiento
+            {
+                IdCompra = tbCompra.Id,
+                Referencia = tbCompra.Documento,
+                Fecha = DateTime.Now,
+                IdTransaccionInventario = 1,
+                TbInvLotes = tbCompra.TbComDetallesCompras.Select(det => new TbInvLote
+                {
+                    NumeroLote = det.NumeroLote,
+                    CostoUnitario = det.ValorCompra,
+                    FechaIngreso = DateTime.Now,
+                    FechaExpiracion = det.FechaExpiracion,
+                    StockDisponible = det.Cantidad,
+                    StockMinimo = 6,
+                    TbInvDetalleLotes = new List<TbInvDetalleLote>
+                    {
+                        new TbInvDetalleLote
+                        {
+                            IdArticulo = det.IdArticulo,
+                            Cantidad = det.Cantidad,
+                            Codigo = det.Codigo,
+                        }
+                    }
+                }).ToList()
             };
-            await this._inventarioRepository.Crear(inv);
+            await this._movInventarioRepository.Crear(tbinvMovimiento);
             return true;
         }
+
         public async Task<bool> ReversarCompra(int id)
         {
             using (var transaction = _tiendaDbContext.Database.BeginTransaction())
@@ -219,7 +174,7 @@ namespace SistemaTienda.BLL.Servicios
                         throw new Exception("No se puede reversar una compra ya reversada!!!");
                     }
                     if (tbCompra is null)
-                        throw new Exception("No existe una compra con el id Indicado!!!!");
+                        throw new Exception("No existe una compra con el id indicado!!!!");
                     tbCompra.IdEstadoCompra = 2;
                     tbCompra.FechaModificacion = DateTime.Now;
 
@@ -240,15 +195,94 @@ namespace SistemaTienda.BLL.Servicios
         
         private async Task<bool> ReversarInventario(int idCompra)
         {
-            var transacciones = await this._tiendaDbContext.TbDetallesInventarios.Where(inv => inv.IdInventario == idCompra).ToListAsync();
+            var invMovimientos = await this._tiendaDbContext.TbInvMovimientos.Where(inv => inv.IdCompra == idCompra).Include(inv => inv.TbInvLotes).Include(inv => inv.TbInvLotes.Select(l => l.TbInvDetalleLotes)).FirstOrDefaultAsync();
             var signo = await this._tiendaDbContext.TbInvTransacciones.Where(inv => inv.Nombre == "Reversion").FirstOrDefaultAsync();
-            foreach (var item in transacciones)
+            foreach (var item in invMovimientos.TbInvLotes)
             {
-                item.IdTransaccionInventario = signo.Id;
-                item.Cantidad = item.Cantidad * signo.Signo;
+                item.StockDisponible = item.StockDisponible * signo.Signo;
+                foreach (var item1 in item.TbInvDetalleLotes)
+                {
+                    item1.Cantidad = item1.Cantidad * signo.Signo;
+                }
             }
-            this._tiendaDbContext.UpdateRange(transacciones);
+            this._tiendaDbContext.Update(invMovimientos);
             await this._tiendaDbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> EditarCompra(CompraEditarDTO compraEditarDTO)
+        {
+            using (var transaction = _tiendaDbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var tbCompra = await this._tiendaDbContext.TbCompras.Where(c => c.Id == compraEditarDTO.Id)
+                     .Include(det => det.TbComDetallesCompras)
+                     .FirstOrDefaultAsync();
+                    var idsDto = compraEditarDTO.DetalleComprasEditarDto.Select(x => x.Id).ToList();
+                    var eliminados = tbCompra.TbComDetallesCompras.Where(x => !idsDto.Contains(x.Id)).ToList();
+
+                    foreach (var e in eliminados)
+                    {
+                        _tiendaDbContext.TbComDetallesCompras.Remove(e);
+                    }
+
+                    foreach (var detDto in compraEditarDTO.DetalleComprasEditarDto)
+                    {
+                        var existente = tbCompra.TbComDetallesCompras.FirstOrDefault(x => x.Id == detDto.Id);
+                        if (existente != null)
+                        {
+                            // actualizar
+                            existente.IdArticulo = detDto.ArticuloId;
+                            existente.Cantidad = detDto.Cantidad;
+                            existente.Descripcion = detDto.Descripcion;
+                            existente.ImpuestoValor = detDto.ImpuestoValor;
+                            existente.ValorCompra = detDto.ValorCompra;
+                            existente.ValorVenta = detDto.ValorVenta;
+                            existente.ValorTotal = detDto.ValorTotal;
+                            existente.FechaExpiracion = detDto.FechaCaducidad;
+                            existente.NumeroLote = detDto.NumeroLote;
+
+                        }
+                        else
+                        {
+                            // nuevo
+                            tbCompra.TbComDetallesCompras.Add(new TbComDetallesCompra
+                            {
+                                IdArticulo = detDto.ArticuloId,
+                                Cantidad = detDto.Cantidad,
+                                Codigo = detDto.Codigo,
+                                FechaExpiracion = detDto.FechaCaducidad,
+                                NumeroLote = detDto.NumeroLote,
+                                Descripcion = detDto.Descripcion,
+                                ImpuestoValor = detDto.ImpuestoValor,
+                                ValorCompra = detDto.ValorCompra,
+                                ValorVenta = detDto.ValorVenta,
+                                ValorTotal = detDto.ValorTotal
+                            });
+                        }
+                    }
+                    this._mapper.MapeoCompraEdicionDtoACompraTb(compraEditarDTO, tbCompra);
+                    var resp = await this._compraRepository.Editar(tbCompra);
+                    if (resp == false)
+                        throw new Exception("No se pudo editar la compra!!");
+
+
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }  
+        }
+
+        public async Task<bool> ActualizarInventario(TbCompra tbCompra)
+        {
+            //var tbInvMovimiento = await this._tiendaDbContext.TbInvMovimientos.Where(inv => inv.IdCompra == tbCompra.Id).Include(com => com.Id == tbCompra.Id).FirstOrDefaultAsync();
+
+
             return true;
         }
     }

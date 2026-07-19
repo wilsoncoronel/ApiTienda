@@ -12,6 +12,7 @@ namespace SistemaTienda.DAL.Repositorios
     public class CompraRepository : GenericRepository<TbCompra>, ICompraRepository
     {
         private readonly TiendaDbContext _context;
+
         public CompraRepository(TiendaDbContext context): base(context) {
             this._context = context;
         }

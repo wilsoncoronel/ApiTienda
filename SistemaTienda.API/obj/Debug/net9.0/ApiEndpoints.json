@@ -196,32 +196,6 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
-    "Method": "ListaCodigosArticulos",
-    "RelativePath": "api/Articulo/ListaCodigosArticulos",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "idArticulo",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.List\u00601[[SistemaTienda.DTO.CodigoArticuloDTO, SistemaTienda.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
     "Method": "ListarTodosArticulos",
     "RelativePath": "api/Articulo/ListarTodosArticulos",
     "HttpMethod": "GET",
@@ -561,81 +535,12 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
-    "Method": "ListaDetallesInventario",
-    "RelativePath": "api/Inventario/ListaDetallesInventario",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "IdInventario",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
-    "Method": "ListaInventario",
-    "RelativePath": "api/Inventario/ListaInventario",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "fechaInicio",
-        "Type": "System.DateOnly",
-        "IsRequired": false
-      },
-      {
-        "Name": "fechaFin",
-        "Type": "System.DateOnly",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
     "Method": "ListaTransaccionesInventario",
     "RelativePath": "api/Inventario/ListaTransaccionesInventario",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
-    "Method": "ResumenVentasDiario",
-    "RelativePath": "api/Inventario/ResumenVentasDiario",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "fechaResumen",
-        "Type": "System.DateOnly",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
-    "Method": "ResumenVentasMensual",
-    "RelativePath": "api/Inventario/ResumenVentasMensual",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "fechaResumen",
-        "Type": "System.DateOnly",
-        "IsRequired": false
-      }
-    ],
     "ReturnTypes": []
   },
   {

@@ -88,7 +88,7 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
-        [HttpGet]
+        /*[HttpGet]
         [Route("ListaCodigosArticulos")]
         public async Task<ActionResult<List<CodigoArticuloDTO>>> ListaCodigosArticulos(int idArticulo)
         {
@@ -104,7 +104,7 @@ namespace SistemaTienda.API.Controllers
                 throw;
             }
             return Ok(resp);
-        }
+        }*/
 
         [HttpGet]
         [Route("ListarTodosArticulos")]

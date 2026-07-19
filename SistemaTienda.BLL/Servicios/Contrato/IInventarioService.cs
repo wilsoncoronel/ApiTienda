@@ -11,10 +11,10 @@ namespace SistemaTienda.BLL.Servicios.Contrato
     {
         Task<List<ExistenciaDTO>> ExistenciasInventario();
         Task<List<TransaccionInventarioDTO>> ListaTransaccionesInventario();
-        Task<List<InventarioDTO>> ListaInventario(DateOnly FechaInicio, DateOnly FechaFinal);
-        Task<List<DetalleInventarioDTO>> ListaDetallesInventario(int idInventario);
-        Task<List<ResumenVentasDiarioDTO>> ResumenVentasDiario(DateOnly fechaResumen);
+        /*Task<List<InventarioDTO>> ListaInventario(DateOnly FechaInicio, DateOnly FechaFinal);*/
+        //Task<List<DetalleInventarioDTO>> ListaDetallesInventario(int idInventario);
+       /* Task<List<ResumenVentasDiarioDTO>> ResumenVentasDiario(DateOnly fechaResumen);
 
-        Task<List<ResumenVentasDiarioDTO>> ResumenVentasMensual(DateOnly fechaResumen);
+        Task<List<ResumenVentasDiarioDTO>> ResumenVentasMensual(DateOnly fechaResumen);*/
     }
 }

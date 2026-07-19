@@ -10,18 +10,10 @@ namespace SistemaTienda.DTO
     {
         public int Id { get; set; }
 
-        public DateTime FechaCreacion { get; set; }
+        public int IdArticulo { get; set; }
 
-        public int? IdCompra { get; set; }
+        public DateTime FechaIngreso { get; set; }
 
-        public int? IdVenta { get; set; }
-
-        public DateTime? FechaReversion { get; set; }
-
-        public DateTime? FechaActualizacion { get; set; }
-
-        public CompraMinDTO? CompraDTO { get; set; }
-
-        public VentaMinDTO? VentaDTO { get; set; }
+        public virtual ICollection<InventarioLoteDTO> InventarioLotesDTO { get; set; }= [];
     }
 }

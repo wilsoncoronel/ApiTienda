@@ -11,6 +11,10 @@ public partial class TbComDetallesCompra
 
     public int IdArticulo { get; set; }
 
+    public string? NumeroLote { get; set; }
+
+    public string? Codigo { get; set; }
+
     public string Descripcion { get; set; } = null!;
 
     public int Cantidad { get; set; }
@@ -22,6 +26,8 @@ public partial class TbComDetallesCompra
     public decimal ValorTotal { get; set; }
 
     public decimal ImpuestoValor { get; set; }
+
+    public DateOnly? FechaExpiracion { get; set; }
 
     public virtual TbComArticulo IdArticuloNavigation { get; set; } = null!;
 

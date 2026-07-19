@@ -66,10 +66,7 @@ namespace SistemaTienda.Utility
         List<EstadoImpuestoDTO> MapeoListaEstadosImpuestosTbAListaEstadosImpuestosDto(List<TbComEstadosImpuesto> listaEstadImpDTO);
         EstadoImpuestoDTO MapeoEstadoImpuestoTbAEstadoImpuestoDto(TbComEstadosImpuesto estaTb);
         TbComImpuestosArticulo MapeoImpuestoDtoAImpuestoTb(ImpuestoArticuloCreacionDTO ImpuestoCreacionDTO);
-        List<InventarioDTO> MapeoListaInventarioTbaListaInventarioDto(List<TbInvInventario> listaInventarioTb);
-        InventarioDTO MapeoInventarioTbaAInventarioDto(TbInvInventario inventarioTb);
-        List<DetalleInventarioDTO> MapeoListaDetallesInventarioTbAListaDetallesInventarioDto(List<TbDetallesInventario> ListaDetallesInv);
-        DetalleInventarioDTO MapeoDetalleInventarioTbADetalleInventarioDto(TbDetallesInventario detalleInvTb);
+        InventarioDTO MapeoInventarioTbaAInventarioDto(TbInvInventarioLote inventarioTb);
         List<CodigoArticuloDTO> MapeoListaArticulosDto(List<TbComCodigosArticulos> ListaCodigos);
         CodigoArticuloDTO MapeoCodigoTbACodigoDTO(TbComCodigosArticulos codigoTb);
     }
@@ -92,7 +89,7 @@ namespace SistemaTienda.Utility
                 };
             }
             
-            public List<DetalleInventarioDTO> MapeoListaDetallesInventarioTbAListaDetallesInventarioDto(List<TbDetallesInventario> ListaDetallesInv)
+            /*public List<DetalleInventarioDTO> MapeoListaDetallesInventarioTbAListaDetallesInventarioDto(List<TbDetallesInventario> ListaDetallesInv)
             {
                 return ListaDetallesInv.Select(det => this.MapeoDetalleInventarioTbADetalleInventarioDto(det)).ToList();
             }
@@ -112,7 +109,6 @@ namespace SistemaTienda.Utility
                     {
                         Id = detalleInvTb.IdArticuloNavigation.Id,
                         Nombre = detalleInvTb.IdArticuloNavigation.Nombre,
-                        Codigo = detalleInvTb.IdArticuloNavigation.Codigo,
                         Descripcion = detalleInvTb.IdArticuloNavigation.Descripcion,
                         ImpuestoArticuloDto = new ImpuestoArticuloDTO
                         {
@@ -126,32 +122,15 @@ namespace SistemaTienda.Utility
                     PrecioCompra = detalleInvTb.PrecioCompra,
                     PrecioVenta = detalleInvTb.PrecioVenta,
                 };
-            }
-            public List<InventarioDTO> MapeoListaInventarioTbaListaInventarioDto(List<TbInvInventario> listaInventarioTb)
-            {
-                return listaInventarioTb.Select(inv => this.MapeoInventarioTbaAInventarioDto(inv)).ToList();
-            }
+            }*/
+            
 
-            public InventarioDTO MapeoInventarioTbaAInventarioDto(TbInvInventario inventarioTb)
+            public InventarioDTO MapeoInventarioTbaAInventarioDto(TbInvInventarioLote inventarioTb)
             {
                 return new InventarioDTO
                 {
                     Id = inventarioTb.Id,
-                    CompraDTO = inventarioTb.IdCompraNavigation != null ? new CompraMinDTO
-                    {
-                        Id = inventarioTb.IdCompraNavigation.Id,
-                        Documento = inventarioTb.IdCompraNavigation.Documento,
-                    } : null,
-                    VentaDTO = inventarioTb.IdVentaNavigation != null ? new VentaMinDTO
-                    {
-                        Id = inventarioTb.IdVentaNavigation.Id,
-                        Documento = inventarioTb.IdVentaNavigation.Documento,
-                    } : null,
-                    IdCompra = inventarioTb.IdCompra ?? 0,
-                    IdVenta = inventarioTb.IdVenta ?? 0,
-                    FechaActualizacion = inventarioTb.FechaActualizacion ?? inventarioTb.FechaCreacion,
-                    FechaCreacion = inventarioTb.FechaCreacion,
-                    FechaReversion = inventarioTb.FechaReversion ?? inventarioTb.FechaCreacion,
+                    
                 };
             }
             public TbComImpuestosArticulo MapeoImpuestoDtoAImpuestoTb(ImpuestoArticuloCreacionDTO ImpuestoCreacionDTO)
@@ -325,7 +304,6 @@ namespace SistemaTienda.Utility
             {
                 var articuloTb = new TbComArticulo
                 {
-                    Codigo = articuloCreacionDto.Codigo,
                     Descripcion = articuloCreacionDto.Descripcion,
                     FechaCaducidad = articuloCreacionDto.FechaCaducidad,
                     FechaCreacion = articuloCreacionDto.FechaCreacion,
@@ -340,11 +318,7 @@ namespace SistemaTienda.Utility
                     IdTipoArticulo = articuloCreacionDto.IdTipoArticulo,
                     IdMarca = articuloCreacionDto.IdMarca,
                     IdUsuarioCreador = articuloCreacionDto.IdUsuarioCreador,
-                    Papeleria = articuloCreacionDto.Papeleria,
-                    TbComCodigosArticulos = articuloCreacionDto.ListaCodigosArticulosDTO.Select(c => new TbComCodigosArticulos
-                    {
-                        Codigo = c.Codigo
-                    }).ToList()
+                    Papeleria = articuloCreacionDto.Papeleria
                 };
                 return articuloTb;
             }
@@ -354,7 +328,6 @@ namespace SistemaTienda.Utility
                 var articuloTb = new TbComArticulo
                 {
                     Id = articuloDto.Id,
-                    Codigo = articuloDto.Codigo,
                     Descripcion = articuloDto.Descripcion,
                     Estado = articuloDto.Estado,
                     EstadoVisual = articuloDto.EstadoVisual,
@@ -387,7 +360,6 @@ namespace SistemaTienda.Utility
                 var articuloDto = new ArticuloDTO
                 {
                     Id = articuloTb.Id,
-                    Codigo = articuloTb.Codigo,
                     Descripcion = articuloTb.Descripcion,
                     Estado = articuloTb.Estado,
                     EstadoVisual = articuloTb.EstadoVisual,
@@ -427,7 +399,6 @@ namespace SistemaTienda.Utility
                 var articuloDto = new ArticuloDTO
                 {
                     Id = articuloTb.Id,
-                    Codigo = articuloTb.Codigo,
                     Descripcion = articuloTb.Descripcion,
                     Estado = articuloTb.Estado,
                     EstadoVisual = articuloTb.EstadoVisual,
@@ -519,7 +490,6 @@ namespace SistemaTienda.Utility
                         {
                             Id = d.ArticuloDTO.Id,
                             Estado = d.ArticuloDTO.Estado,
-                            Codigo = d.ArticuloDTO.Codigo,
                             Nombre = d.ArticuloDTO.Nombre,
                             Unidad = d.ArticuloDTO.Unidad,
                             UnidadValor = d.ArticuloDTO.UnidadValor,
@@ -772,9 +742,12 @@ namespace SistemaTienda.Utility
             {
                 return new TbComDetallesCompra
                 {
-                    IdArticulo = detalleComraCreacionDto.ArticuloId,
+                    IdArticulo = detalleComraCreacionDto.IdArticulo,
                     Cantidad = detalleComraCreacionDto.Cantidad,
                     Descripcion = detalleComraCreacionDto.Descripcion,
+                    Codigo = detalleComraCreacionDto.Codigo,
+                    FechaExpiracion = detalleComraCreacionDto.FechaExpiracion,
+                    NumeroLote = detalleComraCreacionDto.NumeroLote,
                     ImpuestoValor = detalleComraCreacionDto.ImpuestoValor,
                     ValorCompra = detalleComraCreacionDto.ValorCompra,
                     ValorVenta = detalleComraCreacionDto.ValorVenta,
@@ -1122,10 +1095,9 @@ namespace SistemaTienda.Utility
                     DetalleCompras = compraTb.TbComDetallesCompras.Select(d => new DetalleCompraDTO
                     {
                         Id = d.Id,
-                        Articulo = new ArticuloDTO
+                        ArticuloDTO = new ArticuloDTO
                         {
                             Id = d.IdArticuloNavigation.Id,
-                            Codigo = d.IdArticuloNavigation.Codigo,
                             Descripcion = d.IdArticuloNavigation.Descripcion,
                             Nombre = d.IdArticuloNavigation.Nombre,
                             Unidad = d.IdArticuloNavigation.Unidad,
@@ -1211,7 +1183,6 @@ namespace SistemaTienda.Utility
                         Articulo = new ArticuloDTO
                         {
                             Id = d.IdArticuloNavigation.Id,
-                            Codigo = d.IdArticuloNavigation.Codigo,
                             Descripcion = d.IdArticuloNavigation.Descripcion,
                             Nombre = d.IdArticuloNavigation.Nombre,
                             Unidad = d.IdArticuloNavigation.Unidad,

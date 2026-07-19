@@ -12,7 +12,6 @@ namespace SistemaTienda.BLL.Servicios.Contrato
         Task<int> CrearArticulo(ArticuloCreacionDTO articuloCreacionDto);
         Task<bool> CrearArticulosLista(List<ArticuloCreacionDTO> articulosCreacionDto);
         Task<List<ArticuloDTO>> ListarArticulos(DateTime fechaInicio, DateTime fechaFinal);
-        Task<List<CodigoArticuloDTO>> ListarCodigosArticulos(int idArticulo);
         Task<bool> EditarArticulo(ArticuloEdicionDTO articuloEditarDto);
         Task<bool> DesactivarArticulo(int idArticulo);
         Task<List<TipoArticuloDTO>> CargarListaTiposArticulos();

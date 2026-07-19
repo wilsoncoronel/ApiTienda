@@ -5,11 +5,6 @@ using SistemaTienda.DAL.Repositorios.Contrato;
 using SistemaTienda.DTO;
 using SistemaTienda.Model;
 using SistemaTienda.Utility;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SistemaTienda.BLL.Servicios
 {
@@ -18,10 +13,10 @@ namespace SistemaTienda.BLL.Servicios
         private readonly TiendaDbContext _tiendaDbContext;
         private readonly IGenericRepository<TbVenta> _ventaRepository;
         private readonly IGenericRepository<TbVenDetalleVenta> _detalleRepository;
-        private readonly IGenericRepository<TbInvInventario> _inventarioRepository;
+        private readonly IGenericRepository<TbInvInventarioLote> _inventarioRepository;
         private readonly IMapeos _mapper;
 
-        public VentaService(TiendaDbContext tiendaDbContext, IGenericRepository<TbVenta> ventaRepository, IGenericRepository<TbVenDetalleVenta> detalleRepository, IGenericRepository<TbInvInventario> inventarioRepository, IMapeos mapper)
+        public VentaService(TiendaDbContext tiendaDbContext, IGenericRepository<TbVenta> ventaRepository, IGenericRepository<TbVenDetalleVenta> detalleRepository, IGenericRepository<TbInvInventarioLote> inventarioRepository, IMapeos mapper)
         {
             this._tiendaDbContext = tiendaDbContext;
             this._ventaRepository = ventaRepository;
@@ -176,7 +171,8 @@ namespace SistemaTienda.BLL.Servicios
                     tbVenta = await this._tiendaDbContext.TbVentas.Where(c => c.Id == tbVenta.Id)
                         .Include(det => det.TbVenDetalleVenta)
                         .ThenInclude(art => art.IdArticuloNavigation).FirstOrDefaultAsync();
-                    var respInv = await this.AlimentarInventario(tbVenta);
+
+                    var respInv = await this.ActualizarInventario(tbVenta);
                     if (respInv == false)
                         throw new Exception("No se pudo actualizar el inventario");
                     transaction.Commit();
@@ -190,23 +186,24 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
-        private async Task<bool> AlimentarInventario(TbVenta ventaTb)
+       private async Task<bool> ActualizarInventario(TbVenta ventaTb)
         {
-            var inv = new TbInvInventario
+           var inv = new TbInvMovimiento
             {
                 IdVenta = ventaTb.Id,
-                FechaCreacion = DateTime.Now,
+                Fecha = DateTime.Now,
                 IdCompra = null,
-                TbDetallesInventarios = ventaTb.TbVenDetalleVenta.Select(d => new TbDetallesInventario
+                IdTransaccionInventario = 2, // Asumiendo que 2 es el ID para "Salida" en la tabla de trans
+                Referencia = ventaTb.Documento,
+                TbInvLotes = ventaTb.TbVenDetalleVenta.Select
+                (d => new TbInvLote
                 {
-                    IdArticulo = d.IdArticulo,
-                    Cantidad = d.Cantidad,
-                    PrecioCompra = d.ValorCompra,
-                    PrecioVenta = d.ValorVenta,
-                    IdTransaccionInventario = 2, // Asumiendo que 1 es el ID para "Entrada" en la tabla de transacciones de inventario 
+                    FechaExpiracion = null,
+                    FechaIngreso = DateTime.Now,
+                    StockDisponible = d.Cantidad,
                 }).ToList(),
             };
-            await this._inventarioRepository.Crear(inv);
+            //await this._inventarioRepository.Crear(inv);
             return true;
         }
 

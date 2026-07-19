@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+
 using SistemaTienda.Model;
 namespace SistemaTienda.DAL.DBContext;
 
@@ -18,8 +19,6 @@ public partial class TiendaDbContext : DbContext
     public virtual DbSet<TbComArticulo> TbComArticulos { get; set; }
 
     public virtual DbSet<TbComCliente> TbComClientes { get; set; }
-
-    public virtual DbSet<TbComCodigosArticulos> TbComCodigosArticulos { get; set; }
 
     public virtual DbSet<TbComDetallesCompra> TbComDetallesCompras { get; set; }
 
@@ -43,8 +42,6 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbContPartidaContable> TbContPartidaContables { get; set; }
 
-    public virtual DbSet<TbDetallesInventario> TbDetallesInventarios { get; set; }
-
     public virtual DbSet<TbGrlCiudades> TbGrlCiudades { get; set; }
 
     public virtual DbSet<TbGrlDirecciones> TbGrlDirecciones { get; set; }
@@ -53,7 +50,11 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbGrlTipoIdentificacion> TbGrlTipoIdentificacions { get; set; }
 
-    public virtual DbSet<TbInvInventario> TbInvInventarios { get; set; }
+    public virtual DbSet<TbInvDetalleLote> TbInvDetalleLotes { get; set; }
+
+    public virtual DbSet<TbInvLote> TbInvLotes { get; set; }
+
+    public virtual DbSet<TbInvMovimiento> TbInvMovimientos { get; set; }
 
     public virtual DbSet<TbInvTransacciones> TbInvTransacciones { get; set; }
 
@@ -122,22 +123,16 @@ public partial class TiendaDbContext : DbContext
                 .HasConstraintName("FK_TbComClientes_TbGrlPersonas");
         });
 
-        modelBuilder.Entity<TbComCodigosArticulos>(entity =>
-        {
-            entity.Property(e => e.Codigo)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .IsFixedLength();
-
-            entity.HasOne(d => d.IdArticuloNavigation).WithMany(p => p.TbComCodigosArticulos)
-                .HasForeignKey(d => d.IdArticulo)
-                .HasConstraintName("Fk_TbComCodigosArticulos");
-        });
-
         modelBuilder.Entity<TbComDetallesCompra>(entity =>
         {
+            entity.Property(e => e.Codigo)
+                .HasMaxLength(50)
+                .IsFixedLength();
             entity.Property(e => e.Descripcion).HasMaxLength(500);
             entity.Property(e => e.ImpuestoValor).HasColumnType("numeric(18, 4)");
+            entity.Property(e => e.NumeroLote)
+                .HasMaxLength(50)
+                .IsFixedLength();
             entity.Property(e => e.ValorCompra).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.ValorTotal).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.ValorVenta).HasColumnType("numeric(18, 4)");
@@ -272,31 +267,6 @@ public partial class TiendaDbContext : DbContext
                 .HasConstraintName("FK_TbContPartidaContable_TbContCuentaContable");
         });
 
-        modelBuilder.Entity<TbDetallesInventario>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK_TbInventario");
-
-            entity.ToTable("TbDetallesInventario");
-
-            entity.Property(e => e.PrecioCompra).HasColumnType("numeric(18, 4)");
-            entity.Property(e => e.PrecioVenta).HasColumnType("numeric(18, 4)");
-
-            entity.HasOne(d => d.IdArticuloNavigation).WithMany(p => p.TbDetallesInventarios)
-                .HasForeignKey(d => d.IdArticulo)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TbInventario_TbComArticulos");
-
-            entity.HasOne(d => d.IdInventarioNavigation).WithMany(p => p.TbDetallesInventarios)
-                .HasForeignKey(d => d.IdInventario)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TbDetallesInventario_TbInvInventario");
-
-            entity.HasOne(d => d.IdTransaccionInventarioNavigation).WithMany(p => p.TbDetallesInventarios)
-                .HasForeignKey(d => d.IdTransaccionInventario)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TbInventario_TbInvTransacciones");
-        });
-
         modelBuilder.Entity<TbGrlCiudades>(entity =>
         {
             entity.Property(e => e.Nombre).HasMaxLength(200);
@@ -344,29 +314,67 @@ public partial class TiendaDbContext : DbContext
             entity.Property(e => e.Nombre).HasMaxLength(100);
         });
 
-        modelBuilder.Entity<TbInvInventario>(entity =>
+        modelBuilder.Entity<TbInvDetalleLote>(entity =>
         {
-            entity.ToTable("TbInvInventario");
+            entity.HasKey(e => e.Id).HasName("PK_TbInvDetalleMovimientoLote");
 
-            entity.HasIndex(e => e.IdCompra, "IX_UQ_Inventario_Compra")
-                .IsUnique()
-                .HasFilter("([IdCompra] IS NOT NULL)");
+            entity.ToTable("TbInvDetalleLote");
 
-            entity.HasIndex(e => e.IdVenta, "IX_UQ_Inventario_Venta")
-                .IsUnique()
-                .HasFilter("([IdVenta] IS NOT NULL)");
+            entity.Property(e => e.Cantidad).HasColumnType("numeric(18, 4)");
+            entity.Property(e => e.Codigo)
+                .HasMaxLength(10)
+                .IsFixedLength();
 
-            entity.Property(e => e.FechaActualizacion).HasColumnType("datetime");
-            entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
-            entity.Property(e => e.FechaReversion).HasColumnType("datetime");
+            entity.HasOne(d => d.IdArticuloNavigation).WithMany(p => p.TbInvDetalleLotes)
+                .HasForeignKey(d => d.IdArticulo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbInvDetalleLote_TbComArticulos");
 
-            entity.HasOne(d => d.IdCompraNavigation).WithOne(p => p.TbInvInventario)
-                .HasForeignKey<TbInvInventario>(d => d.IdCompra)
-                .HasConstraintName("FK_TbInvInventario_TbCompras");
+            entity.HasOne(d => d.IdLoteNavigation).WithMany(p => p.TbInvDetalleLotes)
+                .HasForeignKey(d => d.IdLote)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbInvDetalleLote_TbInvLote");
+        });
 
-            entity.HasOne(d => d.IdVentaNavigation).WithOne(p => p.TbInvInventario)
-                .HasForeignKey<TbInvInventario>(d => d.IdVenta)
-                .HasConstraintName("FK_TbInvInventario_Venta");
+        modelBuilder.Entity<TbInvLote>(entity =>
+        {
+            entity.ToTable("TbInvLote");
+
+            entity.Property(e => e.CostoUnitario).HasColumnType("decimal(18, 4)");
+            entity.Property(e => e.FechaIngreso).HasColumnType("datetime");
+            entity.Property(e => e.NumeroLote).HasMaxLength(50);
+            entity.Property(e => e.StockDisponible).HasColumnType("numeric(18, 4)");
+            entity.Property(e => e.StockMinimo).HasColumnType("numeric(18, 4)");
+
+            entity.HasOne(d => d.IdMovimientoNavigation).WithMany(p => p.TbInvLotes)
+                .HasForeignKey(d => d.IdMovimiento)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbInvLote_TbInvMovimiento");
+        });
+
+        modelBuilder.Entity<TbInvMovimiento>(entity =>
+        {
+            entity.ToTable("TbInvMovimiento");
+
+            entity.HasIndex(e => e.IdCompra, "IX_TbInvMovimiento_IdCompra");
+
+            entity.HasIndex(e => e.IdVenta, "IX_TbInvMovimiento_IdVenta");
+
+            entity.Property(e => e.Fecha).HasColumnType("datetime");
+            entity.Property(e => e.Referencia).HasMaxLength(50);
+
+            entity.HasOne(d => d.IdCompraNavigation).WithMany(p => p.TbInvMovimientos)
+                .HasForeignKey(d => d.IdCompra)
+                .HasConstraintName("FK_TbInvMovimiento_TbCompras");
+
+            entity.HasOne(d => d.IdTransaccionInventarioNavigation).WithMany(p => p.TbInvMovimientos)
+                .HasForeignKey(d => d.IdTransaccionInventario)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbInvMovimiento_TbInvTransacciones");
+
+            entity.HasOne(d => d.IdVentaNavigation).WithMany(p => p.TbInvMovimientos)
+                .HasForeignKey(d => d.IdVenta)
+                .HasConstraintName("FK_TbInMovimiento_TbVentas");
         });
 
         modelBuilder.Entity<TbInvTransacciones>(entity =>
@@ -468,7 +476,9 @@ public partial class TiendaDbContext : DbContext
 
         modelBuilder.Entity<TbVenDetalleVenta>(entity =>
         {
+            entity.Property(e => e.Codigo).HasMaxLength(50);
             entity.Property(e => e.Descripcion).HasMaxLength(200);
+            entity.Property(e => e.FechaVencimiento).HasColumnType("datetime");
             entity.Property(e => e.ImpuestoValor).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.ValorCompra).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.ValorVenta).HasColumnType("numeric(18, 4)");

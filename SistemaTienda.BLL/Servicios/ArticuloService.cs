@@ -76,7 +76,6 @@ namespace SistemaTienda.BLL.Servicios
                 articuloTb.Nombre = articuloEditarDto.Nombre;
                 articuloTb.IdImpuesto = articuloEditarDto.IdImpuesto;
                 articuloTb.IdTipoArticulo = articuloEditarDto.IdTipoArticulo;
-                articuloTb.Codigo = articuloEditarDto.Codigo;
                 articuloTb.FechaActualizacion = DateTime.Now;
                 articuloTb.Unidad = articuloEditarDto.Unidad;
                 articuloTb.UnidadValor = articuloEditarDto.UnidadValor;
@@ -114,11 +113,7 @@ namespace SistemaTienda.BLL.Servicios
             return this._mapper.MapeoListaArticulosDto(listaArticulos);
         }
 
-        public async Task<List<CodigoArticuloDTO>> ListarCodigosArticulos(int idArticulo)
-        {
-            var listaCodigos = await this.tiendaDbContext.TbComCodigosArticulos.Where(cod => cod.IdArticulo == idArticulo).ToListAsync();
-            return this._mapper.MapeoListaArticulosDto(listaCodigos);
-        }
+        
 
         public async Task<List<TipoArticuloDTO>> CargarListaTiposArticulos()
         {

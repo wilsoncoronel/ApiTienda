@@ -57,7 +57,7 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
-        [HttpGet]
+       /* [HttpGet]
         [Route("ListaInventario")]
         public async Task<IActionResult> ListaInventario(DateOnly fechaInicio, DateOnly fechaFin)
         {
@@ -73,9 +73,9 @@ namespace SistemaTienda.API.Controllers
                 throw;
             }
             return Ok(resp);
-        }
+        }*/
 
-        [HttpGet]
+        /*[HttpGet]
         [Route("ListaDetallesInventario")]
         public async Task<IActionResult> ListaDetallesInventario(int IdInventario)
         {
@@ -91,9 +91,9 @@ namespace SistemaTienda.API.Controllers
                 throw;
             }
             return Ok(resp);
-        }
+        }*/
 
-        [HttpGet]
+        /*[HttpGet]
         [Route("ResumenVentasDiario")]
         public async Task<IActionResult> ResumenVentasDiario(DateOnly fechaResumen)
         {
@@ -109,9 +109,9 @@ namespace SistemaTienda.API.Controllers
                 throw;
             }
             return Ok(resp);
-        }
+        }*/
 
-        [HttpGet]
+       /* [HttpGet]
         [Route("ResumenVentasMensual")]
         public async Task<IActionResult> ResumenVentasMensual(DateOnly fechaResumen)
         {
@@ -128,6 +128,6 @@ namespace SistemaTienda.API.Controllers
                 throw;
             }
             return Ok(resp);
-        }
+        }*/
     }
 }

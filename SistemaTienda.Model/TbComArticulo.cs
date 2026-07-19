@@ -17,8 +17,6 @@ public partial class TbComArticulo
 
     public string Nombre { get; set; } = null!;
 
-    public string? Codigo { get; set; }
-
     public DateTime FechaCreacion { get; set; }
 
     public DateTime? FechaCaducidad { get; set; }
@@ -49,11 +47,9 @@ public partial class TbComArticulo
 
     public virtual TbSisUsuario IdUsuarioCreadorNavigation { get; set; } = null!;
 
-    public virtual ICollection<TbComCodigosArticulos> TbComCodigosArticulos { get; set; } = new List<TbComCodigosArticulos>();
-
     public virtual ICollection<TbComDetallesCompra> TbComDetallesCompras { get; set; } = new List<TbComDetallesCompra>();
 
-    public virtual ICollection<TbDetallesInventario> TbDetallesInventarios { get; set; } = new List<TbDetallesInventario>();
+    public virtual ICollection<TbInvDetalleLote> TbInvDetalleLotes { get; set; } = new List<TbInvDetalleLote>();
 
     public virtual ICollection<TbPedDetallesPedido> TbPedDetallesPedidos { get; set; } = new List<TbPedDetallesPedido>();
 

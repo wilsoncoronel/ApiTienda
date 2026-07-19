@@ -6,27 +6,20 @@ using SistemaTienda.DAL.Repositorios.Contrato;
 using SistemaTienda.DTO;
 using SistemaTienda.Model;
 using SistemaTienda.Utility;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SistemaTienda.BLL.Servicios
 {
     public class InventarioService : IInventarioService
     {
-        private readonly IGenericRepository<TbDetallesInventario> _detInventarioRepo;
-        private readonly IGenericRepository<TbInvInventario> _inventarioRepo;
+        private readonly IGenericRepository<TbInvMovimiento> _inventarioRepo;
         private readonly IMapeos mapeo;
         private readonly IGenericRepository<TbInvTransacciones> _transacRepository;
         private readonly ILogger<InventarioService> _logger;
         private readonly TiendaDbContext _tiendaDb;
 
-        public InventarioService(IGenericRepository<TbDetallesInventario> detInventarioRepo, IGenericRepository<TbInvTransacciones> transacRepository,
-            IGenericRepository<TbInvInventario> _inventarioRepo, IMapeos mapeo, ILogger<InventarioService> logger, TiendaDbContext tiendaDb)
+        public InventarioService(IGenericRepository<TbInvTransacciones> transacRepository,
+            IGenericRepository<TbInvMovimiento> _inventarioRepo, IMapeos mapeo, ILogger<InventarioService> logger, TiendaDbContext tiendaDb)
         {
-            this._detInventarioRepo = detInventarioRepo;
             this._transacRepository = transacRepository;
             this._inventarioRepo = _inventarioRepo;
             this.mapeo = mapeo;
@@ -35,7 +28,7 @@ namespace SistemaTienda.BLL.Servicios
         }
         public async Task<List<ExistenciaDTO>> ExistenciasInventario()
         {
-            try
+            /*try
             {
                 var listainventario = await this._tiendaDb.TbDetallesInventarios.Where(tra => tra.IdTransaccionInventario != 3).Include(art => art.IdArticuloNavigation)
                     .Include(tra => tra.IdTransaccionInventarioNavigation).ToListAsync();
@@ -49,15 +42,15 @@ namespace SistemaTienda.BLL.Servicios
                     NombreArticulo = g.Key.Nombre,
                     TotalCantidad = g.Sum(d => d.Cantidad * d.IdTransaccionInventarioNavigation.Signo),
 
-                }).ToList();
-                return resultado;
-            }
+                }).ToList();*/
+                return [];
+            /*}
             catch
             {
                 throw;
-            }
+            }*/
         }
-        public async Task<List<InventarioDTO>> ListaInventario(DateOnly FechaInicio, DateOnly FechaFinal)
+        /*public async Task<List<InventarioDTO>> ListaInventario(DateOnly FechaInicio, DateOnly FechaFinal)
         {
             var inicio = FechaInicio.ToDateTime(TimeOnly.MinValue);
             var fin = FechaFinal.ToDateTime(TimeOnly.MaxValue);
@@ -75,9 +68,9 @@ namespace SistemaTienda.BLL.Servicios
             {
                 throw;
             }
-        }
+        }*/
 
-        public async Task<List<DetalleInventarioDTO>> ListaDetallesInventario(int IdInventario)
+        /*public async Task<List<DetalleInventarioDTO>> ListaDetallesInventario(int IdInventario)
         {
             try
             {
@@ -95,7 +88,7 @@ namespace SistemaTienda.BLL.Servicios
             {
                 throw;
             }
-        }
+        }*/
 
         public async Task<List<TransaccionInventarioDTO>> ListaTransaccionesInventario()
         {
@@ -118,7 +111,7 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
-        public async Task<List<ResumenVentasDiarioDTO>> ResumenVentasDiario(DateOnly fecha)
+        /*public async Task<List<ResumenVentasDiarioDTO>> ResumenVentasDiario(DateOnly fecha)
         {
             //DateTime fechaActual = DateTime.Now.Date;
             DateTime desde = fecha.ToDateTime(TimeOnly.MinValue);  // 00:00
@@ -161,9 +154,9 @@ namespace SistemaTienda.BLL.Servicios
             {
                 throw;
             }
-        }
+        }*/
 
-        public async Task<List<ResumenVentasDiarioDTO>> ResumenVentasMensual(DateOnly fechaResumen)
+        /*public async Task<List<ResumenVentasDiarioDTO>> ResumenVentasMensual(DateOnly fechaResumen)
         {
             DateTime fechaFin = fechaResumen.ToDateTime(TimeOnly.MinValue);  // 00:00
             DateTime fechaInicio = new DateTime(fechaFin.Year, fechaFin.Month, 1);
@@ -207,6 +200,6 @@ namespace SistemaTienda.BLL.Servicios
                 this._logger.LogError("Error al generar el resumen de ventas mensual para el rango de fechas {FechaInicio} - {FechaFin}", fechaInicio, fechaFin);
                 throw;
             }
-        }
+        }*/
     }
 }

@@ -33,5 +33,5 @@ public partial class TbCompra
 
     public virtual TbContAsientoContable? TbContAsientoContable { get; set; }
 
-    public virtual TbInvInventario? TbInvInventario { get; set; }
+    public virtual ICollection<TbInvMovimiento> TbInvMovimientos { get; set; } = new List<TbInvMovimiento>();
 }
