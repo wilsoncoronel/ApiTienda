@@ -134,27 +134,20 @@ namespace SistemaTienda.BLL.Servicios
         private async Task<bool> AlimentarInventario(TbCompra tbCompra) {
             var tbinvMovimiento = new TbInvMovimiento
             {
-                IdCompra = tbCompra.Id,
                 Referencia = tbCompra.Documento,
                 Fecha = DateTime.Now,
-                IdTransaccionInventario = 1,
+                IdTransaccionInventario = tbCompra.IdTransaccion,
                 TbInvLotes = tbCompra.TbComDetallesCompras.Select(det => new TbInvLote
                 {
                     NumeroLote = det.NumeroLote,
                     CostoUnitario = det.ValorCompra,
+                    IdArticulo = det.IdArticulo,
+                    Codigo = det.Codigo,
                     FechaIngreso = DateTime.Now,
                     FechaExpiracion = det.FechaExpiracion,
                     StockDisponible = det.Cantidad,
                     StockMinimo = 6,
-                    TbInvDetalleLotes = new List<TbInvDetalleLote>
-                    {
-                        new TbInvDetalleLote
-                        {
-                            IdArticulo = det.IdArticulo,
-                            Cantidad = det.Cantidad,
-                            Codigo = det.Codigo,
-                        }
-                    }
+                    Estado = true
                 }).ToList()
             };
             await this._movInventarioRepository.Crear(tbinvMovimiento);
@@ -163,27 +156,72 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<bool> ReversarCompra(int id)
         {
+            // Paso 1: validaciones y búsquedas iniciales
+            var tbCompra = await this._tiendaDbContext.TbCompras.Where(c => c.Id == id).FirstOrDefaultAsync();
+            if (tbCompra is null)
+                throw new Exception("No existe una compra con el id indicado!!!!");
+            if (string.IsNullOrWhiteSpace(tbCompra.Documento))
+                throw new Exception("La compra no tiene documento válido");
+
+            // Obtener id de estado 'Reversada'
+            var estadoReversada = await _tiendaDbContext.TbComEstadosCompras.FirstOrDefaultAsync(e => e.Nombre.ToLower() == "reversada");
+            if (estadoReversada == null)
+                throw new Exception("No existe el estado 'Reversada' en TbComEstadosCompras");
+
+            // Si la compra ya está en estado reversada, no permitir doble reversión
+            if (tbCompra.IdEstadoCompra == estadoReversada.Id)
+                throw new Exception("Compra ya reversada");
+
+            // Obtener transacciones necesarias
+            var transReversar = await _tiendaDbContext.TbInvTransacciones.FirstOrDefaultAsync(t => t.Nombre.ToLower() == "reversion compra");
+            if (transReversar == null)
+                throw new Exception("No existe la transacción 'Reversar Compra'");
+
+            var transReversion = await _tiendaDbContext.TbInvTransacciones.FirstOrDefaultAsync(t => t.Nombre.ToLower() == "reversion compra");
+            if (transReversion == null)
+                throw new Exception("No existe la transacción 'Reversion compra'");
+
+            // Buscar movimientos asociados por referencia (documento)
+            var movimientos = await _tiendaDbContext.TbInvMovimientos
+                .Where(m => m.Referencia == tbCompra.Documento)
+                .Include(m => m.TbInvLotes)
+                    .ThenInclude(l => l.TbInvConsumoLotes)
+                .Include(m => m.TbInvConsumoLotes)
+                .ToListAsync();
+
+            if (movimientos == null || !movimientos.Any())
+                throw new Exception("No se encontró movimiento origen para la compra");
+
+            // Seleccionar el movimiento origen: preferir aquel cuyo IdTransaccionInventario == tbCompra.IdTransaccion si existe
+            var movimientoOrigen = movimientos.FirstOrDefault(m => m.IdTransaccionInventario == tbCompra.IdTransaccion)
+                ?? movimientos.First();
+
+            // Verificar que no existan consumos asociados a los lotes de la compra
+            var lotesConConsumo = movimientoOrigen.TbInvLotes.Any(l => l.TbInvConsumoLotes != null && l.TbInvConsumoLotes.Any());
+            if (lotesConConsumo)
+                throw new Exception("La compra tiene movimientos de consumo en sus lotes y no se puede reversar");
+
+            // Verificar que no exista ya una reversión para esta referencia
+            var existeReversionPrev = movimientos.Any(m => m.IdTransaccionInventario == transReversion.Id || m.IdTransaccionInventario == transReversar.Id);
+            if (existeReversionPrev)
+                throw new Exception("Compra ya tiene reversiones o movimientos relacionados y no puede reversarse");
+
+            // Iniciar transacción
             using (var transaction = _tiendaDbContext.Database.BeginTransaction())
             {
                 try
                 {
-                    var tbCompra = await this._tiendaDbContext.TbCompras.Where(c => c.Id == id)
-                        .FirstOrDefaultAsync();
-                    if (tbCompra.IdEstadoCompra == 2)
-                    {
-                        throw new Exception("No se puede reversar una compra ya reversada!!!");
-                    }
-                    if (tbCompra is null)
-                        throw new Exception("No existe una compra con el id indicado!!!!");
-                    tbCompra.IdEstadoCompra = 2;
-                    tbCompra.FechaModificacion = DateTime.Now;
+                    // Procesar cambios de inventario en método separado
+                    var movimientoReversion = await ProcesarReversionInventarioAsync(movimientoOrigen, tbCompra.Documento, transReversar, transReversion);
 
-                    var resp = await this._compraRepository.Editar(tbCompra);
-                    if (!resp) throw new Exception("No se reverso la compra, el inventario no fue afectado!!!");
-                    var respInv = await this.ReversarInventario(tbCompra.Id);
-                    if(!respInv) throw new Exception("No se reverso el inventario, el inventario no fue afectado!!!");
+                    // Actualizar estado de la compra a 'Reversada' (acción relacionada con la compra)
+                    tbCompra.IdEstadoCompra = estadoReversada.Id;
+                    tbCompra.FechaModificacion = DateTime.Now;
+                    _tiendaDbContext.TbCompras.Update(tbCompra);
+
+                    await _tiendaDbContext.SaveChangesAsync();
                     transaction.Commit();
-                    return respInv;
+                    return true;
                 }
                 catch
                 {
@@ -192,22 +230,44 @@ namespace SistemaTienda.BLL.Servicios
                 }
             }
         }
-        
-        private async Task<bool> ReversarInventario(int idCompra)
+
+        /// <summary>
+        /// Procesa la reversión en inventario: crea el movimiento de reversión (sin lotes), marca lotes y consumos del movimiento origen
+        /// y actualiza el IdTransaccionInventario del movimiento origen a la transacción de reversión.
+        /// Esta operación asume que la transacción externa ya fue iniciada y la entidad movimientoOrigen ya fue cargada con sus relaciones.
+        /// </summary>
+        private async Task<TbInvMovimiento> ProcesarReversionInventarioAsync(TbInvMovimiento movimientoOrigen, string referenciaCompra, TbInvTransacciones transReversar, TbInvTransacciones transReversion)
         {
-            var invMovimientos = await this._tiendaDbContext.TbInvMovimientos.Where(inv => inv.IdCompra == idCompra).Include(inv => inv.TbInvLotes).Include(inv => inv.TbInvLotes.Select(l => l.TbInvDetalleLotes)).FirstOrDefaultAsync();
-            var signo = await this._tiendaDbContext.TbInvTransacciones.Where(inv => inv.Nombre == "Reversion").FirstOrDefaultAsync();
-            foreach (var item in invMovimientos.TbInvLotes)
+            // Crear nuevo movimiento de reversión sin crear lotes
+            var movimientoReversion = new TbInvMovimiento
             {
-                item.StockDisponible = item.StockDisponible * signo.Signo;
-                foreach (var item1 in item.TbInvDetalleLotes)
-                {
-                    item1.Cantidad = item1.Cantidad * signo.Signo;
-                }
+                IdMovimientoOrigen = movimientoOrigen.Id,
+                IdTransaccionInventario = transReversar.Id,
+                Referencia = $"Reversión compra {referenciaCompra} (mov {movimientoOrigen.Id})",
+                Fecha = DateTime.Now
+            };
+            _tiendaDbContext.TbInvMovimientos.Add(movimientoReversion);
+            await _tiendaDbContext.SaveChangesAsync();
+
+            // Marcar lotes del movimiento origen como Estado = false (si el campo existe)
+            foreach (var lote in movimientoOrigen.TbInvLotes)
+            {
+                lote.Estado = false;
+                _tiendaDbContext.TbInvLotes.Update(lote);
             }
-            this._tiendaDbContext.Update(invMovimientos);
-            await this._tiendaDbContext.SaveChangesAsync();
-            return true;
+
+            // Marcar consumos relacionados (si existieran) como reversados
+            foreach (var consumo in movimientoOrigen.TbInvConsumoLotes)
+            {
+                consumo.Estado = false;
+                _tiendaDbContext.TbInvConsumoLotes.Update(consumo);
+            }
+
+            // Cambiar el IdTransaccionInventario del movimiento origen a la transacción de 'Reversion compra'
+            movimientoOrigen.IdTransaccionInventario = transReversion.Id;
+            _tiendaDbContext.TbInvMovimientos.Update(movimientoOrigen);
+
+            return movimientoReversion;
         }
 
         public async Task<bool> EditarCompra(CompraEditarDTO compraEditarDTO)

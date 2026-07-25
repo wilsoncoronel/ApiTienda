@@ -11,6 +11,8 @@ public partial class TbCompra
 
     public int IdEstadoCompra { get; set; }
 
+    public int IdTransaccion { get; set; }
+
     public int IdUsuarioCreador { get; set; }
 
     public string Documento { get; set; } = null!;
@@ -27,11 +29,11 @@ public partial class TbCompra
 
     public virtual TbComProveedores IdProveedorNavigation { get; set; } = null!;
 
+    public virtual TbInvTransacciones IdTransaccionNavigation { get; set; } = null!;
+
     public virtual TbSisUsuario IdUsuarioCreadorNavigation { get; set; } = null!;
 
     public virtual ICollection<TbComDetallesCompra> TbComDetallesCompras { get; set; } = new List<TbComDetallesCompra>();
 
     public virtual TbContAsientoContable? TbContAsientoContable { get; set; }
-
-    public virtual ICollection<TbInvMovimiento> TbInvMovimientos { get; set; } = new List<TbInvMovimiento>();
 }

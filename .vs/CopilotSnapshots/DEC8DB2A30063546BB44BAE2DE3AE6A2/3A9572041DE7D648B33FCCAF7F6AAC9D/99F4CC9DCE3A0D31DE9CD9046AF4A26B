@@ -1,0 +1,315 @@
+﻿using Microsoft.EntityFrameworkCore;
+using System.Data;
+using SistemaTienda.BLL.Servicios.Contrato;
+using SistemaTienda.DAL.DBContext;
+using SistemaTienda.DAL.Repositorios.Contrato;
+using SistemaTienda.DTO;
+using SistemaTienda.Model;
+using SistemaTienda.Utility;
+
+namespace SistemaTienda.BLL.Servicios
+{
+    public class VentaService : IVentaService
+    {
+        private readonly TiendaDbContext _tiendaDbContext;
+        private readonly IGenericRepository<TbVenta> _ventaRepository;
+        private readonly IGenericRepository<TbVenDetalleVenta> _detalleRepository;
+        private readonly IMapeos _mapper;
+
+        public VentaService(TiendaDbContext tiendaDbContext, IGenericRepository<TbVenta> ventaRepository, IGenericRepository<TbVenDetalleVenta> detalleRepository, IMapeos mapper)
+        {
+            this._tiendaDbContext = tiendaDbContext;
+            this._ventaRepository = ventaRepository;
+            this._detalleRepository = detalleRepository;
+            this._mapper = mapper;
+        }
+        public async Task<int> RegistrarVenta(VentaCreacionDTO ventaDto)
+        {
+            // Transacción con aislamiento para reducir condiciones de carrera
+            using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync(IsolationLevel.Serializable);
+            try
+            {
+                // Crear entidad Venta y sus detalles
+                var tbVenta = new TbVenta
+                {
+                    IdCliente = ventaDto.IdCliente,
+                    Documento = ventaDto.Documento,
+                    FechaVenta = ventaDto.FechaCompra,
+                    FechaCreacion = ventaDto.FechaCreacion,
+                    IdEstadoVenta = ventaDto.IdEstado,
+                    EstadoVisual = ventaDto.EstadoVisual,
+                    IdUsuarioCreador = ventaDto.UsuarioCreadorId,
+                    IdTransaccion = ventaDto.IdTransaccion
+                };
+
+                tbVenta.TbVenDetalleVenta = ventaDto.DetalleVentaCreacionDto
+                    .Select(d => new TbVenDetalleVenta
+                    {
+                        IdArticulo = d.IdArticulo,
+                        Cantidad = d.Cantidad,
+                        Descripcion = d.Descripcion ?? string.Empty,
+                        ValorCompra = d.ValorCompra,
+                        ValorVenta = d.ValorVenta,
+                        ValotTotal = d.ValorCompra,
+                        ImpuestoValor = d.ImpuestoValor,
+                        Codigo = string.Empty
+                    })
+                    .ToList();
+
+                // Guardar venta y detalles para obtener Ids de detalle
+                _tiendaDbContext.TbVentas.Add(tbVenta);
+                await _tiendaDbContext.SaveChangesAsync();
+
+                // Para cada detalle, consumir lotes en orden FEFO (FechaExpiracion asc, nulos al final)
+                var tbMovimiento = await CrearMovimientoInventarioAsync(ventaDto.IdTransaccion.Value, tbVenta.Documento);
+
+                foreach (var detalle in tbVenta.TbVenDetalleVenta)
+                {
+                    await ConsumirLotesParaDetalleAsync(tbMovimiento, detalle);
+                }
+
+                // Guardar consumos y actualizaciones de lotes
+                await _tiendaDbContext.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+                return tbVenta.Id;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        private async Task<TbInvMovimiento> CrearMovimientoInventarioAsync(int idTransaccionInventario, string referencia)
+        {
+            var movimiento = new TbInvMovimiento
+            {
+                IdTransaccionInventario = idTransaccionInventario,
+                Referencia = referencia,
+                Fecha = DateTime.Now
+            };
+            _tiendaDbContext.TbInvMovimientos.Add(movimiento);
+            await _tiendaDbContext.SaveChangesAsync();
+            return movimiento;
+        }
+
+        private async Task ConsumirLotesParaDetalleAsync(TbInvMovimiento movimiento, TbVenDetalleVenta detalle)
+        {
+            decimal cantidadRestante = detalle.Cantidad;
+
+            var lotes = await _tiendaDbContext.TbInvLotes
+                .Where(l => l.IdArticulo == detalle.IdArticulo)
+                .OrderBy(l => l.FechaExpiracion.HasValue ? 0 : 1)
+                .ThenBy(l => l.FechaExpiracion)
+                .ThenBy(l => l.FechaIngreso)
+                .ToListAsync();
+
+            // Consumir stock positivo primero
+            foreach (var lote in lotes)
+            {
+                if (cantidadRestante <= 0) break;
+
+                decimal disponible = lote.StockDisponible;
+                if (disponible <= 0) continue;
+
+                decimal consumir = Math.Min(cantidadRestante, disponible);
+
+                var consumo = new TbInvConsumoLote
+                {
+                    IdMovimiento = movimiento.Id,
+                    IdDetalleVenta = detalle.Id,
+                    IdLote = lote.Id,
+                    Cantidad = (int)Math.Round(consumir),
+                    PrecioUnitario = lote.CostoUnitario
+                };
+                _tiendaDbContext.TbInvConsumoLotes.Add(consumo);
+
+                lote.StockDisponible = lote.StockDisponible - consumir;
+                _tiendaDbContext.TbInvLotes.Update(lote);
+
+                cantidadRestante -= consumir;
+            }
+
+            // Si queda cantidad y permitimos consumo parcial, aplicar restante en el primer lote FEFO (puede quedar negativo)
+            if (cantidadRestante > 0 && lotes.Any())
+            {
+                var primerLote = lotes.First();
+                var consumoRestante = cantidadRestante;
+
+                var consumo = new TbInvConsumoLote
+                {
+                    IdMovimiento = movimiento.Id,
+                    IdDetalleVenta = detalle.Id,
+                    IdLote = primerLote.Id,
+                    Cantidad = (int)Math.Round(consumoRestante),
+                    PrecioUnitario = primerLote.CostoUnitario
+                };
+                _tiendaDbContext.TbInvConsumoLotes.Add(consumo);
+
+                primerLote.StockDisponible = primerLote.StockDisponible - consumoRestante;
+                _tiendaDbContext.TbInvLotes.Update(primerLote);
+            }
+        }
+        public async Task<bool> EditarVenta(VentaEditarDTO ventaDto)
+        {
+            using (var transaction = _tiendaDbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var tbVenta = await this._tiendaDbContext.TbVentas.Include(c => c.IdEstadoVentaNavigation)
+                        .Include(d => d.TbVenDetalleVenta)
+                        .FirstOrDefaultAsync(c => c.Id == ventaDto.Id);
+                    var idsDto = ventaDto.DetalleVentaEditarDto.Select(x => x.Id).ToList();
+                    var eliminados = tbVenta.TbVenDetalleVenta
+                        .Where(x => !idsDto.Contains(x.Id)).ToList();
+
+                    foreach (var e in eliminados)
+                    {
+                        _tiendaDbContext.TbVenDetalleVenta.Remove(e);
+                    }
+
+                    foreach (var detDto in ventaDto.DetalleVentaEditarDto)
+                    {
+                        var existente = tbVenta.TbVenDetalleVenta.FirstOrDefault(x => x.Id == detDto.Id);
+                        if (existente != null)
+                        {
+                            // actualizar
+                            existente.IdArticulo = detDto.ArticuloId;
+                            existente.Cantidad = detDto.Cantidad;
+                            existente.Descripcion = detDto.Descripcion;
+                            existente.ImpuestoValor = detDto.ImpuestoValor;
+                            existente.ValorCompra = detDto.ValorCompra;
+                            existente.ValorVenta = detDto.ValorVenta;   
+                            existente.ValotTotal = detDto.ValorTotal;
+                        }
+                        else
+                        {
+                            // nuevo
+                            tbVenta.TbVenDetalleVenta.Add(new TbVenDetalleVenta
+                            {
+                                IdArticulo = detDto.ArticuloId,
+                                Cantidad = detDto.Cantidad,
+                                Descripcion = detDto.Descripcion,
+                                ImpuestoValor = detDto.ImpuestoValor,
+                                ValorCompra = detDto.ValorCompra,
+                                ValorVenta = detDto.ValorVenta,
+                                ValotTotal = detDto.ValorTotal
+                            });
+                        }
+                    }
+                    this._mapper.MapeoVentaEdicionDtoAVentaTb(ventaDto, tbVenta);
+                    var resp = await this._ventaRepository.Editar(tbVenta);
+                    if (resp == false)
+                        throw new Exception("No se pudo editar la venta!!!");
+                    transaction.Commit();
+                    return resp;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
+
+        public async Task<List<EstadoVentaDTO>> ListarEstadosVentas()
+        {
+            List<TbVenEstadosVenta> tbVenEstadosVentas = await this._tiendaDbContext.TbVenEstadosVentas.Where(est => est.EstadoVisual == true).ToListAsync();
+            try
+            {
+                return this._mapper.MapeoListaEstadosVentaTbaAListaEstadosVentaDto(tbVenEstadosVentas);
+             }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<VentaMinDTO>> ListarVentas(DateOnly fechaInicial, DateOnly fechaFinal)
+        {
+            var inicio = fechaInicial.ToDateTime(TimeOnly.MinValue);
+            var fin = fechaFinal.ToDateTime(TimeOnly.MaxValue);
+            try
+            {
+                var tbVentas = await this._tiendaDbContext.TbVentas.Where(c => c.FechaVenta >= inicio && c.FechaVenta <= fin)
+                    .Include(u => u.IdUsuarioCreadorNavigation)
+                    .ThenInclude(per => per.IdPersonaNavigation)
+                    .Include(e => e.IdEstadoVentaNavigation)
+                    .Include(p => p.IdClienteNavigation)
+                    .ThenInclude(per => per.IdPersonaNavigation)
+                    .ToListAsync();
+
+                return this._mapper.MapeoListaVentasTbAListaVentasDto(tbVentas);
+            }
+            catch
+            {
+                throw;
+            }
+            throw new NotImplementedException();
+        }
+
+        public async Task<VentaDTO> ObtenerVenta(int idVenta)
+        {
+            try
+            {
+                TbVenta tbVenta= await this._tiendaDbContext.TbVentas
+                    .Include(u => u.IdUsuarioCreadorNavigation)
+                    .ThenInclude(p => p.IdPersonaNavigation)
+                    .ThenInclude(id => id.IdTipoIdentificacionNavigation)
+                    .Include(prov => prov.IdClienteNavigation)
+                    .ThenInclude(per => per.IdPersonaNavigation)
+                    .ThenInclude(dir => dir.TbGrlDireccione)
+                    .ThenInclude(ciu => ciu.IdCiudadNavigation)
+                    .Include(est => est.IdEstadoVentaNavigation)
+                    .Include(det => det.TbVenDetalleVenta)
+                    .ThenInclude(art => art.IdArticuloNavigation)
+                    .ThenInclude(imp => imp.IdImpuestoNavigation)
+                    .Include(det => det.TbVenDetalleVenta)
+                    .ThenInclude(art => art.IdArticuloNavigation)
+                    .ThenInclude(mar => mar.IdMarcaNavigation)
+                    .Include(det => det.TbVenDetalleVenta)
+                    .ThenInclude(art => art.IdArticuloNavigation)
+                    .ThenInclude(tp => tp.IdTipoArticuloNavigation)
+                    .FirstOrDefaultAsync(c => c.Id == idVenta);
+
+                if (tbVenta is null)
+                    throw new Exception("No se encontró la venta!!");
+
+                var ventaDto = this._mapper.MapeoVentaTbAVentaCompletaDto(tbVenta);
+                return ventaDto;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+
+       public async Task<bool> ActualizarConsumoInventario(TbVenta ventaTb)
+        {
+           var inv = new TbInvMovimiento
+            {
+                Fecha = DateTime.Now,
+                IdTransaccionInventario = (int)ventaTb.IdTransaccion, // Asumiendo que 2 es el ID para "Salida" en la tabla de trans
+                Referencia = ventaTb.Documento,
+                /*TbInvLotes = ventaTb.TbVenDetalleVenta.Select
+                (d => new TbInvConsumoLote
+                {
+                    FechaExpiracion = null,
+                    FechaIngreso = DateTime.Now,
+                    StockDisponible = d.Cantidad,
+                    CostoUnitario = d.ValorCompra,
+
+                }).ToList(),*/
+            };
+            //await this._inventarioRepository.Crear(inv);
+            return true;
+        }
+
+        public Task<bool> ReversarVenta(int id)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

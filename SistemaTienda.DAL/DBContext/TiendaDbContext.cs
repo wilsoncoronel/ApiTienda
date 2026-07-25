@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-
 using SistemaTienda.Model;
 namespace SistemaTienda.DAL.DBContext;
 
@@ -50,7 +49,7 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbGrlTipoIdentificacion> TbGrlTipoIdentificacions { get; set; }
 
-    public virtual DbSet<TbInvDetalleLote> TbInvDetalleLotes { get; set; }
+    public virtual DbSet<TbInvConsumoLote> TbInvConsumoLotes { get; set; }
 
     public virtual DbSet<TbInvLote> TbInvLotes { get; set; }
 
@@ -215,6 +214,11 @@ public partial class TiendaDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbCompras_TbComProveedores");
 
+            entity.HasOne(d => d.IdTransaccionNavigation).WithMany(p => p.TbCompras)
+                .HasForeignKey(d => d.IdTransaccion)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbCompras_TbInvTransacciones");
+
             entity.HasOne(d => d.IdUsuarioCreadorNavigation).WithMany(p => p.TbCompras)
                 .HasForeignKey(d => d.IdUsuarioCreador)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -314,32 +318,33 @@ public partial class TiendaDbContext : DbContext
             entity.Property(e => e.Nombre).HasMaxLength(100);
         });
 
-        modelBuilder.Entity<TbInvDetalleLote>(entity =>
+        modelBuilder.Entity<TbInvConsumoLote>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK_TbInvDetalleMovimientoLote");
+            entity.ToTable("TbInvConsumoLote");
 
-            entity.ToTable("TbInvDetalleLote");
+            entity.Property(e => e.PrecioUnitario).HasColumnType("numeric(18, 4)");
 
-            entity.Property(e => e.Cantidad).HasColumnType("numeric(18, 4)");
-            entity.Property(e => e.Codigo)
-                .HasMaxLength(10)
-                .IsFixedLength();
-
-            entity.HasOne(d => d.IdArticuloNavigation).WithMany(p => p.TbInvDetalleLotes)
-                .HasForeignKey(d => d.IdArticulo)
+            entity.HasOne(d => d.IdDetalleVentaNavigation).WithMany(p => p.TbInvConsumoLotes)
+                .HasForeignKey(d => d.IdDetalleVenta)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TbInvDetalleLote_TbComArticulos");
+                .HasConstraintName("FK_TbInvConsumoLote_TbVenDetalleVenta");
 
-            entity.HasOne(d => d.IdLoteNavigation).WithMany(p => p.TbInvDetalleLotes)
+            entity.HasOne(d => d.IdLoteNavigation).WithMany(p => p.TbInvConsumoLotes)
                 .HasForeignKey(d => d.IdLote)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TbInvDetalleLote_TbInvLote");
+                .HasConstraintName("FK_TbInvConsumoLote_TbInvLote1");
+
+            entity.HasOne(d => d.IdMovimientoNavigation).WithMany(p => p.TbInvConsumoLotes)
+                .HasForeignKey(d => d.IdMovimiento)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbInvConsumoLote_TbInvMovimiento");
         });
 
         modelBuilder.Entity<TbInvLote>(entity =>
         {
             entity.ToTable("TbInvLote");
 
+            entity.Property(e => e.Codigo).HasMaxLength(50);
             entity.Property(e => e.CostoUnitario).HasColumnType("decimal(18, 4)");
             entity.Property(e => e.FechaIngreso).HasColumnType("datetime");
             entity.Property(e => e.NumeroLote).HasMaxLength(50);
@@ -356,25 +361,13 @@ public partial class TiendaDbContext : DbContext
         {
             entity.ToTable("TbInvMovimiento");
 
-            entity.HasIndex(e => e.IdCompra, "IX_TbInvMovimiento_IdCompra");
-
-            entity.HasIndex(e => e.IdVenta, "IX_TbInvMovimiento_IdVenta");
-
             entity.Property(e => e.Fecha).HasColumnType("datetime");
             entity.Property(e => e.Referencia).HasMaxLength(50);
-
-            entity.HasOne(d => d.IdCompraNavigation).WithMany(p => p.TbInvMovimientos)
-                .HasForeignKey(d => d.IdCompra)
-                .HasConstraintName("FK_TbInvMovimiento_TbCompras");
 
             entity.HasOne(d => d.IdTransaccionInventarioNavigation).WithMany(p => p.TbInvMovimientos)
                 .HasForeignKey(d => d.IdTransaccionInventario)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbInvMovimiento_TbInvTransacciones");
-
-            entity.HasOne(d => d.IdVentaNavigation).WithMany(p => p.TbInvMovimientos)
-                .HasForeignKey(d => d.IdVenta)
-                .HasConstraintName("FK_TbInMovimiento_TbVentas");
         });
 
         modelBuilder.Entity<TbInvTransacciones>(entity =>
@@ -476,13 +469,11 @@ public partial class TiendaDbContext : DbContext
 
         modelBuilder.Entity<TbVenDetalleVenta>(entity =>
         {
-            entity.Property(e => e.Codigo).HasMaxLength(50);
             entity.Property(e => e.Descripcion).HasMaxLength(200);
             entity.Property(e => e.FechaVencimiento).HasColumnType("datetime");
             entity.Property(e => e.ImpuestoValor).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.ValorCompra).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.ValorVenta).HasColumnType("numeric(18, 4)");
-            entity.Property(e => e.ValotTotal).HasColumnType("numeric(18, 4)");
 
             entity.HasOne(d => d.IdArticuloNavigation).WithMany(p => p.TbVenDetalleVenta)
                 .HasForeignKey(d => d.IdArticulo)
@@ -519,6 +510,10 @@ public partial class TiendaDbContext : DbContext
                 .HasForeignKey(d => d.IdEstadoVenta)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbVentas_TbVenEstadosVentas");
+
+            entity.HasOne(d => d.IdTransaccionNavigation).WithMany(p => p.TbVenta)
+                .HasForeignKey(d => d.IdTransaccion)
+                .HasConstraintName("FK_TbVentas_TbInvTransacciones");
 
             entity.HasOne(d => d.IdUsuarioCreadorNavigation).WithMany(p => p.TbVenta)
                 .HasForeignKey(d => d.IdUsuarioCreador)

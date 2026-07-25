@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Data;
 using SistemaTienda.BLL.Servicios.Contrato;
 using SistemaTienda.DAL.DBContext;
 using SistemaTienda.DAL.Repositorios.Contrato;
@@ -13,16 +14,143 @@ namespace SistemaTienda.BLL.Servicios
         private readonly TiendaDbContext _tiendaDbContext;
         private readonly IGenericRepository<TbVenta> _ventaRepository;
         private readonly IGenericRepository<TbVenDetalleVenta> _detalleRepository;
-        private readonly IGenericRepository<TbInvInventarioLote> _inventarioRepository;
         private readonly IMapeos _mapper;
 
-        public VentaService(TiendaDbContext tiendaDbContext, IGenericRepository<TbVenta> ventaRepository, IGenericRepository<TbVenDetalleVenta> detalleRepository, IGenericRepository<TbInvInventarioLote> inventarioRepository, IMapeos mapper)
+        public VentaService(TiendaDbContext tiendaDbContext, IGenericRepository<TbVenta> ventaRepository, IGenericRepository<TbVenDetalleVenta> detalleRepository, IMapeos mapper)
         {
             this._tiendaDbContext = tiendaDbContext;
             this._ventaRepository = ventaRepository;
             this._detalleRepository = detalleRepository;
-            this._inventarioRepository = inventarioRepository;
             this._mapper = mapper;
+        }
+        public async Task<int> RegistrarVenta(VentaCreacionDTO ventaDto)
+        {
+            // Transacción con aislamiento para reducir condiciones de carrera
+            using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync(IsolationLevel.Serializable);
+            try
+            {
+                // Crear entidad Venta y sus detalles
+                var tbVenta = new TbVenta
+                {
+                    IdCliente = ventaDto.IdCliente,
+                    Documento = ventaDto.Documento,
+                    FechaVenta = ventaDto.FechaCompra,
+                    FechaCreacion = ventaDto.FechaCreacion,
+                    IdEstadoVenta = ventaDto.IdEstado,
+                    EstadoVisual = ventaDto.EstadoVisual,
+                    IdUsuarioCreador = ventaDto.UsuarioCreadorId,
+                    IdTransaccion = ventaDto.IdTransaccion
+                };
+
+                tbVenta.TbVenDetalleVenta = ventaDto.DetalleVentaCreacionDto
+                    .Select(d => new TbVenDetalleVenta
+                    {
+                        IdArticulo = d.IdArticulo,
+                        Cantidad = d.Cantidad,
+                        Descripcion = d.Descripcion ?? string.Empty,
+                        ValorCompra = d.ValorCompra,
+                        ValorVenta = d.ValorVenta,
+                        ImpuestoValor = d.ImpuestoValor,
+                    })
+                    .ToList();
+
+                // Guardar venta y detalles para obtener Ids de detalle
+                _tiendaDbContext.TbVentas.Add(tbVenta);
+                await _tiendaDbContext.SaveChangesAsync();
+
+                // Para cada detalle, consumir lotes en orden FEFO (FechaExpiracion asc, nulos al final)
+                var tbMovimiento = await CrearMovimientoInventarioAsync(ventaDto.IdTransaccion.Value, tbVenta.Documento);
+
+                foreach (var detalle in tbVenta.TbVenDetalleVenta)
+                {
+                    await ConsumirLotesParaDetalleAsync(tbMovimiento, detalle);
+                }
+
+                // Guardar consumos y actualizaciones de lotes
+                await _tiendaDbContext.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+                return tbVenta.Id;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        private async Task<TbInvMovimiento> CrearMovimientoInventarioAsync(int idTransaccionInventario, string referencia, int? idMovimientoOrigen = null)
+        {
+            var movimiento = new TbInvMovimiento
+            {
+                IdTransaccionInventario = idTransaccionInventario,
+                IdMovimientoOrigen = idMovimientoOrigen,
+                Referencia = referencia,
+                Fecha = DateTime.Now
+            };
+            _tiendaDbContext.TbInvMovimientos.Add(movimiento);
+            await _tiendaDbContext.SaveChangesAsync();
+            return movimiento;
+        }
+
+        private async Task ConsumirLotesParaDetalleAsync(TbInvMovimiento movimiento, TbVenDetalleVenta detalle)
+        {
+            decimal cantidadRestante = detalle.Cantidad;
+
+            var lotes = await _tiendaDbContext.TbInvLotes
+                .Where(l => l.IdArticulo == detalle.IdArticulo)
+                .OrderBy(l => l.FechaExpiracion.HasValue ? 0 : 1)
+                .ThenBy(l => l.FechaExpiracion)
+                .ThenBy(l => l.FechaIngreso)
+                .ToListAsync();
+
+            // Consumir stock positivo primero
+            foreach (var lote in lotes)
+            {
+                if (cantidadRestante <= 0) break;
+
+                decimal disponible = lote.StockDisponible;
+                if (disponible <= 0) continue;
+
+                decimal consumir = Math.Min(cantidadRestante, disponible);
+
+                var consumo = new TbInvConsumoLote
+                {
+                    IdMovimiento = movimiento.Id,
+                    IdDetalleVenta = detalle.Id,
+                    IdLote = lote.Id,
+                    Cantidad = (int)Math.Round(consumir),
+                    PrecioUnitario = lote.CostoUnitario,
+                    Estado = true
+                };
+                _tiendaDbContext.TbInvConsumoLotes.Add(consumo);
+
+                lote.StockDisponible = lote.StockDisponible - consumir;
+                _tiendaDbContext.TbInvLotes.Update(lote);
+
+                cantidadRestante -= consumir;
+            }
+
+            // Si queda cantidad y permitimos consumo parcial, aplicar restante en el primer lote FEFO (puede quedar negativo)
+            if (cantidadRestante > 0 && lotes.Any())
+            {
+                var primerLote = lotes.First();
+                var consumoRestante = cantidadRestante;
+
+                var consumo = new TbInvConsumoLote
+                {
+                    IdMovimiento = movimiento.Id,
+                    IdDetalleVenta = detalle.Id,
+                    IdLote = primerLote.Id,
+                    Cantidad = (int)Math.Round(consumoRestante),
+                    PrecioUnitario = primerLote.CostoUnitario,
+                    Estado = true
+                };
+                _tiendaDbContext.TbInvConsumoLotes.Add(consumo);
+
+                primerLote.StockDisponible = primerLote.StockDisponible - consumoRestante;
+                _tiendaDbContext.TbInvLotes.Update(primerLote);
+            }
         }
         public async Task<bool> EditarVenta(VentaEditarDTO ventaDto)
         {
@@ -53,8 +181,7 @@ namespace SistemaTienda.BLL.Servicios
                             existente.Descripcion = detDto.Descripcion;
                             existente.ImpuestoValor = detDto.ImpuestoValor;
                             existente.ValorCompra = detDto.ValorCompra;
-                            existente.ValorVenta = detDto.ValorVenta;   
-                            existente.ValotTotal = detDto.ValorTotal;
+                            existente.ValorVenta = detDto.ValorVenta;
                         }
                         else
                         {
@@ -67,7 +194,6 @@ namespace SistemaTienda.BLL.Servicios
                                 ImpuestoValor = detDto.ImpuestoValor,
                                 ValorCompra = detDto.ValorCompra,
                                 ValorVenta = detDto.ValorVenta,
-                                ValotTotal = detDto.ValorTotal
                             });
                         }
                     }
@@ -145,7 +271,6 @@ namespace SistemaTienda.BLL.Servicios
                     .ThenInclude(art => art.IdArticuloNavigation)
                     .ThenInclude(tp => tp.IdTipoArticuloNavigation)
                     .FirstOrDefaultAsync(c => c.Id == idVenta);
-
                 if (tbVenta is null)
                     throw new Exception("No se encontró la venta!!");
 
@@ -158,58 +283,97 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
-        public async Task<int> RegistrarVenta(VentaCreacionDTO ventaDto)
-        {
-            using (var transaction = _tiendaDbContext.Database.BeginTransaction())
-            {
-                try
-                {
-                    var tbVenta = this._mapper.MapeoVentaCreacionDtoAVentaTb(ventaDto);
-                    await this._ventaRepository.Crear(tbVenta);
-                    if (tbVenta.Id == 0)
-                        throw new Exception("No se pudo registrar la venta!!");
-                    tbVenta = await this._tiendaDbContext.TbVentas.Where(c => c.Id == tbVenta.Id)
-                        .Include(det => det.TbVenDetalleVenta)
-                        .ThenInclude(art => art.IdArticuloNavigation).FirstOrDefaultAsync();
 
-                    var respInv = await this.ActualizarInventario(tbVenta);
-                    if (respInv == false)
-                        throw new Exception("No se pudo actualizar el inventario");
-                    transaction.Commit();
-                    return tbVenta.Id;
-                }
-                catch
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
-        }
-
-       private async Task<bool> ActualizarInventario(TbVenta ventaTb)
+       public async Task<bool> ActualizarConsumoInventario(TbVenta ventaTb)
         {
            var inv = new TbInvMovimiento
             {
-                IdVenta = ventaTb.Id,
                 Fecha = DateTime.Now,
-                IdCompra = null,
-                IdTransaccionInventario = 2, // Asumiendo que 2 es el ID para "Salida" en la tabla de trans
+                IdTransaccionInventario = (int)ventaTb.IdTransaccion, // Asumiendo que 2 es el ID para "Salida" en la tabla de trans
                 Referencia = ventaTb.Documento,
-                TbInvLotes = ventaTb.TbVenDetalleVenta.Select
-                (d => new TbInvLote
+                /*TbInvLotes = ventaTb.TbVenDetalleVenta.Select
+                (d => new TbInvConsumoLote
                 {
                     FechaExpiracion = null,
                     FechaIngreso = DateTime.Now,
                     StockDisponible = d.Cantidad,
-                }).ToList(),
+                    CostoUnitario = d.ValorCompra,
+
+                }).ToList(),*/
             };
             //await this._inventarioRepository.Crear(inv);
             return true;
         }
 
-        public Task<bool> ReversarVenta(int id)
+        public async Task<bool> ReversarVenta(int id, string documento)
         {
-            throw new NotImplementedException();
+            // Cargar venta por id
+            var tbVenta = await _tiendaDbContext.TbVentas.FirstOrDefaultAsync(v => v.Id == id && v.Documento == documento);
+            if (tbVenta == null) throw new Exception("Venta no encontrada");
+            if (string.IsNullOrWhiteSpace(tbVenta.Documento)) throw new Exception("Documento de la venta inválido");
+
+            // Buscar transacción de reversión
+            var transRev = await _tiendaDbContext.TbInvTransacciones
+                .FirstOrDefaultAsync(t => t.Nombre.ToLower() == "reversion venta");
+            if (transRev == null) throw new Exception("No existe la transacción 'Reversion Venta'");
+
+            // Verificar si la venta ya está reversada
+            if (tbVenta.IdTransaccion.HasValue && tbVenta.IdTransaccion.Value == transRev.Id)
+                throw new Exception("Venta ya reversada");
+
+            // La venta debe tener una transacción origen conocida
+            if (!tbVenta.IdTransaccion.HasValue)
+                throw new Exception("La venta no tiene transacción de origen para reversión");
+
+            // Buscar movimiento origen por referencia exacta, evitando movimientos que ya sean reversiones
+            var movimientoOrigen = await _tiendaDbContext.TbInvMovimientos
+                .Include(m => m.TbInvConsumoLotes)
+                .FirstOrDefaultAsync(m => m.Referencia == tbVenta.Documento && m.IdTransaccionInventario != transRev.Id);
+
+            if (movimientoOrigen == null) throw new Exception("Movimiento origen no encontrado para la venta");
+
+            using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync(IsolationLevel.Serializable);
+            try
+            {
+                // Crear movimiento de reversión
+                var movimientoReversion = await CrearMovimientoInventarioAsync(transRev.Id, $"Reversión de venta {tbVenta.Documento} (mov {movimientoOrigen.Id})", movimientoOrigen.Id);
+
+                // Procesar consumos del movimiento origen
+                foreach (var consumo in movimientoOrigen.TbInvConsumoLotes)
+                {
+                    if (consumo.Estado == false)
+                    {
+                        await transaction.RollbackAsync();
+                        throw new Exception("La venta ya fue reversada (consumo ya marcado)");
+                    }
+
+                    var lote = await _tiendaDbContext.TbInvLotes.FirstOrDefaultAsync(l => l.Id == consumo.IdLote);
+                    if (lote == null)
+                    {
+                        await transaction.RollbackAsync();
+                        throw new Exception($"Lote no encontrado para IdLote {consumo.IdLote}");
+                    }
+
+                    lote.StockDisponible += consumo.Cantidad;
+                    _tiendaDbContext.TbInvLotes.Update(lote);
+
+                    consumo.Estado = false;
+                    _tiendaDbContext.TbInvConsumoLotes.Update(consumo);
+                }
+
+                // Actualizar la venta para indicar que ahora está asociada a la transacción de reversión
+                tbVenta.IdTransaccion = transRev.Id;
+                _tiendaDbContext.TbVentas.Update(tbVenta);
+
+                await _tiendaDbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
     }
 }

@@ -13,5 +13,9 @@ public partial class TbInvTransacciones
 
     public bool Estado { get; set; }
 
+    public virtual ICollection<TbCompra> TbCompras { get; set; } = new List<TbCompra>();
+
     public virtual ICollection<TbInvMovimiento> TbInvMovimientos { get; set; } = new List<TbInvMovimiento>();
+
+    public virtual ICollection<TbVenta> TbVenta { get; set; } = new List<TbVenta>();
 }

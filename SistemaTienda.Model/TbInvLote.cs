@@ -9,7 +9,11 @@ public partial class TbInvLote
 
     public int IdMovimiento { get; set; }
 
-    public string? NumeroLote { get; set; }
+    public int IdArticulo { get; set; }
+
+    public string NumeroLote { get; set; } = null!;
+
+    public string? Codigo { get; set; }
 
     public DateTime FechaIngreso { get; set; }
 
@@ -21,7 +25,9 @@ public partial class TbInvLote
 
     public DateOnly? FechaExpiracion { get; set; }
 
+    public bool Estado { get; set; }
+
     public virtual TbInvMovimiento IdMovimientoNavigation { get; set; } = null!;
 
-    public virtual ICollection<TbInvDetalleLote> TbInvDetalleLotes { get; set; } = new List<TbInvDetalleLote>();
+    public virtual ICollection<TbInvConsumoLote> TbInvConsumoLotes { get; set; } = new List<TbInvConsumoLote>();
 }

@@ -7,6 +7,8 @@ public partial class TbVenta
 {
     public int Id { get; set; }
 
+    public int? IdTransaccion { get; set; }
+
     public int IdCliente { get; set; }
 
     public int IdEstadoVenta { get; set; }
@@ -27,11 +29,11 @@ public partial class TbVenta
 
     public virtual TbVenEstadosVenta IdEstadoVentaNavigation { get; set; } = null!;
 
+    public virtual TbInvTransacciones? IdTransaccionNavigation { get; set; }
+
     public virtual TbSisUsuario IdUsuarioCreadorNavigation { get; set; } = null!;
 
     public virtual TbContAsientoContable? TbContAsientoContable { get; set; }
-
-    public virtual ICollection<TbInvMovimiento> TbInvMovimientos { get; set; } = new List<TbInvMovimiento>();
 
     public virtual ICollection<TbVenDetalleVenta> TbVenDetalleVenta { get; set; } = new List<TbVenDetalleVenta>();
 }

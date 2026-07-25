@@ -66,7 +66,7 @@ namespace SistemaTienda.Utility
         List<EstadoImpuestoDTO> MapeoListaEstadosImpuestosTbAListaEstadosImpuestosDto(List<TbComEstadosImpuesto> listaEstadImpDTO);
         EstadoImpuestoDTO MapeoEstadoImpuestoTbAEstadoImpuestoDto(TbComEstadosImpuesto estaTb);
         TbComImpuestosArticulo MapeoImpuestoDtoAImpuestoTb(ImpuestoArticuloCreacionDTO ImpuestoCreacionDTO);
-        InventarioDTO MapeoInventarioTbaAInventarioDto(TbInvInventarioLote inventarioTb);
+       // InventarioDTO MapeoInventarioTbaAInventarioDto(TbInvInventarioLote inventarioTb);
         List<CodigoArticuloDTO> MapeoListaArticulosDto(List<TbComCodigosArticulos> ListaCodigos);
         CodigoArticuloDTO MapeoCodigoTbACodigoDTO(TbComCodigosArticulos codigoTb);
     }
@@ -125,14 +125,14 @@ namespace SistemaTienda.Utility
             }*/
             
 
-            public InventarioDTO MapeoInventarioTbaAInventarioDto(TbInvInventarioLote inventarioTb)
+           /* public InventarioDTO MapeoInventarioTbaAInventarioDto(TbInvInventarioLote inventarioTb)
             {
                 return new InventarioDTO
                 {
                     Id = inventarioTb.Id,
                     
                 };
-            }
+            }*/
             public TbComImpuestosArticulo MapeoImpuestoDtoAImpuestoTb(ImpuestoArticuloCreacionDTO ImpuestoCreacionDTO)
             {
                 return new TbComImpuestosArticulo
@@ -662,12 +662,11 @@ namespace SistemaTienda.Utility
             {
                 return new TbVenDetalleVenta
                 {
-                    IdArticulo = detalleVentaCreacionDto.ArticuloId,
+                    IdArticulo = detalleVentaCreacionDto.IdArticulo,
                     Cantidad = detalleVentaCreacionDto.Cantidad,
                     Descripcion = detalleVentaCreacionDto.Descripcion,
                     ImpuestoValor = detalleVentaCreacionDto.ImpuestoValor,
                     ValorCompra = detalleVentaCreacionDto.ValorCompra,
-                    ValotTotal = detalleVentaCreacionDto.ValorTotal,
                     IdVenta = detalleVentaCreacionDto.IdVenta,
                 };
             }
@@ -726,6 +725,7 @@ namespace SistemaTienda.Utility
                 {
                     IdProveedor = compraCreacionDto.IdProveedor,
                     Documento = compraCreacionDto.Documento,
+                    IdTransaccion = compraCreacionDto.IdTransaccion,
                     IdEstadoCompra = compraCreacionDto.IdEstado,
                     EstadoVisual = true,
                     IdUsuarioCreador = compraCreacionDto.IdUsuarioCreador,
@@ -775,13 +775,12 @@ namespace SistemaTienda.Utility
             {
                 return new TbVenDetalleVenta
                 {
-                    IdArticulo = detalleVentaCreacionDto.ArticuloId,
+                    IdArticulo = detalleVentaCreacionDto.IdArticulo,
                     Cantidad = detalleVentaCreacionDto.Cantidad,
                     Descripcion = detalleVentaCreacionDto.Descripcion,
                     ImpuestoValor = detalleVentaCreacionDto.ImpuestoValor,
                     ValorCompra = detalleVentaCreacionDto.ValorCompra,
                     ValorVenta = detalleVentaCreacionDto.ValorVenta,
-                    ValotTotal = detalleVentaCreacionDto.ValorTotal,
                 };
             }
             public TbComProveedores MapeoProveedorDtoAProveedorTb(ProveedorCreacionDTO provedorCreacion)
@@ -1214,7 +1213,6 @@ namespace SistemaTienda.Utility
                         ImpuestoValor = d.ImpuestoValor,
                         ValorCompra = d.ValorCompra,
                         ValorVenta = d.ValorVenta,
-                        ValorTotal = d.ValotTotal
                     }).ToList(),
 
                 };

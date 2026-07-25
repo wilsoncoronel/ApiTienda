@@ -54,6 +54,24 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
+        [HttpPost]
+        [Route("ReversarVenta")]
+        public async Task<IActionResult> ReversarVenta(int id, string documento)
+        {
+
+            var resp = new Response<bool>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._ventasService.ReversarVenta(id, documento);
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
         [HttpGet]
         [Route("ListarEstadosVenta")]
         public async Task<IActionResult> ListarEstadosVenta()

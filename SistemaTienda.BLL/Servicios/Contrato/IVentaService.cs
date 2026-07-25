@@ -14,6 +14,6 @@ namespace SistemaTienda.BLL.Servicios.Contrato
         Task<bool> EditarVenta(VentaEditarDTO compraDto);
         Task<List<VentaMinDTO>> ListarVentas(DateOnly fechaInicial, DateOnly fechaFinal);
         Task<VentaDTO> ObtenerVenta(int idVenta);
-        Task<bool> ReversarVenta(int id);
+        Task<bool> ReversarVenta(int id, string documento);
     }
 }
