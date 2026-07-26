@@ -29,6 +29,64 @@ namespace SistemaTienda.BLL.Servicios
             _mapper = mapper;
         }
 
+
+        /// Actualiza/crea/elimina lotes del movimiento de inventario para que reflejen los detalles actuales de la compra.
+        /// El método actualiza los lotes existentes, crea nuevos lotes y elimina los que ya no correspondan.
+        /// También actualiza la referencia del movimiento al formato Documento+"ID"+IdCompra y la fecha.
+
+        private async Task ProcesarMovimientoInventario(TbInvMovimiento movimientoOrigen, TbCompra tbCompra)
+        {
+            // Crear diccionario de lotes existentes por llave (IdArticulo, NumeroLote, Codigo)
+            var lotesExistentes = movimientoOrigen.TbInvLotes.ToDictionary(l => (l.IdArticulo, l.NumeroLote ?? string.Empty, l.Codigo ?? string.Empty), l => l);
+
+            // Para cada detalle actual en la compra, actualizar o crear lote en el movimientoOrigen
+            foreach (var detalle in tbCompra.TbComDetallesCompras)
+            {
+                var key = (detalle.IdArticulo, detalle.NumeroLote ?? string.Empty, detalle.Codigo ?? string.Empty);
+                if (lotesExistentes.TryGetValue(key, out var lote))
+                {
+                    // Ajustar cantidad disponible al nuevo valor
+                    lote.StockDisponible = detalle.Cantidad;
+                    lote.CostoUnitario = detalle.ValorCompra;
+                    lote.FechaExpiracion = detalle.FechaExpiracion;
+                    _tiendaDbContext.TbInvLotes.Update(lote);
+                    lotesExistentes.Remove(key);
+                }
+                else
+                {
+                    // Crear nuevo lote asociado al movimiento
+                    var nuevoLote = new TbInvLote
+                    {
+                        NumeroLote = detalle.NumeroLote,
+                        CostoUnitario = detalle.ValorCompra,
+                        IdArticulo = detalle.IdArticulo,
+                        Codigo = detalle.Codigo,
+                        FechaIngreso = DateTime.Now,
+                        FechaExpiracion = detalle.FechaExpiracion,
+                        StockDisponible = detalle.Cantidad,
+                        StockMinimo = 6,
+                        Estado = true,
+                        // Relacionar con movimiento
+                    };
+                    movimientoOrigen.TbInvLotes.Add(nuevoLote);
+                    _tiendaDbContext.TbInvLotes.Add(nuevoLote);
+                }
+            }
+
+            // Los lotes que queden en lotesExistentes ya no existen en la compra: eliminarlos
+            foreach (var loteRemover in lotesExistentes.Values)
+            {
+                _tiendaDbContext.TbInvLotes.Remove(loteRemover);
+            }
+
+            // Actualizar referencia y fecha del movimiento de inventario (usar formato Documento+"ID"+IdCompra)
+            movimientoOrigen.Referencia = tbCompra.Documento + "ID" + tbCompra.Id;
+            movimientoOrigen.Fecha = DateTime.Now;
+            _tiendaDbContext.TbInvMovimientos.Update(movimientoOrigen);
+
+            await Task.CompletedTask;
+        }
+
         public async Task<List<EstadoCompraDTO>> ListarEstadosCompras()
         {
             List<TbComEstadosCompra> tbComEstadosCompras = await this._tiendaDbContext.TbComEstadosCompras.Where(est => est.EstadoVisual == true).ToListAsync();
@@ -131,10 +189,78 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
+        // Nueva sobrecarga: editar movimiento/lotes por idCompra y documento (referencia)
+        public async Task<bool> EditarCompra(int idCompra, string documento)
+        {
+            // Cargar la compra y sus detalles
+            var tbCompra = await this._tiendaDbContext.TbCompras.Where(c => c.Id == idCompra)
+                .Include(det => det.TbComDetallesCompras)
+                .FirstOrDefaultAsync();
+
+            if (tbCompra == null)
+                throw new Exception("No existe la compra indicada");
+
+            if (string.IsNullOrWhiteSpace(documento) || documento != tbCompra.Documento)
+                throw new Exception("Documento proporcionado no coincide con la compra");
+
+            // Buscar movimientos por referencia exacta (DocumentoIDIdCompra)
+            var referenciaBuscada = documento + "ID" + idCompra;
+            var movimientos = await _tiendaDbContext.TbInvMovimientos
+                .Where(m => m.Referencia == referenciaBuscada)
+                .Include(m => m.TbInvLotes)
+                    .ThenInclude(l => l.TbInvConsumoLotes)
+                .Include(m => m.TbInvConsumoLotes)
+                .ToListAsync();
+
+            TbInvMovimiento movimientoOrigen = null;
+            if (movimientos != null && movimientos.Any())
+            {
+                movimientoOrigen = movimientos.FirstOrDefault(m => m.IdTransaccionInventario == tbCompra.IdTransaccion) ?? movimientos.First();
+
+                // Obtener transacción de reversion venta si existe
+                var transReversionVenta = await _tiendaDbContext.TbInvTransacciones.FirstOrDefaultAsync(t => t.Nombre.ToLower() == "reversion venta");
+
+                // Si el movimiento origen tiene consumos, no se puede editar
+                bool movimientoTieneConsumos = (movimientoOrigen.TbInvConsumoLotes != null && movimientoOrigen.TbInvConsumoLotes.Any())
+                    || movimientoOrigen.TbInvLotes.Any(l => l.TbInvConsumoLotes != null && l.TbInvConsumoLotes.Any());
+                if (movimientoTieneConsumos)
+                    throw new Exception("No se puede editar la compra: existen consumos por venta relacionados.");
+
+                // Si existe algún movimiento que tenga IdMovimientoOrigen apuntando al movimientoOrigen -> no permitir edición
+                var movimientosRelacionados = await _tiendaDbContext.TbInvMovimientos.Where(m => m.IdMovimientoOrigen == movimientoOrigen.Id).ToListAsync();
+                if (movimientosRelacionados.Any())
+                    throw new Exception("No se puede editar la compra: existen movimientos relacionados al movimiento de inventario.");
+
+                // Si existe una venta reversada relacionada (movimiento con transacción 'Reversion Venta')
+                if (transReversionVenta != null && movimientos.Any(m => m.IdTransaccionInventario == transReversionVenta.Id))
+                    throw new Exception("No se puede editar la compra: existe una venta reversada relacionada.");
+            }
+
+            using (var transaction = _tiendaDbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (movimientoOrigen != null)
+                    {
+                        await ProcesarMovimientoInventario(movimientoOrigen, tbCompra);
+                    }
+
+                    await _tiendaDbContext.SaveChangesAsync();
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
+
         private async Task<bool> AlimentarInventario(TbCompra tbCompra) {
             var tbinvMovimiento = new TbInvMovimiento
             {
-                Referencia = tbCompra.Documento,
+                Referencia = tbCompra.Documento + "ID" + tbCompra.Id,
                 Fecha = DateTime.Now,
                 IdTransaccionInventario = tbCompra.IdTransaccion,
                 TbInvLotes = tbCompra.TbComDetallesCompras.Select(det => new TbInvLote
@@ -279,6 +405,43 @@ namespace SistemaTienda.BLL.Servicios
                     var tbCompra = await this._tiendaDbContext.TbCompras.Where(c => c.Id == compraEditarDTO.Id)
                      .Include(det => det.TbComDetallesCompras)
                      .FirstOrDefaultAsync();
+
+                    if (tbCompra == null)
+                        throw new Exception("No existe la compra indicada");
+
+                    // Cargar movimientos de inventario asociados a la referencia (documento)
+                    var movimientos = await _tiendaDbContext.TbInvMovimientos
+                        .Where(m => m.Referencia == tbCompra.Documento)
+                        .Include(m => m.TbInvLotes)
+                            .ThenInclude(l => l.TbInvConsumoLotes)
+                        .Include(m => m.TbInvConsumoLotes)
+                        .ToListAsync();
+
+                    TbInvMovimiento movimientoOrigen = null;
+                    if (movimientos != null && movimientos.Any())
+                    {
+                        movimientoOrigen = movimientos.FirstOrDefault(m => m.IdTransaccionInventario == tbCompra.IdTransaccion) ?? movimientos.First();
+
+                        // Obtener transacción de reversion venta si existe
+                        var transReversionVenta = await _tiendaDbContext.TbInvTransacciones.FirstOrDefaultAsync(t => t.Nombre.ToLower() == "reversion venta");
+
+                        // Si el movimiento origen tiene consumos, no se puede editar
+                        bool movimientoTieneConsumos = (movimientoOrigen.TbInvConsumoLotes != null && movimientoOrigen.TbInvConsumoLotes.Any())
+                            || movimientoOrigen.TbInvLotes.Any(l => l.TbInvConsumoLotes != null && l.TbInvConsumoLotes.Any());
+                        if (movimientoTieneConsumos)
+                            throw new Exception("No se puede editar la compra: existen consumos por venta relacionados.");
+
+                        // Si existe algún movimiento que tenga IdMovimientoOrigen apuntando al movimientoOrigen -> no permitir edición
+                        var movimientosRelacionados = await _tiendaDbContext.TbInvMovimientos.Where(m => m.IdMovimientoOrigen == movimientoOrigen.Id).ToListAsync();
+                        if (movimientosRelacionados.Any())
+                            throw new Exception("No se puede editar la compra: existen movimientos relacionados al movimiento de inventario.");
+
+                        // Si existe una venta reversada relacionada (movimiento con transacción 'Reversion Venta')
+                        if (transReversionVenta != null && movimientos.Any(m => m.IdTransaccionInventario == transReversionVenta.Id))
+                            throw new Exception("No se puede editar la compra: existe una venta reversada relacionada.");
+                    }
+
+                    // Aplicar eliminados/actualizaciones/creaciones en detalles de la compra
                     var idsDto = compraEditarDTO.DetalleComprasEditarDto.Select(x => x.Id).ToList();
                     var eliminados = tbCompra.TbComDetallesCompras.Where(x => !idsDto.Contains(x.Id)).ToList();
 
@@ -302,7 +465,7 @@ namespace SistemaTienda.BLL.Servicios
                             existente.ValorTotal = detDto.ValorTotal;
                             existente.FechaExpiracion = detDto.FechaCaducidad;
                             existente.NumeroLote = detDto.NumeroLote;
-
+                            existente.Codigo = detDto.Codigo;
                         }
                         else
                         {
@@ -322,12 +485,23 @@ namespace SistemaTienda.BLL.Servicios
                             });
                         }
                     }
+
+                    // Mapear campos de la compra y actualizar fecha de modificación
                     this._mapper.MapeoCompraEdicionDtoACompraTb(compraEditarDTO, tbCompra);
+                    tbCompra.FechaModificacion = DateTime.Now;
+
+                    // Si existe movimiento de inventario asociado, actualizar sus lotes para reflejar los cambios en la compra
+                    if (movimientoOrigen != null)
+                    {
+                        await ProcesarMovimientoInventario(movimientoOrigen, tbCompra);
+                    }
+
                     var resp = await this._compraRepository.Editar(tbCompra);
                     if (resp == false)
                         throw new Exception("No se pudo editar la compra!!");
 
-
+                    await _tiendaDbContext.SaveChangesAsync();
+                    transaction.Commit();
                     return true;
                 }
                 catch
@@ -335,7 +509,7 @@ namespace SistemaTienda.BLL.Servicios
                     transaction.Rollback();
                     throw;
                 }
-            }  
+            }
         }
 
         public async Task<bool> ActualizarInventario(TbCompra tbCompra)
