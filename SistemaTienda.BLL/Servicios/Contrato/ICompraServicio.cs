@@ -14,7 +14,6 @@ namespace SistemaTienda.BLL.Servicios.Contrato
         Task<int> RegistrarCompra(CompraCreacionDTO compraDto);
         Task<bool> EditarCompra(CompraEditarDTO compraDto);
         // Nueva sobrecarga: editar movimiento/lotes por idCompra y documento (referencia)
-        Task<bool> EditarCompra(int idCompra, string documento);
         Task<List<CompraMinDTO>> ListarCompras(DateOnly fechaInicial, DateOnly fechaFinal);
         Task<CompraDTO> ObtenerCompra(int idCompra);
         Task<bool> ReversarCompra(int id);

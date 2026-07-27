@@ -66,7 +66,7 @@ namespace SistemaTienda.BLL.Servicios
                     await ConsumirLotesParaDetalleAsync(tbMovimiento, detalle);
                 }
 
-                // Guardar consumos y actualizaciones de lotes
+                // Guardar consumos y actualizaciones de lotes 
                 await _tiendaDbContext.SaveChangesAsync();
 
                 await transaction.CommitAsync();

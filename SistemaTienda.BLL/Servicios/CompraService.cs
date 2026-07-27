@@ -190,73 +190,7 @@ namespace SistemaTienda.BLL.Servicios
         }
 
         // Nueva sobrecarga: editar movimiento/lotes por idCompra y documento (referencia)
-        public async Task<bool> EditarCompra(int idCompra, string documento)
-        {
-            // Cargar la compra y sus detalles
-            var tbCompra = await this._tiendaDbContext.TbCompras.Where(c => c.Id == idCompra)
-                .Include(det => det.TbComDetallesCompras)
-                .FirstOrDefaultAsync();
-
-            if (tbCompra == null)
-                throw new Exception("No existe la compra indicada");
-
-            if (string.IsNullOrWhiteSpace(documento) || documento != tbCompra.Documento)
-                throw new Exception("Documento proporcionado no coincide con la compra");
-
-            // Buscar movimientos por referencia exacta (DocumentoIDIdCompra)
-            var referenciaBuscada = documento + "ID" + idCompra;
-            var movimientos = await _tiendaDbContext.TbInvMovimientos
-                .Where(m => m.Referencia == referenciaBuscada)
-                .Include(m => m.TbInvLotes)
-                    .ThenInclude(l => l.TbInvConsumoLotes)
-                .Include(m => m.TbInvConsumoLotes)
-                .ToListAsync();
-
-            TbInvMovimiento movimientoOrigen = null;
-            if (movimientos != null && movimientos.Any())
-            {
-                movimientoOrigen = movimientos.FirstOrDefault(m => m.IdTransaccionInventario == tbCompra.IdTransaccion) ?? movimientos.First();
-
-                // Obtener transacción de reversion venta si existe
-                var transReversionVenta = await _tiendaDbContext.TbInvTransacciones.FirstOrDefaultAsync(t => t.Nombre.ToLower() == "reversion venta");
-
-                // Si el movimiento origen tiene consumos, no se puede editar
-                bool movimientoTieneConsumos = (movimientoOrigen.TbInvConsumoLotes != null && movimientoOrigen.TbInvConsumoLotes.Any())
-                    || movimientoOrigen.TbInvLotes.Any(l => l.TbInvConsumoLotes != null && l.TbInvConsumoLotes.Any());
-                if (movimientoTieneConsumos)
-                    throw new Exception("No se puede editar la compra: existen consumos por venta relacionados.");
-
-                // Si existe algún movimiento que tenga IdMovimientoOrigen apuntando al movimientoOrigen -> no permitir edición
-                var movimientosRelacionados = await _tiendaDbContext.TbInvMovimientos.Where(m => m.IdMovimientoOrigen == movimientoOrigen.Id).ToListAsync();
-                if (movimientosRelacionados.Any())
-                    throw new Exception("No se puede editar la compra: existen movimientos relacionados al movimiento de inventario.");
-
-                // Si existe una venta reversada relacionada (movimiento con transacción 'Reversion Venta')
-                if (transReversionVenta != null && movimientos.Any(m => m.IdTransaccionInventario == transReversionVenta.Id))
-                    throw new Exception("No se puede editar la compra: existe una venta reversada relacionada.");
-            }
-
-            using (var transaction = _tiendaDbContext.Database.BeginTransaction())
-            {
-                try
-                {
-                    if (movimientoOrigen != null)
-                    {
-                        await ProcesarMovimientoInventario(movimientoOrigen, tbCompra);
-                    }
-
-                    await _tiendaDbContext.SaveChangesAsync();
-                    transaction.Commit();
-                    return true;
-                }
-                catch
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
-        }
-
+        
         private async Task<bool> AlimentarInventario(TbCompra tbCompra) {
             var tbinvMovimiento = new TbInvMovimiento
             {
@@ -490,15 +424,17 @@ namespace SistemaTienda.BLL.Servicios
                     this._mapper.MapeoCompraEdicionDtoACompraTb(compraEditarDTO, tbCompra);
                     tbCompra.FechaModificacion = DateTime.Now;
 
+                    var resp = await this._compraRepository.Editar(tbCompra);
+                    if (resp == false)
+                        throw new Exception("No se pudo editar la compra!!");
+
                     // Si existe movimiento de inventario asociado, actualizar sus lotes para reflejar los cambios en la compra
                     if (movimientoOrigen != null)
                     {
                         await ProcesarMovimientoInventario(movimientoOrigen, tbCompra);
                     }
 
-                    var resp = await this._compraRepository.Editar(tbCompra);
-                    if (resp == false)
-                        throw new Exception("No se pudo editar la compra!!");
+                    
 
                     await _tiendaDbContext.SaveChangesAsync();
                     transaction.Commit();
@@ -510,14 +446,6 @@ namespace SistemaTienda.BLL.Servicios
                     throw;
                 }
             }
-        }
-
-        public async Task<bool> ActualizarInventario(TbCompra tbCompra)
-        {
-            //var tbInvMovimiento = await this._tiendaDbContext.TbInvMovimientos.Where(inv => inv.IdCompra == tbCompra.Id).Include(com => com.Id == tbCompra.Id).FirstOrDefaultAsync();
-
-
-            return true;
         }
     }
 }
