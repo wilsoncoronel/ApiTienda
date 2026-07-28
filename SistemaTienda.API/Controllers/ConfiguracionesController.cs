@@ -12,12 +12,32 @@ namespace SistemaTienda.API.Controllers
         private readonly IMarcaService _marcaService;
         private readonly ITipoArticuloService _tipoArticuloService;
         private readonly IImpuestoArticuloService _impuestoArticuloService;
-
-        public ConfiguracionesController(IMarcaService marcaService, ITipoArticuloService tipoArticuloService, IImpuestoArticuloService impuestoArticuloService)
+        private readonly ITransaccionInventarioService _transaccionInventarioService;
+        public ConfiguracionesController(IMarcaService marcaService, ITipoArticuloService tipoArticuloService, IImpuestoArticuloService impuestoArticuloService, ITransaccionInventarioService transaccionInventarioService)
         {
             this._marcaService = marcaService;
             _tipoArticuloService = tipoArticuloService;
             _impuestoArticuloService = impuestoArticuloService;
+            _transaccionInventarioService = transaccionInventarioService;
+        }
+
+        [HttpGet]
+        [Route("ListarTransacciones")]
+        public async Task<IActionResult> ListarTransacciones()
+        {
+            var resp = new Response<List<TransaccionInventarioDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._transaccionInventarioService.ListarTransaccionesInventario();
+                resp.msg = "Transacciones listadas exitosamente";
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
         }
 
         [HttpGet]

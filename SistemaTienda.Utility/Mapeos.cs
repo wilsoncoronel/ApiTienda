@@ -69,10 +69,20 @@ namespace SistemaTienda.Utility
        // InventarioDTO MapeoInventarioTbaAInventarioDto(TbInvInventarioLote inventarioTb);
         List<CodigoArticuloDTO> MapeoListaArticulosDto(List<TbComCodigosArticulos> ListaCodigos);
         CodigoArticuloDTO MapeoCodigoTbACodigoDTO(TbComCodigosArticulos codigoTb);
+        TransaccionInventarioDTO MapeoTransaccionInventarioTbADto(TbInvTransacciones transaccionTb);
     }
         public class Mapeos : IMapeos
         {
             private DateTime FechaGrl = DateTime.Now;
+
+            public TransaccionInventarioDTO MapeoTransaccionInventarioTbADto(TbInvTransacciones transaccionTb)
+            {
+                return new TransaccionInventarioDTO
+                {
+                    Id = transaccionTb.Id,
+                    Nombre = transaccionTb.Nombre
+                };
+            }
 
             public List<CodigoArticuloDTO> MapeoListaArticulosDto(List<TbComCodigosArticulos> ListaCodigos)
             {
