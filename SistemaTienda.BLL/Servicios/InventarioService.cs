@@ -14,17 +14,19 @@ namespace SistemaTienda.BLL.Servicios
         private readonly IGenericRepository<TbInvMovimiento> _inventarioRepo;
         private readonly IMapeos mapeo;
         private readonly IGenericRepository<TbInvTransacciones> _transacRepository;
+        private readonly IGenericRepository<TbInvLote> _loteRepository;
         private readonly ILogger<InventarioService> _logger;
         private readonly TiendaDbContext _tiendaDb;
 
         public InventarioService(IGenericRepository<TbInvTransacciones> transacRepository,
-            IGenericRepository<TbInvMovimiento> _inventarioRepo, IMapeos mapeo, ILogger<InventarioService> logger, TiendaDbContext tiendaDb)
+            IGenericRepository<TbInvMovimiento> _inventarioRepo, IMapeos mapeo, ILogger<InventarioService> logger, TiendaDbContext tiendaDb, IGenericRepository<TbInvLote> loteRepository)
         {
             this._transacRepository = transacRepository;
             this._inventarioRepo = _inventarioRepo;
             this.mapeo = mapeo;
             this._logger = logger;
             this._tiendaDb = tiendaDb;
+            this._loteRepository = loteRepository;
         }
         public async Task<List<ExistenciaDTO>> ExistenciasInventario()
         {
@@ -50,45 +52,43 @@ namespace SistemaTienda.BLL.Servicios
                 throw;
             }*/
         }
-        /*public async Task<List<InventarioDTO>> ListaInventario(DateOnly FechaInicio, DateOnly FechaFinal)
+        public async Task<List<MovimientoDTO>> ListaInventario(DateOnly FechaInicio, DateOnly FechaFinal)
         {
             var inicio = FechaInicio.ToDateTime(TimeOnly.MinValue);
             var fin = FechaFinal.ToDateTime(TimeOnly.MaxValue);
             
             try
             {
-                var tbInventario = await this._tiendaDb.TbInvInventarios.Where(c => c.FechaCreacion >= inicio && c.FechaCreacion <= fin)
-                    .Include(e => e.IdCompraNavigation)
-                    .Include(p => p.IdVentaNavigation)
+                var tbInventario = await this._tiendaDb.TbInvMovimientos.Where(c => c.Fecha >= inicio && c.Fecha <= fin)
+                    .Include(t => t.IdTransaccionInventarioNavigation)
                     .ToListAsync();
-                var listaIventarioDto = this.mapeo.MapeoListaInventarioTbaListaInventarioDto(tbInventario);
+                var listaIventarioDto = this.mapeo.MapeoListaMovimientosTbAListaMovimientosDto(tbInventario);
                 return listaIventarioDto;
             }
             catch
             {
                 throw;
             }
-        }*/
+        }
 
-        /*public async Task<List<DetalleInventarioDTO>> ListaDetallesInventario(int IdInventario)
+        public async Task<List<InventarioLoteDTO>> ListaDetallesMovimiento(int IdMovimiento)
         {
             try
             {
-                IQueryable<TbDetallesInventario> tbDetallesInventario = await this._detInventarioRepo.Consultar();
-                var listaResultado = new List<TbDetallesInventario>();
-                listaResultado = tbDetallesInventario.Where(det=> det.IdInventario == IdInventario)
+                IQueryable<TbInvLote> tbInvLote = await this._loteRepository.Consultar();
+                var listaResultado = new List<TbInvLote>();
+                listaResultado = tbInvLote.Where(det=> det.IdMovimiento == IdMovimiento)
                     .Include(art => art.IdArticuloNavigation)
                     .ThenInclude(imp => imp.IdImpuestoNavigation)
-                    .Include(tra => tra.IdTransaccionInventarioNavigation)
                     .ToList();
-                var listaIventarioDto = this.mapeo.MapeoListaDetallesInventarioTbAListaDetallesInventarioDto(listaResultado);
+                var listaIventarioDto = this.mapeo.MapeoListaDetallesLotesTbAListaDetallesLotesDto(listaResultado);
                 return listaIventarioDto;
             }
             catch
             {
                 throw;
             }
-        }*/
+        }
 
         public async Task<List<TransaccionInventarioDTO>> ListaTransaccionesInventario()
         {

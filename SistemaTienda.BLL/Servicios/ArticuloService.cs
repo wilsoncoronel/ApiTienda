@@ -69,7 +69,7 @@ namespace SistemaTienda.BLL.Servicios
             {
                 var articuloTb = await this._articuloRepository.ListarId(a => a.Id == articuloEditarDto.Id);
 
-                if (articuloTb.Id == null)
+                if (articuloTb == null)
                     throw new Exception("No se pudo editar el articulo , no existen en la bd!!");
                 articuloTb.IdImpuesto = articuloEditarDto.IdImpuesto;
                 articuloTb.IdMarca = articuloEditarDto.IdMarca;

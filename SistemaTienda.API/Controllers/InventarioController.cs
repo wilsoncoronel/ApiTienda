@@ -57,11 +57,11 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
-       /* [HttpGet]
+        [HttpGet]
         [Route("ListaInventario")]
         public async Task<IActionResult> ListaInventario(DateOnly fechaInicio, DateOnly fechaFin)
         {
-            var resp = new Response<List<InventarioDTO>>();
+            var resp = new Response<List<MovimientoDTO>>();
             try
             {
                 resp.status = true;
@@ -73,17 +73,17 @@ namespace SistemaTienda.API.Controllers
                 throw;
             }
             return Ok(resp);
-        }*/
+        }
 
-        /*[HttpGet]
+        [HttpGet]
         [Route("ListaDetallesInventario")]
-        public async Task<IActionResult> ListaDetallesInventario(int IdInventario)
+        public async Task<IActionResult> ListaDetallesInventario(int IdMovimiento)
         {
-            var resp = new Response<List<DetalleInventarioDTO>>();
+            var resp = new Response<List<InventarioLoteDTO>>();
             try
             {
                 resp.status = true;
-                resp.Value = await this._inventarioService.ListaDetallesInventario(IdInventario);
+                resp.Value = await this._inventarioService.ListaDetallesMovimiento(IdMovimiento);
             }
             catch
             {
@@ -91,7 +91,7 @@ namespace SistemaTienda.API.Controllers
                 throw;
             }
             return Ok(resp);
-        }*/
+        }
 
         /*[HttpGet]
         [Route("ResumenVentasDiario")]

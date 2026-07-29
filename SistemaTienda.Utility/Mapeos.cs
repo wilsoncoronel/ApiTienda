@@ -66,7 +66,9 @@ namespace SistemaTienda.Utility
         List<EstadoImpuestoDTO> MapeoListaEstadosImpuestosTbAListaEstadosImpuestosDto(List<TbComEstadosImpuesto> listaEstadImpDTO);
         EstadoImpuestoDTO MapeoEstadoImpuestoTbAEstadoImpuestoDto(TbComEstadosImpuesto estaTb);
         TbComImpuestosArticulo MapeoImpuestoDtoAImpuestoTb(ImpuestoArticuloCreacionDTO ImpuestoCreacionDTO);
-       // InventarioDTO MapeoInventarioTbaAInventarioDto(TbInvInventarioLote inventarioTb);
+        // InventarioDTO MapeoInventarioTbaAInventarioDto(TbInvInventarioLote inventarioTb);
+        List<InventarioLoteDTO> MapeoListaDetallesLotesTbAListaDetallesLotesDto(List<TbInvLote> ListaDetallesInv);
+        List<MovimientoDTO> MapeoListaMovimientosTbAListaMovimientosDto(List<TbInvMovimiento> listaMovimientosTb);
         List<CodigoArticuloDTO> MapeoListaArticulosDto(List<TbComCodigosArticulos> ListaCodigos);
         CodigoArticuloDTO MapeoCodigoTbACodigoDTO(TbComCodigosArticulos codigoTb);
         TransaccionInventarioDTO MapeoTransaccionInventarioTbADto(TbInvTransacciones transaccionTb);
@@ -83,7 +85,7 @@ namespace SistemaTienda.Utility
                     Nombre = transaccionTb.Nombre
                 };
             }
-
+            
             public List<CodigoArticuloDTO> MapeoListaArticulosDto(List<TbComCodigosArticulos> ListaCodigos)
             {
                 return ListaCodigos.Select(cod => this.MapeoCodigoTbACodigoDTO(cod)).ToList();
@@ -99,22 +101,17 @@ namespace SistemaTienda.Utility
                 };
             }
             
-            /*public List<DetalleInventarioDTO> MapeoListaDetallesInventarioTbAListaDetallesInventarioDto(List<TbDetallesInventario> ListaDetallesInv)
+            public List<InventarioLoteDTO> MapeoListaDetallesLotesTbAListaDetallesLotesDto(List<TbInvLote> ListaDetallesInv)
             {
-                return ListaDetallesInv.Select(det => this.MapeoDetalleInventarioTbADetalleInventarioDto(det)).ToList();
+                return ListaDetallesInv.Select(det => this.MapeoDetalleLotesTbADetalleLotesDto(det)).ToList();
             }
-            public DetalleInventarioDTO MapeoDetalleInventarioTbADetalleInventarioDto(TbDetallesInventario detalleInvTb)
+            public InventarioLoteDTO MapeoDetalleLotesTbADetalleLotesDto(TbInvLote detalleInvTb)
             {
-                return new DetalleInventarioDTO
+                return new InventarioLoteDTO
                 {
                     Id = detalleInvTb.Id,
                     IdArticulo = detalleInvTb.IdArticulo,
-                    Cantidad = detalleInvTb.Cantidad,
-                    TransaccionesDTO = new TransaccionInventarioDTO
-                    {
-                        Id = detalleInvTb.IdTransaccionInventario,
-                        Nombre = detalleInvTb.IdTransaccionInventarioNavigation.Nombre,
-                    },
+                    StockDisponible = detalleInvTb.StockDisponible,
                     ArticuloDTO = new ArticuloMinDTO
                     {
                         Id = detalleInvTb.IdArticuloNavigation.Id,
@@ -128,53 +125,66 @@ namespace SistemaTienda.Utility
                         },
                         Papeleria = detalleInvTb.IdArticuloNavigation.Papeleria,
                     },
-                    IdTransaccionInventario = detalleInvTb.IdTransaccionInventario,
-                    PrecioCompra = detalleInvTb.PrecioCompra,
-                    PrecioVenta = detalleInvTb.PrecioVenta,
+                    CostoUnitario = detalleInvTb.CostoUnitario,
+                    FechaExpiracion = detalleInvTb.FechaExpiracion,
+                    Codigo = detalleInvTb.Codigo,
+                    FechaIngreso = detalleInvTb.FechaIngreso,
+                    NumeroLote = detalleInvTb.NumeroLote,
+                    StockMinimo = detalleInvTb.StockMinimo,
+                    Estado = detalleInvTb.Estado
                 };
-            }*/
+            }
             
 
-           /* public InventarioDTO MapeoInventarioTbaAInventarioDto(TbInvInventarioLote inventarioTb)
-            {
-                return new InventarioDTO
-                {
-                    Id = inventarioTb.Id,
-                    
-                };
-            }*/
-            public TbComImpuestosArticulo MapeoImpuestoDtoAImpuestoTb(ImpuestoArticuloCreacionDTO ImpuestoCreacionDTO)
-            {
-                return new TbComImpuestosArticulo
-                {
-                    Nombre = ImpuestoCreacionDTO.Nombre,
-                    Descripcion = ImpuestoCreacionDTO.Descripcion,
-                    IdEstadoImpuesto = ImpuestoCreacionDTO.IdEstadoImpuesto,
-                    ValorImpuesto = ImpuestoCreacionDTO.ValorImpuesto,
-                };
-            }
+        public List<MovimientoDTO> MapeoListaMovimientosTbAListaMovimientosDto(List<TbInvMovimiento> movimientoTb)
+        {
+            return movimientoTb.Select(mov => this.MapeoMovimientoTbAMovimientoDto(mov)).ToList();
+        }
 
-            public List<EstadoImpuestoDTO> MapeoListaEstadosImpuestosTbAListaEstadosImpuestosDto(List<TbComEstadosImpuesto> listaEstadImpDTO)
+        public MovimientoDTO MapeoMovimientoTbAMovimientoDto(TbInvMovimiento movimientoTb)
+        {
+            return new MovimientoDTO
             {
-                return listaEstadImpDTO.Select(est => this.MapeoEstadoImpuestoTbAEstadoImpuestoDto(est)).ToList();
-            }
-
-            public EstadoImpuestoDTO MapeoEstadoImpuestoTbAEstadoImpuestoDto(TbComEstadosImpuesto estaTb)
-            {
-                return new EstadoImpuestoDTO
+                Id = movimientoTb.Id,
+                FechaIngreso = movimientoTb.Fecha,
+                TransaccionDTO = new TransaccionInventarioDTO
                 {
-                    Id = estaTb.Id,
-                    Nombre = estaTb.Nombre,
-                    EstadoVisual = estaTb.EstadoVisual,
-                };
-            }
+                    Id = movimientoTb.IdTransaccionInventarioNavigation.Id,
+                    Nombre = movimientoTb.IdTransaccionInventarioNavigation.Nombre,
+                },
+                Referencia = movimientoTb.Referencia,
+            };
+        }
+        public List<EstadoImpuestoDTO> MapeoListaEstadosImpuestosTbAListaEstadosImpuestosDto(List<TbComEstadosImpuesto> listaEstadImpDTO)
+        {
+            return listaEstadImpDTO.Select(est => this.MapeoEstadoImpuestoTbAEstadoImpuestoDto(est)).ToList();
+        }
+
+        public EstadoImpuestoDTO MapeoEstadoImpuestoTbAEstadoImpuestoDto(TbComEstadosImpuesto estaTb)
+        {
+            return new EstadoImpuestoDTO
+            {
+                Id = estaTb.Id,
+                Nombre = estaTb.Nombre,
+                EstadoVisual = estaTb.EstadoVisual,
+            };
+        }
 
             public List<ImpuestoArticuloDTO> MapeoListaImpuestosTbAListaImpuestosDto(List<TbComImpuestosArticulo> listaImpuestosTb)
             {
                 return listaImpuestosTb.Select(imp => this.MapeoImpuestoTbAImpuestoDto(imp)).ToList();
             }
-
-            public ImpuestoArticuloDTO MapeoImpuestoTbAImpuestoDto(TbComImpuestosArticulo impuestoTb)
+        public TbComImpuestosArticulo MapeoImpuestoDtoAImpuestoTb(ImpuestoArticuloCreacionDTO ImpuestoCreacionDTO)
+        {
+            return new TbComImpuestosArticulo
+            {
+                Nombre = ImpuestoCreacionDTO.Nombre,
+                ValorImpuesto = ImpuestoCreacionDTO.ValorImpuesto,
+                Descripcion = ImpuestoCreacionDTO.Descripcion,
+                IdEstadoImpuesto = ImpuestoCreacionDTO.IdEstadoImpuesto,
+            };
+        }
+        public ImpuestoArticuloDTO MapeoImpuestoTbAImpuestoDto(TbComImpuestosArticulo impuestoTb)
             {
                 return new ImpuestoArticuloDTO
                 {
@@ -239,8 +249,6 @@ namespace SistemaTienda.Utility
                     EstadoVisual = marcaTb.EstadoVisual,
                 };
             }
-
-
             public List<ClienteDTO> MapeoListaClientesTbaAListaClientesDto(List<TbComCliente> clientesListTb)
             {
                 return clientesListTb.Select(cli => this.MapeoClienteTbAClienteDto(cli)).ToList();
@@ -744,9 +752,6 @@ namespace SistemaTienda.Utility
                     FechaCompra = compraCreacionDto.FechaCompra,
                 };
             }
-
-
-
 
             public TbComDetallesCompra MapeoDetalleCompraCreacionDtoADetalleCompraDto(DetalleCompraCreacionDTO detalleComraCreacionDto)
             {

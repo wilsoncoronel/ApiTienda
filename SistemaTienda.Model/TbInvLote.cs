@@ -27,6 +27,8 @@ public partial class TbInvLote
 
     public bool Estado { get; set; }
 
+    public virtual TbComArticulo IdArticuloNavigation { get; set; } = null!;
+
     public virtual TbInvMovimiento IdMovimientoNavigation { get; set; } = null!;
 
     public virtual ICollection<TbInvConsumoLote> TbInvConsumoLotes { get; set; } = new List<TbInvConsumoLote>();

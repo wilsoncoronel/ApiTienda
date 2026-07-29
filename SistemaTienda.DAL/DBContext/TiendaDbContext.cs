@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+
 using SistemaTienda.Model;
 namespace SistemaTienda.DAL.DBContext;
 
@@ -71,13 +72,19 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbSisUsuario> TbSisUsuarios { get; set; }
 
+    public virtual DbSet<TbVenDetalleDevolucionVentum> TbVenDetalleDevolucionVenta { get; set; }
+
     public virtual DbSet<TbVenDetalleVenta> TbVenDetalleVenta { get; set; }
+
+    public virtual DbSet<TbVenDevolucionVenta> TbVenDevolucionVenta { get; set; }
 
     public virtual DbSet<TbVenEstadosVenta> TbVenEstadosVentas { get; set; }
 
     public virtual DbSet<TbVenta> TbVentas { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=DESKTOP-QO2URC6\\SQLEXPRESS;Database=TiendaDb;User Id=sa;Password=wili199308; TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -351,6 +358,11 @@ public partial class TiendaDbContext : DbContext
             entity.Property(e => e.StockDisponible).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.StockMinimo).HasColumnType("numeric(18, 4)");
 
+            entity.HasOne(d => d.IdArticuloNavigation).WithMany(p => p.TbInvLotes)
+                .HasForeignKey(d => d.IdArticulo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbInvLote_TbComArticulos");
+
             entity.HasOne(d => d.IdMovimientoNavigation).WithMany(p => p.TbInvLotes)
                 .HasForeignKey(d => d.IdMovimiento)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -467,6 +479,11 @@ public partial class TiendaDbContext : DbContext
                 .HasConstraintName("FK_TbSisUsuarios_TbSisRol");
         });
 
+        modelBuilder.Entity<TbVenDetalleDevolucionVentum>(entity =>
+        {
+            entity.Property(e => e.Id).ValueGeneratedNever();
+        });
+
         modelBuilder.Entity<TbVenDetalleVenta>(entity =>
         {
             entity.Property(e => e.Descripcion).HasMaxLength(200);
@@ -484,6 +501,15 @@ public partial class TiendaDbContext : DbContext
                 .HasForeignKey(d => d.IdVenta)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbVenDetalleVenta_TbVentas");
+        });
+
+        modelBuilder.Entity<TbVenDevolucionVenta>(entity =>
+        {
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Fecha).HasColumnType("datetime");
+            entity.Property(e => e.Motivo)
+                .HasMaxLength(200)
+                .IsFixedLength();
         });
 
         modelBuilder.Entity<TbVenEstadosVenta>(entity =>
