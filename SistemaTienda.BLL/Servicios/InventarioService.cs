@@ -15,11 +15,12 @@ namespace SistemaTienda.BLL.Servicios
         private readonly IMapeos mapeo;
         private readonly IGenericRepository<TbInvTransacciones> _transacRepository;
         private readonly IGenericRepository<TbInvLote> _loteRepository;
+        private readonly IGenericRepository<TbInvConsumoLote> _consumoRepository;
         private readonly ILogger<InventarioService> _logger;
         private readonly TiendaDbContext _tiendaDb;
 
         public InventarioService(IGenericRepository<TbInvTransacciones> transacRepository,
-            IGenericRepository<TbInvMovimiento> _inventarioRepo, IMapeos mapeo, ILogger<InventarioService> logger, TiendaDbContext tiendaDb, IGenericRepository<TbInvLote> loteRepository)
+            IGenericRepository<TbInvMovimiento> _inventarioRepo, IMapeos mapeo, ILogger<InventarioService> logger, TiendaDbContext tiendaDb, IGenericRepository<TbInvLote> loteRepository, IGenericRepository<TbInvConsumoLote> consumoRepository)
         {
             this._transacRepository = transacRepository;
             this._inventarioRepo = _inventarioRepo;
@@ -27,6 +28,7 @@ namespace SistemaTienda.BLL.Servicios
             this._logger = logger;
             this._tiendaDb = tiendaDb;
             this._loteRepository = loteRepository;
+            _consumoRepository = consumoRepository;
         }
         public async Task<List<ExistenciaDTO>> ExistenciasInventario()
         {
@@ -75,13 +77,37 @@ namespace SistemaTienda.BLL.Servicios
         {
             try
             {
-                IQueryable<TbInvLote> tbInvLote = await this._loteRepository.Consultar();
-                var listaResultado = new List<TbInvLote>();
-                listaResultado = tbInvLote.Where(det=> det.IdMovimiento == IdMovimiento)
-                    .Include(art => art.IdArticuloNavigation)
-                    .ThenInclude(imp => imp.IdImpuestoNavigation)
-                    .ToList();
-                var listaIventarioDto = this.mapeo.MapeoListaDetallesLotesTbAListaDetallesLotesDto(listaResultado);
+                var transaccion = await _tiendaDb.TbInvMovimientos.Where(m => m.Id == IdMovimiento).Include(tra => tra.IdTransaccionInventarioNavigation).FirstOrDefaultAsync();
+                
+                var nombreTransaccion = transaccion?.IdTransaccionInventarioNavigation?.Nombre;
+                var listaIventarioDto = new List<InventarioLoteDTO> { };
+                if (nombreTransaccion == "Compra")
+                {
+                    IQueryable<TbInvLote> tbInvLote = await this._loteRepository.Consultar();
+                    var listaResultado = new List<TbInvLote>();
+                    listaResultado = tbInvLote.Where(det => det.IdMovimiento == IdMovimiento)
+                        .Include(art => art.IdArticuloNavigation)
+                        .ThenInclude(imp => imp.IdImpuestoNavigation)
+                        .ToList();
+
+                    listaIventarioDto = this.mapeo.MapeoListaDetallesLotesTbAListaDetallesLotesDto(listaResultado);
+                }
+                else if(nombreTransaccion == "Venta")
+                {
+                    IQueryable<TbInvConsumoLote> tbInvConsumo = await this._consumoRepository.Consultar();
+                    var listaResultado = new List<TbInvConsumoLote>();
+                    listaResultado = tbInvConsumo.Where(con => con.IdMovimiento == IdMovimiento)
+                        .Include(det => det.IdDetalleVentaNavigation)
+                            .ThenInclude(art => art.IdArticuloNavigation)
+                            .ThenInclude(imp => imp.IdImpuestoNavigation)
+                        .Include(lot => lot.IdLoteNavigation)
+                        .ToList();
+                    listaIventarioDto = this.mapeo.MapeoListaDetallesConsumosTbAListaDetallesConsumosDto(listaResultado);
+                }
+                else
+                {
+                    listaIventarioDto = new List<InventarioLoteDTO> { };
+                }
                 return listaIventarioDto;
             }
             catch

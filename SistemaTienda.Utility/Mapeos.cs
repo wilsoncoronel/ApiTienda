@@ -72,69 +72,104 @@ namespace SistemaTienda.Utility
         List<CodigoArticuloDTO> MapeoListaArticulosDto(List<TbComCodigosArticulos> ListaCodigos);
         CodigoArticuloDTO MapeoCodigoTbACodigoDTO(TbComCodigosArticulos codigoTb);
         TransaccionInventarioDTO MapeoTransaccionInventarioTbADto(TbInvTransacciones transaccionTb);
+        List<InventarioLoteDTO> MapeoListaDetallesConsumosTbAListaDetallesConsumosDto(List<TbInvConsumoLote> ListaDetallesInv);
+        InventarioLoteDTO MapeoDetalleConsumosTbADetalleConsumosDto(TbInvConsumoLote detalleInvTb);
     }
-        public class Mapeos : IMapeos
-        {
-            private DateTime FechaGrl = DateTime.Now;
+    public class Mapeos : IMapeos
+    {
+        private DateTime FechaGrl = DateTime.Now;
 
-            public TransaccionInventarioDTO MapeoTransaccionInventarioTbADto(TbInvTransacciones transaccionTb)
+        public TransaccionInventarioDTO MapeoTransaccionInventarioTbADto(TbInvTransacciones transaccionTb)
+        {
+            return new TransaccionInventarioDTO
             {
-                return new TransaccionInventarioDTO
-                {
-                    Id = transaccionTb.Id,
-                    Nombre = transaccionTb.Nombre
-                };
-            }
+                Id = transaccionTb.Id,
+                Nombre = transaccionTb.Nombre
+            };
+        }
             
-            public List<CodigoArticuloDTO> MapeoListaArticulosDto(List<TbComCodigosArticulos> ListaCodigos)
-            {
-                return ListaCodigos.Select(cod => this.MapeoCodigoTbACodigoDTO(cod)).ToList();
-            }
+        public List<CodigoArticuloDTO> MapeoListaArticulosDto(List<TbComCodigosArticulos> ListaCodigos)
+        {
+            return ListaCodigos.Select(cod => this.MapeoCodigoTbACodigoDTO(cod)).ToList();
+        }
             
-            public CodigoArticuloDTO MapeoCodigoTbACodigoDTO(TbComCodigosArticulos codigoTb)
+        public CodigoArticuloDTO MapeoCodigoTbACodigoDTO(TbComCodigosArticulos codigoTb)
+        {
+            return new CodigoArticuloDTO
             {
-                return new CodigoArticuloDTO
-                {
-                    Id = codigoTb.Id,
-                    IdArticulo = codigoTb.IdArticulo,
-                    Codigo = codigoTb.Codigo
-                };
-            }
+                Id = codigoTb.Id,
+                IdArticulo = codigoTb.IdArticulo,
+                Codigo = codigoTb.Codigo
+            };
+        }
             
-            public List<InventarioLoteDTO> MapeoListaDetallesLotesTbAListaDetallesLotesDto(List<TbInvLote> ListaDetallesInv)
+        public List<InventarioLoteDTO> MapeoListaDetallesLotesTbAListaDetallesLotesDto(List<TbInvLote> ListaDetallesInv)
+        {
+            return ListaDetallesInv.Select(det => this.MapeoDetalleLotesTbADetalleLotesDto(det)).ToList();
+        }
+        public InventarioLoteDTO MapeoDetalleLotesTbADetalleLotesDto(TbInvLote detalleInvTb)
+        {
+            return new InventarioLoteDTO
             {
-                return ListaDetallesInv.Select(det => this.MapeoDetalleLotesTbADetalleLotesDto(det)).ToList();
-            }
-            public InventarioLoteDTO MapeoDetalleLotesTbADetalleLotesDto(TbInvLote detalleInvTb)
-            {
-                return new InventarioLoteDTO
+                Id = detalleInvTb.Id,
+                IdArticulo = detalleInvTb.IdArticulo,
+                StockDisponible = detalleInvTb.StockDisponible,
+                ArticuloDTO = new ArticuloMinDTO
                 {
-                    Id = detalleInvTb.Id,
-                    IdArticulo = detalleInvTb.IdArticulo,
-                    StockDisponible = detalleInvTb.StockDisponible,
-                    ArticuloDTO = new ArticuloMinDTO
+                    Id = detalleInvTb.IdArticuloNavigation.Id,
+                    Nombre = detalleInvTb.IdArticuloNavigation.Nombre,
+                    Descripcion = detalleInvTb.IdArticuloNavigation.Descripcion,
+                    ImpuestoArticuloDto = new ImpuestoArticuloDTO
                     {
-                        Id = detalleInvTb.IdArticuloNavigation.Id,
-                        Nombre = detalleInvTb.IdArticuloNavigation.Nombre,
-                        Descripcion = detalleInvTb.IdArticuloNavigation.Descripcion,
-                        ImpuestoArticuloDto = new ImpuestoArticuloDTO
-                        {
-                            Id = detalleInvTb.IdArticuloNavigation.IdImpuestoNavigation.Id,
-                            Nombre = detalleInvTb.IdArticuloNavigation.IdImpuestoNavigation.Nombre,
-                            ValorImpuesto = detalleInvTb.IdArticuloNavigation.IdImpuestoNavigation.ValorImpuesto,
-                        },
-                        Papeleria = detalleInvTb.IdArticuloNavigation.Papeleria,
+                        Id = detalleInvTb.IdArticuloNavigation.IdImpuestoNavigation.Id,
+                        Nombre = detalleInvTb.IdArticuloNavigation.IdImpuestoNavigation.Nombre,
+                        ValorImpuesto = detalleInvTb.IdArticuloNavigation.IdImpuestoNavigation.ValorImpuesto,
                     },
-                    CostoUnitario = detalleInvTb.CostoUnitario,
-                    FechaExpiracion = detalleInvTb.FechaExpiracion,
-                    Codigo = detalleInvTb.Codigo,
-                    FechaIngreso = detalleInvTb.FechaIngreso,
-                    NumeroLote = detalleInvTb.NumeroLote,
-                    StockMinimo = detalleInvTb.StockMinimo,
-                    Estado = detalleInvTb.Estado
-                };
-            }
-            
+                    Papeleria = detalleInvTb.IdArticuloNavigation.Papeleria,
+                },
+                CostoUnitario = detalleInvTb.CostoUnitario,
+                FechaExpiracion = detalleInvTb.FechaExpiracion,
+                Codigo = detalleInvTb.Codigo,
+                FechaIngreso = detalleInvTb.FechaIngreso ?? null,
+                NumeroLote = detalleInvTb.NumeroLote,
+                StockMinimo = detalleInvTb.StockMinimo,
+                Estado = detalleInvTb.Estado
+            };
+        }
+
+        public List<InventarioLoteDTO> MapeoListaDetallesConsumosTbAListaDetallesConsumosDto(List<TbInvConsumoLote> ListaDetallesInv)
+        {
+            return ListaDetallesInv.Select(det => this.MapeoDetalleConsumosTbADetalleConsumosDto(det)).ToList();
+        }
+        public InventarioLoteDTO MapeoDetalleConsumosTbADetalleConsumosDto(TbInvConsumoLote detalleInvTb)
+        {
+            return new InventarioLoteDTO
+            {
+                Id = detalleInvTb.Id,
+                IdArticulo = detalleInvTb.IdDetalleVentaNavigation.IdArticuloNavigation.Id,
+                StockDisponible = detalleInvTb.Cantidad,
+                ArticuloDTO = new ArticuloMinDTO
+                {
+                    Id = detalleInvTb.IdDetalleVentaNavigation.IdArticulo,
+                    Nombre = detalleInvTb.IdDetalleVentaNavigation.IdArticuloNavigation.Nombre,
+                    Descripcion = detalleInvTb.IdDetalleVentaNavigation.IdArticuloNavigation.Descripcion,
+                    ImpuestoArticuloDto = new ImpuestoArticuloDTO
+                    {
+                        Id = detalleInvTb.IdDetalleVentaNavigation.IdArticuloNavigation.IdImpuestoNavigation.Id,
+                        Nombre = detalleInvTb.IdDetalleVentaNavigation.IdArticuloNavigation.IdImpuestoNavigation.Nombre,
+                        ValorImpuesto = detalleInvTb.IdDetalleVentaNavigation.IdArticuloNavigation.IdImpuestoNavigation.ValorImpuesto,
+                    },
+                    Papeleria = detalleInvTb.IdDetalleVentaNavigation.IdArticuloNavigation.Papeleria,
+                },
+                CostoUnitario = detalleInvTb.PrecioUnitario,
+                FechaExpiracion = detalleInvTb.IdLoteNavigation.FechaExpiracion ?? null,
+                Codigo = detalleInvTb.IdLoteNavigation.Codigo ?? "SIN CODIGO",
+                FechaIngreso = detalleInvTb.IdLoteNavigation.FechaIngreso ?? null,
+                NumeroLote = detalleInvTb.IdLoteNavigation.NumeroLote ?? null,
+                StockMinimo = detalleInvTb.Cantidad,
+                Estado = (bool)detalleInvTb.Estado,
+            };
+        }
 
         public List<MovimientoDTO> MapeoListaMovimientosTbAListaMovimientosDto(List<TbInvMovimiento> movimientoTb)
         {

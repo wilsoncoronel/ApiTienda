@@ -15,7 +15,7 @@ public partial class TbInvLote
 
     public string? Codigo { get; set; }
 
-    public DateTime FechaIngreso { get; set; }
+    public DateTime? FechaIngreso { get; set; }
 
     public decimal StockDisponible { get; set; }
 

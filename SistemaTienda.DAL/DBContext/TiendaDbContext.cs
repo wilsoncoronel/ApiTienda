@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-
+﻿using Microsoft.EntityFrameworkCore;
 using SistemaTienda.Model;
 namespace SistemaTienda.DAL.DBContext;
 
@@ -72,7 +69,7 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbSisUsuario> TbSisUsuarios { get; set; }
 
-    public virtual DbSet<TbVenDetalleDevolucionVentum> TbVenDetalleDevolucionVenta { get; set; }
+    public virtual DbSet<TbVenDetalleDevolucionVenta> TbVenDetalleDevolucionVenta { get; set; }
 
     public virtual DbSet<TbVenDetalleVenta> TbVenDetalleVenta { get; set; }
 
@@ -82,9 +79,7 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbVenta> TbVentas { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-QO2URC6\\SQLEXPRESS;Database=TiendaDb;User Id=sa;Password=wili199308; TrustServerCertificate=True;");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -479,7 +474,7 @@ public partial class TiendaDbContext : DbContext
                 .HasConstraintName("FK_TbSisUsuarios_TbSisRol");
         });
 
-        modelBuilder.Entity<TbVenDetalleDevolucionVentum>(entity =>
+        modelBuilder.Entity<TbVenDetalleDevolucionVenta>(entity =>
         {
             entity.Property(e => e.Id).ValueGeneratedNever();
         });
