@@ -591,6 +591,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
+    "Method": "ResumenVentasDiario",
+    "RelativePath": "api/Inventario/ResumenVentasDiario",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fechaResumen",
+        "Type": "System.DateOnly",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaTienda.API.Controllers.LoginController",
     "Method": "ExtraerSesion",
     "RelativePath": "api/Login/ExtraerSesion",

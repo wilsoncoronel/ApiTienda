@@ -13,9 +13,8 @@ namespace SistemaTienda.BLL.Servicios.Contrato
         Task<List<TransaccionInventarioDTO>> ListaTransaccionesInventario();
         Task<List<MovimientoDTO>> ListaInventario(DateOnly FechaInicio, DateOnly FechaFinal);
         Task<List<InventarioLoteDTO>> ListaDetallesMovimiento(int idMovimiento);
+        Task<List<ResumenVentasDiarioDTO>> ResumenVentasDiario(DateOnly fechaResumen);
 
-       /* Task<List<ResumenVentasDiarioDTO>> ResumenVentasDiario(DateOnly fechaResumen);
-
-        Task<List<ResumenVentasDiarioDTO>> ResumenVentasMensual(DateOnly fechaResumen);*/
+        /*Task<List<ResumenVentasDiarioDTO>> ResumenVentasMensual(DateOnly fechaResumen);*/
     }
 }

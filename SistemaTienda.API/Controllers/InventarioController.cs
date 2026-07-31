@@ -93,7 +93,7 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
-        /*[HttpGet]
+        [HttpGet]
         [Route("ResumenVentasDiario")]
         public async Task<IActionResult> ResumenVentasDiario(DateOnly fechaResumen)
         {
@@ -109,7 +109,7 @@ namespace SistemaTienda.API.Controllers
                 throw;
             }
             return Ok(resp);
-        }*/
+        }
 
        /* [HttpGet]
         [Route("ResumenVentasMensual")]
