@@ -14,6 +14,7 @@ namespace SistemaTienda.DTO
         public DateTime FechaCompra { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public int IdEstado { get; set; }
+        public int IdTransaccion { get; set; }
         public bool EstadoVisual { get; set; }
         public int IdUsuarioCreador { get; set; }
         public List<DetalleCompraEditarDTO> DetalleComprasEditarDto { get; set; } = [];

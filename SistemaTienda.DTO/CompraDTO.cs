@@ -15,12 +15,12 @@ namespace SistemaTienda.DTO
         public DateTime FechaCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public int IdEstado { get; set; }
+        public int IdTransaccion { get; set; }
         public EstadoCompraDTO EstadoCompra { get; set; }
         public bool EstadoVisual { get; set; }
-        public List<DetalleCompraDTO> DetalleCompras { get; set; } = [];
+        public List<DetalleCompraDTO> DetalleCompras { get; set; } = new List<DetalleCompraDTO>();
         public int IdUsuarioCreador { get; set; }
         public UsuarioDTO UsuarioCreador { get; set; }
-
         public ProveedorDTO ProveedorDto { get; set; }
     }
 }

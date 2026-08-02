@@ -1102,7 +1102,6 @@ namespace SistemaTienda.Utility
 
             public CompraDTO MapeoCompraTbACompraCompletaDto(TbCompra compraTb)
             {
-
                 var compra = new CompraDTO
                 {
                     Id = compraTb.Id,

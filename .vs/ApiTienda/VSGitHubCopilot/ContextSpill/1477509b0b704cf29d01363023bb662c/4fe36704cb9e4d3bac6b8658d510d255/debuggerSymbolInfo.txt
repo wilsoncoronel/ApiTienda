@@ -1,18 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SistemaTienda.BLL.Servicios.Contrato;
-using SistemaTienda.DAL.DBContext;
-using SistemaTienda.DAL.Repositorios.Contrato;
-using SistemaTienda.DTO;
-using SistemaTienda.Model;
-using SistemaTienda.Utility;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SistemaTienda.BLL.Servicios
-{
+﻿SistemaTienda.BLL.Servicios.CompraService Class (C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\Servicios\CompraService.cs):
+```
     public class CompraService : ICompraServicio
     {
         private readonly TiendaDbContext _tiendaDbContext;
@@ -447,4 +434,4 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
     }
-}
+```
