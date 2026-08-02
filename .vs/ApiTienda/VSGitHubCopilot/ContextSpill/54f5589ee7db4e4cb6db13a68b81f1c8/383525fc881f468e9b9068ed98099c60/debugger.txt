@@ -1,0 +1,173 @@
+﻿## PROCESSES
+Currently debugging:
+- SistemaTienda.API.exe (PID: 18468)
+
+## EXCEPTION
+Exception Type: Microsoft.EntityFrameworkCore.DbUpdateException
+Exception Message: An error occurred while saving the entity changes. See the inner exception for details.
+Inner Exceptions:
+1- System.Data.SqlTypes.SqlTypeException:SqlDateTime overflow. Must be between 1/1/1753 12:00:00 AM and 12/31/9999 11:59:59 PM.
+Piece of code that has the exception:
+```csharp C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\Servicios\VentaService.cs
+26:         public async Task<int> RegistrarVenta(VentaCreacionDTO ventaDto)
+27:         {
+28:             // Transacción con aislamiento para reducir condiciones de carrera
+29:             using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync(IsolationLevel.Serializable);
+30:             try
+31:             {
+32:                 // Crear entidad Venta y sus detalles
+33:                 var tbVenta = new TbVenta
+34:                 {
+35:                     IdCliente = ventaDto.IdCliente,
+36:                     Documento = ventaDto.Documento,
+37:                     FechaVenta = ventaDto.FechaCompra,
+38:                     FechaCreacion = ventaDto.FechaCreacion,
+39:                     IdEstadoVenta = ventaDto.IdEstado,
+40:                     EstadoVisual = ventaDto.EstadoVisual,
+41:                     IdUsuarioCreador = ventaDto.UsuarioCreadorId,
+42:                     IdTransaccion = ventaDto.IdTransaccion
+43:                 };
+44: 
+45:                 tbVenta.TbVenDetalleVenta = ventaDto.DetalleVentaCreacionDto
+46:                     .Select(d => new TbVenDetalleVenta
+47:                     {
+48:                         IdArticulo = d.IdArticulo,
+49:                         Cantidad = d.Cantidad,
+50:                         Descripcion = d.Descripcion ?? string.Empty,
+51:                         ValorCompra = d.ValorCompra,
+52:                         ValorVenta = d.ValorVenta,
+53:                         ImpuestoValor = d.ImpuestoValor,
+54:                     })
+55:                     .ToList();
+56: 
+57:                 // Guardar venta y detalles para obtener Ids de detalle
+58:                 _tiendaDbContext.TbVentas.Add(tbVenta);
+59:                 await _tiendaDbContext.SaveChangesAsync();
+60: 
+61:                 // Para cada detalle, consumir lotes en orden FEFO (FechaExpiracion asc, nulos al final)
+62:                 var tbMovimiento = await CrearMovimientoInventarioAsync(ventaDto.IdTransaccion.Value, tbVenta.Documento);
+63: 
+64:                 foreach (var detalle in tbVenta.TbVenDetalleVenta)
+65:                 {
+66:                     await ConsumirLotesParaDetalleAsync(tbMovimiento, detalle);
+67:                 }
+68: 
+69:                 // Guardar consumos y actualizaciones de lotes 
+70:                 await _tiendaDbContext.SaveChangesAsync();
+71: 
+72:                 await transaction.CommitAsync();
+73:                 return tbVenta.Id;
+74:             }
+75:             catch
+76:             {
+77:                 await transaction.RollbackAsync();
+78:                 throw;
+79:             }
+80:         }
+```
+Exception is on line 75
+This exception was originally thrown at this call stack:
+[1] Microsoft.Data.SqlClient.SqlCommand.ExecuteDbDataReaderAsync.AnonymousMethod__211_0(System.Threading.Tasks.Task<Microsoft.Data.SqlClient.SqlDataReader>)
+[2] System.Threading.ExecutionContext.RunInternal(System.Threading.ExecutionContext, System.Threading.ContextCallback, object)
+[3] System.Threading.ExecutionContext.RunInternal(System.Threading.ExecutionContext, System.Threading.ContextCallback, object)
+[4] System.Threading.Tasks.Task.ExecuteWithThreadLocal(ref System.Threading.Tasks.Task, System.Threading.Thread)
+[5] Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(Microsoft.EntityFrameworkCore.Storage.RelationalCommandParameterObject, System.Threading.CancellationToken)
+[6] Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(Microsoft.EntityFrameworkCore.Storage.RelationalCommandParameterObject, System.Threading.CancellationToken)
+[7] Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(Microsoft.EntityFrameworkCore.Storage.IRelationalConnection, System.Threading.CancellationToken)
+The callstack context, if included, corresponds to the thread where this exception occurred. There is no need to identify this thread by other means.
+The top most frame in the callstack context should correspond to the place the exception message was thrown from. Code may or may not have been provided for it but can be requested.
+
+## CALLSTACK
+Thread ID: 17156
+[1] SistemaTienda.BLL.dll!SistemaTienda.BLL.Servicios.VentaService.RegistrarVenta
+This is the current user focused stack frame. The provided locals context corresponds to this stack frame, but you may evaluate expressions and retrieve code for any frame.
+Code for the stack frame:
+```csharp SistemaTienda.BLL\Servicios\VentaService.cs
+26:         public async Task<int> RegistrarVenta(VentaCreacionDTO ventaDto)
+27:         {
+28:             // Transacción con aislamiento para reducir condiciones de carrera
+29:             using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync(IsolationLevel.Serializable);
+30:             try
+31:             {
+32:                 // Crear entidad Venta y sus detalles
+33:                 var tbVenta = new TbVenta
+34:                 {
+35:                     IdCliente = ventaDto.IdCliente,
+36:                     Documento = ventaDto.Documento,
+37:                     FechaVenta = ventaDto.FechaCompra,
+38:                     FechaCreacion = ventaDto.FechaCreacion,
+39:                     IdEstadoVenta = ventaDto.IdEstado,
+40:                     EstadoVisual = ventaDto.EstadoVisual,
+41:                     IdUsuarioCreador = ventaDto.UsuarioCreadorId,
+42:                     IdTransaccion = ventaDto.IdTransaccion
+43:                 };
+44: 
+45:                 tbVenta.TbVenDetalleVenta = ventaDto.DetalleVentaCreacionDto
+46:                     .Select(d => new TbVenDetalleVenta
+47:                     {
+48:                         IdArticulo = d.IdArticulo,
+49:                         Cantidad = d.Cantidad,
+50:                         Descripcion = d.Descripcion ?? string.Empty,
+51:                         ValorCompra = d.ValorCompra,
+52:                         ValorVenta = d.ValorVenta,
+53:                         ImpuestoValor = d.ImpuestoValor,
+54:                     })
+55:                     .ToList();
+56: 
+57:                 // Guardar venta y detalles para obtener Ids de detalle
+58:                 _tiendaDbContext.TbVentas.Add(tbVenta);
+59:                 await _tiendaDbContext.SaveChangesAsync();
+60: 
+61:                 // Para cada detalle, consumir lotes en orden FEFO (FechaExpiracion asc, nulos al final)
+62:                 var tbMovimiento = await CrearMovimientoInventarioAsync(ventaDto.IdTransaccion.Value, tbVenta.Documento);
+63: 
+64:                 foreach (var detalle in tbVenta.TbVenDetalleVenta)
+65:                 {
+66:                     await ConsumirLotesParaDetalleAsync(tbMovimiento, detalle);
+67:                 }
+68: 
+69:                 // Guardar consumos y actualizaciones de lotes 
+70:                 await _tiendaDbContext.SaveChangesAsync();
+71: 
+72:                 await transaction.CommitAsync();
+73:                 return tbVenta.Id;
+74:             }
+75:             catch
+76:             {
+77:                 await transaction.RollbackAsync();
+78:                 throw;
+79:             }
+80:         }
+```
+Current statement: line 75
+[2] [Pila de llamadas asincrónicas]
+[3] [Asincrónico] SistemaTienda.API.dll!SistemaTienda.API.Controllers.VentasController.RegistrarVenta
+Code for the stack frame:
+```csharp SistemaTienda.API\Controllers\VentasController.cs
+20:         [HttpPost]
+21:         [Route("RegistrarVenta")]
+22:         public async Task<IActionResult> RegistrarVenta(VentaCreacionDTO ventaCreacionDto)
+23:         {
+24: 
+25:             var resp = new Response<int>();
+26:             try
+27:             {
+28:                 resp.status = true;
+29:                 resp.Value = await this._ventasService.RegistrarVenta(ventaCreacionDto);
+30:             }
+31:             catch
+32:             {
+33:                 resp.status = false;
+34:                 throw;
+35:             }
+36:             return Ok(resp);
+37:         }
+```
+Current statement: line 29
+[4] [Código externo]
+
+## LOCALS
+Variable: 'this' of type 'SistemaTienda.BLL.Servicios.VentaService' is a complex object with child properties and has value: {SistemaTienda.BLL.Servicios.VentaService}
+Variable: 'ventaDto' of type 'SistemaTienda.DTO.VentaCreacionDTO' is a complex object with child properties and has value: {SistemaTienda.DTO.VentaCreacionDTO}
+Variable: 'transaction' of type 'Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction {Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerTransaction}' is a complex object with child properties and has value: {Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerTransaction}
+

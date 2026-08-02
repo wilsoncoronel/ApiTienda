@@ -35,7 +35,7 @@ namespace SistemaTienda.BLL.Servicios
                     IdCliente = ventaDto.IdCliente,
                     Documento = ventaDto.Documento,
                     FechaVenta = ventaDto.FechaCompra,
-                    FechaCreacion = ventaDto.FechaCreacion,
+                    FechaCreacion = DateTime.Now,
                     IdEstadoVenta = ventaDto.IdEstado,
                     EstadoVisual = ventaDto.EstadoVisual,
                     IdUsuarioCreador = ventaDto.UsuarioCreadorId,
