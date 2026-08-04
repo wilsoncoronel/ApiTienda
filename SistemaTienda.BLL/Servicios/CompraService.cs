@@ -276,6 +276,7 @@ namespace SistemaTienda.BLL.Servicios
                     // Actualizar estado de la compra a 'Reversada' (acción relacionada con la compra)
                     tbCompra.IdEstadoCompra = estadoReversada.Id;
                     tbCompra.FechaModificacion = DateTime.Now;
+                    tbCompra.IdTransaccion = transReversion.Id;
                     _tiendaDbContext.TbCompras.Update(tbCompra);
 
                     await _tiendaDbContext.SaveChangesAsync();

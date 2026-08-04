@@ -1013,7 +1013,6 @@ namespace SistemaTienda.Utility
                 compraTb.FechaModificacion = FechaGrl;
                 compraTb.IdEstadoCompra = compraEditarDto.IdEstado;
                 compraTb.Documento = compraEditarDto.Documento;
-                compraTb.FechaModificacion = FechaGrl;
 
             }
 
@@ -1102,6 +1101,7 @@ namespace SistemaTienda.Utility
 
             public CompraDTO MapeoCompraTbACompraCompletaDto(TbCompra compraTb)
             {
+                DateOnly fechaSolo = DateOnly.FromDateTime(DateTime.Now);
                 var compra = new CompraDTO
                 {
                     Id = compraTb.Id,
@@ -1152,7 +1152,6 @@ namespace SistemaTienda.Utility
                             UnidadValor = d.IdArticuloNavigation.UnidadValor,
                             FechaActualizacion = d.IdArticuloNavigation.FechaActualizacion?? d.IdArticuloNavigation.FechaCreacion,
                             FechaCreacion = d.IdArticuloNavigation.FechaCreacion,
-                            FechaCaducidad = d.IdArticuloNavigation.FechaCaducidad?? d.IdArticuloNavigation.FechaCreacion,
                             ImpuestoArticuloDto = new ImpuestoArticuloDTO
                             {
                                 Id = d.IdArticuloNavigation.IdImpuestoNavigation.Id,
@@ -1172,6 +1171,9 @@ namespace SistemaTienda.Utility
                                 Descripcion = d.IdArticuloNavigation.IdMarcaNavigation.Descripcion,
                             }
                         },
+                        Codigo = d.Codigo,
+                        Lote = d.NumeroLote,
+                        FechaCaducidad = d.FechaExpiracion?.ToDateTime(TimeOnly.MinValue),
                         Cantidad = d.Cantidad,
                         Descripcion = d.Descripcion,
                         ImpuestoValor = d.ImpuestoValor,
