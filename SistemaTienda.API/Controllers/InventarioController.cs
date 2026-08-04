@@ -21,14 +21,13 @@ namespace SistemaTienda.API.Controllers
 
         [HttpGet]
         [Route("ExistenciasInventario")]
-        public async Task<IActionResult> ExistenciasInventario()
+        public async Task<IActionResult> ExistenciasInventario(bool incluirCeros = false)
         {
-            var resp = new Response<List<ExistenciaDTO>>();
+            var resp = new Response<List<InventarioLoteDTO>>();
             try
             {
                 resp.status = true;
-                
-                resp.Value = await this._inventarioService.ExistenciasInventario();
+                resp.Value = await this._inventarioService.ExistenciasInventario(incluirCeros);
             }
             catch(Exception ex)
             {

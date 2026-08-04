@@ -9,7 +9,7 @@ namespace SistemaTienda.BLL.Servicios.Contrato
 {
     public interface IInventarioService
     {
-        Task<List<ExistenciaDTO>> ExistenciasInventario();
+        Task<List<InventarioLoteDTO>> ExistenciasInventario(bool incluirCeros = false);
         Task<List<TransaccionInventarioDTO>> ListaTransaccionesInventario();
         Task<List<MovimientoDTO>> ListaInventario(DateOnly FechaInicio, DateOnly FechaFinal);
         Task<List<InventarioLoteDTO>> ListaDetallesMovimiento(int idMovimiento);

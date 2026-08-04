@@ -242,7 +242,7 @@ namespace SistemaTienda.BLL.Servicios
 
             // Buscar movimientos asociados por referencia (documento)
             var movimientos = await _tiendaDbContext.TbInvMovimientos
-                .Where(m => m.Referencia == tbCompra.Documento)
+                .Where(m => m.Referencia == $"{tbCompra.Documento}ID{tbCompra.Id}")
                 .Include(m => m.TbInvLotes)
                     .ThenInclude(l => l.TbInvConsumoLotes)
                 .Include(m => m.TbInvConsumoLotes)
@@ -303,7 +303,7 @@ namespace SistemaTienda.BLL.Servicios
             {
                 IdMovimientoOrigen = movimientoOrigen.Id,
                 IdTransaccionInventario = transReversar.Id,
-                Referencia = $"Reversión compra {referenciaCompra} (mov {movimientoOrigen.Id})",
+                Referencia = $"{referenciaCompra}ID{movimientoOrigen.Id}",
                 Fecha = DateTime.Now
             };
             _tiendaDbContext.TbInvMovimientos.Add(movimientoReversion);
@@ -338,11 +338,15 @@ namespace SistemaTienda.BLL.Servicios
                 {
                     var tbCompra = await this._tiendaDbContext.TbCompras.Where(c => c.Id == compraEditarDTO.Id)
                      .Include(det => det.TbComDetallesCompras)
+                     .Include(est => est.IdEstadoCompraNavigation)
                      .FirstOrDefaultAsync();
-
+                    
                     if (tbCompra == null)
                         throw new Exception("No existe la compra indicada");
-
+                    if(tbCompra.IdEstadoCompraNavigation.Nombre.ToUpper() == "REVERSADA")
+                    {
+                        throw new Exception("No se puede editar una compra ya reversada!!");
+                    }
                     // Cargar movimientos de inventario asociados a la referencia (documento)
                     var movimientos = await _tiendaDbContext.TbInvMovimientos
                         .Where(m => m.Referencia == tbCompra.Documento)

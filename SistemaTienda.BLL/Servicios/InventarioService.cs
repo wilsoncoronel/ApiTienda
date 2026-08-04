@@ -30,29 +30,34 @@ namespace SistemaTienda.BLL.Servicios
             this._loteRepository = loteRepository;
             _consumoRepository = consumoRepository;
         }
-        public async Task<List<ExistenciaDTO>> ExistenciasInventario()
+        public async Task<List<InventarioLoteDTO>> ExistenciasInventario(bool incluirCeros = false)
         {
-            /*try
+            try
             {
-                var listainventario = await this._tiendaDb.TbDetallesInventarios.Where(tra => tra.IdTransaccionInventario != 3).Include(art => art.IdArticuloNavigation)
-                    .Include(tra => tra.IdTransaccionInventarioNavigation).ToListAsync();
+                var listaMovimientos = await this._tiendaDb.TbInvMovimientos
+                    .Where(tra => tra.IdTransaccionInventario == 1)
+                    .Include(m => m.TbInvLotes)
+                        .ThenInclude(l => l.IdArticuloNavigation)
+                            .ThenInclude(a => a.IdImpuestoNavigation) // Asegurar carga del impuesto para evitar NullReference
+                    .ToListAsync();
 
-                var resultado = listainventario.GroupBy(det => new
-                {
-                    det.IdArticuloNavigation.Nombre
-                }).Select(g => new ExistenciaDTO
-                {
-                    IdArticulo = g.First().IdArticulo,
-                    NombreArticulo = g.Key.Nombre,
-                    TotalCantidad = g.Sum(d => d.Cantidad * d.IdTransaccionInventarioNavigation.Signo),
+                // Aplanar los lotes de todos los movimientos
+                var lotes = listaMovimientos.SelectMany(m => m.TbInvLotes).ToList();
 
-                }).ToList();*/
-                return [];
-            /*}
+                // Mapear a DTO usando el mapeador existente
+                var listaDto = this.mapeo.MapeoListaDetallesLotesTbAListaDetallesLotesDto(lotes);
+
+                // Filtrar según stock (por defecto ocultar ceros)
+                var resultado = incluirCeros
+                    ? listaDto.Where(l => l.StockDisponible >= 0).ToList()
+                    : listaDto.Where(l => l.StockDisponible > 0).ToList();
+
+                return resultado;
+            }
             catch
             {
                 throw;
-            }*/
+            }
         }
         public async Task<List<MovimientoDTO>> ListaInventario(DateOnly FechaInicio, DateOnly FechaFinal)
         {
