@@ -811,7 +811,6 @@ namespace SistemaTienda.Utility
                 return new TbVenta
                 {
                     IdCliente = ventaCreacionDto.IdCliente,
-                    Documento = ventaCreacionDto.Documento,
                     IdEstadoVenta = ventaCreacionDto.IdEstado,
                     EstadoVisual = true,
                     IdUsuarioCreador = ventaCreacionDto.UsuarioCreadorId,

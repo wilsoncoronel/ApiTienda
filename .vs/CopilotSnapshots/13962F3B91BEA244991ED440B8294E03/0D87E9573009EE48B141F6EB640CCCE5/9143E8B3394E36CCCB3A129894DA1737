@@ -31,26 +31,10 @@ namespace SistemaTienda.BLL.Servicios
 
 
 
-        private async Task ProcesarMovimientoInventario(TbInvMovimiento movimientoOrigen, TbCompra tbCompra, List<TbComDetallesCompra> detallesEliminados)
+        private async Task ProcesarMovimientoInventario(TbInvMovimiento movimientoOrigen, TbCompra tbCompra)
         {
             // Crear diccionario de lotes existentes por llave (IdArticulo, NumeroLote, Codigo)
             var lotesExistentes = movimientoOrigen.TbInvLotes.ToDictionary(l => (l.IdArticulo, l.NumeroLote ?? string.Empty, l.Codigo ?? string.Empty), l => l);
-
-            // Procesar eliminados: eliminar físicamente los lotes correspondientes a los detalles eliminados
-            if (detallesEliminados != null && detallesEliminados.Any())
-            {
-                foreach (var detEl in detallesEliminados)
-                {
-                    var keyEl = (detEl.IdArticulo, detEl.NumeroLote ?? string.Empty, detEl.Codigo ?? string.Empty);
-                    if (lotesExistentes.TryGetValue(keyEl, out var loteRemover))
-                    {
-                        // Eliminar lote físicamente
-                        movimientoOrigen.TbInvLotes.Remove(loteRemover);
-                        _tiendaDbContext.TbInvLotes.Remove(loteRemover);
-                        lotesExistentes.Remove(keyEl);
-                    }
-                }
-            }
 
             // Para cada detalle actual en la compra, actualizar o crear lote en el movimientoOrigen
             foreach (var detalle in tbCompra.TbComDetallesCompras)
@@ -365,7 +349,7 @@ namespace SistemaTienda.BLL.Servicios
                     }
                     // Cargar movimientos de inventario asociados a la referencia (documento)
                     var movimientos = await _tiendaDbContext.TbInvMovimientos
-                        .Where(m => m.Referencia == (tbCompra.Documento + "ID" + tbCompra.Id))
+                        .Where(m => m.Referencia == tbCompra.Documento)
                         .Include(m => m.TbInvLotes)
                             .ThenInclude(l => l.TbInvConsumoLotes)
                         .Include(m => m.TbInvConsumoLotes)
@@ -451,7 +435,7 @@ namespace SistemaTienda.BLL.Servicios
                     // Si existe movimiento de inventario asociado, actualizar sus lotes para reflejar los cambios en la compra
                     if (movimientoOrigen != null)
                     {
-                        await ProcesarMovimientoInventario(movimientoOrigen, tbCompra, eliminados);
+                        await ProcesarMovimientoInventario(movimientoOrigen, tbCompra);
                     }
 
                     

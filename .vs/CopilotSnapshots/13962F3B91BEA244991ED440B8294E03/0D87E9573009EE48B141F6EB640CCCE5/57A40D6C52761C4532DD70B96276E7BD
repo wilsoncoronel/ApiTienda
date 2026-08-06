@@ -365,7 +365,7 @@ namespace SistemaTienda.BLL.Servicios
                     }
                     // Cargar movimientos de inventario asociados a la referencia (documento)
                     var movimientos = await _tiendaDbContext.TbInvMovimientos
-                        .Where(m => m.Referencia == (tbCompra.Documento + "ID" + tbCompra.Id))
+                        .Where(m => m.Referencia == tbCompra.Documento)
                         .Include(m => m.TbInvLotes)
                             .ThenInclude(l => l.TbInvConsumoLotes)
                         .Include(m => m.TbInvConsumoLotes)
@@ -451,7 +451,7 @@ namespace SistemaTienda.BLL.Servicios
                     // Si existe movimiento de inventario asociado, actualizar sus lotes para reflejar los cambios en la compra
                     if (movimientoOrigen != null)
                     {
-                        await ProcesarMovimientoInventario(movimientoOrigen, tbCompra, eliminados);
+                        await ProcesarMovimientoInventario(movimientoOrigen, tbCompra);
                     }
 
                     

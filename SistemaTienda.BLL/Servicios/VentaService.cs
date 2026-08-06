@@ -29,11 +29,12 @@ namespace SistemaTienda.BLL.Servicios
             using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync(IsolationLevel.Serializable);
             try
             {
+                var codFech = DateTime.Now.ToString("ddMMyyy");
+
                 // Crear entidad Venta y sus detalles
                 var tbVenta = new TbVenta
                 {
                     IdCliente = ventaDto.IdCliente,
-                    Documento = ventaDto.Documento,
                     FechaVenta = ventaDto.FechaCompra,
                     FechaCreacion = DateTime.Now,
                     IdEstadoVenta = ventaDto.IdEstado,
@@ -57,7 +58,11 @@ namespace SistemaTienda.BLL.Servicios
                 // Guardar venta y detalles para obtener Ids de detalle
                 _tiendaDbContext.TbVentas.Add(tbVenta);
                 await _tiendaDbContext.SaveChangesAsync();
-
+                if(tbVenta.Id != 0)
+                {
+                    tbVenta.Documento = $"{codFech}{tbVenta.Id}1724525801";
+                    await _ventaRepository.Editar(tbVenta);
+                }
                 // Para cada detalle, consumir lotes en orden FEFO (FechaExpiracion asc, nulos al final)
                 var tbMovimiento = await CrearMovimientoInventarioAsync(ventaDto.IdTransaccion.Value, tbVenta.Documento);
 

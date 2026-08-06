@@ -49,8 +49,8 @@ namespace SistemaTienda.BLL.Servicios
 
                 // Filtrar según stock (por defecto ocultar ceros)
                 var resultado = incluirCeros
-                    ? listaDto.Where(l => l.StockDisponible >= 0).ToList()
-                    : listaDto.Where(l => l.StockDisponible > 0).ToList();
+                    ? listaDto.Where(l => l.StockDisponible > 0).ToList()
+                    : listaDto.Where(l => l.StockDisponible <= 0).ToList();
 
                 return resultado;
             }
@@ -86,7 +86,7 @@ namespace SistemaTienda.BLL.Servicios
                 
                 var nombreTransaccion = transaccion?.IdTransaccionInventarioNavigation?.Nombre;
                 var listaIventarioDto = new List<InventarioLoteDTO> { };
-                if (nombreTransaccion == "Compra")
+                if (nombreTransaccion == "Compra" || nombreTransaccion == "Reversion Compra")
                 {
                     IQueryable<TbInvLote> tbInvLote = await this._loteRepository.Consultar();
                     var listaResultado = new List<TbInvLote>();
@@ -97,7 +97,7 @@ namespace SistemaTienda.BLL.Servicios
 
                     listaIventarioDto = this.mapeo.MapeoListaDetallesLotesTbAListaDetallesLotesDto(listaResultado);
                 }
-                else if(nombreTransaccion == "Venta")
+                else if(nombreTransaccion == "Venta" || nombreTransaccion == "Reversion Venta")
                 {
                     IQueryable<TbInvConsumoLote> tbInvConsumo = await this._consumoRepository.Consultar();
                     var listaResultado = new List<TbInvConsumoLote>();
