@@ -108,9 +108,9 @@ namespace SistemaTienda.API.Controllers
 
         [HttpGet]
         [Route("ListarTodosArticulos")]
-        public async Task<ActionResult<List<ArticuloDTO>>> ListarTodosArticulos()
+        public async Task<ActionResult<List<InventarioLoteDTO>>> ListarTodosArticulos()
         {
-            var resp = new Response<List<ArticuloDTO>>();
+            var resp = new Response<List<InventarioLoteDTO>>();
             try
             {
                 resp.status = true;

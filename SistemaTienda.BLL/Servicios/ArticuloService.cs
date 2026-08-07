@@ -93,13 +93,30 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
-        public async Task<List<ArticuloDTO>> ListarTodosArticulos()
+        public async Task<List<InventarioLoteDTO>> ListarTodosArticulos()
         {
-            var listaArticulos = await this.tiendaDbContext.TbComArticulos.Where(art => art.Estado == true && art.EstadoVisual == true && art.Estado == true && art.EstadoVisual == true)
-                .Include(a => a.IdMarcaNavigation)
-                .Include(a => a.IdTipoArticuloNavigation)
-                .Include(a => a.IdImpuestoNavigation).ToListAsync();
-            return this._mapper.MapeoListaArticulosDtoVentas(listaArticulos);
+            // Identificar transacciones que representan reversiones (por nombre)
+            var idsTransReversion = await this.tiendaDbContext.TbInvTransacciones
+                .Where(t => t.Nombre.ToLower().Contains("reversion compra"))
+                .Select(t => t.Id)
+                .ToListAsync();
+
+            // Obtener lotes existentes y traer la entidad Articulo relacionada,
+            // excluyendo lotes con Estado = false o que pertenezcan a movimientos de reversión
+            var lotes = await this.tiendaDbContext.TbInvLotes
+                .Where(l => l.Estado == true && l.StockDisponible > 0 && !idsTransReversion.Contains(l.IdMovimientoNavigation.IdTransaccionInventario))
+                .Include(l => l.IdMovimientoNavigation)
+                .Include(l => l.IdArticuloNavigation)
+                    .ThenInclude(a => a.IdMarcaNavigation)
+                .Include(l => l.IdArticuloNavigation)
+                    .ThenInclude(a => a.IdTipoArticuloNavigation)
+                .Include(l => l.IdArticuloNavigation)
+                    .ThenInclude(a => a.IdImpuestoNavigation)
+                .ToListAsync();
+
+            // Mapear lotes a DTO de inventario y retornar
+            var listaDto = this._mapper.MapeoListaDetallesLotesTbAListaDetallesLotesDto(lotes);
+            return listaDto;
         }
 
         public async Task<List<ArticuloDTO>> ListarArticulos(DateTime fechaInicial, DateTime fechaFinal)
