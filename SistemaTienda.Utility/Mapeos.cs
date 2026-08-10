@@ -126,6 +126,8 @@ namespace SistemaTienda.Utility
                         ValorImpuesto = detalleInvTb.IdArticuloNavigation.IdImpuestoNavigation.ValorImpuesto,
                     },
                     Papeleria = detalleInvTb.IdArticuloNavigation.Papeleria,
+                    ValorCompra = detalleInvTb.IdArticuloNavigation.ValorCompra,
+                    ValorVenta = detalleInvTb.IdArticuloNavigation.ValorVenta,
                 },
                 CostoUnitario = detalleInvTb.CostoUnitario,
                 FechaExpiracion = detalleInvTb.FechaExpiracion,

@@ -14,5 +14,7 @@ namespace SistemaTienda.DTO
         public string Descripcion { get; set; }
         public ImpuestoArticuloDTO ImpuestoArticuloDto { get; set; }
         public bool? Papeleria { get; set; }
+        public decimal ValorVenta { get; set; }
+        public decimal ValorCompra { get; set; }
     }
 }

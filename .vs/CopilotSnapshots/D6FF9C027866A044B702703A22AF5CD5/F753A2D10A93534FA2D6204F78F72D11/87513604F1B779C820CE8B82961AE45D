@@ -116,50 +116,6 @@ namespace SistemaTienda.BLL.Servicios
 
             // Mapear lotes a DTO de inventario y retornar
             var listaDto = this._mapper.MapeoListaDetallesLotesTbAListaDetallesLotesDto(lotes);
-
-            // Si no hay lotes con stock disponible, devolver la lista de artículos
-            // mapeados al mismo formato de InventarioLoteDTO con valores por defecto
-            if (listaDto == null || listaDto.Count == 0)
-            {
-                var listaArticulos = await this.tiendaDbContext.TbComArticulos
-                    .Where(a => a.Estado == true && a.EstadoVisual == true)
-                    .Include(a => a.IdImpuestoNavigation)
-                    .ToListAsync();
-
-                var listaDesdeArticulos = listaArticulos.Select(a => new InventarioLoteDTO
-                {
-                    Id = a.Id,
-                    IdMovimiento = 0,
-                    IdArticulo = a.Id,
-                    ArticuloDTO = new ArticuloMinDTO
-                    {
-                        Id = a.Id,
-                        Nombre = string.IsNullOrWhiteSpace(a.Nombre) ? "VACIO" : a.Nombre,
-                        Descripcion = string.IsNullOrWhiteSpace(a.Descripcion) ? "VACIO" : a.Descripcion,
-                        Codigo = "VACIO",
-                        ImpuestoArticuloDto = a.IdImpuestoNavigation == null ? new ImpuestoArticuloDTO { Id = 0, Nombre = "VACIO", ValorImpuesto = 0 } : new ImpuestoArticuloDTO
-                        {
-                            Id = a.IdImpuestoNavigation.Id,
-                            Nombre = string.IsNullOrWhiteSpace(a.IdImpuestoNavigation.Nombre) ? "VACIO" : a.IdImpuestoNavigation.Nombre,
-                            ValorImpuesto = a.IdImpuestoNavigation.ValorImpuesto
-                        },
-                        Papeleria = a.Papeleria,
-                        ValorCompra = a.ValorCompra,
-                        ValorVenta = a.ValorVenta
-                    },
-                    NumeroLote = "VACIO",
-                    Codigo = "VACIO",
-                    FechaIngreso = null,
-                    StockDisponible = 0m,
-                    StockMinimo = 0m,
-                    CostoUnitario = 0m,
-                    FechaExpiracion = null,
-                    Estado = a.Estado
-                }).ToList();
-
-                return listaDesdeArticulos;
-            }
-
             return listaDto;
         }
 

@@ -204,7 +204,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.List\u00601[[SistemaTienda.DTO.ArticuloDTO, SistemaTienda.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.List\u00601[[SistemaTienda.DTO.InventarioLoteDTO, SistemaTienda.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
