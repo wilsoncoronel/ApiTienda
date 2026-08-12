@@ -17,6 +17,7 @@ namespace SistemaTienda.DTO
         public int IdUsuarioCreador { get; set; }
 
         public int IdImpuesto { get; set; }
+        public int? IdPorcentajeGanancia { get; set; }
 
         public string Nombre { get; set; } = null!;
 

@@ -10,10 +10,12 @@ namespace SistemaTienda.API.Controllers
     public class ArticuloController : ControllerBase
     {
         private readonly IArticuloService _articuloService;
+        private readonly IPorcentajeGananciaService _porcentajeService;
 
-        public ArticuloController(IArticuloService articuloService)
+        public ArticuloController(IArticuloService articuloService, IPorcentajeGananciaService porcentajeService)
         {
             this._articuloService = articuloService;
+            this._porcentajeService = porcentajeService;
         }
 
         [HttpGet]
@@ -88,15 +90,15 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
-        /*[HttpGet]
-        [Route("ListaCodigosArticulos")]
-        public async Task<ActionResult<List<CodigoArticuloDTO>>> ListaCodigosArticulos(int idArticulo)
+        [HttpGet]
+        [Route("ListarPorcentajes")]
+        public async Task<ActionResult<List<PorcentajeGananciaDTO>>> ListaPorcentajes()
         {
-            var resp = new Response<List<CodigoArticuloDTO>>();
+            var resp = new Response<List<PorcentajeGananciaDTO>>();
             try
             {
                 resp.status = true;
-                resp.Value = await this._articuloService.ListarCodigosArticulos(idArticulo);
+                resp.Value = await this._porcentajeService.ListarPorcentaje();
             }
             catch
             {
@@ -104,13 +106,13 @@ namespace SistemaTienda.API.Controllers
                 throw;
             }
             return Ok(resp);
-        }*/
+        }
 
         [HttpGet]
         [Route("ListarTodosArticulos")]
-        public async Task<ActionResult<List<InventarioLoteDTO>>> ListarTodosArticulos()
+        public async Task<ActionResult<List<ArticuloInventarioDTO>>> ListarTodosArticulos()
         {
-            var resp = new Response<List<InventarioLoteDTO>>();
+            var resp = new Response<List<ArticuloInventarioDTO>>();
             try
             {
                 resp.status = true;

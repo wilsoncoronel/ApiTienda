@@ -196,6 +196,26 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
+    "Method": "ListaPorcentajes",
+    "RelativePath": "api/Articulo/ListarPorcentajes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[SistemaTienda.DTO.PorcentajeGananciaDTO, SistemaTienda.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
     "Method": "ListarTodosArticulos",
     "RelativePath": "api/Articulo/ListarTodosArticulos",
     "HttpMethod": "GET",
@@ -421,6 +441,22 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
+    "Method": "CrearPorcentaje",
+    "RelativePath": "api/Configuraciones/CrearPorcentaje",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "porcentajeDto",
+        "Type": "SistemaTienda.DTO.PorcentajeGananciaCreacionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
     "Method": "CrearTipoArticulo",
     "RelativePath": "api/Configuraciones/CrearTipoArticulo",
     "HttpMethod": "POST",
@@ -469,6 +505,22 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
+    "Method": "EditarPorcentaje",
+    "RelativePath": "api/Configuraciones/EditarPorcentaje",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "porcentajeDto",
+        "Type": "SistemaTienda.DTO.PorcentajeGananciaDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
     "Method": "EditarTipoArticulo",
     "RelativePath": "api/Configuraciones/EditarTipoArticulo",
     "HttpMethod": "PUT",
@@ -507,6 +559,16 @@
     "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
     "Method": "ListarMarcas",
     "RelativePath": "api/Configuraciones/ListarMarcas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
+    "Method": "ListarPorcentajes",
+    "RelativePath": "api/Configuraciones/ListarPorcentajes",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

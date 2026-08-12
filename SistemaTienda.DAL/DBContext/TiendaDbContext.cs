@@ -1,6 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using SistemaTienda.Model;
 namespace SistemaTienda.DAL.DBContext;
+
 
 public partial class TiendaDbContext : DbContext
 {
@@ -26,6 +29,8 @@ public partial class TiendaDbContext : DbContext
     public virtual DbSet<TbComImpuestosArticulo> TbComImpuestosArticulos { get; set; }
 
     public virtual DbSet<TbComMarca> TbComMarcas { get; set; }
+
+    public virtual DbSet<TbComPorcentajeGanancia> TbComPorcentajeGanancia { get; set; }
 
     public virtual DbSet<TbComProveedores> TbComProveedores { get; set; }
 
@@ -79,7 +84,9 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbVenta> TbVentas { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=DESKTOP-QO2URC6\\SQLEXPRESS;Database=TiendaDb;User Id=sa;Password=wili199308; TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -104,6 +111,10 @@ public partial class TiendaDbContext : DbContext
                 .HasForeignKey(d => d.IdMarca)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbComArticulos_TbComMarca");
+
+            entity.HasOne(d => d.IdPorcentajeGananciaNavigation).WithMany(p => p.TbComArticulos)
+                .HasForeignKey(d => d.IdPorcentajeGanancia)
+                .HasConstraintName("FK_TbComArticulos_TbComPorcentajeGanancia");
 
             entity.HasOne(d => d.IdTipoArticuloNavigation).WithMany(p => p.TbComArticulos)
                 .HasForeignKey(d => d.IdTipoArticulo)
@@ -180,6 +191,16 @@ public partial class TiendaDbContext : DbContext
 
             entity.Property(e => e.Descripcion).HasMaxLength(200);
             entity.Property(e => e.Nombre).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<TbComPorcentajeGanancia>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_TbVenPorcentajeGanancia");
+
+            entity.Property(e => e.PorcentajeGanancia)
+                .HasMaxLength(10)
+                .IsFixedLength();
+            entity.Property(e => e.Valor).HasColumnType("numeric(18, 4)");
         });
 
         modelBuilder.Entity<TbComProveedores>(entity =>

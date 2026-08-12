@@ -9,17 +9,77 @@ namespace SistemaTienda.API.Controllers
     [Route("api/[controller]")]
     public class ConfiguracionesController : ControllerBase
     {
+        private readonly IPorcentajeGananciaService _porcentajeService;
         private readonly IMarcaService _marcaService;
         private readonly ITipoArticuloService _tipoArticuloService;
         private readonly IImpuestoArticuloService _impuestoArticuloService;
         private readonly ITransaccionInventarioService _transaccionInventarioService;
-        public ConfiguracionesController(IMarcaService marcaService, ITipoArticuloService tipoArticuloService, IImpuestoArticuloService impuestoArticuloService, ITransaccionInventarioService transaccionInventarioService)
+        public ConfiguracionesController(IPorcentajeGananciaService porcentajeService,IMarcaService marcaService, ITipoArticuloService tipoArticuloService, IImpuestoArticuloService impuestoArticuloService, ITransaccionInventarioService transaccionInventarioService)
         {
+            this._porcentajeService = porcentajeService;
             this._marcaService = marcaService;
             _tipoArticuloService = tipoArticuloService;
             _impuestoArticuloService = impuestoArticuloService;
             _transaccionInventarioService = transaccionInventarioService;
         }
+
+        [HttpGet]
+        [Route("ListarPorcentajes")]
+        public async Task<IActionResult> ListarPorcentajes()
+        {
+            var resp = new Response<List<PorcentajeGananciaDTO>>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._porcentajeService.ListarPorcentaje();
+                resp.msg = "Porcentajes listados exitosamente!!";
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
+        [HttpPost]
+        [Route("CrearPorcentaje")]
+        public async Task<IActionResult> CrearPorcentaje(PorcentajeGananciaCreacionDTO porcentajeDto)
+        {
+            var resp = new Response<int>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._porcentajeService.CrearPorcentaje(porcentajeDto);
+                resp.msg = "Porcentaje creada exitosamente";
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
+        [HttpPut]
+        [Route("EditarPorcentaje")]
+        public async Task<IActionResult> EditarPorcentaje(PorcentajeGananciaDTO porcentajeDto)
+        {
+            var resp = new Response<bool>();
+            try
+            {
+                resp.status = true;
+                resp.Value = await this._porcentajeService.EditarPorcentaje(porcentajeDto);
+                resp.msg = "Porcentaje editado exitosamente";
+            }
+            catch
+            {
+                resp.status = false;
+                throw;
+            }
+            return Ok(resp);
+        }
+
 
         [HttpGet]
         [Route("ListarTransacciones")]

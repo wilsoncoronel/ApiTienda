@@ -22,6 +22,7 @@ namespace SistemaTienda.DTO
         public DateTime FechaActualizacion { get; set; }
         public string Unidad { get; set; }
         public int IdMarca { get; set; }
+        public int? IdPorcentajeGanancia { get; set; }
         public int IdTipoArticulo { get; set; }
         public int IdImpuesto { get; set; }
         public bool? Papeleria { get; set; }

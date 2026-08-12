@@ -23,10 +23,12 @@ namespace SistemaTienda.DTO
         public decimal ValorVenta { get; set; }
         public decimal ValorCompra { get; set; }
         public int IdMarca { get; set; }
+        public int? IdPorcentajeGanancia { get; set; }
         public MarcaDTO MarcaDTO { get; set; }
         public int IdTipoArticulo { get; set; }
         public TipoArticuloDTO TipoArticuloDTO { get; set; }
         public ImpuestoArticuloDTO ImpuestoArticuloDto { get; set; }
+        public virtual PorcentajeGananciaDTO? PorcentajeDTO{ get; set; }
         public int IdImpuesto { get; set; }
         public bool? Papeleria { get; set; }
     }

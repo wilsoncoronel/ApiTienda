@@ -74,6 +74,8 @@ namespace SistemaTienda.Utility
         TransaccionInventarioDTO MapeoTransaccionInventarioTbADto(TbInvTransacciones transaccionTb);
         List<InventarioLoteDTO> MapeoListaDetallesConsumosTbAListaDetallesConsumosDto(List<TbInvConsumoLote> ListaDetallesInv);
         InventarioLoteDTO MapeoDetalleConsumosTbADetalleConsumosDto(TbInvConsumoLote detalleInvTb);
+        TbComPorcentajeGanancia MapeoPorcentajeCreacionDtoAPorcentajeTb(PorcentajeGananciaCreacionDTO porcentajeDto);
+        List<PorcentajeGananciaDTO> MapeoListasPorcentajeTbAListaPorcentajeDto(List<TbComPorcentajeGanancia> listaPorcentajesTb);
     }
     public class Mapeos : IMapeos
     {
@@ -272,10 +274,38 @@ namespace SistemaTienda.Utility
                     EstadoVisual = marcaDto.EstadoVisual,
                 };
             }
+
+            public TbComPorcentajeGanancia MapeoPorcentajeCreacionDtoAPorcentajeTb(PorcentajeGananciaCreacionDTO porcentajeDto)
+            {
+                return new TbComPorcentajeGanancia
+                {
+                    PorcentajeGanancia = porcentajeDto.PorcentajeGanancia,
+                    Valor = porcentajeDto.Valor,
+                    EstadoVisual = porcentajeDto.EstadoVisual,
+                };
+            }
+
+            public List<PorcentajeGananciaDTO> MapeoListasPorcentajeTbAListaPorcentajeDto(List<TbComPorcentajeGanancia> listaPorcentajesTb)
+            {
+                return listaPorcentajesTb.Select(por => this.MapeoPorcentajeTbAPorcentajeDto(por)).ToList();
+            }
+
+            public PorcentajeGananciaDTO MapeoPorcentajeTbAPorcentajeDto(TbComPorcentajeGanancia porcentajeTb)
+            {
+                return new PorcentajeGananciaDTO
+                {
+                    Id = porcentajeTb.Id,
+                    PorcentajeGanancia = porcentajeTb.PorcentajeGanancia,
+                    Valor = porcentajeTb.Valor,
+                    EstadoVisual = porcentajeTb.EstadoVisual,
+                };
+            }
+
             public List<MarcaDTO> MapeoListasMarcaTbAListaMarcaDto(List<TbComMarca> listaMarcasTb)
             {
                 return listaMarcasTb.Select(mar => this.MapeoMarcaTbAMarcaDto(mar)).ToList();
             }
+
             public MarcaDTO MapeoMarcaTbAMarcaDto(TbComMarca marcaTb)
             {
                 return new MarcaDTO
@@ -357,24 +387,25 @@ namespace SistemaTienda.Utility
 
             public TbComArticulo MapeoArticuloCreacionDtoAArticuloTb(ArticuloCreacionDTO articuloCreacionDto)
             {
-                var articuloTb = new TbComArticulo
-                {
-                    Descripcion = articuloCreacionDto.Descripcion,
-                    FechaCaducidad = articuloCreacionDto.FechaCaducidad,
-                    FechaCreacion = articuloCreacionDto.FechaCreacion,
-                    Estado = articuloCreacionDto.Estado,
-                    EstadoVisual = articuloCreacionDto.EstadoVisual,
-                    IdImpuesto = articuloCreacionDto.IdImpuesto,
-                    Nombre = articuloCreacionDto.Nombre,
-                    Unidad = articuloCreacionDto.Unidad,
-                    ValorCompra = articuloCreacionDto.ValorCompra,
-                    UnidadValor = articuloCreacionDto.UnidadValor,
-                    ValorVenta = articuloCreacionDto.ValorVenta,
-                    IdTipoArticulo = articuloCreacionDto.IdTipoArticulo,
-                    IdMarca = articuloCreacionDto.IdMarca,
-                    IdUsuarioCreador = articuloCreacionDto.IdUsuarioCreador,
-                    Papeleria = articuloCreacionDto.Papeleria
-                };
+            var articuloTb = new TbComArticulo
+            {
+                Descripcion = articuloCreacionDto.Descripcion,
+                FechaCaducidad = articuloCreacionDto.FechaCaducidad,
+                FechaCreacion = articuloCreacionDto.FechaCreacion,
+                Estado = articuloCreacionDto.Estado,
+                EstadoVisual = articuloCreacionDto.EstadoVisual,
+                IdImpuesto = articuloCreacionDto.IdImpuesto,
+                IdPorcentajeGanancia = articuloCreacionDto.IdPorcentajeGanancia,
+                Nombre = articuloCreacionDto.Nombre,
+                Unidad = articuloCreacionDto.Unidad,
+                ValorCompra = articuloCreacionDto.ValorCompra,
+                UnidadValor = articuloCreacionDto.UnidadValor,
+                ValorVenta = articuloCreacionDto.ValorVenta,
+                IdTipoArticulo = articuloCreacionDto.IdTipoArticulo,
+                IdMarca = articuloCreacionDto.IdMarca,
+                IdUsuarioCreador = articuloCreacionDto.IdUsuarioCreador,
+                Papeleria = articuloCreacionDto.Papeleria
+            };
                 return articuloTb;
             }
 
@@ -418,6 +449,14 @@ namespace SistemaTienda.Utility
                     Descripcion = articuloTb.Descripcion,
                     Estado = articuloTb.Estado,
                     EstadoVisual = articuloTb.EstadoVisual,
+                    IdPorcentajeGanancia = articuloTb.IdPorcentajeGanancia,
+                    PorcentajeDTO = articuloTb.IdPorcentajeGananciaNavigation != null ? new PorcentajeGananciaDTO
+                    {
+                        Id = articuloTb.IdPorcentajeGananciaNavigation.Id,
+                        PorcentajeGanancia = articuloTb.IdPorcentajeGananciaNavigation.PorcentajeGanancia,
+                        Valor = articuloTb.IdPorcentajeGananciaNavigation.Valor,
+                        EstadoVisual = articuloTb.IdPorcentajeGananciaNavigation.EstadoVisual,
+                    } : null,
                     ImpuestoArticuloDto = new ImpuestoArticuloDTO
                     {
                         Id = articuloTb.IdImpuestoNavigation.Id,
@@ -482,6 +521,12 @@ namespace SistemaTienda.Utility
                         Id = articuloTb.IdMarcaNavigation.Id,
                         Descripcion = articuloTb.IdMarcaNavigation.Descripcion,
                         Nombre = articuloTb.IdMarcaNavigation.Nombre,
+                    },
+                    PorcentajeDTO = new PorcentajeGananciaDTO
+                    {
+                        Id = articuloTb.IdPorcentajeGananciaNavigation?.Id ?? 0,
+                        PorcentajeGanancia = articuloTb.IdPorcentajeGananciaNavigation?.PorcentajeGanancia ?? "",
+                        Valor = articuloTb.IdPorcentajeGananciaNavigation?.Valor ?? 0
                     },
                     Papeleria = articuloTb.Papeleria
                 };

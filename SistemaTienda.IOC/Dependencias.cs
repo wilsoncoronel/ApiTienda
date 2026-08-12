@@ -29,6 +29,7 @@ namespace SistemaTienda.IOC
             services.AddTransient<IInventarioService, InventarioService>();
             services.AddTransient<ITipoArticuloService, TipoArticuloService>();
             services.AddTransient<IImpuestoArticuloService, ImpuestoArticuloService>();
+            services.AddTransient<IPorcentajeGananciaService, PorcentajeGananciaService>();
             services.AddTransient<IUsuarioService, UsuarioService>();
             services.AddTransient<IMarcaService, MarcaService>();
             services.AddTransient<ITransaccionInventarioService, TransaccionInventarioService>();

@@ -15,6 +15,8 @@ public partial class TbComArticulo
 
     public int IdImpuesto { get; set; }
 
+    public int? IdPorcentajeGanancia { get; set; }
+
     public string Nombre { get; set; } = null!;
 
     public DateTime FechaCreacion { get; set; }
@@ -42,6 +44,8 @@ public partial class TbComArticulo
     public virtual TbComImpuestosArticulo IdImpuestoNavigation { get; set; } = null!;
 
     public virtual TbComMarca IdMarcaNavigation { get; set; } = null!;
+
+    public virtual TbComPorcentajeGanancia? IdPorcentajeGananciaNavigation { get; set; }
 
     public virtual TbComTiposArticulo IdTipoArticuloNavigation { get; set; } = null!;
 

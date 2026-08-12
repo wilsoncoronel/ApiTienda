@@ -43,28 +43,25 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<bool> EditarMarca(MarcaEditarDTO marcaEditarDto)
         {
-            
-            
-                try
-                {
-                    var marca = await this._tiendaDb.TbComMarcas.Where(c => c.Id == marcaEditarDto.Id)
-                        .FirstOrDefaultAsync();
-                    if (marca is null)
-                        throw new Exception("No se encontró la marca a editar");
-                    marca.EstadoVisual = marcaEditarDto.EstadoVisual;
-                    marca.Nombre = marcaEditarDto.Nombre;
-                    marca.Descripcion = marcaEditarDto.Descripcion;
-                var resp = await this.marcaRepository.Editar(marca);
-                    if (resp == false)
-                        throw new Exception("No se pudo editar la marca");
-                    return resp;
-                }
-                catch
-                {
+            try
+            {
+                var marca = await this._tiendaDb.TbComMarcas.Where(c => c.Id == marcaEditarDto.Id)
+                    .FirstOrDefaultAsync();
+                if (marca is null)
+                    throw new Exception("No se encontró la marca a editar");
+                marca.EstadoVisual = marcaEditarDto.EstadoVisual;
+                marca.Nombre = marcaEditarDto.Nombre;
+                marca.Descripcion = marcaEditarDto.Descripcion;
+            var resp = await this.marcaRepository.Editar(marca);
+                if (resp == false)
+                    throw new Exception("No se pudo editar la marca");
+                return resp;
+            }
+            catch
+            {
                    
-                    throw new Exception("Error ha ocurrido un error editando la marca, comuníquese con el administrador del sistema!!!");
-                }
-            
+                throw new Exception("Error ha ocurrido un error editando la marca, comuníquese con el administrador del sistema!!!");
+            }
         }
 
         public async Task<List<MarcaDTO>> ListarMarcas()
