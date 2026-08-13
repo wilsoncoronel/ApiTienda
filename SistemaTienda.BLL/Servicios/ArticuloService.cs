@@ -185,7 +185,8 @@ namespace SistemaTienda.BLL.Servicios
                 .Select(t => new ImpuestoArticuloDTO
                 {
                     Id = t.Id,
-                    Nombre = t.Nombre
+                    Nombre = t.Nombre,
+                    ValorImpuesto = t.ValorImpuesto
                 }).ToListAsync();
             return listaImpuestosArticulos;
         }

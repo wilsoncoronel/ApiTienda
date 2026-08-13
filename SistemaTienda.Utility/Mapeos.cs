@@ -502,7 +502,7 @@ namespace SistemaTienda.Utility
                         ValorImpuesto = articuloTb.IdImpuestoNavigation.ValorImpuesto,
                         Nombre = articuloTb.IdImpuestoNavigation.Nombre,
                     },
-                    Nombre = articuloTb.Nombre,
+                    Nombre = $"{articuloTb.Nombre} Valor Com: {articuloTb.ValorCompra}, Uni: {articuloTb.UnidadValor} {articuloTb.Unidad}",
                     Unidad = articuloTb.Unidad,
                     ValorCompra = articuloTb.ValorCompra,
                     UnidadValor = articuloTb.UnidadValor,
