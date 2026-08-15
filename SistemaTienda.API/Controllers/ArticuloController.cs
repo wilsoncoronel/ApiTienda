@@ -110,13 +110,13 @@ namespace SistemaTienda.API.Controllers
 
         [HttpGet]
         [Route("ListarTodosArticulos")]
-        public async Task<ActionResult<List<ArticuloInventarioDTO>>> ListarTodosArticulos()
+        public async Task<ActionResult<List<ArticuloInventarioDTO>>> ListarTodosArticulos(bool esVenta = false)
         {
             var resp = new Response<List<ArticuloInventarioDTO>>();
             try
             {
                 resp.status = true;
-                resp.Value = await this._articuloService.ListarTodosArticulos();
+                resp.Value = await this._articuloService.ListarTodosArticulos(esVenta);
             }
             catch
             {

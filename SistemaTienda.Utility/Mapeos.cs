@@ -31,8 +31,8 @@ namespace SistemaTienda.Utility
         CompraDTO MapeoCompraTbACompraCompletaDto(TbCompra compraTb);
         PermisosRolDTO MapeoTbSisPermisorRolAPermisosRolDTO(TbSisPermisosRol permisosRolTb);
         List<PermisosRolDTO> MapeoListaTbSisPermisosRolAPermisosRolDTO(IEnumerable<TbSisPermisosRol> listaPermisosRolTb);
-        List<ArticuloDTO> MapeoListaArticulosDto(List<TbComArticulo> listaArticulosTb);
-        ArticuloDTO MapeoArticuloTbAArticuloDto(TbComArticulo articuloTb);
+        List<ArticuloDTO> MapeoListaArticulosDto(List<TbComArticulo> listaArticulosTb, bool esVenta = false);
+        ArticuloDTO MapeoArticuloTbAArticuloDto(TbComArticulo articuloTb, bool esVenta);
         ProveedorDTO MapeoProveedorTbAProveedorDto(TbComProveedores provedorTb);
         EstadoCompraDTO MapeoEstadosCompraTbaAEstadosCompraDto(TbComEstadosCompra EstadosTb);
         List<EstadoCompraDTO> MapeoListaEstadosCompraTbaAListaEstadosCompraDto(List<TbComEstadosCompra> ListaEstadosDto);
@@ -76,6 +76,7 @@ namespace SistemaTienda.Utility
         InventarioLoteDTO MapeoDetalleConsumosTbADetalleConsumosDto(TbInvConsumoLote detalleInvTb);
         TbComPorcentajeGanancia MapeoPorcentajeCreacionDtoAPorcentajeTb(PorcentajeGananciaCreacionDTO porcentajeDto);
         List<PorcentajeGananciaDTO> MapeoListasPorcentajeTbAListaPorcentajeDto(List<TbComPorcentajeGanancia> listaPorcentajesTb);
+        List<ArticuloDTO> MapeoListaArticulosDtoPrincipal(List<TbComArticulo> listaArticulosTb);
     }
     public class Mapeos : IMapeos
     {
@@ -488,7 +489,7 @@ namespace SistemaTienda.Utility
                 return articuloDto;
             }
 
-            public ArticuloDTO MapeoArticuloTbAArticuloDto(TbComArticulo articuloTb)
+            public ArticuloDTO MapeoArticuloTbAArticuloDto(TbComArticulo articuloTb, bool esVenta)
             {
                 var articuloDto = new ArticuloDTO
                 {
@@ -502,7 +503,7 @@ namespace SistemaTienda.Utility
                         ValorImpuesto = articuloTb.IdImpuestoNavigation.ValorImpuesto,
                         Nombre = articuloTb.IdImpuestoNavigation.Nombre,
                     },
-                    Nombre = $"{articuloTb.Nombre} Valor Com: {articuloTb.ValorCompra}, Uni: {articuloTb.UnidadValor} {articuloTb.Unidad}",
+                    Nombre = !esVenta? $"{articuloTb.Nombre} Valor Com: {articuloTb.ValorCompra}, Uni: {articuloTb.UnidadValor} {articuloTb.Unidad}": $"{articuloTb.Nombre} Valor Vent: {articuloTb.ValorVenta}, Uni: {articuloTb.UnidadValor} {articuloTb.Unidad}",
                     Unidad = articuloTb.Unidad,
                     ValorCompra = articuloTb.ValorCompra,
                     UnidadValor = articuloTb.UnidadValor,
@@ -533,12 +534,63 @@ namespace SistemaTienda.Utility
                 return articuloDto;
             }
 
-            public List<ArticuloDTO> MapeoListaArticulosDto(List<TbComArticulo> listaArticulosTb)
+        public ArticuloDTO MapeoArticuloTbAArticuloDtoPrincipal(TbComArticulo articuloTb)
+        {
+            var articuloDto = new ArticuloDTO
             {
-                return listaArticulosTb.Select(a => this.MapeoArticuloTbAArticuloDto(a)).ToList();
+                Id = articuloTb.Id,
+                Descripcion = articuloTb.Descripcion,
+                Estado = articuloTb.Estado,
+                EstadoVisual = articuloTb.EstadoVisual,
+                ImpuestoArticuloDto = new ImpuestoArticuloDTO
+                {
+                    Id = articuloTb.IdImpuestoNavigation.Id,
+                    ValorImpuesto = articuloTb.IdImpuestoNavigation.ValorImpuesto,
+                    Nombre = articuloTb.IdImpuestoNavigation.Nombre,
+                },
+                Nombre = articuloTb.Nombre,
+                Unidad = articuloTb.Unidad,
+                ValorCompra = articuloTb.ValorCompra,
+                UnidadValor = articuloTb.UnidadValor,
+                ValorVenta = articuloTb.ValorVenta,
+                FechaActualizacion = articuloTb.FechaActualizacion ?? articuloTb.FechaCreacion,
+                FechaCaducidad = articuloTb.FechaCaducidad,
+                FechaCreacion = articuloTb.FechaCreacion,
+                TipoArticuloDTO = new TipoArticuloDTO
+                {
+                    Id = articuloTb.IdTipoArticulo,
+                    Descripcion = articuloTb.IdTipoArticuloNavigation.Descripcion,
+                    Nombre = articuloTb.IdTipoArticuloNavigation.Nombre,
+                },
+                MarcaDTO = new MarcaDTO
+                {
+                    Id = articuloTb.IdMarcaNavigation.Id,
+                    Descripcion = articuloTb.IdMarcaNavigation.Descripcion,
+                    Nombre = articuloTb.IdMarcaNavigation.Nombre,
+                },
+                PorcentajeDTO = new PorcentajeGananciaDTO
+                {
+                    Id = articuloTb.IdPorcentajeGananciaNavigation?.Id ?? 0,
+                    PorcentajeGanancia = articuloTb.IdPorcentajeGananciaNavigation?.PorcentajeGanancia ?? "",
+                    Valor = articuloTb.IdPorcentajeGananciaNavigation?.Valor ?? 0
+                },
+                Papeleria = articuloTb.Papeleria
+            };
+            return articuloDto;
+        }
+
+            public List<ArticuloDTO> MapeoListaArticulosDto(List<TbComArticulo> listaArticulosTb, bool esVenta = false)
+            {
+                return listaArticulosTb.Select(a => this.MapeoArticuloTbAArticuloDto(a, esVenta)).ToList();
             }
 
-            public SesionDTO MapeoUsuarioDtoASesionDto(TbSisUsuario usuarioTb)
+            public List<ArticuloDTO> MapeoListaArticulosDtoPrincipal(List<TbComArticulo> listaArticulosTb)
+            {
+                return listaArticulosTb.Select(a => this.MapeoArticuloTbAArticuloDtoPrincipal(a)).ToList();
+            }
+
+
+        public SesionDTO MapeoUsuarioDtoASesionDto(TbSisUsuario usuarioTb)
             {
                 var sesionDto = new SesionDTO
                 {

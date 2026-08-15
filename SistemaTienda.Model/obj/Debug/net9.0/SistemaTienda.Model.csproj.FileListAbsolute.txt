@@ -43,3 +43,4 @@ C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\SistemaTienda.Model.pdb
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\SistemaTienda.Model.genruntimeconfig.cache
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\ref\SistemaTienda.Model.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\SistemaT.936470BF.Up2Date

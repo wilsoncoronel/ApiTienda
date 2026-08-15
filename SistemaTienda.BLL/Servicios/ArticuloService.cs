@@ -94,7 +94,7 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
-        public async Task<List<ArticuloInventarioDTO>> ListarTodosArticulos()
+        public async Task<List<ArticuloInventarioDTO>> ListarTodosArticulos(bool esVenta)
         {
             // Identificar transacciones que representan reversiones (por nombre)
             var idsTransReversion = await this.tiendaDbContext.TbInvTransacciones
@@ -120,7 +120,7 @@ namespace SistemaTienda.BLL.Servicios
             // Mapear cada lote a ArticuloInventarioDTO (una entrada por lote)
             resultado.AddRange(lotes.Select(l => new ArticuloInventarioDTO
             {
-                Articulo = this._mapper.MapeoArticuloTbAArticuloDto(l.IdArticuloNavigation),
+                Articulo = this._mapper.MapeoArticuloTbAArticuloDto(l.IdArticuloNavigation, esVenta),
                 NumeroLote = l.NumeroLote ?? string.Empty,
                 Codigo = l.Codigo ?? string.Empty,
                 FechaIngreso = l.FechaIngreso,
@@ -141,7 +141,7 @@ namespace SistemaTienda.BLL.Servicios
 
             resultado.AddRange(articulosSinLote.Select(a => new ArticuloInventarioDTO
             {
-                Articulo = this._mapper.MapeoArticuloTbAArticuloDto(a),
+                Articulo = this._mapper.MapeoArticuloTbAArticuloDto(a, esVenta),
                 NumeroLote = string.Empty,
                 Codigo = string.Empty,
                 FechaIngreso = null,
@@ -161,10 +161,8 @@ namespace SistemaTienda.BLL.Servicios
                 .Include(a => a.IdTipoArticuloNavigation)
                 .Include(a => a.IdImpuestoNavigation)
                 .Include(p => p.IdPorcentajeGananciaNavigation).ToListAsync();
-            return this._mapper.MapeoListaArticulosDto(listaArticulos);
+            return this._mapper.MapeoListaArticulosDtoPrincipal(listaArticulos);
         }
-
-        
 
         public async Task<List<TipoArticuloDTO>> CargarListaTiposArticulos()
         {

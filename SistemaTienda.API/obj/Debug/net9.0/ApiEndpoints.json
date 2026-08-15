@@ -221,7 +221,13 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "esVenta",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.List\u00601[[SistemaTienda.DTO.ArticuloInventarioDTO, SistemaTienda.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
