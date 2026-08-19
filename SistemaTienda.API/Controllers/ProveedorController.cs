@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SistemaTienda.API.Exceptions;
 using SistemaTienda.API.Utilidad;
 using SistemaTienda.BLL.Servicios.Contrato;
 using SistemaTienda.DTO;
@@ -10,10 +11,43 @@ namespace SistemaTienda.API.Controllers
     public class ProveedorController : ControllerBase
     {
         private readonly IProveedorService proveedorService;
+        private readonly ISriService sriService;
 
-        public ProveedorController(IProveedorService proveedorService)
+        public ProveedorController(IProveedorService proveedorService, ISriService sriService)
         {
             this.proveedorService = proveedorService;
+            this.sriService = sriService;
+        }
+        [HttpGet("ConsultarRuc")]
+        public async Task<IActionResult> ConsultarRuc(string ruc)
+        {
+            if (string.IsNullOrWhiteSpace(ruc))
+            {
+                throw new BadRequestException(
+                    "Debe ingresar un RUC.");
+            }
+
+            if (ruc.Length != 13 ||
+                !ruc.All(char.IsDigit))
+            {
+                throw new BadRequestException(
+                    "El RUC debe contener 13 dígitos.");
+            }
+
+            var contribuyente = await sriService.ConsultarProveedorPorRuc(ruc);
+
+            if (contribuyente == null)
+            {
+                throw new NotFoundException(
+                    "No se encontró información para el RUC indicado.");
+            }
+
+            return Ok(new Response<SriContribuyenteDTO>
+            {
+                status = true,
+                Value = contribuyente,
+                msg = "Información del RUC obtenida correctamente."
+            });
         }
 
         [HttpGet]
@@ -21,18 +55,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> BuscarProveedorCI(string identificacion)
         {
             var resp = new Response<ProveedorDTO>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this.proveedorService.BuscarProveedorCI(identificacion);
-                resp.msg = "";
-            }
-            catch
-            {
-                resp.status = false;
-                resp.msg = "Error al buscar el proveedor, comuniquese con el administrador del sistema!!!";
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this.proveedorService.BuscarProveedorCI(identificacion);
+            resp.msg = "Error al buscar el proveedor, comuniquese con el administrador del sistema!!!";
             return Ok(resp);
         }
 

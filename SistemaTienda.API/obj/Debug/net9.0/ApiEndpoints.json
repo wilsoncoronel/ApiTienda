@@ -751,6 +751,22 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ProveedorController",
+    "Method": "ConsultarRuc",
+    "RelativePath": "api/Proveedor/ConsultarRuc",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ruc",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ProveedorController",
     "Method": "CrearProveedor",
     "RelativePath": "api/Proveedor/CrearProveedor",
     "HttpMethod": "POST",

@@ -11,7 +11,6 @@ namespace SistemaTienda.BLL.Servicios
 {
     public class LogginService : ILogginService
     {
-
         public readonly IGenericRepository<TbSisUsuario> _usuarioRepositorio;
         public readonly IMapeos _mapeos;
         public readonly TiendaDbContext _dbContext;
