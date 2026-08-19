@@ -23,16 +23,10 @@ namespace SistemaTienda.API.Controllers
         public async Task<ActionResult<List<TipoArticuloDTO>>> CargarListaTiposArticulos()
         {
             var resp = new Response<List<TipoArticuloDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._articuloService.CargarListaTiposArticulos();
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+           
+            resp.status = true;
+            resp.Value = await this._articuloService.CargarListaTiposArticulos();
+            resp.msg = "Lista de tipos de artículos cargada correctamente.";
             return Ok(resp);
         }
 
@@ -41,16 +35,11 @@ namespace SistemaTienda.API.Controllers
         public async Task<ActionResult<List<ImpuestoArticuloDTO>>> CargarListaImpuestos()
         {
             var resp = new Response<List<ImpuestoArticuloDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._articuloService.CargarListaImpuestos();
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+           
+            resp.status = true;
+            resp.Value = await this._articuloService.CargarListaImpuestos();
+            resp.msg = "Lista de impuestos de artículos cargada correctamente.";
+
             return Ok(resp);
         }
 
@@ -59,16 +48,11 @@ namespace SistemaTienda.API.Controllers
         public async Task<ActionResult<List<MarcaDTO>>> CargarListaMarcas()
         {
             var resp = new Response<List<MarcaDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._articuloService.CargarListaMarca();
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+           
+            resp.status = true;
+            resp.Value = await this._articuloService.CargarListaMarca();
+            resp.msg = "Lista de marcas de artículos cargada correctamente.";
+
             return Ok(resp);
         }
 
@@ -77,16 +61,10 @@ namespace SistemaTienda.API.Controllers
         public async Task<ActionResult<List<ArticuloDTO>>> ListaArticulos(DateTime fechaInicial, DateTime fechaFinal)
         {
             var resp = new Response<List<ArticuloDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._articuloService.ListarArticulos(fechaInicial, fechaFinal);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+           
+            resp.status = true;
+            resp.Value = await this._articuloService.ListarArticulos(fechaInicial, fechaFinal);            
+            resp.msg = "Error al cargar la lista de artículos.";
             return Ok(resp);
         }
 
@@ -95,16 +73,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<ActionResult<List<PorcentajeGananciaDTO>>> ListaPorcentajes()
         {
             var resp = new Response<List<PorcentajeGananciaDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._porcentajeService.ListarPorcentaje();
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._porcentajeService.ListarPorcentaje();
+            resp.msg = "Lista de porcentajes cargada correctamente.";
             return Ok(resp);
         }
 
@@ -113,16 +84,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<ActionResult<List<ArticuloInventarioDTO>>> ListarTodosArticulos(bool esVenta = false)
         {
             var resp = new Response<List<ArticuloInventarioDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._articuloService.ListarTodosArticulos(esVenta);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._articuloService.ListarTodosArticulos(esVenta);
+            resp.msg = "Lista de artículos cargada correctamente.";
             return Ok(resp);
         }
 
@@ -132,16 +96,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<ActionResult<int>> CrearArticulo([FromBody] ArticuloCreacionDTO articuloCreacionDto)
         {
             var resp = new Response<int>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._articuloService.CrearArticulo(articuloCreacionDto);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._articuloService.CrearArticulo(articuloCreacionDto);
+            resp.msg = "Artículo creado correctamente.";
             return Ok(resp);
         }
 
@@ -150,16 +107,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<ActionResult<bool>> CrearArticulosLista([FromBody] List<ArticuloCreacionDTO> articulosCreacionDto)
         {
             var resp = new Response<bool>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._articuloService.CrearArticulosLista(articulosCreacionDto);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._articuloService.CrearArticulosLista(articulosCreacionDto);
+            resp.msg = "Artículos creados correctamente.";
             return Ok(resp);
         }
 
@@ -168,16 +118,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<ActionResult<int>> EditarArticulo([FromBody] ArticuloEdicionDTO articuloEdicionDto)
         {
             var resp = new Response<bool>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._articuloService.EditarArticulo(articuloEdicionDto);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._articuloService.EditarArticulo(articuloEdicionDto);
+            resp.msg = "Artículo editado correctamente.";
             return Ok(resp);
         }
 
@@ -186,16 +129,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<ActionResult<bool>> DesactivarArticulo([FromBody] int idArticulo)
         {
             var resp = new Response<bool>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._articuloService.DesactivarArticulo(idArticulo);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._articuloService.DesactivarArticulo(idArticulo);
+            resp.msg = "Artículo desactivado correctamente.";
             return Ok(resp);
         }
     }

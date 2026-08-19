@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SistemaTienda.BLL\SistemaTienda.BLL.csproj" />
     <ProjectReference Include="..\SistemaTienda.DTO\SistemaTienda.DTO.csproj" />
+    <ProjectReference Include="..\SistemaTienda.Exceptions\SistemaTienda.Exceptions.csproj" />
     <ProjectReference Include="..\SistemaTienda.IOC\SistemaTienda.IOC.csproj" />
   </ItemGroup>
 

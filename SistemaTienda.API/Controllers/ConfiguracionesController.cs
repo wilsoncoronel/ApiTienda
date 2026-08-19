@@ -28,17 +28,11 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListarPorcentajes()
         {
             var resp = new Response<List<PorcentajeGananciaDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._porcentajeService.ListarPorcentaje();
-                resp.msg = "Porcentajes listados exitosamente!!";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            
+            resp.status = true;
+            resp.Value = await this._porcentajeService.ListarPorcentaje();
+            resp.msg = "Porcentajes listados exitosamente!!";
+           
             return Ok(resp);
         }
 
@@ -47,17 +41,11 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> CrearPorcentaje(PorcentajeGananciaCreacionDTO porcentajeDto)
         {
             var resp = new Response<int>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._porcentajeService.CrearPorcentaje(porcentajeDto);
-                resp.msg = "Porcentaje creada exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            
+            resp.status = true;
+            resp.Value = await this._porcentajeService.CrearPorcentaje(porcentajeDto);
+            resp.msg = "Porcentaje creada exitosamente";
+            
             return Ok(resp);
         }
 
@@ -66,17 +54,11 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> EditarPorcentaje(PorcentajeGananciaDTO porcentajeDto)
         {
             var resp = new Response<bool>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._porcentajeService.EditarPorcentaje(porcentajeDto);
-                resp.msg = "Porcentaje editado exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+           
+            resp.status = true;
+            resp.Value = await this._porcentajeService.EditarPorcentaje(porcentajeDto);
+            resp.msg = "Porcentaje editado exitosamente";
+            
             return Ok(resp);
         }
 
@@ -86,17 +68,11 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListarTransacciones()
         {
             var resp = new Response<List<TransaccionInventarioDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._transaccionInventarioService.ListarTransaccionesInventario();
-                resp.msg = "Transacciones listadas exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            
+            resp.status = true;
+            resp.Value = await this._transaccionInventarioService.ListarTransaccionesInventario();
+            resp.msg = "Transacciones listadas exitosamente";
+            
             return Ok(resp);
         }
 
@@ -105,17 +81,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListarMarcas()
         {
             var resp = new Response<List<MarcaDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._marcaService.ListarMarcas();
-                resp.msg = "Marcas listadas exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._marcaService.ListarMarcas();
+            resp.msg = "Marcas listadas exitosamente";
             return Ok(resp);
         }
 
@@ -124,17 +92,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> CrearMarca(MarcaCreacionDTO marcaDto)
         {
             var resp = new Response<int>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._marcaService.CrearMarca(marcaDto);
-                resp.msg = "Marca creada exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._marcaService.CrearMarca(marcaDto);
+            resp.msg = "Marca creada exitosamente";
             return Ok(resp);
         }
 
@@ -143,17 +103,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> EditarMarca(MarcaEditarDTO marcaDto)
         {
             var resp = new Response<bool>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._marcaService.EditarMarca(marcaDto);
-                resp.msg = "Marca editada exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._marcaService.EditarMarca(marcaDto);
+            resp.msg = "Marca editada exitosamente";
             return Ok(resp);
         }
 
@@ -162,17 +114,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListarTiposArticulos()
         {
             var resp = new Response<List<TipoArticuloDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._tipoArticuloService.ListarTiposArticulos();
-                resp.msg = "Tipos Artículos listados exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._tipoArticuloService.ListarTiposArticulos();
+            resp.msg = "Tipos Artículos listados exitosamente";
             return Ok(resp);
         }
 
@@ -181,17 +125,10 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> CrearTipoArticulo(TipoArticuloCreacionDTO tipoDto)
         {
             var resp = new Response<int>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._tipoArticuloService.CrearTipoArticulo(tipoDto);
-                resp.msg = "Tipo Articulo creado exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+           
+            resp.status = true;
+            resp.Value = await this._tipoArticuloService.CrearTipoArticulo(tipoDto);
+            resp.msg = "Tipo artículo creado correctamente";
             return Ok(resp);
         }
 
@@ -200,17 +137,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> EditarTipoArticulo(TipoArticuloEditarDTO tipoDto)
         {
             var resp = new Response<bool>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._tipoArticuloService.EditarTipoArticulo(tipoDto);
-                resp.msg = "Tipo artículo editada exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._tipoArticuloService.EditarTipoArticulo(tipoDto);
+            resp.msg = "Tipo artículo editada exitosamente";
             return Ok(resp);
         }
 
@@ -219,17 +148,10 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListarImpuestosArticulos()
         {
             var resp = new Response<List<ImpuestoArticuloDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._impuestoArticuloService.ListarImpuestos();
-                resp.msg = "Impuestos Artículos listados exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            
+            resp.status = true;
+            resp.Value = await this._impuestoArticuloService.ListarImpuestos();
+            resp.msg = "Impuestos listados exitosamente";
             return Ok(resp);
         }
 
@@ -238,17 +160,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListarEstados()
         {
             var resp = new Response<List<EstadoImpuestoDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._impuestoArticuloService.ListarEstados();
-                resp.msg = "Estados listados exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._impuestoArticuloService.ListarEstados();
+            resp.msg = "Estados listados exitosamente";
             return Ok(resp);
         }
 
@@ -257,17 +171,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> CrearImpuesto(ImpuestoArticuloCreacionDTO impuestoCrearDto)
         {
             var resp = new Response<int>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._impuestoArticuloService.CrearImpuestos(impuestoCrearDto);
-                resp.msg = "Impuesto creado exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._impuestoArticuloService.CrearImpuestos(impuestoCrearDto);
+            resp.msg = "Impuesto creado exitosamente";
             return Ok(resp);
         }
 
@@ -276,17 +182,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> EditarImpuesto(ImpuestoArticuloEditarDTO impuestoEditarDto)
         {
             var resp = new Response<bool>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._impuestoArticuloService.EditarImpuesto(impuestoEditarDto);
-                resp.msg = "Marca editada exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._impuestoArticuloService.EditarImpuesto(impuestoEditarDto);
+            resp.msg = "Marca editada exitosamente";
             return Ok(resp);
         }
     }

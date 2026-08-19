@@ -1,3 +1,4 @@
+using SistemaTienda.API.Middleware;
 using SistemaTienda.IOC;
 using SistemaTienda.DAL.DBContext;
 using Scalar.AspNetCore;
@@ -11,6 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.InyectarDependecias(builder.Configuration);
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

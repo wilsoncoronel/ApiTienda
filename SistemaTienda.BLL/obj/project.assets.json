@@ -1101,6 +1101,16 @@
           "bin/placeholder/SistemaTienda.DTO.dll": {}
         }
       },
+      "SistemaTienda.Exceptions/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/SistemaTienda.Exceptions.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SistemaTienda.Exceptions.dll": {}
+        }
+      },
       "SistemaTienda.Model/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
@@ -2981,6 +2991,11 @@
       "path": "../SistemaTienda.DTO/SistemaTienda.DTO.csproj",
       "msbuildProject": "../SistemaTienda.DTO/SistemaTienda.DTO.csproj"
     },
+    "SistemaTienda.Exceptions/1.0.0": {
+      "type": "project",
+      "path": "../SistemaTienda.Exceptions/SistemaTienda.Exceptions.csproj",
+      "msbuildProject": "../SistemaTienda.Exceptions/SistemaTienda.Exceptions.csproj"
+    },
     "SistemaTienda.Model/1.0.0": {
       "type": "project",
       "path": "../SistemaTienda.Model/SistemaTienda.Model.csproj",
@@ -2997,6 +3012,7 @@
       "Microsoft.AspNetCore.Mvc.Abstractions >= 2.3.0",
       "SistemaTienda.DAL >= 1.0.0",
       "SistemaTienda.DTO >= 1.0.0",
+      "SistemaTienda.Exceptions >= 1.0.0",
       "SistemaTienda.Model >= 1.0.0",
       "SistemaTienda.Utility >= 1.0.0"
     ]
@@ -3040,6 +3056,9 @@
             },
             "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj": {
               "projectPath": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj"
+            },
+            "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.Exceptions\\SistemaTienda.Exceptions.csproj": {
+              "projectPath": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.Exceptions\\SistemaTienda.Exceptions.csproj"
             },
             "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.Model\\SistemaTienda.Model.csproj": {
               "projectPath": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.Model\\SistemaTienda.Model.csproj"

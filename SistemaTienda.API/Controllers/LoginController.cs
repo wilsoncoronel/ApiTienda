@@ -19,16 +19,10 @@ namespace SistemaTienda.API.Controllers
         [Route("IniciarSesion")]
         public async Task<IActionResult> Loggin(string usuario, string password) {
             var resp = new Response<List<PermisosRolDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._loginService.ValidarCredenciales(usuario, password);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            
+            resp.status = true;
+            resp.Value = await this._loginService.ValidarCredenciales(usuario, password);
+            resp.msg = "Inicio de sesión exitoso!!";
             return Ok(resp);
         }
 
@@ -37,16 +31,10 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ExtraerSesion(string usuario)
         {
             var resp = new Response<SesionDTO>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._loginService.ExtraerPerfil(usuario);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            
+            resp.status = true;
+            resp.Value = await this._loginService.ExtraerPerfil(usuario);
+            resp.msg = "Sesión extraída exitosamente!!";
             return Ok(resp);
         }
 
@@ -56,16 +44,10 @@ namespace SistemaTienda.API.Controllers
         {
             int idUsuario = id;
             var resp = new Response<UsuarioDTO>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._loginService.ObtenerPerfil(idUsuario);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+           
+            resp.status = true;
+            resp.Value = await this._loginService.ObtenerPerfil(idUsuario);
+            resp.msg = "Perfil obtenido exitosamente!!";
             return Ok(resp);
         }
     }

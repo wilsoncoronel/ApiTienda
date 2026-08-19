@@ -1,0 +1,13 @@
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Exceptions\bin\Debug\net9.0\SistemaTienda.Exceptions.deps.json
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Exceptions\bin\Debug\net9.0\SistemaTienda.Exceptions.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Exceptions\bin\Debug\net9.0\SistemaTienda.Exceptions.pdb
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Exceptions\obj\Debug\net9.0\SistemaTienda.Exceptions.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Exceptions\obj\Debug\net9.0\SistemaTienda.Exceptions.AssemblyInfoInputs.cache
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Exceptions\obj\Debug\net9.0\SistemaTienda.Exceptions.AssemblyInfo.cs
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Exceptions\obj\Debug\net9.0\SistemaTienda.Exceptions.csproj.CoreCompileInputs.cache
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Exceptions\obj\Debug\net9.0\SistemaTienda.Exceptions.sourcelink.json
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Exceptions\obj\Debug\net9.0\SistemaTienda.Exceptions.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Exceptions\obj\Debug\net9.0\refint\SistemaTienda.Exceptions.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Exceptions\obj\Debug\net9.0\SistemaTienda.Exceptions.pdb
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Exceptions\obj\Debug\net9.0\ref\SistemaTienda.Exceptions.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Exceptions\obj\Debug\net9.0\SistemaT.9AC58558.Up2Date

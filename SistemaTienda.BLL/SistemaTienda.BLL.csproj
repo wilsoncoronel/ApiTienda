@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SistemaTienda.DAL\SistemaTienda.DAL.csproj" />
     <ProjectReference Include="..\SistemaTienda.DTO\SistemaTienda.DTO.csproj" />
+    <ProjectReference Include="..\SistemaTienda.Exceptions\SistemaTienda.Exceptions.csproj" />
     <ProjectReference Include="..\SistemaTienda.Model\SistemaTienda.Model.csproj" />
     <ProjectReference Include="..\SistemaTienda.Utility\SistemaTienda.Utility.csproj" />
   </ItemGroup>

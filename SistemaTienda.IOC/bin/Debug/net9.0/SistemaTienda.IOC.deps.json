@@ -563,6 +563,7 @@
           "Microsoft.AspNetCore.Mvc.Abstractions": "2.3.0",
           "SistemaTienda.DAL": "1.0.0",
           "SistemaTienda.DTO": "1.0.0",
+          "SistemaTienda.Exceptions": "1.0.0",
           "SistemaTienda.Model": "1.0.0",
           "SistemaTienda.Utility": "1.0.0"
         },
@@ -587,6 +588,14 @@
       "SistemaTienda.DTO/1.0.0": {
         "runtime": {
           "SistemaTienda.DTO.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "SistemaTienda.Exceptions/1.0.0": {
+        "runtime": {
+          "SistemaTienda.Exceptions.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -928,6 +937,11 @@
       "sha512": ""
     },
     "SistemaTienda.DTO/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "SistemaTienda.Exceptions/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

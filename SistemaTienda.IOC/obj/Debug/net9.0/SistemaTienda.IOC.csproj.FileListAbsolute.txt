@@ -70,3 +70,5 @@ C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.IOC\obj\Debug\net9.0\Si
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.IOC\obj\Debug\net9.0\refint\SistemaTienda.IOC.dll
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.IOC\obj\Debug\net9.0\SistemaTienda.IOC.pdb
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.IOC\obj\Debug\net9.0\ref\SistemaTienda.IOC.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.IOC\bin\Debug\net9.0\SistemaTienda.Exceptions.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.IOC\bin\Debug\net9.0\SistemaTienda.Exceptions.pdb

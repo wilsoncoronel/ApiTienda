@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SistemaTienda.API.Exceptions;
 using SistemaTienda.BLL.Servicios.Contrato;
 using SistemaTienda.DAL.DBContext;
 using SistemaTienda.DAL.Repositorios.Contrato;
@@ -28,70 +29,51 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<int> CrearArticulo(ArticuloCreacionDTO articuloCreacionDto)
         {
-            try {
-                var articuloTb = this._mapper.MapeoArticuloCreacionDtoAArticuloTb(articuloCreacionDto);
-                articuloTb.FechaCreacion = DateTime.Now;
-                articuloTb.Estado = true;
-                articuloTb.EstadoVisual = true;
-                   var articuloCreado =  await this._articuloRepository.Crear(articuloTb);
-                if (articuloCreado.Id == null)
-                    throw new Exception("No se pudo crear el artículo!!!");
-                return articuloCreado.Id;
-            } catch {
-                throw;
-            }
+            var articuloTb = this._mapper.MapeoArticuloCreacionDtoAArticuloTb(articuloCreacionDto);
+            articuloTb.FechaCreacion = DateTime.Now;
+            articuloTb.Estado = true;
+            articuloTb.EstadoVisual = true;
+                var articuloCreado =  await this._articuloRepository.Crear(articuloTb);
+            if (articuloCreado.Id == null)
+                throw new DbUpdateException("No se pudo crear el artículo!!!");
+            return articuloCreado.Id;
         }
-
         
         public async Task<bool> DesactivarArticulo(int idArticulo)
-        {
-            try
-            {
-                var articuloTb = await this._articuloRepository.ListarId(a => a.Id == idArticulo);
-                articuloTb.Estado = false;
-                articuloTb.FechaActualizacion = DateTime.Now;
-                var resp = await this._articuloRepository.Editar(articuloTb);
-                if (resp == false)
-                    throw new Exception("No se pudo desactivar el artículo!!");
-                return resp;
-            }
-            catch
-            {
-                throw;
-            }
+        {   
+            var articuloTb = await this._articuloRepository.ListarId(a => a.Id == idArticulo);
+            articuloTb.Estado = false;
+            articuloTb.FechaActualizacion = DateTime.Now;
+            var resp = await this._articuloRepository.Editar(articuloTb);
+            if (resp == false)
+                throw new DbUpdateException("No se pudo desactivar el artículo!!");
+            return resp;
         }
 
         public async Task<bool> EditarArticulo(ArticuloEdicionDTO articuloEditarDto)
         {
-            try
-            {
-                var articuloTb = await this._articuloRepository.ListarId(a => a.Id == articuloEditarDto.Id);
-
-                if (articuloTb == null)
-                    throw new Exception("No se pudo editar el articulo , no existen en la bd!!");
-                articuloTb.IdImpuesto = articuloEditarDto.IdImpuesto;
-                articuloTb.IdMarca = articuloEditarDto.IdMarca;
-                articuloTb.Nombre = articuloEditarDto.Nombre;
-                articuloTb.IdImpuesto = articuloEditarDto.IdImpuesto;
-                articuloTb.IdTipoArticulo = articuloEditarDto.IdTipoArticulo;
-                articuloTb.FechaActualizacion = DateTime.Now;
-                articuloTb.Unidad = articuloEditarDto.Unidad;
-                articuloTb.UnidadValor = articuloEditarDto.UnidadValor;
-                articuloTb.ValorCompra = articuloEditarDto.ValorCompra;
-                articuloTb.ValorVenta = articuloEditarDto.ValorVenta;
-                articuloTb.Descripcion = articuloEditarDto.Descripcion;
-                articuloTb.Estado = articuloEditarDto.Estado;
-                articuloTb.FechaCaducidad = articuloEditarDto.FechaCaducidad;
-                articuloTb.Papeleria = articuloEditarDto.Papeleria;
-                articuloTb.IdPorcentajeGanancia = articuloEditarDto.IdPorcentajeGanancia;
-                var resp = await this._articuloRepository.Editar(articuloTb);
-                if (resp == false)
-                    throw new Exception("No se pudo editar el artículo");
-                return resp;
-            }
-            catch {
-                throw;
-            }
+            var articuloTb = await this._articuloRepository.ListarId(a => a.Id == articuloEditarDto.Id);
+            if (articuloTb == null)
+                throw new NotFoundException("No se pudo editar el articulo , no existen en la bd!!");
+            articuloTb.IdImpuesto = articuloEditarDto.IdImpuesto;
+            articuloTb.IdMarca = articuloEditarDto.IdMarca;
+            articuloTb.Nombre = articuloEditarDto.Nombre;
+            articuloTb.IdImpuesto = articuloEditarDto.IdImpuesto;
+            articuloTb.IdTipoArticulo = articuloEditarDto.IdTipoArticulo;
+            articuloTb.FechaActualizacion = DateTime.Now;
+            articuloTb.Unidad = articuloEditarDto.Unidad;
+            articuloTb.UnidadValor = articuloEditarDto.UnidadValor;
+            articuloTb.ValorCompra = articuloEditarDto.ValorCompra;
+            articuloTb.ValorVenta = articuloEditarDto.ValorVenta;
+            articuloTb.Descripcion = articuloEditarDto.Descripcion;
+            articuloTb.Estado = articuloEditarDto.Estado;
+            articuloTb.FechaCaducidad = articuloEditarDto.FechaCaducidad;
+            articuloTb.Papeleria = articuloEditarDto.Papeleria;
+            articuloTb.IdPorcentajeGanancia = articuloEditarDto.IdPorcentajeGanancia;
+            var resp = await this._articuloRepository.Editar(articuloTb);
+            if (resp == false)
+                throw new DbUpdateException("No se pudo editar el articulo , no existen en la bd!!");
+            return resp;
         }
 
         public async Task<List<ArticuloInventarioDTO>> ListarTodosArticulos(bool esVenta)
@@ -204,20 +186,19 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<bool> CrearArticulosLista(List<ArticuloCreacionDTO> articulosCreacionDto)
         {
-            using (var transaction = tiendaDbContext.Database.BeginTransaction())
-            {
-                try {
-                    var articulosTb = this._mapper.MapeoListaArticulosCreacionAListaArticulosTb(articulosCreacionDto);
-                    this.tiendaDbContext.TbComArticulos.AddRange(articulosTb);
-                    await this.tiendaDbContext.SaveChangesAsync();
-                    transaction.Commit();
-                    return true;
-                }
-                catch {
-                    transaction.Rollback();
-                    throw;
-                }
+            using var transaction = await tiendaDbContext.Database.BeginTransactionAsync();
+            try {
+                var articulosTb = this._mapper.MapeoListaArticulosCreacionAListaArticulosTb(articulosCreacionDto);
+                this.tiendaDbContext.TbComArticulos.AddRange(articulosTb);
+                await this.tiendaDbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return true;
             }
+            catch {
+                await transaction.RollbackAsync();
+                throw;
+            }
+            
         }
     }
 }

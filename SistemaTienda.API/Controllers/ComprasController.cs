@@ -14,25 +14,16 @@ namespace SistemaTienda.API.Controllers
         {
             this._compraService = compraService;
         }
+
         [HttpPost]
         [Route("RegistrarCompra")]
         public async Task<IActionResult> RegistrarCompra(CompraCreacionDTO compraCreacionDto)
         {
            
             var resp = new Response<int>();
-            try
-            {
-                // Aquí iría la lógica para registrar la compra utilizando un servicio
-                // Por ejemplo: resp.Value = await this._compraService.RegistrarCompra(ventaCreacionDto);
-                
-                resp.status = true;
-                resp.Value = await this._compraService.RegistrarCompra(compraCreacionDto); // Simulación de ID de compra registrada
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._compraService.RegistrarCompra(compraCreacionDto); // Simulación de ID de compra registrada
+            resp.msg = "Compra registrada correctamente";
             return Ok(resp);
         }
 
@@ -42,19 +33,9 @@ namespace SistemaTienda.API.Controllers
         {
 
             var resp = new Response<bool>();
-            try
-            {
-                // Aquí iría la lógica para registrar la compra utilizando un servicio
-                // Por ejemplo: resp.Value = await this._compraService.RegistrarCompra(ventaCreacionDto);
-
-                resp.status = true;
-                resp.Value = await this._compraService.EditarCompra(compraEditarDto); // Simulación de ID de compra registrada
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._compraService.EditarCompra(compraEditarDto); // Simulación de ID de compra registrada
+            resp.msg = "Compra editada correctamente";
             return Ok(resp);
         }
 
@@ -63,16 +44,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListarEstadosCompra()
         {
             var resp = new Response<List<EstadoCompraDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._compraService.ListarEstadosCompras();
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._compraService.ListarEstadosCompras();
+            resp.msg = "Estados de compra listados correctamente";
             return Ok(resp);
         }
 
@@ -81,19 +55,11 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListarCompras(DateOnly fechaInicial, DateOnly fechaFinal)
         {
             var resp = new Response<List<CompraMinDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._compraService.ListarCompras(fechaInicial, fechaFinal);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._compraService.ListarCompras(fechaInicial, fechaFinal);
+            resp.msg = "Compras listadas correctamente";
             return Ok(resp);
         }
-
 
         [HttpGet]
         [Route("ObtenerCompra")]
@@ -101,16 +67,9 @@ namespace SistemaTienda.API.Controllers
         {
 
             var resp = new Response<CompraDTO>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._compraService.ObtenerCompra(idCompra);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._compraService.ObtenerCompra(idCompra);
+            resp.msg = "Compra obtenida correctamente";
             return Ok(resp);
         }
 
@@ -118,19 +77,10 @@ namespace SistemaTienda.API.Controllers
         [Route("ReversarCompra")]
         public async Task<IActionResult> ReversarCompra(int idCompra)
         {
-
-            var resp = new Response<bool>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._compraService.ReversarCompra(idCompra);
-                resp.msg = "Reversion de la comra exitosa";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            var resp = new Response<bool>();    
+            resp.status = true;
+            resp.Value = await this._compraService.ReversarCompra(idCompra);
+            resp.msg = "Reversion de la compra exitosa";
             return Ok(resp);
         }
     }
