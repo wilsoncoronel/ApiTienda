@@ -28,14 +28,26 @@ namespace SistemaTienda.BLL.Servicios.Contrato
             if (string.IsNullOrWhiteSpace(identificacion))
                 return false;
 
-            return await tiendaDbContext.TbGrlPersonas.AsNoTracking().AnyAsync(p =>
-                    p.Identificacion == identificacion); // si aplica en tu modelo
+            return await tiendaDbContext.TbComProveedores.AsNoTracking().AnyAsync(p =>
+                    p.IdPersonaNavigation.Identificacion == identificacion); // si aplica en tu modelo
         }
+
+        public async Task<int> ExistePersonaConIdentificacion(string iden)
+        {
+            return await tiendaDbContext.TbComProveedores
+            .Where(pro => pro.IdPersonaNavigation.Identificacion == iden)
+            .Select(pro => pro.IdPersona)
+            .FirstOrDefaultAsync();
+        }
+
         public async Task<SriContribuyenteDTO?> ConsultarProveedorPorRuc(string ruc)
         {
-            bool existePer = await this.ExisteProveedorConIdentificacionAsync(ruc);
-            if(existePer)
-                throw new ConflictException("Ya existe una persona en el sistema con la identificación proporcionada");
+            bool existePro = await this.ExisteProveedorConIdentificacionAsync(ruc);
+            int existePer = 0;
+            if (!existePro)
+                existePer = await this.ExistePersonaConIdentificacion(ruc);
+            if(existePer != 0)
+                throw new ConflictException("Ya existe un proveedor en el sistema con la identificación proporcionada");
             string urlExistente =
                 $"sri-catastro-sujeto-servicio-internet/rest/" +
                 $"ConsolidadoContribuyente/" +

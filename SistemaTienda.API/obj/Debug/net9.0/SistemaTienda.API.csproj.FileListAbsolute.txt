@@ -533,4 +533,3 @@ C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\re
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\bin\Debug\net9.0\SistemaTienda.Exceptions.dll
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\bin\Debug\net9.0\SistemaTienda.Exceptions.pdb
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\bin\Debug\net9.0\Newtonsoft.Json.dll
-C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\SistemaTienda.API.MvcApplicationPartsAssemblyInfo.cs

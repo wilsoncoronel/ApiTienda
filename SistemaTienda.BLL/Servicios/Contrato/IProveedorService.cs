@@ -9,6 +9,6 @@ namespace SistemaTienda.BLL.Servicios.Contrato
         Task<List<TipoIdentificacionDTO>> ListarTiposIdentificacion();
         Task<int> CrearProveedor(ProveedorCreacionDTO proveedorCreacionDto);
         Task<bool> EditarProveedor(ProveedorEditarDTO proveedorEditarDto);
-        Task<ProveedorDTO> BuscarProveedorCI(string identificacion);
+        Task<ProveedorDTO> BuscarProveedorCI(string identificacion, bool verPersona);
     }
 }

@@ -52,11 +52,11 @@ namespace SistemaTienda.API.Controllers
 
         [HttpGet]
         [Route("BuscarProveedorCI")]
-        public async Task<IActionResult> BuscarProveedorCI(string identificacion)
+        public async Task<IActionResult> BuscarProveedorCI(string identificacion, bool verPersona = false)
         {
             var resp = new Response<ProveedorDTO>();
             resp.status = true;
-            resp.Value = await this.proveedorService.BuscarProveedorCI(identificacion);
+            resp.Value = await this.proveedorService.BuscarProveedorCI(identificacion, verPersona);
             resp.msg = "Error al buscar el proveedor, comuniquese con el administrador del sistema!!!";
             return Ok(resp);
         }

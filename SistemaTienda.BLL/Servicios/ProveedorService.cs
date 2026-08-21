@@ -1,16 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SistemaTienda.API.Exceptions;
 using SistemaTienda.BLL.Servicios.Contrato;
 using SistemaTienda.DAL.DBContext;
 using SistemaTienda.DAL.Repositorios.Contrato;
 using SistemaTienda.DTO;
 using SistemaTienda.Model;
 using SistemaTienda.Utility;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SistemaTienda.BLL.Servicios
 {
@@ -29,27 +24,95 @@ namespace SistemaTienda.BLL.Servicios
         
         public async Task<int> CrearProveedor(ProveedorCreacionDTO proveedorCreacionDto)
         {
-            using (var transaccion = _tiendaDbContext.Database.BeginTransaction())
+            using var transaccion = await _tiendaDbContext.Database.BeginTransactionAsync();
+            try
             {
-                try
-                {
-                    var proveedor = this.mapper.MapeoProveedorDtoAProveedorTb(proveedorCreacionDto);
-                    await this._proveedorRepository.Crear(proveedor);
-                    if (proveedor.Id == 0)
-                        throw new Exception("No se pudo crear el proveedor");
-                    transaccion.Commit();
-                    return proveedor.Id;
-                }
-                catch
-                {
-                    transaccion.Rollback();
-                    throw new Exception("Error ha ocurrido un error creando el proveedor, comuniquese con el administrador del sistema!!!");
-                }
+                var proveedor = this.mapper.MapeoProveedorDtoAProveedorTb(proveedorCreacionDto);
+                await this._proveedorRepository.Crear(proveedor);
+                if (proveedor.Id == 0)
+                    throw new Exception("No se pudo crear el proveedor");
+                await transaccion.CommitAsync();
+                return proveedor.Id;
+            }
+            catch
+            {
+                await transaccion.RollbackAsync();
+                throw new Exception("Error ha ocurrido un error creando el proveedor, comuniquese con el administrador del sistema!!!");
             }
         }
 
-        public async Task<ProveedorDTO> BuscarProveedorCI(string identificacion)
+        public async Task<ProveedorDTO> BuscarProveedorCI(string identificacion,bool verPersona)
         {
+            identificacion = identificacion.Trim();
+
+            if (verPersona)
+            {
+                var persona = await _tiendaDbContext.TbGrlPersonas
+                    .Include(p => p.IdTipoIdentificacionNavigation)
+                    .Include(p => p.TbGrlDireccione)
+                        .ThenInclude(d => d.IdCiudadNavigation)
+                    .FirstOrDefaultAsync(
+                        p => p.Identificacion.Trim() == identificacion);
+
+                if (persona is not null)
+                {
+                    var proveedor = await _tiendaDbContext.TbComProveedores
+                        .Include(p => p.IdPersonaNavigation)
+                            .ThenInclude(p => p.IdTipoIdentificacionNavigation)
+                        .Include(p => p.IdPersonaNavigation)
+                            .ThenInclude(p => p.TbGrlDireccione)
+                                .ThenInclude(d => d.IdCiudadNavigation)
+                        .FirstOrDefaultAsync(
+                            p => p.IdPersona == persona.Id);
+
+                    if (proveedor is null)
+                    {
+                        proveedor = await CrearSoloProveedor(persona);
+                    }
+
+                    return mapper.MapeoProveedorTbAProveedorDto(proveedor);
+                }
+            }
+
+            var proveedorExistente =
+                await _tiendaDbContext.TbComProveedores
+                    .Include(p => p.IdPersonaNavigation)
+                        .ThenInclude(p => p.IdTipoIdentificacionNavigation)
+                    .Include(p => p.IdPersonaNavigation)
+                        .ThenInclude(p => p.TbGrlDireccione)
+                            .ThenInclude(d => d.IdCiudadNavigation)
+                    .FirstOrDefaultAsync(
+                        p => p.IdPersonaNavigation.Identificacion.Trim()
+                            == identificacion);
+
+            if (proveedorExistente is null)
+            {
+                throw new NotFoundException(
+                    "No se encontró ningún proveedor con la identificación proporcionada.");
+            }
+
+            return mapper.MapeoProveedorTbAProveedorDto(
+                proveedorExistente);
+        }
+
+        private async Task<TbComProveedores> CrearSoloProveedor(TbGrlPersona persona)
+        {
+            var proveedor = new TbComProveedores
+            {
+                IdPersona = persona.Id,
+                RazonSocial = $"{persona.Apellidos} {persona.Nombres}",
+                Estado = true,
+                EstadoVisual = true
+            };
+
+            _tiendaDbContext.TbComProveedores.Add(proveedor);
+            await _tiendaDbContext.SaveChangesAsync();
+            return proveedor;
+        }
+
+        public async Task<bool> EditarProveedor(ProveedorEditarDTO proveedorEditarDto)
+        {
+            using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync();
             try
             {
                 var proveedor = await this._tiendaDbContext.TbComProveedores
@@ -58,90 +121,47 @@ namespace SistemaTienda.BLL.Servicios
                     .Include(p => p.IdPersonaNavigation)
                     .ThenInclude(d => d.TbGrlDireccione)
                     .ThenInclude(c => c.IdCiudadNavigation)
-                    .Where(p => p.IdPersonaNavigation.Identificacion.Trim() == identificacion.Trim()).FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync(p => p.Id == proveedorEditarDto.Id);
                 if(proveedor is null)
                 {
-                    throw new Exception("No se encontró ningún proveedor con la identificación proporcionada");
+                    throw new NotFoundException("No se encontró el proveedor a editar");
                 }
-                return this.mapper.MapeoProveedorTbAProveedorDto(proveedor);
-
+                this.mapper.MapeoProveedorEditarDtoAProveedorTb(proveedorEditarDto, proveedor);
+                var resp = await this._proveedorRepository.Editar(proveedor);
+                if (resp == false)
+                    throw new ConflictException("No se pudo editar el proveedor");
+                await transaction.CommitAsync();
+                return resp;
             }
-            catch(Exception ex)
+            catch
             {
-                throw new Exception("Error buscando el proveedor", ex);
+                await transaction.RollbackAsync();
+                throw;
             }
-        }
-        
-        public async Task<bool> EditarProveedor(ProveedorEditarDTO proveedorEditarDto)
-        {
-            using (var transaction = _tiendaDbContext.Database.BeginTransaction())
-            {
-                try
-                {
-                    var proveedor = await this._tiendaDbContext.TbComProveedores
-                        .Include(p => p.IdPersonaNavigation)
-                        .ThenInclude(t => t.IdTipoIdentificacionNavigation)
-                        .Include(p => p.IdPersonaNavigation)
-                        .ThenInclude(d => d.TbGrlDireccione)
-                        .ThenInclude(c => c.IdCiudadNavigation)
-                        .FirstOrDefaultAsync(p => p.Id == proveedorEditarDto.Id);
-                    this.mapper.MapeoProveedorEditarDtoAProveedorTb(proveedorEditarDto, proveedor);
-                    var resp = await this._proveedorRepository.Editar(proveedor);
-                    if (resp == false)
-                        throw new Exception("No se pudo editar el proveedor");
-                    transaction.Commit();
-                    return resp;
-                }
-                catch
-                {
-                    transaction.Rollback();
-                    throw new Exception("Ha ocurrido un error editando el proveedor, comuníquese con el administrador del sistema!!!");
-                }
-            }
+            
         }
 
         public async Task<List<ProveedorDTO>> ListarProveedores()
         {
-            try
-            {
-                var proveedoresList = await this._tiendaDbContext.TbComProveedores.Where(prov=> prov.EstadoVisual == true)
-                    .Include(p => p.IdPersonaNavigation)
-                    .ThenInclude(t => t.IdTipoIdentificacionNavigation)
-                    .Include(p => p.IdPersonaNavigation)
-                    .ThenInclude(d => d.TbGrlDireccione)
-                    .ThenInclude(c => c.IdCiudadNavigation).ToListAsync();
-                return this.mapper.MapeoProveedorTbListaAProveedorDtoLista(proveedoresList);
-            }
-            catch
-            {
-                throw;
-            }
+            var proveedoresList = await this._tiendaDbContext.TbComProveedores.Where(prov=> prov.EstadoVisual == true)
+                .Include(p => p.IdPersonaNavigation)
+                .ThenInclude(t => t.IdTipoIdentificacionNavigation)
+                .Include(p => p.IdPersonaNavigation)
+                .ThenInclude(d => d.TbGrlDireccione)
+                .ThenInclude(c => c.IdCiudadNavigation).ToListAsync();
+            return this.mapper.MapeoProveedorTbListaAProveedorDtoLista(proveedoresList);
         }
 
         public async Task<List<CiudadDTO>> ListarCiudades()
         {
             List<TbGrlCiudades> tbCiudades = await this._tiendaDbContext.TbGrlCiudades.Where(est => est.EstadoVisual == true).ToListAsync();
-            try
-            {
-                return this.mapper.MapeoListaCiudadesTbaAListaCiudadesDto(tbCiudades);
-            }
-            catch
-            {
-                throw;
-            }
+            return this.mapper.MapeoListaCiudadesTbaAListaCiudadesDto(tbCiudades);
         }
 
         public async Task<List<TipoIdentificacionDTO>> ListarTiposIdentificacion()
         {
             List<TbGrlTipoIdentificacion> tbTiposIdentificacion = await this._tiendaDbContext.TbGrlTipoIdentificacions.Where(est => est.EstadoVisual == true).ToListAsync();
-            try
-            {
-                return this.mapper.MapeoListTiposIdentificacionTbaAListaTiposIDentificacionDto(tbTiposIdentificacion);
-            }
-            catch
-            {
-                throw;
-            }
+            return this.mapper.MapeoListTiposIdentificacionTbaAListaTiposIDentificacionDto(tbTiposIdentificacion);
         }
     }
 }

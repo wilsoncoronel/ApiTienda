@@ -745,6 +745,11 @@
         "Name": "identificacion",
         "Type": "System.String",
         "IsRequired": false
+      },
+      {
+        "Name": "verPersona",
+        "Type": "System.Boolean",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
