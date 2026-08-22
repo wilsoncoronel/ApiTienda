@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SistemaTienda.API.Exceptions;
 using SistemaTienda.BLL.Servicios.Contrato;
 using SistemaTienda.DAL.DBContext;
 using SistemaTienda.DAL.Repositorios.Contrato;
@@ -26,41 +27,26 @@ namespace SistemaTienda.BLL.Servicios
         }
         public async Task<int> CrearPorcentaje(PorcentajeGananciaCreacionDTO porcentajeGananciaCreacionDto)
         {
-            try
-            {
-                var porcentaje = this.mapeos.MapeoPorcentajeCreacionDtoAPorcentajeTb(porcentajeGananciaCreacionDto);
-                await this.porcentajeRepository.Crear(porcentaje);
-                if (porcentaje.Id == 0)
-                    throw new Exception("No se pudo crear el porcentaje de ganancia");
-                return porcentaje.Id;
-            }
-            catch
-            {
-                throw new Exception("Un error ha ocurrido un error creando el porcentaje, comuníquese con el administrador del sistema!!!");
-            }
+            var porcentaje = this.mapeos.MapeoPorcentajeCreacionDtoAPorcentajeTb(porcentajeGananciaCreacionDto);
+            await this.porcentajeRepository.Crear(porcentaje);
+            if (porcentaje.Id == 0)
+                throw new BadRequestException("No se pudo crear el porcentaje de ganancia");
+            return porcentaje.Id;
         }
 
         public async Task<bool> EditarPorcentaje(PorcentajeGananciaDTO porcentajeGananciaEdicionDto)
         {
-            try
-            {
-                var porcentajeGanancia = await this._tiendaDb.TbComPorcentajeGanancia.Where(p => p.Id == porcentajeGananciaEdicionDto.Id)
-                    .FirstOrDefaultAsync();
-                if (porcentajeGanancia is null)
-                    throw new Exception("No se encontró la marca a editar");
-                porcentajeGanancia.EstadoVisual = porcentajeGananciaEdicionDto.EstadoVisual;
-                porcentajeGanancia.Valor = porcentajeGanancia.Valor;
-                porcentajeGanancia.PorcentajeGanancia = porcentajeGanancia.PorcentajeGanancia;
-                var resp = await this.porcentajeRepository.Editar(porcentajeGanancia);
-                if (resp == false)
-                    throw new Exception("No se pudo editar el porcentaje!!");
-                return resp;
-            }
-            catch
-            {
-
-                throw new Exception("Error ha ocurrido un error editando el porcentaje, comuníquese con el administrador del sistema!!!");
-            }
+            var porcentajeGanancia = await this._tiendaDb.TbComPorcentajeGanancia.Where(p => p.Id == porcentajeGananciaEdicionDto.Id)
+                .FirstOrDefaultAsync();
+            if (porcentajeGanancia is null)
+                throw new NotFoundException("No se encontró la marca a editar");
+            porcentajeGanancia.EstadoVisual = porcentajeGananciaEdicionDto.EstadoVisual;
+            porcentajeGanancia.Valor = porcentajeGanancia.Valor;
+            porcentajeGanancia.PorcentajeGanancia = porcentajeGanancia.PorcentajeGanancia;
+            var resp = await this.porcentajeRepository.Editar(porcentajeGanancia);
+            if (resp == false)
+                throw new BadRequestException("No se pudo editar el porcentaje!!");
+            return resp;
         }
 
         public async Task<List<PorcentajeGananciaDTO>> ListarPorcentaje()

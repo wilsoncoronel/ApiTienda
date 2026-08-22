@@ -21,18 +21,10 @@ namespace SistemaTienda.API.Controllers
         [Route("RegistrarVenta")]
         public async Task<IActionResult> RegistrarVenta(VentaCreacionDTO ventaCreacionDto)
         {
-
             var resp = new Response<int>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._ventasService.RegistrarVenta(ventaCreacionDto);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._ventasService.RegistrarVenta(ventaCreacionDto);
+            resp.msg = "Venta registrada con exito!!";
             return Ok(resp);
         }
 
@@ -41,16 +33,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> EditarVenta(VentaEditarDTO ventaEditarDto)
         {
             var resp = new Response<bool>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._ventasService.EditarVenta(ventaEditarDto); // Simulación de ID de compra registrada
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._ventasService.EditarVenta(ventaEditarDto); // Simulación de ID de compra registrada
+            resp.msg = "Venta ediatada correctamente";
             return Ok(resp);
         }
 
@@ -58,18 +43,10 @@ namespace SistemaTienda.API.Controllers
         [Route("ReversarVenta")]
         public async Task<IActionResult> ReversarVenta(int id, string documento)
         {
-
             var resp = new Response<bool>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._ventasService.ReversarVenta(id, documento);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._ventasService.ReversarVenta(id, documento);
+            resp.msg = "Venta reversada!!";
             return Ok(resp);
         }
         [HttpGet]
@@ -77,16 +54,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListarEstadosVenta()
         {
             var resp = new Response<List<EstadoVentaDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._ventasService.ListarEstadosVentas();
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._ventasService.ListarEstadosVentas();
+            resp.msg = "Estados listado correctamente!!";
             return Ok(resp);
         }
 
@@ -95,16 +65,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListarVentas(DateOnly fechaInicial, DateOnly fechaFinal)
         {
             var resp = new Response<List<VentaMinDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._ventasService.ListarVentas(fechaInicial, fechaFinal);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._ventasService.ListarVentas(fechaInicial, fechaFinal);
+            resp.msg = "Ventas listadas correctamente!!";
             return Ok(resp);
         }
 
@@ -112,18 +75,10 @@ namespace SistemaTienda.API.Controllers
         [Route("ObtenerVenta")]
         public async Task<IActionResult> ObtenerVenta(int idVenta)
         {
-
             var resp = new Response<VentaDTO>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._ventasService.ObtenerVenta(idVenta);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._ventasService.ObtenerVenta(idVenta);
+            resp.msg = "Veta cargada!!";
             return Ok(resp);
         }
 

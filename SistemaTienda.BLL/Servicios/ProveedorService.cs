@@ -30,14 +30,14 @@ namespace SistemaTienda.BLL.Servicios
                 var proveedor = this.mapper.MapeoProveedorDtoAProveedorTb(proveedorCreacionDto);
                 await this._proveedorRepository.Crear(proveedor);
                 if (proveedor.Id == 0)
-                    throw new Exception("No se pudo crear el proveedor");
+                    throw new BadRequestException("No se pudo crear el proveedor");
                 await transaccion.CommitAsync();
                 return proveedor.Id;
             }
             catch
             {
                 await transaccion.RollbackAsync();
-                throw new Exception("Error ha ocurrido un error creando el proveedor, comuniquese con el administrador del sistema!!!");
+                throw;
             }
         }
 

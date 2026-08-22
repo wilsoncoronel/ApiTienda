@@ -21,16 +21,10 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> CrearUsuario([FromBody] UsuarioCreacionDTO usuario)
         {
             var resp = new Response<int>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._usuarioService.CrearUsuario(usuario);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            
+            resp.status = true;
+            resp.Value = await this._usuarioService.CrearUsuario(usuario);
+            resp.msg = "Usuario creado con exito!!";
             return Ok(resp);
         }
 
@@ -39,16 +33,10 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListarUsuarios()
         {
             var resp = new Response<List<UsuarioDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._usuarioService.ListarUsuario();
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            
+            resp.status = true;
+            resp.Value = await this._usuarioService.ListarUsuario();
+            resp.msg = "Lista de usuario cargada correctamente";
             return Ok(resp);
         }
 
@@ -59,16 +47,10 @@ namespace SistemaTienda.API.Controllers
         {
             var resp = new Response<UsuarioDTO>();
             int Id = IdUsuario;
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._usuarioService.ListarUsuarioId(Id);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            
+            resp.status = true;
+            resp.Value = await this._usuarioService.ListarUsuarioId(Id);
+            resp.msg = "Usuario cargado!!";
             return Ok(resp);
         }
 
@@ -77,16 +59,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> EditarUsuario([FromBody] UsuarioEditarDTO usuarioEditarDto)
         {
             var resp = new Response<int>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._usuarioService.EditarUsuario(usuarioEditarDto);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._usuarioService.EditarUsuario(usuarioEditarDto);
+            resp.msg = "Usuario editado correctamente!!";
             return Ok(resp);
         }
     }

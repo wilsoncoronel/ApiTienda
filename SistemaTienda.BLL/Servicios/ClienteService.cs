@@ -72,43 +72,41 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<bool> EditarCliente(ClienteEditarDTO clienteEditarDto)
         {
-
             using var transaccion = await _tiendaDbContext.Database.BeginTransactionAsync();
+            try
             {
-                try
-                {
-                    var cliente = await this._tiendaDbContext.TbComClientes.Where(c => c.Id == clienteEditarDto.Id)
-                        .Include(per =>per.IdPersonaNavigation)
-                        .ThenInclude(ti => ti.IdTipoIdentificacionNavigation)
-                        .Include(per => per.IdPersonaNavigation)
-                        .ThenInclude(dir => dir.TbGrlDireccione)
-                            .ThenInclude(ciu => ciu.IdCiudadNavigation)
-                        .FirstOrDefaultAsync();
-                    if(cliente is null)
-                        throw new Exception("No se encontró el cliente a editar");
-                    cliente.IdPersonaNavigation.Telefono = clienteEditarDto.Telefono;
-                    cliente.IdPersonaNavigation.Mail = clienteEditarDto.Mail;
-                    cliente.IdPersonaNavigation.FechaModificacion = DateTime.Now;
-                    cliente.IdPersonaNavigation.TbGrlDireccione.IdCiudad = clienteEditarDto.DireccionEdicionDto.IdCiudad;
-                    cliente.IdPersonaNavigation.TbGrlDireccione.Descripcion = clienteEditarDto.DireccionEdicionDto.Descripcion;
-                    cliente.IdPersonaNavigation.Nombres = clienteEditarDto.Nombres;
-                    cliente.IdPersonaNavigation.Apellidos = clienteEditarDto.Apellidos;
-                    cliente.IdPersonaNavigation.Identificacion = clienteEditarDto.Identificacion;
-                    cliente.EstadoVisual = clienteEditarDto.EstadoVisual;
-                    cliente.Estado = clienteEditarDto.Estado;
-                    cliente.IdPersonaNavigation.IdTipoIdentificacion = clienteEditarDto.IdTipoIdentificacion;
-                    var resp = await this._clienteRepository.Editar(cliente);
-                    if (resp == false)
-                        throw new Exception("No se pudo editar el cliente");
-                    await transaccion.CommitAsync();
-                    return resp;
-                }
-                catch
-                {
-                    await transaccion.RollbackAsync();
-                    throw new Exception("Error ha ocurrido un error creando el cliente, comuníquese con el administrador del sistema!!!");
-                }
+                var cliente = await this._tiendaDbContext.TbComClientes.Where(c => c.Id == clienteEditarDto.Id)
+                    .Include(per =>per.IdPersonaNavigation)
+                    .ThenInclude(ti => ti.IdTipoIdentificacionNavigation)
+                    .Include(per => per.IdPersonaNavigation)
+                    .ThenInclude(dir => dir.TbGrlDireccione)
+                        .ThenInclude(ciu => ciu.IdCiudadNavigation)
+                    .FirstOrDefaultAsync();
+                if(cliente is null)
+                    throw new Exception("No se encontró el cliente a editar");
+                cliente.IdPersonaNavigation.Telefono = clienteEditarDto.Telefono;
+                cliente.IdPersonaNavigation.Mail = clienteEditarDto.Mail;
+                cliente.IdPersonaNavigation.FechaModificacion = DateTime.Now;
+                cliente.IdPersonaNavigation.TbGrlDireccione.IdCiudad = clienteEditarDto.DireccionEdicionDto.IdCiudad;
+                cliente.IdPersonaNavigation.TbGrlDireccione.Descripcion = clienteEditarDto.DireccionEdicionDto.Descripcion;
+                cliente.IdPersonaNavigation.Nombres = clienteEditarDto.Nombres;
+                cliente.IdPersonaNavigation.Apellidos = clienteEditarDto.Apellidos;
+                cliente.IdPersonaNavigation.Identificacion = clienteEditarDto.Identificacion;
+                cliente.EstadoVisual = clienteEditarDto.EstadoVisual;
+                cliente.Estado = clienteEditarDto.Estado;
+                cliente.IdPersonaNavigation.IdTipoIdentificacion = clienteEditarDto.IdTipoIdentificacion;
+                var resp = await this._clienteRepository.Editar(cliente);
+                if (resp == false)
+                    throw new BadRequestException("No se pudo editar el cliente");
+                await transaccion.CommitAsync();
+                return resp;
             }
+            catch
+            {
+                await transaccion.RollbackAsync();
+                throw;
+            }
+            
         }
 
         public async Task<List<TipoIdentificacionDTO>> ListarTiposIdentificacion()

@@ -23,18 +23,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> BuscarClienteCI(string identificacion)
         {
             var resp = new Response<ClienteDTO>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._clienteService.BuscarClienteCI(identificacion);
-                resp.msg = "Cliente encontrado!!";
-            }
-            catch
-            {
-                resp.status = false;
-                resp.msg = "Error al buscar el cliente, comuníquese con el administrador del sistema!!!";
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._clienteService.BuscarClienteCI(identificacion);
+            resp.msg = "Cliente encontrado!!";
             return Ok(resp);
         }
 
@@ -43,18 +34,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> CrearCliente([FromBody] ClienteCreacionDTO cliente)
         {
             var resp = new Response<int>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._clienteService.CrearCliente(cliente);
-                resp.msg = "Cliente creado exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                resp.msg = "Error al crear el cliente, comuníquese con el administrador del sistema!!!"; 
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._clienteService.CrearCliente(cliente);
+            resp.msg = "Cliente creado exitosamente";
             return Ok(resp);
         }
 
@@ -63,17 +45,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListarTiposIdentificacion()
         {
             var resp = new Response<List<TipoIdentificacionDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._clienteService.ListarTiposIdentificacion();
-                resp.msg = "Tipos de identificación listados exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._clienteService.ListarTiposIdentificacion();
+            resp.msg = "Tipos de identificación listados exitosamente";
             return Ok(resp);
         }
 
@@ -82,17 +56,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListarClientes()
         {
             var resp = new Response<List<ClienteDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._clienteService.ListarClientes();
-                resp.msg = "Clientes listados listados exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._clienteService.ListarClientes();
+            resp.msg = "Clientes listados listados exitosamente";
             return Ok(resp);
         }
 
@@ -101,17 +67,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListarCiudades()
         {
             var resp = new Response<List<CiudadDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._clienteService.ListarCiudades();
-                resp.msg = "Tipos de identificación listados exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._clienteService.ListarCiudades();
+            resp.msg = "Tipos de identificación listados exitosamente";
             return Ok(resp);
         }
 
@@ -124,18 +82,9 @@ namespace SistemaTienda.API.Controllers
                 return BadRequest(ModelState);
             }
             var resp = new Response<bool>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._clienteService.EditarCliente(Cliente);
-                resp.msg = "Cliente editado exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                resp.msg = "Error al editar el cliente, comuniquese con el administrador del sistema!!!";
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._clienteService.EditarCliente(Cliente);
+            resp.msg = "Cliente editado exitosamente";
             return Ok(resp);
         }
     }

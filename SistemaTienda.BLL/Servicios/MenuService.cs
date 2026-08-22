@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SistemaTienda.API.Exceptions;
 using SistemaTienda.BLL.Servicios.Contrato;
 using SistemaTienda.DAL.DBContext;
 using SistemaTienda.DAL.Repositorios.Contrato;
@@ -28,18 +29,11 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<List<PermisosRolDTO>> ObtenerMenu(int idRol)
         {
-            try
-            {
-                var menu = await this._tienda.TbSisPermisosRols.Where(p => p.IdRol == idRol && p.EstadoVisual == true).Include(m => m.IdMenuNavigation).ToListAsync();
-                if (menu is null)
-                    throw new Exception("No se encontraron permisos asignados a este rol");
+            var menu = await this._tienda.TbSisPermisosRols.Where(p => p.IdRol == idRol && p.EstadoVisual == true).Include(m => m.IdMenuNavigation).ToListAsync();
+            if (menu is null)
+                throw new NotFoundException("No se encontraron permisos asignados a este rol");
                 
-                return this.mapper.MapeoListaTbSisPermisosRolAPermisosRolDTO(menu).OrderBy(m => m.Menu.Nombre).ToList();
-            }
-            catch
-            {
-                throw;
-            }
+            return this.mapper.MapeoListaTbSisPermisosRolAPermisosRolDTO(menu).OrderBy(m => m.Menu.Nombre).ToList();
         }
     }
 }

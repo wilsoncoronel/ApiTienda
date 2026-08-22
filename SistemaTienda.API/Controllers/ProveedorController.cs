@@ -66,18 +66,11 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> CrearProveedor([FromBody] ProveedorCreacionDTO proveedor)
         {
             var resp = new Response<int>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this.proveedorService.CrearProveedor(proveedor);
-                resp.msg = "Proveedor creado exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                resp.msg = "Error al crear el proveedor, comuniquese con el administrador del sistema!!!";
-                throw;
-            }
+            
+            resp.status = true;
+            resp.Value = await this.proveedorService.CrearProveedor(proveedor);
+            resp.msg = "Proveedor creado exitosamente";
+            
             return Ok(resp);
         }
 
@@ -86,17 +79,11 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListarProveedores()
         {
             var resp = new Response<List<ProveedorDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this.proveedorService.ListarProveedores();
-                resp.msg = "Proveedores listados listados exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            
+            resp.status = true;
+            resp.Value = await this.proveedorService.ListarProveedores();
+            resp.msg = "Proveedores listados listados exitosamente";
+            
             return Ok(resp);
         }
 
@@ -105,17 +92,11 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListarCiudades()
         {
             var resp = new Response<List<CiudadDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this.proveedorService.ListarCiudades();
-                resp.msg = "Ciudades listadas exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            
+            resp.status = true;
+            resp.Value = await this.proveedorService.ListarCiudades();
+            resp.msg = "Ciudades listadas exitosamente";
+            
             return Ok(resp);
         }
 
@@ -124,17 +105,11 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListarTiposIdentificacion()
         {
             var resp = new Response<List<TipoIdentificacionDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this.proveedorService.ListarTiposIdentificacion();
-                resp.msg = "Tipos identificación listadas exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            
+            resp.status = true;
+            resp.Value = await this.proveedorService.ListarTiposIdentificacion();
+            resp.msg = "Tipos identificación listadas exitosamente";
+            
             return Ok(resp);
         }
 
@@ -144,18 +119,11 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> EditarProveedor([FromBody] ProveedorEditarDTO proveedor)
         {
             var resp = new Response<bool>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this.proveedorService.EditarProveedor(proveedor);
-                resp.msg = "Proveedor editado exitosamente";
-            }
-            catch
-            {
-                resp.status = false;
-                resp.msg = "Error al crear el proveedor, comuniquese con el administrador del sistema!!!";
-                throw;
-            }
+            
+            resp.status = true;
+            resp.Value = await this.proveedorService.EditarProveedor(proveedor);
+            resp.msg = "Proveedor editado exitosamente";
+            
             return Ok(resp);
         }
     }

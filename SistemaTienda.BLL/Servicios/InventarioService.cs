@@ -32,114 +32,85 @@ namespace SistemaTienda.BLL.Servicios
         }
         public async Task<List<InventarioLoteDTO>> ExistenciasInventario(bool incluirCeros = false)
         {
-            try
-            {
-                var listaMovimientos = await this._tiendaDb.TbInvMovimientos
-                    .Where(tra => tra.IdTransaccionInventario == 1)
-                    .Include(m => m.TbInvLotes)
-                        .ThenInclude(l => l.IdArticuloNavigation)
-                            .ThenInclude(a => a.IdImpuestoNavigation) // Asegurar carga del impuesto para evitar NullReference
-                    .ToListAsync();
+            var listaMovimientos = await this._tiendaDb.TbInvMovimientos
+                .Where(tra => tra.IdTransaccionInventario == 1)
+                .Include(m => m.TbInvLotes)
+                    .ThenInclude(l => l.IdArticuloNavigation)
+                        .ThenInclude(a => a.IdImpuestoNavigation) // Asegurar carga del impuesto para evitar NullReference
+                .ToListAsync();
 
-                // Aplanar los lotes de todos los movimientos
-                var lotes = listaMovimientos.SelectMany(m => m.TbInvLotes).ToList();
+            // Aplanar los lotes de todos los movimientos
+            var lotes = listaMovimientos.SelectMany(m => m.TbInvLotes).ToList();
 
-                // Mapear a DTO usando el mapeador existente
-                var listaDto = this.mapeo.MapeoListaDetallesLotesTbAListaDetallesLotesDto(lotes);
+            // Mapear a DTO usando el mapeador existente
+            var listaDto = this.mapeo.MapeoListaDetallesLotesTbAListaDetallesLotesDto(lotes);
 
-                // Filtrar según stock (por defecto ocultar ceros)
-                var resultado = incluirCeros
-                    ? listaDto.Where(l => l.StockDisponible > 0).ToList()
-                    : listaDto.Where(l => l.StockDisponible <= 0).ToList();
+            // Filtrar según stock (por defecto ocultar ceros)
+            var resultado = incluirCeros
+                ? listaDto.Where(l => l.StockDisponible > 0).ToList()
+                : listaDto.Where(l => l.StockDisponible <= 0).ToList();
 
-                return resultado;
-            }
-            catch
-            {
-                throw;
-            }
+            return resultado;
         }
         public async Task<List<MovimientoDTO>> ListaInventario(DateOnly FechaInicio, DateOnly FechaFinal)
         {
             var inicio = FechaInicio.ToDateTime(TimeOnly.MinValue);
             var fin = FechaFinal.ToDateTime(TimeOnly.MaxValue);
             
-            try
-            {
-                var tbInventario = await this._tiendaDb.TbInvMovimientos.Where(c => c.Fecha >= inicio && c.Fecha <= fin)
-                    .Include(t => t.IdTransaccionInventarioNavigation)
-                    .ToListAsync();
-                var listaIventarioDto = this.mapeo.MapeoListaMovimientosTbAListaMovimientosDto(tbInventario);
-                return listaIventarioDto;
-            }
-            catch
-            {
-                throw;
-            }
+            var tbInventario = await this._tiendaDb.TbInvMovimientos.Where(c => c.Fecha >= inicio && c.Fecha <= fin)
+                .Include(t => t.IdTransaccionInventarioNavigation)
+                .ToListAsync();
+            var listaIventarioDto = this.mapeo.MapeoListaMovimientosTbAListaMovimientosDto(tbInventario);
+            return listaIventarioDto;
         }
 
         public async Task<List<InventarioLoteDTO>> ListaDetallesMovimiento(int IdMovimiento)
         {
-            try
-            {
-                var transaccion = await _tiendaDb.TbInvMovimientos.Where(m => m.Id == IdMovimiento).Include(tra => tra.IdTransaccionInventarioNavigation).FirstOrDefaultAsync();
+            var transaccion = await _tiendaDb.TbInvMovimientos.Where(m => m.Id == IdMovimiento).Include(tra => tra.IdTransaccionInventarioNavigation).FirstOrDefaultAsync();
                 
-                var nombreTransaccion = transaccion?.IdTransaccionInventarioNavigation?.Nombre;
-                var listaIventarioDto = new List<InventarioLoteDTO> { };
-                if (nombreTransaccion == "Compra" || nombreTransaccion == "Reversion Compra")
-                {
-                    IQueryable<TbInvLote> tbInvLote = await this._loteRepository.Consultar();
-                    var listaResultado = new List<TbInvLote>();
-                    listaResultado = tbInvLote.Where(det => det.IdMovimiento == IdMovimiento)
-                        .Include(art => art.IdArticuloNavigation)
-                        .ThenInclude(imp => imp.IdImpuestoNavigation)
-                        .ToList();
-
-                    listaIventarioDto = this.mapeo.MapeoListaDetallesLotesTbAListaDetallesLotesDto(listaResultado);
-                }
-                else if(nombreTransaccion == "Venta" || nombreTransaccion == "Reversion Venta")
-                {
-                    IQueryable<TbInvConsumoLote> tbInvConsumo = await this._consumoRepository.Consultar();
-                    var listaResultado = new List<TbInvConsumoLote>();
-                    listaResultado = tbInvConsumo.Where(con => con.IdMovimiento == IdMovimiento)
-                        .Include(det => det.IdDetalleVentaNavigation)
-                            .ThenInclude(art => art.IdArticuloNavigation)
-                            .ThenInclude(imp => imp.IdImpuestoNavigation)
-                        .Include(lot => lot.IdLoteNavigation)
-                        .ToList();
-                    listaIventarioDto = this.mapeo.MapeoListaDetallesConsumosTbAListaDetallesConsumosDto(listaResultado);
-                }
-                else
-                {
-                    listaIventarioDto = new List<InventarioLoteDTO> { };
-                }
-                return listaIventarioDto;
-            }
-            catch
+            var nombreTransaccion = transaccion?.IdTransaccionInventarioNavigation?.Nombre;
+            var listaIventarioDto = new List<InventarioLoteDTO> { };
+            if (nombreTransaccion == "Compra" || nombreTransaccion == "Reversion Compra")
             {
-                throw;
+                IQueryable<TbInvLote> tbInvLote = await this._loteRepository.Consultar();
+                var listaResultado = new List<TbInvLote>();
+                listaResultado = tbInvLote.Where(det => det.IdMovimiento == IdMovimiento)
+                    .Include(art => art.IdArticuloNavigation)
+                    .ThenInclude(imp => imp.IdImpuestoNavigation)
+                    .ToList();
+                listaIventarioDto = this.mapeo.MapeoListaDetallesLotesTbAListaDetallesLotesDto(listaResultado);
             }
+            else if(nombreTransaccion == "Venta" || nombreTransaccion == "Reversion Venta")
+            {
+                IQueryable<TbInvConsumoLote> tbInvConsumo = await this._consumoRepository.Consultar();
+                var listaResultado = new List<TbInvConsumoLote>();
+                listaResultado = tbInvConsumo.Where(con => con.IdMovimiento == IdMovimiento)
+                    .Include(det => det.IdDetalleVentaNavigation)
+                        .ThenInclude(art => art.IdArticuloNavigation)
+                        .ThenInclude(imp => imp.IdImpuestoNavigation)
+                    .Include(lot => lot.IdLoteNavigation)
+                    .ToList();
+                listaIventarioDto = this.mapeo.MapeoListaDetallesConsumosTbAListaDetallesConsumosDto(listaResultado);
+            }
+            else
+            {
+                listaIventarioDto = new List<InventarioLoteDTO> { };
+            }
+            return listaIventarioDto;
         }
 
         public async Task<List<TransaccionInventarioDTO>> ListaTransaccionesInventario()
         {
-            try
+            var listaTranInventario = await this._transacRepository.Consultar();
+            var resultado = listaTranInventario.ToList().Select(tran => new TransaccionInventarioDTO
             {
-                var listaTranInventario = await this._transacRepository.Consultar();
-                var resultado = listaTranInventario.ToList().Select(tran => new TransaccionInventarioDTO
-                {
-                    Id = tran.Id,
-                    Nombre = tran.Nombre,
-                    Signo = tran.Signo,
-                    Estado = tran.Estado
-                }).ToList();
+                Id = tran.Id,
+                Nombre = tran.Nombre,
+                Signo = tran.Signo,
+                Estado = tran.Estado
+            }).ToList();
 
-                return resultado;
-            }
-            catch
-            {
-                throw;
-            }
+            return resultado;
         }
 
         public async Task<List<ResumenVentasDiarioDTO>> ResumenVentasDiario(DateOnly fecha)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SistemaTienda.API.Exceptions;
 using SistemaTienda.BLL.Servicios.Contrato;
 using SistemaTienda.DAL.DBContext;
 using SistemaTienda.DAL.Repositorios.Contrato;
@@ -27,54 +28,32 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<int> CrearTipoArticulo(TipoArticuloCreacionDTO tipoArticuloCreacionDto)
         {
-            try
-            {
-                var tiposArticulo = this.mapeos.MapeoTipoArticuloDtoATipoArticuloTb(tipoArticuloCreacionDto);
-                await this.tipoArticuloRepository.Crear(tiposArticulo);
-                if (tiposArticulo.Id == 0)
-                    throw new Exception("No se pudo crear el tipo artículo!!");
-                return tiposArticulo.Id;
-            }
-            catch
-            {
-                throw new Exception("Un error ha ocurrido un error creando la marca, comuníquese con el administrador del sistema!!!");
-            }
+            var tiposArticulo = this.mapeos.MapeoTipoArticuloDtoATipoArticuloTb(tipoArticuloCreacionDto);
+            await this.tipoArticuloRepository.Crear(tiposArticulo);
+            if (tiposArticulo.Id == 0)
+                throw new BadRequestException("No se pudo crear el tipo artículo!!");
+            return tiposArticulo.Id;
         }
 
         public async Task<bool> EditarTipoArticulo(TipoArticuloEditarDTO tipoArticuloEditarDto)
         {
-            try
-            {
-                var tipoArticuloTb = await this._tiendaDb.TbComTiposArticulos.Where(c => c.Id == tipoArticuloEditarDto.Id)
-                    .FirstOrDefaultAsync();
-                if (tipoArticuloTb is null)
-                    throw new Exception("No se encontró el tipo artículo a editar");
-                tipoArticuloTb.EstadoVisual = tipoArticuloEditarDto.EstadoVisual;
-                tipoArticuloTb.Nombre = tipoArticuloEditarDto.Nombre;
-                tipoArticuloTb.Descripcion = tipoArticuloEditarDto.Descripcion;
-                var resp = await this.tipoArticuloRepository.Editar(tipoArticuloTb);
-                if (resp == false)
-                    throw new Exception("No se pudo editar el tipo artículo!!");
-                return resp;
-            }
-            catch
-            {
-                throw new Exception("Ha ocurrido un error editando el tipo artículo, comuníquese con el administrador del sistema!!!");
-            }
-
+            var tipoArticuloTb = await this._tiendaDb.TbComTiposArticulos.Where(c => c.Id == tipoArticuloEditarDto.Id)
+                .FirstOrDefaultAsync();
+            if (tipoArticuloTb is null)
+                throw new NotFoundException("No se encontró el tipo artículo a editar");
+            tipoArticuloTb.EstadoVisual = tipoArticuloEditarDto.EstadoVisual;
+            tipoArticuloTb.Nombre = tipoArticuloEditarDto.Nombre;
+            tipoArticuloTb.Descripcion = tipoArticuloEditarDto.Descripcion;
+            var resp = await this.tipoArticuloRepository.Editar(tipoArticuloTb);
+            if (resp == false)
+                throw new BadRequestException("No se pudo editar el tipo artículo!!");
+            return resp;
         }
 
         public async Task<List<TipoArticuloDTO>> ListarTiposArticulos()
         {
-            try
-            {
-                var tiposList = await this._tiendaDb.TbComTiposArticulos.Where(tipArt=> tipArt.EstadoVisual == true).ToListAsync();
-                return this.mapeos.MapeoListasTipoArticulosTbAListaTipoArticulosDto(tiposList);
-            }
-            catch
-            {
-                throw;
-            }
+            var tiposList = await this._tiendaDb.TbComTiposArticulos.Where(tipArt=> tipArt.EstadoVisual == true).ToListAsync();
+            return this.mapeos.MapeoListasTipoArticulosTbAListaTipoArticulosDto(tiposList);
         }
     }
 }

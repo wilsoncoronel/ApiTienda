@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SistemaTienda.API.Exceptions;
 using SistemaTienda.BLL.Servicios.Contrato;
 using SistemaTienda.DAL.DBContext;
 using SistemaTienda.DAL.Repositorios.Contrato;
@@ -25,24 +26,23 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<int> CrearUsuario(UsuarioCreacionDTO userDto)
         {
-            using (var transaction = _tiendaDbContext.Database.BeginTransaction())
+            using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync();
+            try
             {
-                try
-                {
-                    var usuarioTb = this._mapper.MapeoUsuarioCreacionDtoATbUsuario(userDto);
-                    await this._usuarioRepository.Crear(usuarioTb);
-                    if (usuarioTb.Id == null)
-                        throw new Exception("No se creo el usuario");
-                    transaction.Commit();
-                    return usuarioTb.Id;
-                }
-                catch
-                {
-                    transaction.Rollback();
-                    throw;
-
-                }
+                var usuarioTb = this._mapper.MapeoUsuarioCreacionDtoATbUsuario(userDto);
+                await this._usuarioRepository.Crear(usuarioTb);
+                if (usuarioTb.Id == null)
+                    throw new BadRequestException("No se creo el usuario");
+                transaction.Commit();
+                return usuarioTb.Id;
             }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+
+            }
+            
         }
 
         public async Task<List<UsuarioDTO>> ListarUsuario()
@@ -75,27 +75,25 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<int> EditarUsuario(UsuarioEditarDTO userEditarDto)
         {
-            using (var transaction = _tiendaDbContext.Database.BeginTransaction())
+            using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync();
+            try
             {
-                try
-                {
-                    var usuarioDb = await this._tiendaDbContext.TbSisUsuarios.Include(p => p.IdPersonaNavigation)
-                        .ThenInclude(d => d.TbGrlDireccione)
-                            .ThenInclude(c => c.IdCiudadNavigation)
-                        .Include(r => r.IdRolNavigation)
-                            .FirstOrDefaultAsync(x => x.Id == userEditarDto.Id);
-                    if (usuarioDb.Id == null)
-                        throw new Exception("No se modificó el usuario con Id: " + userEditarDto.Id);
-                    this._mapper.MapeoUsuarioEdicionDtoATbUsuario(userEditarDto, usuarioDb);
-                    await this._usuarioRepository.Editar(usuarioDb);
-                    transaction.Commit();
-                    return usuarioDb.Id;
-                }
-                catch
-                {
-                    transaction.Rollback();
-                    throw;
-                }
+                var usuarioDb = await this._tiendaDbContext.TbSisUsuarios.Include(p => p.IdPersonaNavigation)
+                    .ThenInclude(d => d.TbGrlDireccione)
+                        .ThenInclude(c => c.IdCiudadNavigation)
+                    .Include(r => r.IdRolNavigation)
+                        .FirstOrDefaultAsync(x => x.Id == userEditarDto.Id);
+                if (usuarioDb.Id == null)
+                    throw new BadRequestException("No se modificó el usuario con Id: " + userEditarDto.Id);
+                this._mapper.MapeoUsuarioEdicionDtoATbUsuario(userEditarDto, usuarioDb);
+                await this._usuarioRepository.Editar(usuarioDb);
+                await transaction.CommitAsync();
+                return usuarioDb.Id;
+            }
+            catch
+            {
+                transaction.RollbackAsync();
+                throw;
             }
         }
     }

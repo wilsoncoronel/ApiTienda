@@ -24,17 +24,10 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ExistenciasInventario(bool incluirCeros = false)
         {
             var resp = new Response<List<InventarioLoteDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._inventarioService.ExistenciasInventario(incluirCeros);
-            }
-            catch(Exception ex)
-            {
-                resp.status = false;
-                this.logger.LogError("Error en la conexion "+ ex);
-                throw;
-            }
+            
+            resp.status = true;
+            resp.Value = await this._inventarioService.ExistenciasInventario(incluirCeros);
+            resp.msg = "Inventario cargado con exito!!";
             return Ok(resp);
         }
 
@@ -43,16 +36,10 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListaTransaccionesInventario()
         {
             var resp = new Response<List<TransaccionInventarioDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._inventarioService.ListaTransaccionesInventario();
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._inventarioService.ListaTransaccionesInventario();
+            resp.msg = "Transacciones cargadas con exito!!";
+             
             return Ok(resp);
         }
 
@@ -61,16 +48,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListaInventario(DateOnly fechaInicio, DateOnly fechaFin)
         {
             var resp = new Response<List<MovimientoDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._inventarioService.ListaInventario(fechaInicio, fechaFin);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._inventarioService.ListaInventario(fechaInicio, fechaFin);
+            resp.msg = "Lista de inventario cargado!!";
             return Ok(resp);
         }
 
@@ -79,16 +59,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ListaDetallesInventario(int IdMovimiento)
         {
             var resp = new Response<List<InventarioLoteDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._inventarioService.ListaDetallesMovimiento(IdMovimiento);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._inventarioService.ListaDetallesMovimiento(IdMovimiento);
+            resp.msg = "Detalles cargados!!";    
             return Ok(resp);
         }
 
@@ -97,16 +70,9 @@ namespace SistemaTienda.API.Controllers
         public async Task<IActionResult> ResumenVentasDiario(DateOnly fechaResumen)
         {
             var resp = new Response<List<ResumenVentasDiarioDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._inventarioService.ResumenVentasDiario(fechaResumen);
-            }
-            catch
-            {
-                resp.status = false;
-                throw;
-            }
+            resp.status = true;
+            resp.Value = await this._inventarioService.ResumenVentasDiario(fechaResumen);
+            resp.msg = "Resuemn de ventas diario cargado!!";
             return Ok(resp);
         }
 

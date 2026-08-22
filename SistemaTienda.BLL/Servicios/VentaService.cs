@@ -6,6 +6,7 @@ using SistemaTienda.DAL.Repositorios.Contrato;
 using SistemaTienda.DTO;
 using SistemaTienda.Model;
 using SistemaTienda.Utility;
+using SistemaTienda.API.Exceptions;
 
 namespace SistemaTienda.BLL.Servicios
 {
@@ -220,72 +221,51 @@ namespace SistemaTienda.BLL.Servicios
         public async Task<List<EstadoVentaDTO>> ListarEstadosVentas()
         {
             List<TbVenEstadosVenta> tbVenEstadosVentas = await this._tiendaDbContext.TbVenEstadosVentas.Where(est => est.EstadoVisual == true).ToListAsync();
-            try
-            {
-                return this._mapper.MapeoListaEstadosVentaTbaAListaEstadosVentaDto(tbVenEstadosVentas);
-             }
-            catch
-            {
-                throw;
-            }
+            return this._mapper.MapeoListaEstadosVentaTbaAListaEstadosVentaDto(tbVenEstadosVentas);
         }
 
         public async Task<List<VentaMinDTO>> ListarVentas(DateOnly fechaInicial, DateOnly fechaFinal)
         {
             var inicio = fechaInicial.ToDateTime(TimeOnly.MinValue);
             var fin = fechaFinal.ToDateTime(TimeOnly.MaxValue);
-            try
-            {
-                var tbVentas = await this._tiendaDbContext.TbVentas.Where(c => c.FechaVenta >= inicio && c.FechaVenta <= fin)
-                    .Include(u => u.IdUsuarioCreadorNavigation)
-                    .ThenInclude(per => per.IdPersonaNavigation)
-                    .Include(e => e.IdEstadoVentaNavigation)
-                    .Include(p => p.IdClienteNavigation)
-                    .ThenInclude(per => per.IdPersonaNavigation)
-                    .ToListAsync();
+            
+            var tbVentas = await this._tiendaDbContext.TbVentas.Where(c => c.FechaVenta >= inicio && c.FechaVenta <= fin)
+                .Include(u => u.IdUsuarioCreadorNavigation)
+                .ThenInclude(per => per.IdPersonaNavigation)
+                .Include(e => e.IdEstadoVentaNavigation)
+                .Include(p => p.IdClienteNavigation)
+                .ThenInclude(per => per.IdPersonaNavigation)
+                .ToListAsync();
 
-                return this._mapper.MapeoListaVentasTbAListaVentasDto(tbVentas);
-            }
-            catch
-            {
-                throw;
-            }
-            throw new NotImplementedException();
+            return this._mapper.MapeoListaVentasTbAListaVentasDto(tbVentas);
         }
 
         public async Task<VentaDTO> ObtenerVenta(int idVenta)
         {
-            try
-            {
-                TbVenta tbVenta= await this._tiendaDbContext.TbVentas
-                    .Include(u => u.IdUsuarioCreadorNavigation)
-                    .ThenInclude(p => p.IdPersonaNavigation)
-                    .ThenInclude(id => id.IdTipoIdentificacionNavigation)
-                    .Include(prov => prov.IdClienteNavigation)
-                    .ThenInclude(per => per.IdPersonaNavigation)
-                    .ThenInclude(dir => dir.TbGrlDireccione)
-                    .ThenInclude(ciu => ciu.IdCiudadNavigation)
-                    .Include(est => est.IdEstadoVentaNavigation)
-                    .Include(det => det.TbVenDetalleVenta)
-                    .ThenInclude(art => art.IdArticuloNavigation)
-                    .ThenInclude(imp => imp.IdImpuestoNavigation)
-                    .Include(det => det.TbVenDetalleVenta)
-                    .ThenInclude(art => art.IdArticuloNavigation)
-                    .ThenInclude(mar => mar.IdMarcaNavigation)
-                    .Include(det => det.TbVenDetalleVenta)
-                    .ThenInclude(art => art.IdArticuloNavigation)
-                    .ThenInclude(tp => tp.IdTipoArticuloNavigation)
-                    .FirstOrDefaultAsync(c => c.Id == idVenta);
-                if (tbVenta is null)
-                    throw new Exception("No se encontró la venta!!");
+            TbVenta tbVenta= await this._tiendaDbContext.TbVentas
+                .Include(u => u.IdUsuarioCreadorNavigation)
+                .ThenInclude(p => p.IdPersonaNavigation)
+                .ThenInclude(id => id.IdTipoIdentificacionNavigation)
+                .Include(prov => prov.IdClienteNavigation)
+                .ThenInclude(per => per.IdPersonaNavigation)
+                .ThenInclude(dir => dir.TbGrlDireccione)
+                .ThenInclude(ciu => ciu.IdCiudadNavigation)
+                .Include(est => est.IdEstadoVentaNavigation)
+                .Include(det => det.TbVenDetalleVenta)
+                .ThenInclude(art => art.IdArticuloNavigation)
+                .ThenInclude(imp => imp.IdImpuestoNavigation)
+                .Include(det => det.TbVenDetalleVenta)
+                .ThenInclude(art => art.IdArticuloNavigation)
+                .ThenInclude(mar => mar.IdMarcaNavigation)
+                .Include(det => det.TbVenDetalleVenta)
+                .ThenInclude(art => art.IdArticuloNavigation)
+                .ThenInclude(tp => tp.IdTipoArticuloNavigation)
+                .FirstOrDefaultAsync(c => c.Id == idVenta);
+            if (tbVenta is null)
+                throw new NotFoundException("No se encontró la venta!!");
 
-                var ventaDto = this._mapper.MapeoVentaTbAVentaCompletaDto(tbVenta);
-                return ventaDto;
-            }
-            catch
-            {
-                throw;
-            }
+            var ventaDto = this._mapper.MapeoVentaTbAVentaCompletaDto(tbVenta);
+            return ventaDto;
         }
 
 
@@ -314,28 +294,28 @@ namespace SistemaTienda.BLL.Servicios
         {
             // Cargar venta por id
             var tbVenta = await _tiendaDbContext.TbVentas.FirstOrDefaultAsync(v => v.Id == id && v.Documento == documento);
-            if (tbVenta == null) throw new Exception("Venta no encontrada");
+            if (tbVenta == null) throw new NotFoundException("Venta no encontrada");
             if (string.IsNullOrWhiteSpace(tbVenta.Documento)) throw new Exception("Documento de la venta inválido");
 
             // Buscar transacción de reversión
             var transRev = await _tiendaDbContext.TbInvTransacciones
                 .FirstOrDefaultAsync(t => t.Nombre.ToLower() == "reversion venta");
-            if (transRev == null) throw new Exception("No existe la transacción 'Reversion Venta'");
+            if (transRev == null) throw new NotFoundException("No existe la transacción 'Reversion Venta'");
 
             // Verificar si la venta ya está reversada
             if (tbVenta.IdTransaccion.HasValue && tbVenta.IdTransaccion.Value == transRev.Id)
-                throw new Exception("Venta ya reversada");
+                throw new ConflictException("Venta ya reversada");
 
             // La venta debe tener una transacción origen conocida
             if (!tbVenta.IdTransaccion.HasValue)
-                throw new Exception("La venta no tiene transacción de origen para reversión");
+                throw new ConflictException("La venta no tiene transacción de origen para reversión");
 
             // Buscar movimiento origen por referencia exacta, evitando movimientos que ya sean reversiones
             var movimientoOrigen = await _tiendaDbContext.TbInvMovimientos
                 .Include(m => m.TbInvConsumoLotes)
                 .FirstOrDefaultAsync(m => m.Referencia == tbVenta.Documento && m.IdTransaccionInventario != transRev.Id);
 
-            if (movimientoOrigen == null) throw new Exception("Movimiento origen no encontrado para la venta");
+            if (movimientoOrigen == null) throw new NotFoundException("Movimiento origen no encontrado para la venta");
 
             using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync(IsolationLevel.Serializable);
             try
@@ -349,14 +329,14 @@ namespace SistemaTienda.BLL.Servicios
                     if (consumo.Estado == false)
                     {
                         await transaction.RollbackAsync();
-                        throw new Exception("La venta ya fue reversada (consumo ya marcado)");
+                        throw new ConflictException("La venta ya fue reversada (consumo ya marcado)");
                     }
 
                     var lote = await _tiendaDbContext.TbInvLotes.FirstOrDefaultAsync(l => l.Id == consumo.IdLote);
                     if (lote == null)
                     {
                         await transaction.RollbackAsync();
-                        throw new Exception($"Lote no encontrado para IdLote {consumo.IdLote}");
+                        throw new NotFoundException($"Lote no encontrado para IdLote {consumo.IdLote}");
                     }
 
                     lote.StockDisponible += consumo.Cantidad;
