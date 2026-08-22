@@ -21,8 +21,6 @@ namespace SistemaTienda.DTO
 
         public string Nombre { get; set; } = null!;
 
-        public string? Codigo { get; set; }
-
         public DateTime? FechaCaducidad { get; set; }
 
         public bool EstadoVisual { get; set; }

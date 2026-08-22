@@ -27,11 +27,11 @@ namespace SistemaTienda.API.Controllers
                     "Debe ingresar un RUC.");
             }
 
-            if (ruc.Length != 13 ||
+            if (ruc.Length > 13 ||
                 !ruc.All(char.IsDigit))
             {
                 throw new BadRequestException(
-                    "El RUC debe contener 13 dígitos.");
+                    "La identificación no es valida!! Por favbor revisela!!");
             }
 
             var contribuyente = await sriService.ConsultarProveedorPorRuc(ruc);
@@ -52,7 +52,7 @@ namespace SistemaTienda.API.Controllers
 
         [HttpGet]
         [Route("BuscarProveedorCI")]
-        public async Task<IActionResult> BuscarProveedorCI(string identificacion, bool verPersona = false)
+        public async Task<IActionResult> BuscarProveedorCI(string identificacion, bool verPersona)
         {
             var resp = new Response<ProveedorDTO>();
             resp.status = true;

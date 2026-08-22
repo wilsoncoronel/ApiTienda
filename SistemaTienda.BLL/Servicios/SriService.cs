@@ -32,22 +32,28 @@ namespace SistemaTienda.BLL.Servicios.Contrato
                     p.IdPersonaNavigation.Identificacion == identificacion); // si aplica en tu modelo
         }
 
-        public async Task<int> ExistePersonaConIdentificacion(string iden)
+        public async Task<bool> ExistePersonaConIdentificacion(string iden)
         {
-            return await tiendaDbContext.TbComProveedores
-            .Where(pro => pro.IdPersonaNavigation.Identificacion == iden)
-            .Select(pro => pro.IdPersona)
-            .FirstOrDefaultAsync();
+            return await tiendaDbContext.TbGrlPersonas
+            .AsNoTracking().AnyAsync(per => per.Identificacion == iden);
         }
 
         public async Task<SriContribuyenteDTO?> ConsultarProveedorPorRuc(string ruc)
         {
             bool existePro = await this.ExisteProveedorConIdentificacionAsync(ruc);
-            int existePer = 0;
-            if (!existePro)
-                existePer = await this.ExistePersonaConIdentificacion(ruc);
-            if(existePer != 0)
+            if(existePro)
                 throw new ConflictException("Ya existe un proveedor en el sistema con la identificación proporcionada");
+            bool existePer = await this.ExistePersonaConIdentificacion(ruc);
+            if (existePer)
+                throw new ConflictException("Ya existe una persona en el sistema con la identificación proporcionada, revise el modulo de personas");
+
+
+            if (string.IsNullOrWhiteSpace(ruc) || ruc.Length != 13 || !ruc.All(char.IsDigit))
+            {
+                throw new BadRequestException("El RUC debe contener exactamente 13 dígitos.");
+            }
+            if (ruc.Length != 13)
+                return null;
             string urlExistente =
                 $"sri-catastro-sujeto-servicio-internet/rest/" +
                 $"ConsolidadoContribuyente/" +

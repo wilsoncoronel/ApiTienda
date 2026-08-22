@@ -28,8 +28,8 @@ namespace SistemaTienda.API.Middleware
             {
                 await HandleExceptionAsync(context, ex);
             }
-
         }
+
         private async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             HttpStatusCode statusCode;

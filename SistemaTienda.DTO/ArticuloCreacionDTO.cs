@@ -9,7 +9,6 @@ namespace SistemaTienda.DTO
     public class ArticuloCreacionDTO
     {
         public string Nombre { get; set; }
-        public string Codigo { get; set; }
         public int IdUsuarioCreador { get; set; }
         public DateTime FechaCreacion { get; set; }
         public DateTime FechaCaducidad { get; set; }
