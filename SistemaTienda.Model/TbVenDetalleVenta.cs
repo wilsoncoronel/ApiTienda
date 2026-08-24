@@ -28,4 +28,6 @@ public partial class TbVenDetalleVenta
     public virtual TbVenta IdVentaNavigation { get; set; } = null!;
 
     public virtual ICollection<TbInvConsumoLote> TbInvConsumoLotes { get; set; } = new List<TbInvConsumoLote>();
+
+    public virtual ICollection<TbVenDetalleDevolucionVenta> TbVenDetalleDevolucionVenta { get; set; } = new List<TbVenDetalleDevolucionVenta>();
 }
