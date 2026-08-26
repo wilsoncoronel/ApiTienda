@@ -33,12 +33,12 @@ namespace SistemaTienda.BLL.Servicios
                 await this._usuarioRepository.Crear(usuarioTb);
                 if (usuarioTb.Id == null)
                     throw new BadRequestException("No se creo el usuario");
-                transaction.Commit();
+                await transaction.CommitAsync();
                 return usuarioTb.Id;
             }
             catch
             {
-                transaction.Rollback();
+                await transaction.RollbackAsync();
                 throw;
 
             }
@@ -92,7 +92,7 @@ namespace SistemaTienda.BLL.Servicios
             }
             catch
             {
-                transaction.RollbackAsync();
+                await transaction.RollbackAsync();
                 throw;
             }
         }

@@ -17,6 +17,7 @@ namespace SistemaTienda.DTO
         public bool Estado { get; set; }
         public string Descripcion { get; set; }
         public DateTime? FechaActualizacion { get; set; }
+        public int IdUnidad { get; set; }
         public string Unidad { get; set; }
         public decimal? UnidadValor { get; set; }
         public decimal ValorVenta { get; set; }
@@ -27,6 +28,8 @@ namespace SistemaTienda.DTO
         public int IdTipoArticulo { get; set; }
         public TipoArticuloDTO TipoArticuloDTO { get; set; }
         public ImpuestoArticuloDTO ImpuestoArticuloDto { get; set; }
+
+        public UnidadMedidaDTO UnidadMedidaDto{ get; set; }
         public virtual PorcentajeGananciaDTO? PorcentajeDTO{ get; set; }
         public int IdImpuesto { get; set; }
         public bool? Papeleria { get; set; }

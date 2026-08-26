@@ -23,6 +23,7 @@ namespace SistemaTienda.DTO
         public int? IdPorcentajeGanancia { get; set; }
         public int IdTipoArticulo { get; set; }
         public int IdImpuesto { get; set; }
+        public int IdUnidad { get; set; }
         public bool? Papeleria { get; set; }
     }
 }

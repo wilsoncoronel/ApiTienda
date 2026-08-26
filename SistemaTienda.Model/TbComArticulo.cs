@@ -31,7 +31,7 @@ public partial class TbComArticulo
 
     public DateTime? FechaActualizacion { get; set; }
 
-    public string? Unidad { get; set; }
+    public int IdUnidad { get; set; }
 
     public decimal? UnidadValor { get; set; }
 
@@ -48,6 +48,8 @@ public partial class TbComArticulo
     public virtual TbComPorcentajeGanancia? IdPorcentajeGananciaNavigation { get; set; }
 
     public virtual TbComTiposArticulo IdTipoArticuloNavigation { get; set; } = null!;
+
+    public virtual TbComUnidadesMedida IdUnidadNavigation { get; set; } = null!;
 
     public virtual TbSisUsuario IdUsuarioCreadorNavigation { get; set; } = null!;
 

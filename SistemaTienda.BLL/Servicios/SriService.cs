@@ -32,21 +32,33 @@ namespace SistemaTienda.BLL.Servicios.Contrato
                     p.IdPersonaNavigation.Identificacion == identificacion); // si aplica en tu modelo
         }
 
+        public async Task<bool> ExisteClienteConIdentificacionAsync(string identificacion)
+        {
+            if (string.IsNullOrWhiteSpace(identificacion))
+                return false;
+
+            return await tiendaDbContext.TbComClientes.AsNoTracking().AnyAsync(p =>
+                    p.IdPersonaNavigation.Identificacion == identificacion); // si aplica en tu modelo
+        }
+
         public async Task<bool> ExistePersonaConIdentificacion(string iden)
         {
             return await tiendaDbContext.TbGrlPersonas
             .AsNoTracking().AnyAsync(per => per.Identificacion == iden);
         }
 
-        public async Task<SriContribuyenteDTO?> ConsultarProveedorPorRuc(string ruc)
+        public async Task<SriContribuyenteDTO?> ConsultarProveedorPorRuc(string ruc, bool esProveedor)
         {
-            bool existePro = await this.ExisteProveedorConIdentificacionAsync(ruc);
-            if(existePro)
-                throw new ConflictException("Ya existe un proveedor en el sistema con la identificación proporcionada");
+            bool existeProCli = false;
+            if (esProveedor)
+                existeProCli = await this.ExisteProveedorConIdentificacionAsync(ruc);
+            else
+                existeProCli = await this.ExisteClienteConIdentificacionAsync(ruc); 
+            if(existeProCli)
+                throw new ConflictException("Ya existe un proveedor o cliente en el sistema con la identificación proporcionada");
             bool existePer = await this.ExistePersonaConIdentificacion(ruc);
             if (existePer)
                 throw new ConflictException("Ya existe una persona en el sistema con la identificación proporcionada, revise el modulo de personas");
-
 
             if (string.IsNullOrWhiteSpace(ruc) || ruc.Length != 13 || !ruc.All(char.IsDigit))
             {

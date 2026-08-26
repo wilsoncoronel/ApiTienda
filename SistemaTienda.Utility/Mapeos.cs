@@ -388,25 +388,25 @@ namespace SistemaTienda.Utility
 
             public TbComArticulo MapeoArticuloCreacionDtoAArticuloTb(ArticuloCreacionDTO articuloCreacionDto)
             {
-            var articuloTb = new TbComArticulo
-            {
-                Descripcion = articuloCreacionDto.Descripcion,
-                FechaCaducidad = articuloCreacionDto.FechaCaducidad,
-                FechaCreacion = articuloCreacionDto.FechaCreacion,
-                Estado = articuloCreacionDto.Estado,
-                EstadoVisual = articuloCreacionDto.EstadoVisual,
-                IdImpuesto = articuloCreacionDto.IdImpuesto,
-                IdPorcentajeGanancia = articuloCreacionDto.IdPorcentajeGanancia,
-                Nombre = articuloCreacionDto.Nombre,
-                Unidad = articuloCreacionDto.Unidad,
-                ValorCompra = articuloCreacionDto.ValorCompra,
-                UnidadValor = articuloCreacionDto.UnidadValor,
-                ValorVenta = articuloCreacionDto.ValorVenta,
-                IdTipoArticulo = articuloCreacionDto.IdTipoArticulo,
-                IdMarca = articuloCreacionDto.IdMarca,
-                IdUsuarioCreador = articuloCreacionDto.IdUsuarioCreador,
-                Papeleria = articuloCreacionDto.Papeleria
-            };
+                var articuloTb = new TbComArticulo
+                {
+                    Descripcion = articuloCreacionDto.Descripcion,
+                    FechaCaducidad = articuloCreacionDto.FechaCaducidad,
+                    FechaCreacion = articuloCreacionDto.FechaCreacion,
+                    Estado = articuloCreacionDto.Estado,
+                    EstadoVisual = articuloCreacionDto.EstadoVisual,
+                    IdImpuesto = articuloCreacionDto.IdImpuesto,
+                    IdPorcentajeGanancia = articuloCreacionDto.IdPorcentajeGanancia,
+                    Nombre = articuloCreacionDto.Nombre,
+                    IdUnidad = articuloCreacionDto.IdUnidad,
+                    ValorCompra = articuloCreacionDto.ValorCompra,
+                    UnidadValor = articuloCreacionDto.UnidadValor,
+                    ValorVenta = articuloCreacionDto.ValorVenta,
+                    IdTipoArticulo = articuloCreacionDto.IdTipoArticulo,
+                    IdMarca = articuloCreacionDto.IdMarca,
+                    IdUsuarioCreador = articuloCreacionDto.IdUsuarioCreador,
+                    Papeleria = articuloCreacionDto.Papeleria
+                };
                 return articuloTb;
             }
 
@@ -424,7 +424,11 @@ namespace SistemaTienda.Utility
                         ValorImpuesto = articuloDto.ImpuestoArticuloDto.ValorImpuesto,
                     },
                     Nombre = articuloDto.Nombre,
-                    Unidad = articuloDto.Unidad,
+                    IdUnidadNavigation = new TbComUnidadesMedida
+                    {
+                        Id = articuloDto.IdUnidad,
+                        Nombre = articuloDto.Nombre
+                    },
                     ValorCompra = articuloDto.ValorCompra,
                     UnidadValor = articuloDto.UnidadValor,
                     ValorVenta = articuloDto.ValorVenta,
@@ -464,8 +468,8 @@ namespace SistemaTienda.Utility
                         ValorImpuesto = articuloTb.IdImpuestoNavigation.ValorImpuesto,
                         Nombre = articuloTb.IdImpuestoNavigation.Nombre,
                     },
-                    Nombre = $"{articuloTb.Nombre} {articuloTb.Unidad} {articuloTb.UnidadValor} {articuloTb.IdMarcaNavigation.Nombre} PRECIO {articuloTb.ValorVenta}$",
-                    Unidad = articuloTb.Unidad,
+                    Nombre = $"{articuloTb.Nombre} {articuloTb.IdMarcaNavigation.Nombre } {articuloTb.IdUnidadNavigation.Nombre} {articuloTb.UnidadValor} {articuloTb.IdMarcaNavigation.Nombre} PRECIO {articuloTb.ValorVenta}$",
+                    IdUnidad = articuloTb.IdUnidad,
                     ValorCompra = articuloTb.ValorCompra,
                     UnidadValor = articuloTb.UnidadValor,
                     ValorVenta = articuloTb.ValorVenta,
@@ -503,8 +507,8 @@ namespace SistemaTienda.Utility
                         ValorImpuesto = articuloTb.IdImpuestoNavigation.ValorImpuesto,
                         Nombre = articuloTb.IdImpuestoNavigation.Nombre,
                     },
-                    Nombre = !esVenta? $"{articuloTb.Nombre} Valor Com: {articuloTb.ValorCompra}, Uni: {articuloTb.UnidadValor} {articuloTb.Unidad}": $"{articuloTb.Nombre} Valor Vent: {articuloTb.ValorVenta}, Uni: {articuloTb.UnidadValor} {articuloTb.Unidad}",
-                    Unidad = articuloTb.Unidad,
+                    Nombre = !esVenta? $"{articuloTb.Nombre} {articuloTb.IdMarcaNavigation.Nombre} Valor Com: {articuloTb.ValorCompra}, Uni: {articuloTb.UnidadValor} {articuloTb.IdUnidadNavigation.Nombre}": $"{articuloTb.Nombre} Valor Vent: {articuloTb.ValorVenta}, Uni: {articuloTb.UnidadValor} {articuloTb.IdUnidadNavigation.Nombre}",
+                    IdUnidad = articuloTb.IdUnidad,
                     ValorCompra = articuloTb.ValorCompra,
                     UnidadValor = articuloTb.UnidadValor,
                     ValorVenta = articuloTb.ValorVenta,
@@ -549,7 +553,7 @@ namespace SistemaTienda.Utility
                     Nombre = articuloTb.IdImpuestoNavigation.Nombre,
                 },
                 Nombre = articuloTb.Nombre,
-                Unidad = articuloTb.Unidad,
+                IdUnidad = articuloTb.IdUnidad,
                 ValorCompra = articuloTb.ValorCompra,
                 UnidadValor = articuloTb.UnidadValor,
                 ValorVenta = articuloTb.ValorVenta,
@@ -643,7 +647,11 @@ namespace SistemaTienda.Utility
                             Id = d.ArticuloDTO.Id,
                             Estado = d.ArticuloDTO.Estado,
                             Nombre = d.ArticuloDTO.Nombre,
-                            Unidad = d.ArticuloDTO.Unidad,
+                            IdUnidadNavigation = new TbComUnidadesMedida
+                            {
+                                Id = d.ArticuloDTO.UnidadMedidaDto.Id,
+                                Nombre = d.ArticuloDTO.UnidadMedidaDto.Nombre
+                            },
                             UnidadValor = d.ArticuloDTO.UnidadValor,
                             IdImpuestoNavigation = new TbComImpuestosArticulo
                             {
@@ -1246,7 +1254,11 @@ namespace SistemaTienda.Utility
                             Id = d.IdArticuloNavigation.Id,
                             Descripcion = d.IdArticuloNavigation.Descripcion,
                             Nombre = d.IdArticuloNavigation.Nombre,
-                            Unidad = d.IdArticuloNavigation.Unidad,
+                            UnidadMedidaDto = new UnidadMedidaDTO
+                            {
+                                Id = d.IdArticuloNavigation.IdUnidadNavigation.Id,
+                                Nombre = d.IdArticuloNavigation.IdUnidadNavigation.Nombre
+                            },
                             UnidadValor = d.IdArticuloNavigation.UnidadValor,
                             FechaActualizacion = d.IdArticuloNavigation.FechaActualizacion?? d.IdArticuloNavigation.FechaCreacion,
                             FechaCreacion = d.IdArticuloNavigation.FechaCreacion,
@@ -1333,7 +1345,11 @@ namespace SistemaTienda.Utility
                             Id = d.IdArticuloNavigation.Id,
                             Descripcion = d.IdArticuloNavigation.Descripcion,
                             Nombre = d.IdArticuloNavigation.Nombre,
-                            Unidad = d.IdArticuloNavigation.Unidad,
+                            UnidadMedidaDto = new UnidadMedidaDTO
+                            {
+                                Id = d.IdArticuloNavigation.IdUnidadNavigation.Id,
+                                Nombre = d.IdArticuloNavigation.IdUnidadNavigation.Nombre
+                            },
                             UnidadValor = d.IdArticuloNavigation.UnidadValor,
                             FechaActualizacion = d.IdArticuloNavigation.FechaActualizacion ?? DateTime.Now,
                             FechaCreacion = d.IdArticuloNavigation.FechaCreacion,

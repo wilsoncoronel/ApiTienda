@@ -19,28 +19,21 @@ namespace SistemaTienda.API.Controllers
             this.sriService = sriService;
         }
         [HttpGet("ConsultarRuc")]
-        public async Task<IActionResult> ConsultarRuc(string ruc)
+        public async Task<IActionResult> ConsultarRuc(string ruc, bool esProveedor)
         {
             if (string.IsNullOrWhiteSpace(ruc))
-            {
-                throw new BadRequestException(
-                    "Debe ingresar un RUC.");
-            }
+                throw new BadRequestException("Debe ingresar un RUC.");
 
             if (ruc.Length > 13 ||
                 !ruc.All(char.IsDigit))
-            {
                 throw new BadRequestException(
                     "La identificación no es valida!! Por favbor revisela!!");
-            }
 
-            var contribuyente = await sriService.ConsultarProveedorPorRuc(ruc);
+            var contribuyente = await sriService.ConsultarProveedorPorRuc(ruc, esProveedor);
 
             if (contribuyente == null)
-            {
                 throw new NotFoundException(
                     "No se encontró información para el RUC indicado.");
-            }
 
             return Ok(new Response<SriContribuyenteDTO>
             {

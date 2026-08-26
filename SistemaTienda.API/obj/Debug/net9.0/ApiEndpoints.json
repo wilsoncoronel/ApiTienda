@@ -766,6 +766,11 @@
         "Name": "ruc",
         "Type": "System.String",
         "IsRequired": false
+      },
+      {
+        "Name": "esProveedor",
+        "Type": "System.Boolean",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

@@ -39,6 +39,8 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbComTiposArticulo> TbComTiposArticulos { get; set; }
 
+    public virtual DbSet<TbComUnidadesMedida> TbComUnidadesMedida { get; set; }
+
     public virtual DbSet<TbCompra> TbCompras { get; set; }
 
     public virtual DbSet<TbContAsientoContable> TbContAsientoContables { get; set; }
@@ -87,7 +89,10 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbVenta> TbVentas { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=DESKTOP-QO2URC6\\SQLEXPRESS;Database=TiendaDb;User Id=sa;Password=wili199308; TrustServerCertificate=True;");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<TbComArticulo>(entity =>
@@ -97,7 +102,6 @@ public partial class TiendaDbContext : DbContext
             entity.Property(e => e.FechaCaducidad).HasColumnType("datetime");
             entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
             entity.Property(e => e.Nombre).HasMaxLength(200);
-            entity.Property(e => e.Unidad).HasMaxLength(100);
             entity.Property(e => e.UnidadValor).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.ValorCompra).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.ValorVenta).HasColumnType("numeric(18, 4)");
@@ -120,6 +124,11 @@ public partial class TiendaDbContext : DbContext
                 .HasForeignKey(d => d.IdTipoArticulo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbComArticulos_TbComTiposArticulos");
+
+            entity.HasOne(d => d.IdUnidadNavigation).WithMany(p => p.TbComArticulos)
+                .HasForeignKey(d => d.IdUnidad)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbComArticulos_TbComUnidadesMedida");
 
             entity.HasOne(d => d.IdUsuarioCreadorNavigation).WithMany(p => p.TbComArticulos)
                 .HasForeignKey(d => d.IdUsuarioCreador)
@@ -249,6 +258,14 @@ public partial class TiendaDbContext : DbContext
         {
             entity.Property(e => e.Descripcion).HasMaxLength(500);
             entity.Property(e => e.Nombre).HasMaxLength(200);
+        });
+
+        modelBuilder.Entity<TbComUnidadesMedida>(entity =>
+        {
+            entity.Property(e => e.Nombre)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .IsFixedLength();
         });
 
         modelBuilder.Entity<TbCompra>(entity =>

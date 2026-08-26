@@ -61,7 +61,7 @@ namespace SistemaTienda.BLL.Servicios
             articuloTb.IdImpuesto = articuloEditarDto.IdImpuesto;
             articuloTb.IdTipoArticulo = articuloEditarDto.IdTipoArticulo;
             articuloTb.FechaActualizacion = DateTime.Now;
-            articuloTb.Unidad = articuloEditarDto.Unidad;
+            articuloTb.IdUnidad = articuloEditarDto.IdUnidad;
             articuloTb.UnidadValor = articuloEditarDto.UnidadValor;
             articuloTb.ValorCompra = articuloEditarDto.ValorCompra;
             articuloTb.ValorVenta = articuloEditarDto.ValorVenta;

@@ -9,6 +9,6 @@ namespace SistemaTienda.BLL.Servicios.Contrato
 {
     public interface ISriService
     {
-        Task<SriContribuyenteDTO?> ConsultarProveedorPorRuc(string ruc);
+        Task<SriContribuyenteDTO?> ConsultarProveedorPorRuc(string ruc, bool esProveedor = false);
     }
 }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SistemaTienda.DTO")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e6932c98fd3e91667d5ac943aee9364b7b199066")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8a78cafe844c76fe57ef481188a0076a5fc7e2ce")]
 [assembly: System.Reflection.AssemblyProductAttribute("SistemaTienda.DTO")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SistemaTienda.DTO")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

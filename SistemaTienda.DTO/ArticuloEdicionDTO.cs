@@ -18,7 +18,7 @@ namespace SistemaTienda.DTO
 
         public int IdImpuesto { get; set; }
         public int? IdPorcentajeGanancia { get; set; }
-
+        public int IdUnidad { get; set; }
         public string Nombre { get; set; } = null!;
 
         public DateTime? FechaCaducidad { get; set; }

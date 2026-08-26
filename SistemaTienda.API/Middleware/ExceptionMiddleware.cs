@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using SistemaTienda.API.Utilidad;
 using System.Net;
 using System.Text.Json;
