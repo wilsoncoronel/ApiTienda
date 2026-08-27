@@ -14,13 +14,54 @@ namespace SistemaTienda.API.Controllers
         private readonly ITipoArticuloService _tipoArticuloService;
         private readonly IImpuestoArticuloService _impuestoArticuloService;
         private readonly ITransaccionInventarioService _transaccionInventarioService;
-        public ConfiguracionesController(IPorcentajeGananciaService porcentajeService,IMarcaService marcaService, ITipoArticuloService tipoArticuloService, IImpuestoArticuloService impuestoArticuloService, ITransaccionInventarioService transaccionInventarioService)
+
+        private readonly IUnidadMedidaService _unidaService;
+
+        public ConfiguracionesController(IPorcentajeGananciaService porcentajeService,IMarcaService marcaService, ITipoArticuloService tipoArticuloService, IImpuestoArticuloService impuestoArticuloService, ITransaccionInventarioService transaccionInventarioService, IUnidadMedidaService unidaService)
         {
             this._porcentajeService = porcentajeService;
             this._marcaService = marcaService;
             _tipoArticuloService = tipoArticuloService;
             _impuestoArticuloService = impuestoArticuloService;
             _transaccionInventarioService = transaccionInventarioService;
+            _unidaService = unidaService;
+        }
+
+        [HttpGet]
+        [Route("ListarUnidadesMedida")]
+        public async Task<IActionResult> ListarUnidadesMerdida()
+        {
+            var resp = new Response<List<UnidadMedidaDTO>>();
+
+            resp.status = true;
+            resp.Value = await this._unidaService.ListarUnidadesMedida();
+            resp.msg = "Unidades listados exitosamente!!";
+
+            return Ok(resp);
+        }
+
+        [HttpPost]
+        [Route("CrearUnidadMedida")]
+        public async Task<IActionResult> CrearUnidadMedida(UnidadCreacionDTO unidadCreacionDTO)
+        {
+            var resp = new Response<int>();
+
+            resp.status = true;
+            resp.Value = await this._unidaService.CrearUnidadMedida(unidadCreacionDTO);
+            resp.msg = "Unidad creada exitosamente";
+
+            return Ok(resp);
+        }
+
+        [HttpPut]
+        [Route("EditarUnidadMedida")]
+        public async Task<IActionResult> EditarUnidadMedida(UnidadEditarDTO unidadEditarDto)
+        {
+            var resp = new Response<bool>();
+            resp.status = true;
+            resp.Value = await this._unidaService.EditarUnidadMedida(unidadEditarDto);
+            resp.msg = "Unidad editada exitosamente";
+            return Ok(resp);
         }
 
         [HttpGet]

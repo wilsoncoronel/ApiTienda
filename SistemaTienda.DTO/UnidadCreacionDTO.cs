@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace SistemaTienda.DTO
 {
-    public class UnidadMedidaDTO
+    public class UnidadCreacionDTO
     {
         public int Id { get; set; }
         public string Nombre { get; set; } = null!;
-        public bool Estado { get; set; }
-        public bool EstadoVisual { get; set; }
     }
 }

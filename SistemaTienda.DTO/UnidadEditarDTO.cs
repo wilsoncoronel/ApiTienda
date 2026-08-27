@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SistemaTienda.DTO
 {
-    public class UnidadMedidaDTO
+    public class UnidadEditarDTO
     {
         public int Id { get; set; }
         public string Nombre { get; set; } = null!;

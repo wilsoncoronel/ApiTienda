@@ -48,7 +48,6 @@ namespace SistemaTienda.BLL.Servicios
             if (resp == false)
                 throw new BadRequestException("No se pudo editar la marca");
             return resp;
-            
         }
 
         public async Task<List<MarcaDTO>> ListarMarcas()

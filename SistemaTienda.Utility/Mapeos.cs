@@ -77,6 +77,9 @@ namespace SistemaTienda.Utility
         TbComPorcentajeGanancia MapeoPorcentajeCreacionDtoAPorcentajeTb(PorcentajeGananciaCreacionDTO porcentajeDto);
         List<PorcentajeGananciaDTO> MapeoListasPorcentajeTbAListaPorcentajeDto(List<TbComPorcentajeGanancia> listaPorcentajesTb);
         List<ArticuloDTO> MapeoListaArticulosDtoPrincipal(List<TbComArticulo> listaArticulosTb);
+        TbComUnidadesMedida MapeoUnidadCreacionDtoAUnidadTb(UnidadCreacionDTO unidadDto);
+        List<UnidadMedidaDTO> MapeoListaUnidadTbAListaUnidadDto(List<TbComUnidadesMedida> listaUnidadesTb);
+        UnidadMedidaDTO MapeoUnidadTbAUnidadDto(TbComUnidadesMedida unidadTb);
     }
     public class Mapeos : IMapeos
     {
@@ -276,7 +279,17 @@ namespace SistemaTienda.Utility
                 };
             }
 
-            public TbComPorcentajeGanancia MapeoPorcentajeCreacionDtoAPorcentajeTb(PorcentajeGananciaCreacionDTO porcentajeDto)
+            public TbComUnidadesMedida MapeoUnidadCreacionDtoAUnidadTb(UnidadCreacionDTO unidadDto)
+            {
+                return new TbComUnidadesMedida
+                {
+                    Nombre = unidadDto.Nombre,
+                    Estado = true,
+                    EstadoVisual = true,
+                };
+            }
+
+        public TbComPorcentajeGanancia MapeoPorcentajeCreacionDtoAPorcentajeTb(PorcentajeGananciaCreacionDTO porcentajeDto)
             {
                 return new TbComPorcentajeGanancia
                 {
@@ -307,6 +320,21 @@ namespace SistemaTienda.Utility
                 return listaMarcasTb.Select(mar => this.MapeoMarcaTbAMarcaDto(mar)).ToList();
             }
 
+            public List<UnidadMedidaDTO> MapeoListaUnidadTbAListaUnidadDto(List<TbComUnidadesMedida> listaUnidadesTb)
+            {
+                return listaUnidadesTb.Select(mar => this.MapeoUnidadTbAUnidadDto(mar)).ToList();
+            }
+
+            public UnidadMedidaDTO MapeoUnidadTbAUnidadDto(TbComUnidadesMedida unidadTb)
+            {
+                return new UnidadMedidaDTO
+                {
+                    Id = unidadTb.Id,
+                    Nombre = unidadTb.Nombre,
+                    Estado = unidadTb.Estado,
+                    EstadoVisual = unidadTb.EstadoVisual,
+                };
+            }
             public MarcaDTO MapeoMarcaTbAMarcaDto(TbComMarca marcaTb)
             {
                 return new MarcaDTO
@@ -712,8 +740,6 @@ namespace SistemaTienda.Utility
              }*/
             public UsuarioDTO MapeoUsuarioTbAUsuarioDto(TbSisUsuario usuarioTb)
             {
-
-
                 var usuarioDto = new UsuarioDTO
                 {
                     Id = usuarioTb.Id,

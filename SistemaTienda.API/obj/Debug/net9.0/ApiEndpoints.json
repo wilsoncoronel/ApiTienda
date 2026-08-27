@@ -479,6 +479,22 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
+    "Method": "CrearUnidadMedida",
+    "RelativePath": "api/Configuraciones/CrearUnidadMedida",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "unidadCreacionDTO",
+        "Type": "SistemaTienda.DTO.UnidadCreacionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
     "Method": "EditarImpuesto",
     "RelativePath": "api/Configuraciones/EditarImpuesto",
     "HttpMethod": "PUT",
@@ -543,6 +559,22 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
+    "Method": "EditarUnidadMedida",
+    "RelativePath": "api/Configuraciones/EditarUnidadMedida",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "unidadEditarDto",
+        "Type": "SistemaTienda.DTO.UnidadEditarDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
     "Method": "ListarEstados",
     "RelativePath": "api/Configuraciones/ListarEstados",
     "HttpMethod": "GET",
@@ -595,6 +627,16 @@
     "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
     "Method": "ListarTransacciones",
     "RelativePath": "api/Configuraciones/ListarTransacciones",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
+    "Method": "ListarUnidadesMerdida",
+    "RelativePath": "api/Configuraciones/ListarUnidadesMedida",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
