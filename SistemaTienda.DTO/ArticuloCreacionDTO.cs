@@ -18,7 +18,6 @@ namespace SistemaTienda.DTO
         public decimal ValorVenta { get; set; }
         public decimal UnidadValor { get; set; }
         public string Descripcion { get; set; }
-        public string Unidad { get; set; }
         public int IdMarca { get; set; }
         public int? IdPorcentajeGanancia { get; set; }
         public int IdTipoArticulo { get; set; }

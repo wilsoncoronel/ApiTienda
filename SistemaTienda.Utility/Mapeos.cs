@@ -496,7 +496,7 @@ namespace SistemaTienda.Utility
                         ValorImpuesto = articuloTb.IdImpuestoNavigation.ValorImpuesto,
                         Nombre = articuloTb.IdImpuestoNavigation.Nombre,
                     },
-                    Nombre = $"{articuloTb.Nombre} {articuloTb.IdMarcaNavigation.Nombre } {articuloTb.IdUnidadNavigation.Nombre} {articuloTb.UnidadValor} {articuloTb.IdMarcaNavigation.Nombre} PRECIO {articuloTb.ValorVenta}$",
+                    Nombre = $"{articuloTb.Nombre} {articuloTb.IdMarcaNavigation.Nombre } {articuloTb.IdUnidadNavigation.Nombre.TrimEnd()} {articuloTb.UnidadValor} {articuloTb.IdMarcaNavigation.Nombre} PRECIO {articuloTb.ValorVenta}$",
                     IdUnidad = articuloTb.IdUnidad,
                     ValorCompra = articuloTb.ValorCompra,
                     UnidadValor = articuloTb.UnidadValor,
@@ -535,7 +535,7 @@ namespace SistemaTienda.Utility
                         ValorImpuesto = articuloTb.IdImpuestoNavigation.ValorImpuesto,
                         Nombre = articuloTb.IdImpuestoNavigation.Nombre,
                     },
-                    Nombre = !esVenta? $"{articuloTb.Nombre} {articuloTb.IdMarcaNavigation.Nombre} Valor Com: {articuloTb.ValorCompra}, Uni: {articuloTb.UnidadValor} {articuloTb.IdUnidadNavigation.Nombre}": $"{articuloTb.Nombre} Valor Vent: {articuloTb.ValorVenta}, Uni: {articuloTb.UnidadValor} {articuloTb.IdUnidadNavigation.Nombre}",
+                    Nombre = !esVenta? $"{articuloTb.Nombre} {articuloTb.IdMarcaNavigation.Nombre} Valor Com: {articuloTb.ValorCompra}, Uni: {articuloTb.UnidadValor} {articuloTb.IdUnidadNavigation.Nombre}": $"{articuloTb.Nombre} Valor Vent: {articuloTb.ValorVenta}, Uni: {articuloTb.UnidadValor} {articuloTb.IdUnidadNavigation.Nombre.TrimEnd()}",
                     IdUnidad = articuloTb.IdUnidad,
                     ValorCompra = articuloTb.ValorCompra,
                     UnidadValor = articuloTb.UnidadValor,
@@ -605,6 +605,13 @@ namespace SistemaTienda.Utility
                     Id = articuloTb.IdPorcentajeGananciaNavigation?.Id ?? 0,
                     PorcentajeGanancia = articuloTb.IdPorcentajeGananciaNavigation?.PorcentajeGanancia ?? "",
                     Valor = articuloTb.IdPorcentajeGananciaNavigation?.Valor ?? 0
+                },
+
+                UnidadMedidaDto = new UnidadMedidaDTO
+                {
+                    Id = articuloTb.IdUnidadNavigation?.Id ?? 0,
+                    Nombre = articuloTb.IdUnidadNavigation?.Nombre ?? "",
+                    Estado = articuloTb.IdUnidadNavigation?.Estado ?? false
                 },
                 Papeleria = articuloTb.Papeleria
             };

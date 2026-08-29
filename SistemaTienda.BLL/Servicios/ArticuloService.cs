@@ -95,6 +95,8 @@ namespace SistemaTienda.BLL.Servicios
                     .ThenInclude(a => a.IdTipoArticuloNavigation)
                 .Include(l => l.IdArticuloNavigation)
                     .ThenInclude(a => a.IdImpuestoNavigation)
+                .Include(l => l.IdArticuloNavigation)
+                    .ThenInclude(u => u.IdUnidadNavigation)
                 .ToListAsync();
 
             var resultado = new List<ArticuloInventarioDTO>();
@@ -119,6 +121,7 @@ namespace SistemaTienda.BLL.Servicios
                 .Include(a => a.IdImpuestoNavigation)
                 .Include(a => a.IdMarcaNavigation)
                 .Include(a => a.IdTipoArticuloNavigation)
+                .Include(u => u.IdUnidadNavigation)
                 .ToListAsync();
 
             resultado.AddRange(articulosSinLote.Select(a => new ArticuloInventarioDTO
@@ -142,7 +145,8 @@ namespace SistemaTienda.BLL.Servicios
                 .Include(a => a.IdMarcaNavigation)
                 .Include(a => a.IdTipoArticuloNavigation)
                 .Include(a => a.IdImpuestoNavigation)
-                .Include(p => p.IdPorcentajeGananciaNavigation).ToListAsync();
+                .Include(p => p.IdPorcentajeGananciaNavigation)
+                .Include(u => u.IdUnidadNavigation).ToListAsync();
             return this._mapper.MapeoListaArticulosDtoPrincipal(listaArticulos);
         }
 
