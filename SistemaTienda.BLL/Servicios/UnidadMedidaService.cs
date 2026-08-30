@@ -39,10 +39,10 @@ namespace SistemaTienda.BLL.Servicios
         {
             var unidad = await this.tiendaDb.TbComUnidadesMedida.Where(u => u.Id == unidadEditarDto.Id).FirstOrDefaultAsync();
             if (unidad is null)
-                throw new Exception("No se encontró la unidad a editar");
-            unidad.EstadoVisual = unidad.EstadoVisual;
-            unidad.Nombre = unidad.Nombre;
-            unidad.Estado = unidad.Estado;
+                throw new NotFoundException("No se encontró la unidad a editar");
+            unidad.EstadoVisual = unidadEditarDto.EstadoVisual;
+            unidad.Nombre = unidadEditarDto.Nombre;
+            unidad.Estado = unidadEditarDto.Estado;
             var resp = await this.unidadRepository.Editar(unidad);
             if (resp == false)
                 throw new BadRequestException("No se pudo editar la unidad!!");

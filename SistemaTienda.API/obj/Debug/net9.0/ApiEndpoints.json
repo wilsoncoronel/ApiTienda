@@ -880,6 +880,16 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SistemaTienda.API.Controllers.SistemasController",
+    "Method": "ListarPersonas",
+    "RelativePath": "api/Sistemas/ListarPersonas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaTienda.API.Controllers.UsuarioController",
     "Method": "CrearUsuario",
     "RelativePath": "api/Usuario/CrearUsuario",

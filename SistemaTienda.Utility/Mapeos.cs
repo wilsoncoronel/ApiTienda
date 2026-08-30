@@ -330,7 +330,7 @@ namespace SistemaTienda.Utility
                 return new UnidadMedidaDTO
                 {
                     Id = unidadTb.Id,
-                    Nombre = unidadTb.Nombre,
+                    Nombre = unidadTb.Nombre.TrimEnd(),
                     Estado = unidadTb.Estado,
                     EstadoVisual = unidadTb.EstadoVisual,
                 };
