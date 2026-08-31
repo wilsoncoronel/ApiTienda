@@ -13,5 +13,6 @@ namespace SistemaTienda.BLL.Servicios.Contrato
         Task<int> ConvertirUsuario(int IdPersona);
         Task<int> ConvertirCliente(int IdPersona);
         Task<int> ConvertirProveedor(int IdPersona);
+        Task<PersonaCompletoDTO> PersonaCompleta(int idPersona);
     }
 }

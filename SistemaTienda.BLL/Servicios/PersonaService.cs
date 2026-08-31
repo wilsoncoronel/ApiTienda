@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SistemaTienda.API.Exceptions;
 using SistemaTienda.BLL.Servicios.Contrato;
 using SistemaTienda.DAL.DBContext;
 using SistemaTienda.DTO;
+using SistemaTienda.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +15,12 @@ namespace SistemaTienda.BLL.Servicios
     public class PersonaService : IPersonaService
     {
         private readonly TiendaDbContext tiendaDbContext;
+        private readonly IMapeoPersona mapeoPersona;
 
-        public PersonaService(TiendaDbContext tiendaDbContext)
+        public PersonaService(TiendaDbContext tiendaDbContext, IMapeoPersona mapeoPersona)
         {
             this.tiendaDbContext = tiendaDbContext;
+            this.mapeoPersona = mapeoPersona;
         }
         public Task<int> ConvertirCliente(int IdPersona)
         {
@@ -70,6 +74,20 @@ namespace SistemaTienda.BLL.Servicios
             .ToListAsync();
 
             return personas;
+        }
+
+        public async Task<PersonaCompletoDTO> PersonaCompleta(int idPersona)
+        {
+            var persona = await tiendaDbContext.TbGrlPersonas.Where(per => per.Id == idPersona)
+                .Include(i => i.IdTipoIdentificacionNavigation)
+                .Include(dir => dir.TbGrlDireccione).FirstOrDefaultAsync();
+            if (persona is null)
+                throw new NotFoundException("No existe la persona!!");
+            var cli = await tiendaDbContext.TbComClientes.Where(cli => cli.IdPersona == persona.Id).FirstOrDefaultAsync();
+            var usu = await tiendaDbContext.TbSisUsuarios.Where(usu => usu.IdPersona == persona.Id).FirstOrDefaultAsync();
+            var prov = await tiendaDbContext.TbComProveedores.Where(prov => prov.IdPersona == persona.Id).FirstOrDefaultAsync();
+
+            return mapeoPersona.MapeoPersonaCompletoDto(persona, cli, prov, usu);
         }
     }
 }
