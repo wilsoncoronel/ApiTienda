@@ -80,13 +80,14 @@ namespace SistemaTienda.BLL.Servicios
         {
             var persona = await tiendaDbContext.TbGrlPersonas.Where(per => per.Id == idPersona)
                 .Include(i => i.IdTipoIdentificacionNavigation)
-                .Include(dir => dir.TbGrlDireccione).FirstOrDefaultAsync();
+                .Include(dir => dir.TbGrlDireccione)
+                .ThenInclude(ciu => ciu.IdCiudadNavigation)
+                .FirstOrDefaultAsync();
             if (persona is null)
                 throw new NotFoundException("No existe la persona!!");
             var cli = await tiendaDbContext.TbComClientes.Where(cli => cli.IdPersona == persona.Id).FirstOrDefaultAsync();
-            var usu = await tiendaDbContext.TbSisUsuarios.Where(usu => usu.IdPersona == persona.Id).FirstOrDefaultAsync();
+            var usu = await tiendaDbContext.TbSisUsuarios.Where(usu => usu.IdPersona == persona.Id).Include(rol => rol.IdRolNavigation).FirstOrDefaultAsync();
             var prov = await tiendaDbContext.TbComProveedores.Where(prov => prov.IdPersona == persona.Id).FirstOrDefaultAsync();
-
             return mapeoPersona.MapeoPersonaCompletoDto(persona, cli, prov, usu);
         }
     }

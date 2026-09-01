@@ -881,8 +881,34 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.SistemasController",
+    "Method": "PersonaCompleta",
+    "RelativePath": "api/Sistemas/BuscarPersonas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idPersona",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.SistemasController",
     "Method": "ListarPersonas",
     "RelativePath": "api/Sistemas/ListarPersonas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.SistemasController",
+    "Method": "ListarRoles",
+    "RelativePath": "api/Sistemas/ListarRoles",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

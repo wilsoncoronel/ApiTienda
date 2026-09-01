@@ -25,6 +25,7 @@ namespace SistemaTienda.IOC
             }); 
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddTransient<IMapeos, Mapeos>();
+            services.AddTransient<IMapeoPersona, MapeoPersona>();
             services.AddTransient<ILogginService, LogginService>();
             services.AddTransient<IInventarioService, InventarioService>();
             services.AddTransient<ITipoArticuloService, TipoArticuloService>();
@@ -41,6 +42,8 @@ namespace SistemaTienda.IOC
             services.AddTransient<IClienteService, ClienteService>();
             services.AddTransient<IUnidadMedidaService, UnidadMedidaService>();
             services.AddTransient<IPersonaService, PersonaService>();
+            services.AddTransient<ISistemaService, SistemaService>();
+            services.AddTransient<IMapeosSistemas, MapeosSistemas>();
         }
     }
 }
