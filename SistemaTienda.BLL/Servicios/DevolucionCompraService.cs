@@ -1,0 +1,93 @@
+using Microsoft.EntityFrameworkCore;
+using SistemaTienda.API.Exceptions;
+using SistemaTienda.BLL.Servicios.Contrato;
+using SistemaTienda.DAL.DBContext;
+using SistemaTienda.DAL.Repositorios.Contrato;
+using SistemaTienda.DTO;
+using SistemaTienda.Model;
+using SistemaTienda.Utility;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace SistemaTienda.BLL.Servicios
+{
+    public class DevolucionCompraService : IDevolucionCompraService
+    {
+        private readonly TiendaDbContext _tiendaDbContext;
+        private readonly IGenericRepository<TbComDevolucionCompra> _devolucionRepository;
+        private readonly IGenericRepository<TbComDetalleDevolucionCompra> _detalleDevolucionRepository;
+        private readonly IMapeoDevolucionCompra _mapeo;
+
+        public DevolucionCompraService(TiendaDbContext tiendaDbContext,
+            IGenericRepository<TbComDevolucionCompra> devolucionRepository,
+            IGenericRepository<TbComDetalleDevolucionCompra> detalleDevolucionRepository,
+            IMapeoDevolucionCompra mapeo)
+        {
+            _tiendaDbContext = tiendaDbContext;
+            _devolucionRepository = devolucionRepository;
+            _detalleDevolucionRepository = detalleDevolucionRepository;
+            _mapeo = mapeo;
+        }
+
+        public async Task<int> CrearDevolucionCompra(DevolucionCompraCreacionDTO dto)
+        {
+            // Validar existencia de compra
+            var compra = await _tiendaDbContext.TbCompras.Where(c => c.Id == dto.IdCompra).FirstOrDefaultAsync();
+            if (compra == null)
+                throw new NotFoundException("No existe la compra indicada");
+
+            using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync();
+            try
+            {
+                // Validar detalles y stock por lote
+                foreach (var det in dto.DetalleDevolucionCompraDto)
+                {
+                    var detalleCompra = await _tiendaDbContext.TbComDetallesCompras.Where(d => d.Id == det.IdDetalleCompra).FirstOrDefaultAsync();
+                    if (detalleCompra == null)
+                        throw new NotFoundException($"No existe el detalle de compra con id {det.IdDetalleCompra}");
+
+                    // Buscar lote asociado (por articulo + numero lote)
+                    var lote = await _tiendaDbContext.TbInvLotes.Where(l => l.IdArticulo == detalleCompra.IdArticulo && (l.NumeroLote == detalleCompra.NumeroLote || string.IsNullOrEmpty(detalleCompra.NumeroLote))).FirstOrDefaultAsync();
+                    if (lote == null)
+                        throw new NotFoundException($"No existe lote asociado para el detalle de compra {detalleCompra.Id}");
+
+                    if (det.Cantidad > lote.StockDisponible)
+                        throw new ConflictException($"La cantidad a devolver ({det.Cantidad}) excede el stock disponible del lote ({lote.StockDisponible})");
+                }
+
+                // Mapear y crear devolucion
+                var tbDevolucion = _mapeo.MapeoDevolucionCompraCreacionDtoATb(dto);
+                tbDevolucion.FechaCreacion = DateTime.Now;
+                _tiendaDbContext.TbComDevolucionCompras.Add(tbDevolucion);
+                await _tiendaDbContext.SaveChangesAsync();
+
+                // Crear movimiento de inventario para la devolución
+                var trans = await _tiendaDbContext.TbInvTransacciones.FirstOrDefaultAsync(t => t.Nombre.ToLower() == "devolucion compra");
+                if (trans == null)
+                    throw new NotFoundException("No existe la transacción 'Devolucion Compra' en TbInvTransacciones");
+
+                var movimiento = new TbInvMovimiento
+                {
+                    IdTransaccionInventario = trans.Id,
+                    Referencia = tbDevolucion.Id.ToString(),
+                    Fecha = DateTime.Now
+                };
+                _tiendaDbContext.TbInvMovimientos.Add(movimiento);
+                await _tiendaDbContext.SaveChangesAsync();
+
+                // NOTA: La tabla TbInvConsumoLote tiene FK hacia TbVenDetalleVenta en el modelo actual.
+                // Crear consumos por devolucion implicaría violar la FK si se intentara referenciar detalles de compra.
+                // Por ello en esta implementación solo se registra el movimiento y los detalles de devolucion en su tabla correspondiente.
+
+                await transaction.CommitAsync();
+                return tbDevolucion.Id;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+    }
+}

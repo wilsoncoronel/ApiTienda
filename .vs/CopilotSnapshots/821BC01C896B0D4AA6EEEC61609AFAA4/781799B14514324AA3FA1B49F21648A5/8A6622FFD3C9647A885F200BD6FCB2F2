@@ -1,0 +1,25 @@
+﻿using SistemaTienda.Model;
+using System;
+using System.Collections.Generic;
+
+namespace SistemaTienda.DTO
+{
+    public class DevolucionCompraCreacionDTO
+    {
+        public int Id { get; set; }
+
+        public int IdCompra { get; set; }
+
+        public DateTime FechaCreacion { get; set; }
+
+        public DateTime? FechaReversion { get; set; }
+
+        public int Estado { get; set; }
+
+        public string Motivo { get; set; } = null!;
+
+        public virtual TbCompra IdCompraNavigation { get; set; } = null!;
+
+        public ICollection<DetalleDevolucionCompraCreacionDTO> DetalleDevolucionCompraDto { get; set; } = new List<DetalleDevolucionCompraCreacionDTO>();
+    }
+}

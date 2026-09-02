@@ -98,7 +98,7 @@ namespace SistemaTienda.Utility
                 EstadoUsuario = usuario?.Estado ?? false,
                 EsCliente = esCLiente,
                 EsProveedor = esProveedor,
-                EsUsuario = esProveedor
+                EsUsuario = esUsuario
             };
         }
     }
