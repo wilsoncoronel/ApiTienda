@@ -59,6 +59,8 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbInvConsumoLote> TbInvConsumoLotes { get; set; }
 
+    public virtual DbSet<TbInvDevolucionLote> TbInvDevolucionLotes { get; set; }
+
     public virtual DbSet<TbInvLote> TbInvLotes { get; set; }
 
     public virtual DbSet<TbInvMovimiento> TbInvMovimientos { get; set; }
@@ -89,9 +91,7 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbVenta> TbVentas { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-QO2URC6\\SQLEXPRESS;Database=TiendaDb;User Id=sa;Password=wili199308; TrustServerCertificate=True;");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -409,6 +409,29 @@ public partial class TiendaDbContext : DbContext
                 .HasForeignKey(d => d.IdMovimiento)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbInvConsumoLote_TbInvMovimiento");
+        });
+
+        modelBuilder.Entity<TbInvDevolucionLote>(entity =>
+        {
+            entity.ToTable("TbInvDevolucionLote");
+
+            entity.Property(e => e.Cantidad).HasColumnType("numeric(18, 4)");
+            entity.Property(e => e.CostoUnitario).HasColumnType("numeric(18, 4)");
+
+            entity.HasOne(d => d.IdDetalleDevolucionCompraNavigation).WithMany(p => p.TbInvDevolucionLotes)
+                .HasForeignKey(d => d.IdDetalleDevolucionCompra)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbInvDevolucionLote_TbComDetalleDevolucionCompra");
+
+            entity.HasOne(d => d.IdLoteNavigation).WithMany(p => p.TbInvDevolucionLotes)
+                .HasForeignKey(d => d.IdLote)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbInvDevolucionLote_TbInvLote");
+
+            entity.HasOne(d => d.IdMovimientoNavigation).WithMany(p => p.TbInvDevolucionLotes)
+                .HasForeignKey(d => d.IdMovimiento)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbInvDevolucionLote_TbInvMovimiento");
         });
 
         modelBuilder.Entity<TbInvLote>(entity =>

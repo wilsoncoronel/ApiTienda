@@ -644,6 +644,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SistemaTienda.API.Controllers.DevolucionCompraController",
+    "Method": "CrearDevolucionCompra",
+    "RelativePath": "api/DevolucionCompra/CrearDevolucionCompra",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "SistemaTienda.DTO.DevolucionCompraCreacionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
     "Method": "ExistenciasInventario",
     "RelativePath": "api/Inventario/ExistenciasInventario",

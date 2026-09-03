@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 
 namespace SistemaTienda.Model;
@@ -18,4 +18,6 @@ public partial class TbComDetalleDevolucionCompra
     public virtual TbComDetallesCompra IdDetalleCompraNavigation { get; set; } = null!;
 
     public virtual TbComDevolucionCompra IdDevolucionCompraNavigation { get; set; } = null!;
+
+    public virtual ICollection<TbInvDevolucionLote> TbInvDevolucionLotes { get; set; } = new List<TbInvDevolucionLote>();
 }

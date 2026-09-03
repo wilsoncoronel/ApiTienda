@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SistemaTienda.API.Exceptions;
 using SistemaTienda.BLL.Servicios.Contrato;
 using SistemaTienda.DAL.DBContext;
@@ -37,11 +37,6 @@ namespace SistemaTienda.BLL.Servicios
             if (compra == null)
                 throw new NotFoundException("No existe la compra indicada");
 
-            // Verificar que la compra no esté reversada
-            var estadoReversada = await _tiendaDbContext.TbComEstadosCompras.FirstOrDefaultAsync(e => e.Nombre.ToLower() == "reversada");
-            if (estadoReversada != null && compra.IdEstadoCompra == estadoReversada.Id)
-                throw new ConflictException("La compra está reversada y no se puede realizar la devolución");
-
             using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync();
             try
             {
@@ -56,10 +51,6 @@ namespace SistemaTienda.BLL.Servicios
                     var lote = await _tiendaDbContext.TbInvLotes.Where(l => l.IdArticulo == detalleCompra.IdArticulo && (l.NumeroLote == detalleCompra.NumeroLote || string.IsNullOrEmpty(detalleCompra.NumeroLote))).FirstOrDefaultAsync();
                     if (lote == null)
                         throw new NotFoundException($"No existe lote asociado para el detalle de compra {detalleCompra.Id}");
-
-                    // El lote debe tener stock positivo y suficiente
-                    if (lote.StockDisponible <= 0)
-                        throw new ConflictException($"El lote asociado al detalle de compra {detalleCompra.Id} tiene stock cero o negativo y no se puede devolver");
 
                     if (det.Cantidad > lote.StockDisponible)
                         throw new ConflictException($"La cantidad a devolver ({det.Cantidad}) excede el stock disponible del lote ({lote.StockDisponible})");
