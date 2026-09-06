@@ -10,4 +10,3 @@ C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Exceptions\obj\Debug\ne
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Exceptions\obj\Debug\net9.0\refint\SistemaTienda.Exceptions.dll
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Exceptions\obj\Debug\net9.0\SistemaTienda.Exceptions.pdb
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Exceptions\obj\Debug\net9.0\ref\SistemaTienda.Exceptions.dll
-C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Exceptions\obj\Debug\net9.0\SistemaT.9AC58558.Up2Date
