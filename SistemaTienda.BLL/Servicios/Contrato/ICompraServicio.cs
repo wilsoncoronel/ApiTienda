@@ -1,4 +1,5 @@
-﻿using SistemaTienda.DTO;
+﻿using Microsoft.AspNetCore.Mvc;
+using SistemaTienda.DTO;
 using SistemaTienda.Model;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace SistemaTienda.BLL.Servicios.Contrato
         Task<bool> EditarCompra(CompraEditarDTO compraDto);
         // Nueva sobrecarga: editar movimiento/lotes por idCompra y documento (referencia)
         Task<List<CompraMinDTO>> ListarCompras(DateOnly fechaInicial, DateOnly fechaFinal);
+        Task<List<CompraMinDTO>> ListaCompraDevolucion(string busquedaCompra);
+        Task<List<DetalleCompraDTO>> ListarDetallesCompras(int idCompra);
         Task<CompraDTO> ObtenerCompra(int idCompra);
         Task<bool> ReversarCompra(int id);
     }

@@ -51,6 +51,28 @@ namespace SistemaTienda.API.Controllers
         }
 
         [HttpGet]
+        [Route("ListarComprasDevolucion")]
+        public async Task<IActionResult> ListarComprasDevolucion(string busquedaCompra)
+        {
+            var resp = new Response<List<CompraMinDTO>>();
+            resp.status = true;
+            resp.Value = await this._compraService.ListaCompraDevolucion(busquedaCompra);
+            resp.msg = "Compras listadas correctamente";
+            return Ok(resp);
+        }
+
+        [HttpGet]
+        [Route("ListarDetallesCompra")]
+        public async Task<IActionResult> ListarDetallesCompras(int idCompra)
+        {
+            var resp = new Response<List<DetalleCompraDTO>>();
+            resp.status = true;
+            resp.Value = await this._compraService.ListarDetallesCompras(idCompra);
+            resp.msg = "Detalles listadas correctamente";
+            return Ok(resp);
+        }
+
+        [HttpGet]
         [Route("ListarCompras")]
         public async Task<IActionResult> ListarCompras(DateOnly fechaInicial, DateOnly fechaFinal)
         {

@@ -357,6 +357,38 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ComprasController",
+    "Method": "ListarComprasDevolucion",
+    "RelativePath": "api/Compras/ListarComprasDevolucion",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "busquedaCompra",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ComprasController",
+    "Method": "ListarDetallesCompras",
+    "RelativePath": "api/Compras/ListarDetallesCompra",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idCompra",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ComprasController",
     "Method": "ListarEstadosCompra",
     "RelativePath": "api/Compras/ListarEstadosCompra",
     "HttpMethod": "GET",

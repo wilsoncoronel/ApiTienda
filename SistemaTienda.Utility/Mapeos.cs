@@ -68,6 +68,8 @@ namespace SistemaTienda.Utility
         TbComImpuestosArticulo MapeoImpuestoDtoAImpuestoTb(ImpuestoArticuloCreacionDTO ImpuestoCreacionDTO);
         // InventarioDTO MapeoInventarioTbaAInventarioDto(TbInvInventarioLote inventarioTb);
         List<InventarioLoteDTO> MapeoListaDetallesLotesTbAListaDetallesLotesDto(List<TbInvLote> ListaDetallesInv);
+        List<DetalleCompraDTO> MapeoListaLotesTbAListaDetallesCompraDto(List<TbInvLote> listaLotes, int idCompra);
+        List<DetalleCompraDTO> MapeoListaLotesTbAListaDetallesCompraDto(List<TbInvLote> listaLotes, int idCompra, List<TbComDetallesCompra> detallesCompra);
         List<MovimientoDTO> MapeoListaMovimientosTbAListaMovimientosDto(List<TbInvMovimiento> listaMovimientosTb);
         List<CodigoArticuloDTO> MapeoListaArticulosDto(List<TbComCodigosArticulos> ListaCodigos);
         CodigoArticuloDTO MapeoCodigoTbACodigoDTO(TbComCodigosArticulos codigoTb);
@@ -91,6 +93,51 @@ namespace SistemaTienda.Utility
             {
                 Id = transaccionTb.Id,
                 Nombre = transaccionTb.Nombre
+            };
+        }
+
+        public List<DetalleCompraDTO> MapeoListaLotesTbAListaDetallesCompraDto(List<TbInvLote> listaLotes, int idCompra)
+        {
+            return listaLotes.Select(l => this.MapeoLoteTbADetalleCompraDto(l, idCompra, null)).ToList();
+        }
+
+        public List<DetalleCompraDTO> MapeoListaLotesTbAListaDetallesCompraDto(List<TbInvLote> listaLotes, int idCompra, List<TbComDetallesCompra> detallesCompra)
+        {
+            return listaLotes.Select(l =>
+            {
+                var detalle = detallesCompra?.FirstOrDefault(d => (d.NumeroLote != null && d.NumeroLote == l.NumeroLote) || d.IdArticulo == l.IdArticulo);
+                return this.MapeoLoteTbADetalleCompraDto(l, idCompra, detalle);
+            }).ToList();
+        }
+
+        public DetalleCompraDTO MapeoLoteTbADetalleCompraDto(TbInvLote loteTb, int idCompra)
+        {
+            return this.MapeoLoteTbADetalleCompraDto(loteTb, idCompra, null);
+        }
+
+        public DetalleCompraDTO MapeoLoteTbADetalleCompraDto(TbInvLote loteTb, int idCompra, TbComDetallesCompra? detalleCompra)
+        {
+            // Si se proporcionó un detalle de compra, usar su ValorCompra; en caso contrario, usar el costo del lote
+            var valorCompra = detalleCompra != null ? detalleCompra.ValorCompra : loteTb.CostoUnitario;
+            var id = detalleCompra?.Id ?? 0;
+            var descripcion = detalleCompra?.Descripcion ?? loteTb.IdArticuloNavigation?.Descripcion ?? loteTb.NumeroLote;
+            var valorVenta = detalleCompra != null ? detalleCompra.ValorVenta : loteTb.IdArticuloNavigation?.ValorVenta ?? 0;
+
+            return new DetalleCompraDTO
+            {
+                Id = id,
+                IdCompra = idCompra,
+                IdArticulo = loteTb.IdArticulo,
+                Lote = loteTb.NumeroLote,
+                Codigo = loteTb.Codigo,
+                Descripcion = descripcion,
+                Cantidad = (int)loteTb.StockDisponible,
+                ValorCompra = valorCompra,
+                ValorVenta = valorVenta,
+                ValorTotal = valorCompra * loteTb.StockDisponible,
+                ImpuestoValor = loteTb.IdArticuloNavigation?.IdImpuestoNavigation?.ValorImpuesto ?? 0,
+                ArticuloDTO = loteTb.IdArticuloNavigation != null ? this.MapeoArticuloTbAArticuloDtoDevolucion(loteTb.IdArticuloNavigation, false) : new ArticuloDTO { Id = loteTb.IdArticulo, Nombre = loteTb.NumeroLote ?? string.Empty, Descripcion = loteTb.IdArticuloNavigation?.Descripcion ?? string.Empty, ValorCompra = 0, ValorVenta = 0 },
+                FechaCaducidad = loteTb.FechaExpiracion?.ToDateTime(TimeOnly.MinValue)
             };
         }
             
@@ -496,7 +543,7 @@ namespace SistemaTienda.Utility
                         ValorImpuesto = articuloTb.IdImpuestoNavigation.ValorImpuesto,
                         Nombre = articuloTb.IdImpuestoNavigation.Nombre,
                     },
-                    Nombre = $"{articuloTb.Nombre} {articuloTb.IdMarcaNavigation.Nombre } {articuloTb.IdUnidadNavigation.Nombre.TrimEnd()} {articuloTb.UnidadValor} {articuloTb.IdMarcaNavigation.Nombre} PRECIO {articuloTb.ValorVenta}$",
+                    Nombre = $"{articuloTb.Nombre} {articuloTb.IdMarcaNavigation.Nombre } {articuloTb.IdUnidadNavigation.Nombre.TrimEnd()} {articuloTb.UnidadValor} {articuloTb.IdMarcaNavigation.Nombre} PRECIO {articuloTb.ValorVenta}$".Trim(),
                     IdUnidad = articuloTb.IdUnidad,
                     ValorCompra = articuloTb.ValorCompra,
                     UnidadValor = articuloTb.UnidadValor,
@@ -521,6 +568,27 @@ namespace SistemaTienda.Utility
                 return articuloDto;
             }
 
+            public ArticuloDTO MapeoArticuloTbAArticuloDtoDevolucion(TbComArticulo articuloTb, bool esVenta)
+            {
+                var articuloDto = new ArticuloDTO
+                {
+                    Id = articuloTb.Id,
+                    Descripcion = articuloTb.Descripcion,
+                    Estado = articuloTb.Estado,
+                    EstadoVisual = articuloTb.EstadoVisual,
+                    Nombre = !esVenta? $"{articuloTb.Nombre} Valor Com: {articuloTb.ValorCompra}, Uni: {articuloTb.UnidadValor}".Trim(): $"{articuloTb.Nombre} Valor Vent: {articuloTb.ValorVenta}".Trim(),
+                    IdUnidad = articuloTb.IdUnidad,
+                    ValorCompra = articuloTb.ValorCompra,
+                    UnidadValor = articuloTb.UnidadValor,
+                    ValorVenta = articuloTb.ValorVenta,
+                    FechaActualizacion = articuloTb.FechaActualizacion ?? articuloTb.FechaCreacion,
+                    FechaCaducidad = articuloTb.FechaCaducidad,
+                    FechaCreacion = articuloTb.FechaCreacion,
+                    Papeleria = articuloTb.Papeleria
+                };
+                return articuloDto;
+            }
+
             public ArticuloDTO MapeoArticuloTbAArticuloDto(TbComArticulo articuloTb, bool esVenta)
             {
                 var articuloDto = new ArticuloDTO
@@ -535,7 +603,7 @@ namespace SistemaTienda.Utility
                         ValorImpuesto = articuloTb.IdImpuestoNavigation.ValorImpuesto,
                         Nombre = articuloTb.IdImpuestoNavigation.Nombre,
                     },
-                    Nombre = !esVenta? $"{articuloTb.Nombre} {articuloTb.IdMarcaNavigation.Nombre} Valor Com: {articuloTb.ValorCompra}, Uni: {articuloTb.UnidadValor} {articuloTb.IdUnidadNavigation.Nombre}": $"{articuloTb.Nombre} Valor Vent: {articuloTb.ValorVenta}, Uni: {articuloTb.UnidadValor} {articuloTb.IdUnidadNavigation.Nombre.TrimEnd()}",
+                    Nombre = !esVenta? $"{articuloTb.Nombre} {articuloTb.IdMarcaNavigation.Nombre} Valor Com: {articuloTb.ValorCompra}, Uni: {articuloTb.UnidadValor} {articuloTb.IdUnidadNavigation.Nombre}".Trim(): $"{articuloTb.Nombre} Valor Vent: {articuloTb.ValorVenta}, Uni: {articuloTb.UnidadValor} {articuloTb.IdUnidadNavigation.Nombre.TrimEnd()}".Trim(),
                     IdUnidad = articuloTb.IdUnidad,
                     ValorCompra = articuloTb.ValorCompra,
                     UnidadValor = articuloTb.UnidadValor,
@@ -1238,7 +1306,7 @@ namespace SistemaTienda.Utility
                 return compra;
             }
 
-            public CompraDTO MapeoCompraTbACompraCompletaDto(TbCompra compraTb)
+            public CompraDTO MapeoCompraTbACompraCompletaDto (TbCompra compraTb)
             {
                 DateOnly fechaSolo = DateOnly.FromDateTime(DateTime.Now);
                 var compra = new CompraDTO

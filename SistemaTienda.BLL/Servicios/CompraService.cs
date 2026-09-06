@@ -440,5 +440,46 @@ namespace SistemaTienda.BLL.Servicios
                 throw;
             }
         }
+
+        public async Task<List<CompraMinDTO>> ListaCompraDevolucion(string busquedaCompra)
+        {
+            var tbCompras = await this._tiendaDbContext.TbCompras.Where(com => com.Documento == busquedaCompra || com.Id == Convert.ToInt32(busquedaCompra))
+                .Include(u => u.IdUsuarioCreadorNavigation)
+                .ThenInclude(per => per.IdPersonaNavigation)
+                .Include(e => e.IdEstadoCompraNavigation)
+                .Include(p => p.IdProveedorNavigation)
+                .ThenInclude(per => per.IdPersonaNavigation)
+                .ToListAsync();
+            return this._mapper.MapeoListaCompraTbAListaCompraDto(tbCompras);
+        }
+
+        public async Task<List<DetalleCompraDTO>> ListarDetallesCompras(int idCompra)
+        {
+            // Obtener la compra para construir la referencia usada en movimientos de inventario
+            var tbCompra = await _tiendaDbContext.TbCompras.Where(c => c.Id == idCompra).FirstOrDefaultAsync();
+            if (tbCompra == null)
+                return new List<DetalleCompraDTO>();
+
+            var referencia = tbCompra.Documento + "ID" + idCompra;
+
+            // Buscar movimientos de inventario asociados a la compra por la referencia
+            var movimientos = await _tiendaDbContext.TbInvMovimientos
+                .Where(m => m.Referencia == referencia)
+                .Include(m => m.TbInvLotes)
+                    .ThenInclude(l => l.IdArticuloNavigation)
+                .ToListAsync();
+
+            // Obtener todos los lotes con stock disponible mayor a cero
+            var lotes = movimientos.SelectMany(m => m.TbInvLotes)
+                .Where(l => l.StockDisponible > 0)
+                .ToList();
+
+            // Obtener los detalles de compra originales para usar el valor de compra registrado
+            var detallesCompra = await _tiendaDbContext.TbComDetallesCompras.Where(d => d.IdCompra == idCompra).ToListAsync();
+
+            // Mapear lotes a DetalleCompraDTO usando el mapeador y los detalles de compra para tomar el precio
+            var listaDto = this._mapper.MapeoListaLotesTbAListaDetallesCompraDto(lotes, idCompra, detallesCompra);
+            return listaDto;
+        }
     }
 }

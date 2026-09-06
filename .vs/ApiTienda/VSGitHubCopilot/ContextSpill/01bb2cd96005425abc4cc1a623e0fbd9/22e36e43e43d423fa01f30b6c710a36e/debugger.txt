@@ -1,0 +1,168 @@
+﻿## PROCESSES
+Currently debugging:
+- SistemaTienda.API.exe (PID: 36164)
+
+## EXCEPTION
+Exception Type: System.NullReferenceException
+Exception Message: Object reference not set to an instance of an object.
+This exception was originally thrown at this call stack:
+[1] SistemaTienda.Utility.Mapeos.MapeoArticuloTbAArticuloDtoDevolucion(SistemaTienda.Model.TbComArticulo, bool) en Mapeos.cs
+Code for the stack frame:
+```csharp SistemaTienda.Utility\Mapeos.cs
+571:             public ArticuloDTO MapeoArticuloTbAArticuloDtoDevolucion(TbComArticulo articuloTb, bool esVenta)
+572:             {
+573:                 var articuloDto = new ArticuloDTO
+574:                 {
+575:                     Id = articuloTb.Id,
+576:                     Descripcion = articuloTb.Descripcion,
+577:                     Estado = articuloTb.Estado,
+578:                     EstadoVisual = articuloTb.EstadoVisual,
+579:                     Nombre = !esVenta? $"{articuloTb.Nombre} {articuloTb.IdMarcaNavigation.Nombre} Valor Com: {articuloTb.ValorCompra}, Uni: {articuloTb.UnidadValor} {articuloTb.IdUnidadNavigation.Nombre}".Trim(): $"{articuloTb.Nombre} Valor Vent: {articuloTb.ValorVenta}, Uni: {articuloTb.UnidadValor} {articuloTb.IdUnidadNavigation.Nombre.TrimEnd()}".Trim(),
+580:                     IdUnidad = articuloTb.IdUnidad,
+581:                     ValorCompra = articuloTb.ValorCompra,
+582:                     UnidadValor = articuloTb.UnidadValor,
+583:                     ValorVenta = articuloTb.ValorVenta,
+584:                     FechaActualizacion = articuloTb.FechaActualizacion ?? articuloTb.FechaCreacion,
+585:                     FechaCaducidad = articuloTb.FechaCaducidad,
+586:                     FechaCreacion = articuloTb.FechaCreacion,
+587:                     Papeleria = articuloTb.Papeleria
+588:                 };
+589:                 return articuloDto;
+590:             }
+```
+Current statement: lines 573-588
+[2] SistemaTienda.Utility.Mapeos.MapeoLoteTbADetalleCompraDto(SistemaTienda.Model.TbInvLote, int, SistemaTienda.Model.TbComDetallesCompra) en Mapeos.cs
+Code for the stack frame:
+```csharp SistemaTienda.Utility\Mapeos.cs
+118:         public DetalleCompraDTO MapeoLoteTbADetalleCompraDto(TbInvLote loteTb, int idCompra, TbComDetallesCompra? detalleCompra)
+119:         {
+120:             // Si se proporcionó un detalle de compra, usar su ValorCompra; en caso contrario, usar el costo del lote
+121:             var valorCompra = detalleCompra != null ? detalleCompra.ValorCompra : loteTb.CostoUnitario;
+122:             var id = detalleCompra?.Id ?? 0;
+123:             var descripcion = detalleCompra?.Descripcion ?? loteTb.IdArticuloNavigation?.Descripcion ?? loteTb.NumeroLote;
+124:             var valorVenta = detalleCompra != null ? detalleCompra.ValorVenta : loteTb.IdArticuloNavigation?.ValorVenta ?? 0;
+125: 
+126:             return new DetalleCompraDTO
+127:             {
+128:                 Id = id,
+129:                 IdCompra = idCompra,
+130:                 IdArticulo = loteTb.IdArticulo,
+131:                 Lote = loteTb.NumeroLote,
+132:                 Codigo = loteTb.Codigo,
+133:                 Descripcion = descripcion,
+134:                 Cantidad = (int)loteTb.StockDisponible,
+135:                 ValorCompra = valorCompra,
+136:                 ValorVenta = valorVenta,
+137:                 ValorTotal = valorCompra * loteTb.StockDisponible,
+138:                 ImpuestoValor = loteTb.IdArticuloNavigation?.IdImpuestoNavigation?.ValorImpuesto ?? 0,
+139:                 ArticuloDTO = loteTb.IdArticuloNavigation != null ? this.MapeoArticuloTbAArticuloDtoDevolucion(loteTb.IdArticuloNavigation, false) : new ArticuloDTO { Id = loteTb.IdArticulo, Nombre = loteTb.NumeroLote ?? string.Empty, Descripcion = loteTb.IdArticuloNavigation?.Descripcion ?? string.Empty, ValorCompra = 0, ValorVenta = 0 },
+140:                 FechaCaducidad = loteTb.FechaExpiracion?.ToDateTime(TimeOnly.MinValue)
+141:             };
+142:         }
+```
+Current statement: lines 126-141
+[3] SistemaTienda.Utility.Mapeos.MapeoListaLotesTbAListaDetallesCompraDto.AnonymousMethod__0(SistemaTienda.Model.TbInvLote) en Mapeos.cs
+Code for the stack frame:
+```csharp SistemaTienda.Utility\Mapeos.cs
+104:         public List<DetalleCompraDTO> MapeoListaLotesTbAListaDetallesCompraDto(List<TbInvLote> listaLotes, int idCompra, List<TbComDetallesCompra> detallesCompra)
+105:         {
+106:             return listaLotes.Select(l =>
+107:             {
+108:                 var detalle = detallesCompra?.FirstOrDefault(d => (d.NumeroLote != null && d.NumeroLote == l.NumeroLote) || d.IdArticulo == l.IdArticulo);
+109:                 return this.MapeoLoteTbADetalleCompraDto(l, idCompra, detalle);
+110:             }).ToList();
+111:         }
+```
+Current statement: line 109
+[4] System.Linq.Enumerable.ListSelectIterator<TSource, TResult>.ToList()
+[5] SistemaTienda.Utility.Mapeos.MapeoListaLotesTbAListaDetallesCompraDto(System.Collections.Generic.List<SistemaTienda.Model.TbInvLote>, int, System.Collections.Generic.List<SistemaTienda.Model.TbComDetallesCompra>) en Mapeos.cs
+Code for the stack frame:
+```csharp SistemaTienda.Utility\Mapeos.cs
+104:         public List<DetalleCompraDTO> MapeoListaLotesTbAListaDetallesCompraDto(List<TbInvLote> listaLotes, int idCompra, List<TbComDetallesCompra> detallesCompra)
+105:         {
+106:             return listaLotes.Select(l =>
+107:             {
+108:                 var detalle = detallesCompra?.FirstOrDefault(d => (d.NumeroLote != null && d.NumeroLote == l.NumeroLote) || d.IdArticulo == l.IdArticulo);
+109:                 return this.MapeoLoteTbADetalleCompraDto(l, idCompra, detalle);
+110:             }).ToList();
+111:         }
+```
+Current statement: lines 106-110
+[6] SistemaTienda.BLL.Servicios.CompraService.ListarDetallesCompras(int) en CompraService.cs
+Code for the stack frame:
+```csharp SistemaTienda.BLL\Servicios\CompraService.cs
+456:         public async Task<List<DetalleCompraDTO>> ListarDetallesCompras(int idCompra)
+457:         {
+458:             // Obtener la compra para construir la referencia usada en movimientos de inventario
+459:             var tbCompra = await _tiendaDbContext.TbCompras.Where(c => c.Id == idCompra).FirstOrDefaultAsync();
+460:             if (tbCompra == null)
+461:                 return new List<DetalleCompraDTO>();
+462: 
+463:             var referencia = tbCompra.Documento + "ID" + idCompra;
+464: 
+465:             // Buscar movimientos de inventario asociados a la compra por la referencia
+466:             var movimientos = await _tiendaDbContext.TbInvMovimientos
+467:                 .Where(m => m.Referencia == referencia)
+468:                 .Include(m => m.TbInvLotes)
+469:                     .ThenInclude(l => l.IdArticuloNavigation)
+470:                 .ToListAsync();
+471: 
+472:             // Obtener todos los lotes con stock disponible mayor a cero
+473:             var lotes = movimientos.SelectMany(m => m.TbInvLotes)
+474:                 .Where(l => l.StockDisponible > 0)
+475:                 .ToList();
+476: 
+477:             // Obtener los detalles de compra originales para usar el valor de compra registrado
+478:             var detallesCompra = await _tiendaDbContext.TbComDetallesCompras.Where(d => d.IdCompra == idCompra).ToListAsync();
+479: 
+480:             // Mapear lotes a DetalleCompraDTO usando el mapeador y los detalles de compra para tomar el precio
+481:             var listaDto = this._mapper.MapeoListaLotesTbAListaDetallesCompraDto(lotes, idCompra, detallesCompra);
+482:             return listaDto;
+483:         }
+```
+Current statement: line 481
+[7] SistemaTienda.API.Controllers.ComprasController.ListarDetallesCompras(int) en ComprasController.cs
+Code for the stack frame:
+```csharp SistemaTienda.API\Controllers\ComprasController.cs
+64:         [HttpGet]
+65:         [Route("ListarDetallesCompra")]
+66:         public async Task<IActionResult> ListarDetallesCompras(int idCompra)
+67:         {
+68:             var resp = new Response<List<DetalleCompraDTO>>();
+69:             resp.status = true;
+70:             resp.Value = await this._compraService.ListarDetallesCompras(idCompra);
+71:             resp.msg = "Detalles listadas correctamente";
+72:             return Ok(resp);
+73:         }
+```
+Current statement: line 70
+The callstack context, if included, corresponds to the thread where this exception occurred. There is no need to identify this thread by other means.
+The top most frame in the callstack context should correspond to the place the exception message was thrown from. Code may or may not have been provided for it but can be requested.
+
+## CALLSTACK
+Thread ID: 38192
+[1] [Código externo]
+[5] [En espera de una operación asincrónica, haga doble clic o presione ENTRAR para ver las pilas de llamadas asincrónicas]
+[6] SistemaTienda.API.dll!SistemaTienda.API.Controllers.ComprasController.ListarDetallesCompras
+This is the current user focused stack frame. The provided locals context corresponds to this stack frame, but you may evaluate expressions and retrieve code for any frame.
+Code for the stack frame:
+```csharp SistemaTienda.API\Controllers\ComprasController.cs
+64:         [HttpGet]
+65:         [Route("ListarDetallesCompra")]
+66:         public async Task<IActionResult> ListarDetallesCompras(int idCompra)
+67:         {
+68:             var resp = new Response<List<DetalleCompraDTO>>();
+69:             resp.status = true;
+70:             resp.Value = await this._compraService.ListarDetallesCompras(idCompra);
+71:             resp.msg = "Detalles listadas correctamente";
+72:             return Ok(resp);
+73:         }
+```
+Current statement: line 70
+[7] [Código externo]
+
+## LOCALS
+Variable: 'this' of type 'SistemaTienda.API.Controllers.ComprasController' is a complex object with child properties and has value: {SistemaTienda.API.Controllers.ComprasController}
+Variable: 'idCompra' of type 'int' has value: 26
+Variable: 'resp' of type 'SistemaTienda.API.Utilidad.Response<System.Collections.Generic.List<SistemaTienda.DTO.DetalleCompraDTO>>' is a complex object with child properties and has value: {SistemaTienda.API.Utilidad.Response<System.Collections.Generic.List<SistemaTienda.DTO.DetalleCompraDTO>>}
+

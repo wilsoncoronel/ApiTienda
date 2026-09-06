@@ -17,7 +17,6 @@ namespace SistemaTienda.Utility
             {
                 IdCompra = dto.IdCompra,
                 FechaCreacion = dto.FechaCreacion == default ? System.DateTime.Now : dto.FechaCreacion,
-                FechaReversion = dto.FechaReversion,
                 Estado = dto.Estado,
                 Motivo = dto.Motivo ?? string.Empty
             };
