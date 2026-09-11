@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "/eaWgDMCsMw=",
+  "dgSpecHash": "wZIv4kBuPYs=",
   "success": true,
   "projectFilePath": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.Exceptions\\SistemaTienda.Exceptions.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\DOOMSLAYER\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.20\\microsoft.windowsdesktop.app.ref.9.0.20.nupkg.sha512",
+    "C:\\Users\\DOOMSLAYER\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.20\\microsoft.netcore.app.ref.9.0.20.nupkg.sha512",
+    "C:\\Users\\DOOMSLAYER\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.20\\microsoft.aspnetcore.app.ref.9.0.20.nupkg.sha512"
+  ],
   "logs": []
 }

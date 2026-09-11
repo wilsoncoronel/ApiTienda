@@ -35,7 +35,7 @@ namespace SistemaTienda.BLL.Servicios
             return unidad.Id;
         }
 
-        public async Task<bool> EditarUnidadMedida(UnidadEditarDTO unidadEditarDto)
+        public async Task<bool> EditarUnidadMedida(UnidadMedidaDTO unidadEditarDto)
         {
             var unidad = await this.tiendaDb.TbComUnidadesMedida.Where(u => u.Id == unidadEditarDto.Id).FirstOrDefaultAsync();
             if (unidad is null)

@@ -599,7 +599,7 @@
     "Parameters": [
       {
         "Name": "unidadEditarDto",
-        "Type": "SistemaTienda.DTO.UnidadEditarDTO",
+        "Type": "SistemaTienda.DTO.UnidadMedidaDTO",
         "IsRequired": true
       }
     ],

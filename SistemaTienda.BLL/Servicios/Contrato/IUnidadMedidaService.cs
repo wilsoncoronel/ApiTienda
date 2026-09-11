@@ -10,7 +10,7 @@ namespace SistemaTienda.BLL.Servicios.Contrato
     public interface IUnidadMedidaService
     {
         Task<int> CrearUnidadMedida(UnidadCreacionDTO unidadCreacionDto);
-        Task<bool> EditarUnidadMedida(UnidadEditarDTO unidadEditarDto);
+        Task<bool> EditarUnidadMedida(UnidadMedidaDTO unidadEditarDto);
         Task<List<UnidadMedidaDTO>> ListarUnidadesMedida();
     }
 }

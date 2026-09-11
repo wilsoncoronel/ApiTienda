@@ -55,7 +55,7 @@ namespace SistemaTienda.API.Controllers
 
         [HttpPut]
         [Route("EditarUnidadMedida")]
-        public async Task<IActionResult> EditarUnidadMedida(UnidadEditarDTO unidadEditarDto)
+        public async Task<IActionResult> EditarUnidadMedida(UnidadMedidaDTO unidadEditarDto)
         {
             var resp = new Response<bool>();
             resp.status = true;
