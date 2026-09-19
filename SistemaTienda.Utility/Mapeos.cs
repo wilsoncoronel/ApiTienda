@@ -61,11 +61,11 @@ namespace SistemaTienda.Utility
         TbComTiposArticulo MapeoTipoArticuloDtoATipoArticuloTb(TipoArticuloCreacionDTO tipoArticuloDto);
         TipoArticuloDTO MapeoTipoArticuloTbATipoArticuloDto(TbComTiposArticulo tipoArticuloTb);
         List<TipoArticuloDTO> MapeoListasTipoArticulosTbAListaTipoArticulosDto(List<TbComTiposArticulo> listaTiposArticulosTb);
-        List<ImpuestoArticuloDTO> MapeoListaImpuestosTbAListaImpuestosDto(List<TbComImpuestosArticulo> listaImpuestosTb);
-        ImpuestoArticuloDTO MapeoImpuestoTbAImpuestoDto(TbComImpuestosArticulo impuestoTb);
+        List<ImpuestoDTO> MapeoListaImpuestosTbAListaImpuestosDto(List<TbComImpuesto> listaImpuestosTb);
+        ImpuestoDTO MapeoImpuestoTbAImpuestoDto(TbComImpuesto impuestoTb);
         List<EstadoImpuestoDTO> MapeoListaEstadosImpuestosTbAListaEstadosImpuestosDto(List<TbComEstadosImpuesto> listaEstadImpDTO);
         EstadoImpuestoDTO MapeoEstadoImpuestoTbAEstadoImpuestoDto(TbComEstadosImpuesto estaTb);
-        TbComImpuestosArticulo MapeoImpuestoDtoAImpuestoTb(ImpuestoArticuloCreacionDTO ImpuestoCreacionDTO);
+        TbComImpuesto MapeoImpuestoDtoAImpuestoTb(ImpuestoCrearDTO ImpuestoCreacionDTO);
         // InventarioDTO MapeoInventarioTbaAInventarioDto(TbInvInventarioLote inventarioTb);
         List<InventarioLoteDTO> MapeoListaDetallesLotesTbAListaDetallesLotesDto(List<TbInvLote> ListaDetallesInv);
         List<DetalleCompraDTO> MapeoListaLotesTbAListaDetallesCompraDto(List<TbInvLote> listaLotes, int idCompra);
@@ -135,7 +135,6 @@ namespace SistemaTienda.Utility
                 ValorCompra = valorCompra,
                 ValorVenta = valorVenta,
                 ValorTotal = valorCompra * loteTb.StockDisponible,
-                ImpuestoValor = loteTb.IdArticuloNavigation?.IdImpuestoNavigation?.ValorImpuesto ?? 0,
                 ArticuloDTO = loteTb.IdArticuloNavigation != null ? this.MapeoArticuloTbAArticuloDtoDevolucion(loteTb.IdArticuloNavigation, false) : new ArticuloDTO { Id = loteTb.IdArticulo, Nombre = loteTb.NumeroLote ?? string.Empty, Descripcion = loteTb.IdArticuloNavigation?.Descripcion ?? string.Empty, ValorCompra = 0, ValorVenta = 0 },
                 FechaCaducidad = loteTb.FechaExpiracion?.ToDateTime(TimeOnly.MinValue)
             };
@@ -172,12 +171,16 @@ namespace SistemaTienda.Utility
                     Id = detalleInvTb.IdArticuloNavigation.Id,
                     Nombre = detalleInvTb.IdArticuloNavigation.Nombre,
                     Descripcion = detalleInvTb.IdArticuloNavigation.Descripcion,
-                    ImpuestoArticuloDto = new ImpuestoArticuloDTO
+                    ArticulosImpuestosDTO = detalleInvTb.IdArticuloNavigation.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoDTO
                     {
-                        Id = detalleInvTb.IdArticuloNavigation.IdImpuestoNavigation.Id,
-                        Nombre = detalleInvTb.IdArticuloNavigation.IdImpuestoNavigation.Nombre,
-                        ValorImpuesto = detalleInvTb.IdArticuloNavigation.IdImpuestoNavigation.ValorImpuesto,
-                    },
+                        ImpuestoDTO = new ImpuestoDTO
+                        {
+                            Id = ai.IdImpuestoNavigation.Id,
+                            Nombre = ai.IdImpuestoNavigation.Nombre,
+                            Valor = ai.IdImpuestoNavigation.Valor,
+                            TipoCalculo = ai.IdImpuestoNavigation.TipoCalculo,
+                        }
+                    }).ToList(),
                     Papeleria = detalleInvTb.IdArticuloNavigation.Papeleria,
                     ValorCompra = detalleInvTb.IdArticuloNavigation.ValorCompra,
                     ValorVenta = detalleInvTb.IdArticuloNavigation.ValorVenta,
@@ -208,12 +211,21 @@ namespace SistemaTienda.Utility
                     Id = detalleInvTb.IdDetalleVentaNavigation.IdArticulo,
                     Nombre = detalleInvTb.IdDetalleVentaNavigation.IdArticuloNavigation.Nombre,
                     Descripcion = detalleInvTb.IdDetalleVentaNavigation.IdArticuloNavigation.Descripcion,
-                    ImpuestoArticuloDto = new ImpuestoArticuloDTO
+                    ArticulosImpuestosDTO = detalleInvTb.IdDetalleVentaNavigation.IdArticuloNavigation.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoDTO
                     {
-                        Id = detalleInvTb.IdDetalleVentaNavigation.IdArticuloNavigation.IdImpuestoNavigation.Id,
-                        Nombre = detalleInvTb.IdDetalleVentaNavigation.IdArticuloNavigation.IdImpuestoNavigation.Nombre,
-                        ValorImpuesto = detalleInvTb.IdDetalleVentaNavigation.IdArticuloNavigation.IdImpuestoNavigation.ValorImpuesto,
-                    },
+                        Id = ai.Id,
+                        IdArticulo = ai.IdArticulo,
+                        IdImpuesto = ai.IdImpuesto,
+                        Estado = ai.Estado,
+                        ImpuestoDTO = new ImpuestoDTO
+                        {
+                            Id = ai.IdImpuestoNavigation.Id,
+                            Nombre = ai.IdImpuestoNavigation.Nombre,
+                            TipoCalculo = ai.IdImpuestoNavigation.TipoCalculo,
+                            Valor = ai.IdImpuestoNavigation.Valor
+                        }
+                    }).ToList(),
+
                     Papeleria = detalleInvTb.IdDetalleVentaNavigation.IdArticuloNavigation.Papeleria,
                 },
                 CostoUnitario = detalleInvTb.PrecioUnitario,
@@ -260,34 +272,32 @@ namespace SistemaTienda.Utility
             };
         }
 
-            public List<ImpuestoArticuloDTO> MapeoListaImpuestosTbAListaImpuestosDto(List<TbComImpuestosArticulo> listaImpuestosTb)
+            public List<ImpuestoDTO> MapeoListaImpuestosTbAListaImpuestosDto(List<TbComImpuesto> listaImpuestosTb)
             {
                 return listaImpuestosTb.Select(imp => this.MapeoImpuestoTbAImpuestoDto(imp)).ToList();
             }
-        public TbComImpuestosArticulo MapeoImpuestoDtoAImpuestoTb(ImpuestoArticuloCreacionDTO ImpuestoCreacionDTO)
+        public TbComImpuesto MapeoImpuestoDtoAImpuestoTb(ImpuestoCrearDTO ImpuestoCreacionDTO)
         {
-            return new TbComImpuestosArticulo
+            return new TbComImpuesto
             {
                 Nombre = ImpuestoCreacionDTO.Nombre,
-                ValorImpuesto = ImpuestoCreacionDTO.ValorImpuesto,
-                Descripcion = ImpuestoCreacionDTO.Descripcion,
-                IdEstadoImpuesto = ImpuestoCreacionDTO.IdEstadoImpuesto,
+                TipoCalculo = ImpuestoCreacionDTO.TipoCalculo,
+                Valor = ImpuestoCreacionDTO.Valor,
+                Estado = ImpuestoCreacionDTO.Estado,
             };
         }
-        public ImpuestoArticuloDTO MapeoImpuestoTbAImpuestoDto(TbComImpuestosArticulo impuestoTb)
+
+       
+        public ImpuestoDTO MapeoImpuestoTbAImpuestoDto(TbComImpuesto impuestoTb)
             {
-                return new ImpuestoArticuloDTO
+                return new ImpuestoDTO
                 {
                     Id = impuestoTb.Id,
                     Nombre = impuestoTb.Nombre,
-                    ValorImpuesto = impuestoTb.ValorImpuesto,
-                    Descripcion = impuestoTb.Descripcion,
-                    IdEstadoImpuesto = impuestoTb.IdEstadoImpuesto,
-                    EstadoImpuesto = new EstadoImpuestoDTO
-                    {
-                        Id = impuestoTb.IdEstadoImpuestoNavigation.Id,
-                        Nombre = impuestoTb.IdEstadoImpuestoNavigation.Nombre,
-                    }
+                    Estado = impuestoTb.Estado,
+                    TipoCalculo = impuestoTb.TipoCalculo,
+                    Valor = impuestoTb.Valor,
+
                 };
             }
 
@@ -493,11 +503,13 @@ namespace SistemaTienda.Utility
                     Descripcion = articuloDto.Descripcion,
                     Estado = articuloDto.Estado,
                     EstadoVisual = articuloDto.EstadoVisual,
-                    IdImpuestoNavigation = new TbComImpuestosArticulo
+                    TbComArticulosImpuestos = articuloDto.ArticulosImpuestosDTO.Select(ai => new TbComArticulosImpuesto
                     {
-                        Id = articuloDto.ImpuestoArticuloDto.Id,
-                        ValorImpuesto = articuloDto.ImpuestoArticuloDto.ValorImpuesto,
-                    },
+                        Id = ai.Id,
+                        IdArticulo = ai.IdArticulo,
+                        IdImpuesto = ai.IdImpuesto,
+                        Estado = ai.Estado
+                    }).ToList(),
                     Nombre = articuloDto.Nombre,
                     IdUnidadNavigation = new TbComUnidadesMedida
                     {
@@ -537,12 +549,20 @@ namespace SistemaTienda.Utility
                         Valor = articuloTb.IdPorcentajeGananciaNavigation.Valor,
                         EstadoVisual = articuloTb.IdPorcentajeGananciaNavigation.EstadoVisual,
                     } : null,
-                    ImpuestoArticuloDto = new ImpuestoArticuloDTO
+                    ArticulosImpuestosDTO = articuloTb.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoDTO
                     {
-                        Id = articuloTb.IdImpuestoNavigation.Id,
-                        ValorImpuesto = articuloTb.IdImpuestoNavigation.ValorImpuesto,
-                        Nombre = articuloTb.IdImpuestoNavigation.Nombre,
-                    },
+                        Id = ai.Id,
+                        IdArticulo = ai.IdArticulo,
+                        IdImpuesto = ai.IdImpuesto,
+                        Estado = ai.Estado,
+                        ImpuestoDTO = new ImpuestoDTO
+                        {
+                            Id = ai.IdImpuestoNavigation.Id,
+                            Nombre = ai.IdImpuestoNavigation.Nombre,
+                            TipoCalculo = ai.IdImpuestoNavigation.TipoCalculo,
+                            Valor = ai.IdImpuestoNavigation.Valor
+                        }
+                    }).ToList(),
                     Nombre = $"{articuloTb.Nombre} {articuloTb.IdMarcaNavigation.Nombre } {articuloTb.IdUnidadNavigation.Nombre.TrimEnd()} {articuloTb.UnidadValor} {articuloTb.IdMarcaNavigation.Nombre} PRECIO {articuloTb.ValorVenta}$".Trim(),
                     IdUnidad = articuloTb.IdUnidad,
                     ValorCompra = articuloTb.ValorCompra,
@@ -597,12 +617,20 @@ namespace SistemaTienda.Utility
                     Descripcion = articuloTb.Descripcion,
                     Estado = articuloTb.Estado,
                     EstadoVisual = articuloTb.EstadoVisual,
-                    ImpuestoArticuloDto = new ImpuestoArticuloDTO
+                    ArticulosImpuestosDTO = articuloTb.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoDTO
                     {
-                        Id = articuloTb.IdImpuestoNavigation.Id,
-                        ValorImpuesto = articuloTb.IdImpuestoNavigation.ValorImpuesto,
-                        Nombre = articuloTb.IdImpuestoNavigation.Nombre,
-                    },
+                        Id = ai.Id,
+                        IdArticulo = ai.IdArticulo,
+                        IdImpuesto = ai.IdImpuesto,
+                        Estado = ai.Estado,
+                        ImpuestoDTO = new ImpuestoDTO
+                        {
+                            Id = ai.IdImpuestoNavigation.Id,
+                            Nombre = ai.IdImpuestoNavigation.Nombre,
+                            TipoCalculo = ai.IdImpuestoNavigation.TipoCalculo,
+                            Valor = ai.IdImpuestoNavigation.Valor
+                        }
+                    }).ToList(),
                     Nombre = !esVenta? $"{articuloTb.Nombre} {articuloTb.IdMarcaNavigation.Nombre} Valor Com: {articuloTb.ValorCompra}, Uni: {articuloTb.UnidadValor} {articuloTb.IdUnidadNavigation.Nombre}".Trim(): $"{articuloTb.Nombre} Valor Vent: {articuloTb.ValorVenta}, Uni: {articuloTb.UnidadValor} {articuloTb.IdUnidadNavigation.Nombre.TrimEnd()}".Trim(),
                     IdUnidad = articuloTb.IdUnidad,
                     ValorCompra = articuloTb.ValorCompra,
@@ -642,12 +670,20 @@ namespace SistemaTienda.Utility
                 Descripcion = articuloTb.Descripcion,
                 Estado = articuloTb.Estado,
                 EstadoVisual = articuloTb.EstadoVisual,
-                ImpuestoArticuloDto = new ImpuestoArticuloDTO
+                ArticulosImpuestosDTO = articuloTb.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoDTO
                 {
-                    Id = articuloTb.IdImpuestoNavigation.Id,
-                    ValorImpuesto = articuloTb.IdImpuestoNavigation.ValorImpuesto,
-                    Nombre = articuloTb.IdImpuestoNavigation.Nombre,
-                },
+                    Id = ai.Id,
+                    IdArticulo = ai.IdArticulo,
+                    IdImpuesto = ai.IdImpuesto,
+                    Estado = ai.Estado,
+                    ImpuestoDTO = new ImpuestoDTO
+                    {
+                        Id = ai.IdImpuestoNavigation.Id,
+                        Nombre = ai.IdImpuestoNavigation.Nombre,
+                        TipoCalculo = ai.IdImpuestoNavigation.TipoCalculo,
+                        Valor = ai.IdImpuestoNavigation.Valor
+                    }
+                }).ToList(),
                 Nombre = articuloTb.Nombre,
                 IdUnidad = articuloTb.IdUnidad,
                 ValorCompra = articuloTb.ValorCompra,
@@ -756,14 +792,14 @@ namespace SistemaTienda.Utility
                                 Nombre = d.ArticuloDTO.UnidadMedidaDto.Nombre
                             },
                             UnidadValor = d.ArticuloDTO.UnidadValor,
-                            IdImpuestoNavigation = new TbComImpuestosArticulo
+                            TbComArticulosImpuestos = d.ArticuloDTO.ArticulosImpuestosDTO.Select(ai => new TbComArticulosImpuesto
                             {
-                                Id = d.ArticuloDTO.ImpuestoArticuloDto.Id,
-                                Nombre = d.ArticuloDTO.ImpuestoArticuloDto.Nombre,
-                                ValorImpuesto = d.ArticuloDTO.ImpuestoArticuloDto.ValorImpuesto,
-                            },
+                                Id = ai.Id,
+                                IdArticulo = ai.IdArticulo,
+                                IdImpuesto = ai.IdImpuesto,
+                                Estado = ai.Estado
+                            }).ToList(),
                             ValorCompra = d.ArticuloDTO.ValorCompra,
-
                         }
                     }).ToList(),
                 };
@@ -1363,12 +1399,20 @@ namespace SistemaTienda.Utility
                             UnidadValor = d.IdArticuloNavigation.UnidadValor,
                             FechaActualizacion = d.IdArticuloNavigation.FechaActualizacion?? d.IdArticuloNavigation.FechaCreacion,
                             FechaCreacion = d.IdArticuloNavigation.FechaCreacion,
-                            ImpuestoArticuloDto = new ImpuestoArticuloDTO
+                            ArticulosImpuestosDTO = d.IdArticuloNavigation.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoDTO
                             {
-                                Id = d.IdArticuloNavigation.IdImpuestoNavigation.Id,
-                                Nombre = d.IdArticuloNavigation.IdImpuestoNavigation.Nombre,
-                                ValorImpuesto = d.IdArticuloNavigation.IdImpuestoNavigation.ValorImpuesto,
-                            },
+                                Id = ai.Id,
+                                IdArticulo = ai.IdArticulo,
+                                IdImpuesto = ai.IdImpuesto,
+                                Estado = ai.Estado,
+                                ImpuestoDTO = new ImpuestoDTO
+                                {
+                                    Id = ai.IdImpuestoNavigation.Id,
+                                    Nombre = ai.IdImpuestoNavigation.Nombre,
+                                    TipoCalculo = ai.IdImpuestoNavigation.TipoCalculo,
+                                    Valor = ai.IdImpuestoNavigation.Valor
+                                }
+                            }).ToList(),
                             TipoArticuloDTO = new TipoArticuloDTO
                             {
                                 Id = d.IdArticuloNavigation.IdTipoArticuloNavigation.Id,
@@ -1455,12 +1499,20 @@ namespace SistemaTienda.Utility
                             FechaActualizacion = d.IdArticuloNavigation.FechaActualizacion ?? DateTime.Now,
                             FechaCreacion = d.IdArticuloNavigation.FechaCreacion,
                             FechaCaducidad = d.IdArticuloNavigation.FechaCaducidad ?? DateTime.Now,
-                            ImpuestoArticuloDto = new ImpuestoArticuloDTO
+                            ArticulosImpuestosDTO = d.IdArticuloNavigation.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoDTO
                             {
-                                Id = d.IdArticuloNavigation.IdImpuestoNavigation.Id,
-                                Nombre = d.IdArticuloNavigation.IdImpuestoNavigation.Nombre,
-                                ValorImpuesto = d.IdArticuloNavigation.IdImpuestoNavigation.ValorImpuesto,
-                            },
+                                Id = ai.Id,
+                                IdArticulo = ai.IdArticulo,
+                                IdImpuesto = ai.IdImpuesto,
+                                Estado = ai.Estado,
+                                ImpuestoDTO = new ImpuestoDTO
+                                {
+                                    Id = ai.IdImpuestoNavigation.Id,
+                                    Nombre = ai.IdImpuestoNavigation.Nombre,
+                                    TipoCalculo = ai.IdImpuestoNavigation.TipoCalculo,
+                                    Valor = ai.IdImpuestoNavigation.Valor
+                                }
+                            }).ToList(),
                             TipoArticuloDTO = new TipoArticuloDTO
                             {
                                 Id = d.IdArticuloNavigation.IdTipoArticuloNavigation.Id,

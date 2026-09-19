@@ -29,5 +29,5 @@ public partial class TbVenDetalleVenta
 
     public virtual ICollection<TbInvConsumoLote> TbInvConsumoLotes { get; set; } = new List<TbInvConsumoLote>();
 
-    public virtual ICollection<TbVenDetalleDevolucionVenta> TbVenDetalleDevolucionVenta { get; set; } = new List<TbVenDetalleDevolucionVenta>();
+    public virtual ICollection<TbVenDetalleDevolucionVentum> TbVenDetalleDevolucionVenta { get; set; } = new List<TbVenDetalleDevolucionVentum>();
 }

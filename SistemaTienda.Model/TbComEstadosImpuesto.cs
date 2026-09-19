@@ -10,6 +10,4 @@ public partial class TbComEstadosImpuesto
     public string Nombre { get; set; } = null!;
 
     public bool EstadoVisual { get; set; }
-
-    public virtual ICollection<TbComImpuestosArticulo> TbComImpuestosArticulos { get; set; } = new List<TbComImpuestosArticulo>();
 }

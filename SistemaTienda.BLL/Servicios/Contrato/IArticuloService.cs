@@ -15,7 +15,7 @@ namespace SistemaTienda.BLL.Servicios.Contrato
         Task<bool> EditarArticulo(ArticuloEdicionDTO articuloEditarDto);
         Task<bool> DesactivarArticulo(int idArticulo);
         Task<List<TipoArticuloDTO>> CargarListaTiposArticulos();
-        Task<List<ImpuestoArticuloDTO>> CargarListaImpuestos();
+        Task<List<ImpuestoDTO>> CargarListaImpuestos();
         Task<List<MarcaDTO>> CargarListaMarca();
         Task<List<ArticuloInventarioDTO>> ListarTodosArticulos(bool esVenta);
     }

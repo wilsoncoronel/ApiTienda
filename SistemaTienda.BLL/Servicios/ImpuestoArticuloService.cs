@@ -18,23 +18,23 @@ namespace SistemaTienda.BLL.Servicios
     {
         private readonly IMapeos _mapeos;
         private readonly TiendaDbContext _tiendaDbContext;
-        private readonly IGenericRepository<TbComImpuestosArticulo> _impuestosArticulosRepsitory;
+        private readonly IGenericRepository<TbComImpuesto> _impuestosRepository;
         private readonly IGenericRepository<TbComEstadosImpuesto> _estadosImpuestosRepository;
-        public ImpuestoArticuloService(IMapeos mapeos, TiendaDbContext tiendaDbContext, IGenericRepository<TbComImpuestosArticulo> impuestosArticulosRepsitory, IGenericRepository<TbComEstadosImpuesto> estadosImpuestosRepository)
+        public ImpuestoArticuloService(IMapeos mapeos, TiendaDbContext tiendaDbContext, IGenericRepository<TbComImpuesto> impuestosRepository, IGenericRepository<TbComEstadosImpuesto> estadosImpuestosRepository)
         {
             this._mapeos = mapeos;
             this._tiendaDbContext = tiendaDbContext;
-            this._impuestosArticulosRepsitory = impuestosArticulosRepsitory;
+            this._impuestosRepository = impuestosRepository;
             _estadosImpuestosRepository = estadosImpuestosRepository;
         }
 
-        public async Task<int> CrearImpuestos(ImpuestoArticuloCreacionDTO impuestoArticuloCreacionDto)
+        public async Task<int> CrearImpuestos(ImpuestoCrearDTO impuestoArticuloCreacionDto)
         {
             using var transaccion = await _tiendaDbContext.Database.BeginTransactionAsync();
             try
             {
                 var impuesto = this._mapeos.MapeoImpuestoDtoAImpuestoTb(impuestoArticuloCreacionDto);
-                await this._impuestosArticulosRepsitory.Crear(impuesto);
+                await this._impuestosRepository.Crear(impuesto);
                 if (impuesto.Id == 0)
                     throw new BadRequestException("No se pudo crear el impuesto!!");
                 transaccion.Commit();
@@ -47,17 +47,17 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
-        public async Task<bool> EditarImpuesto(ImpuestoArticuloEditarDTO impuestoArticuloEditarDto)
+        public async Task<bool> EditarImpuesto(ImpuestoDTO impuestoArticuloEditarDto)
         {
-            var imp = await this._tiendaDbContext.TbComImpuestosArticulos.Where(c => c.Id == impuestoArticuloEditarDto.Id)
+            var imp = await this._tiendaDbContext.TbComImpuestos.Where(c => c.Id == impuestoArticuloEditarDto.Id)
                 .FirstOrDefaultAsync();
             if (imp is null)
                 throw new NotFoundException("No se encontró el impuesto a editar!!");
-            imp.IdEstadoImpuesto = impuestoArticuloEditarDto.IdEstadoImpuesto;
             imp.Nombre = impuestoArticuloEditarDto.Nombre;
-            imp.Descripcion = impuestoArticuloEditarDto.Descripcion;
-            imp.ValorImpuesto = impuestoArticuloEditarDto.ValorImpuesto;
-            var resp = await this._impuestosArticulosRepsitory.Editar(imp);
+            imp.TipoCalculo = impuestoArticuloEditarDto.TipoCalculo;
+            imp.Valor = impuestoArticuloEditarDto.Valor;
+            imp.Estado = impuestoArticuloEditarDto.Estado;
+            var resp = await this._impuestosRepository.Editar(imp);
             if (resp == false)
                 throw new BadRequestException("No se pudo editar el impuesto!!");
             return resp;
@@ -69,9 +69,9 @@ namespace SistemaTienda.BLL.Servicios
             return this._mapeos.MapeoListaEstadosImpuestosTbAListaEstadosImpuestosDto(estadosList);
         }
 
-        public async Task<List<ImpuestoArticuloDTO>> ListarImpuestos()
+        public async Task<List<ImpuestoDTO>> ListarImpuestos()
         {
-            var impuestosList = await this._tiendaDbContext.TbComImpuestosArticulos.Include(est => est.IdEstadoImpuestoNavigation).ToListAsync();
+            var impuestosList = await this._tiendaDbContext.TbComImpuestos.ToListAsync();
             return this._mapeos.MapeoListaImpuestosTbAListaImpuestosDto(impuestosList);
         }
     }

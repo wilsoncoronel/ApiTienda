@@ -94,7 +94,8 @@ namespace SistemaTienda.BLL.Servicios
                 .Include(l => l.IdArticuloNavigation)
                     .ThenInclude(a => a.IdTipoArticuloNavigation)
                 .Include(l => l.IdArticuloNavigation)
-                    .ThenInclude(a => a.IdImpuestoNavigation)
+                    .ThenInclude(a => a.TbComArticulosImpuestos)
+                        .ThenInclude(ai => ai.IdImpuestoNavigation)
                 .Include(l => l.IdArticuloNavigation)
                     .ThenInclude(u => u.IdUnidadNavigation)
                 .ToListAsync();
@@ -118,7 +119,8 @@ namespace SistemaTienda.BLL.Servicios
             var idsConLote = lotes.Select(l => l.IdArticulo).Distinct().ToList();
             var articulosSinLote = await this.tiendaDbContext.TbComArticulos
                 .Where(a => a.Estado == true && a.EstadoVisual == true && !idsConLote.Contains(a.Id))
-                .Include(a => a.IdImpuestoNavigation)
+                .Include(a => a.TbComArticulosImpuestos)
+                    .ThenInclude(ai => ai.IdImpuestoNavigation)
                 .Include(a => a.IdMarcaNavigation)
                 .Include(a => a.IdTipoArticuloNavigation)
                 .Include(u => u.IdUnidadNavigation)
@@ -144,7 +146,8 @@ namespace SistemaTienda.BLL.Servicios
             var listaArticulos = await this.tiendaDbContext.TbComArticulos.Where(art => art.Estado == true && art.EstadoVisual == true && art.FechaCreacion >= fechaInicial && art.FechaCreacion <= fechaFinal )
                 .Include(a => a.IdMarcaNavigation)
                 .Include(a => a.IdTipoArticuloNavigation)
-                .Include(a => a.IdImpuestoNavigation)
+                .Include(a => a.TbComArticulosImpuestos)
+                    .ThenInclude(ai => ai.IdImpuestoNavigation)
                 .Include(p => p.IdPorcentajeGananciaNavigation)
                 .Include(u => u.IdUnidadNavigation).ToListAsync();
             return this._mapper.MapeoListaArticulosDtoPrincipal(listaArticulos);
@@ -162,15 +165,16 @@ namespace SistemaTienda.BLL.Servicios
             return listaTiposArticulos;
         }
 
-        public async Task<List<ImpuestoArticuloDTO>> CargarListaImpuestos()
+        public async Task<List<ImpuestoDTO>> CargarListaImpuestos()
         {
-            var listaImpuestosArticulos = await this.tiendaDbContext.TbComImpuestosArticulos
-                .Where(t => t.IdEstadoImpuestoNavigation.EstadoVisual == true)
-                .Select(t => new ImpuestoArticuloDTO
+            var listaImpuestosArticulos = await this.tiendaDbContext.TbComImpuestos
+                .Where(i=> i.Estado == true)
+                .Select(t => new ImpuestoDTO
                 {
                     Id = t.Id,
                     Nombre = t.Nombre,
-                    ValorImpuesto = t.ValorImpuesto
+                    TipoCalculo = t.TipoCalculo,
+                    Valor = t.Valor
                 }).ToListAsync();
             return listaImpuestosArticulos;
         }

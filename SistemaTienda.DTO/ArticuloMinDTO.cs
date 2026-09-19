@@ -12,7 +12,7 @@ namespace SistemaTienda.DTO
         public string Nombre { get; set; }
         public string Codigo { get; set; }
         public string Descripcion { get; set; }
-        public ImpuestoArticuloDTO ImpuestoArticuloDto { get; set; }
+        public List<ArticuloImpuestoDTO> ArticulosImpuestosDTO { get; set; }
         public bool? Papeleria { get; set; }
         public decimal ValorVenta { get; set; }
         public decimal ValorCompra { get; set; }

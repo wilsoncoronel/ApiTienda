@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SistemaTienda.Model;
 
-public partial class TbVenDetalleDevolucionVenta
+public partial class TbVenDetalleDevolucionVentum
 {
     public int Id { get; set; }
 

@@ -17,6 +17,8 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbComArticulo> TbComArticulos { get; set; }
 
+    public virtual DbSet<TbComArticulosImpuesto> TbComArticulosImpuestos { get; set; }
+
     public virtual DbSet<TbComCliente> TbComClientes { get; set; }
 
     public virtual DbSet<TbComDetalleDevolucionCompra> TbComDetalleDevolucionCompras { get; set; }
@@ -29,7 +31,7 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbComEstadosImpuesto> TbComEstadosImpuestos { get; set; }
 
-    public virtual DbSet<TbComImpuestosArticulo> TbComImpuestosArticulos { get; set; }
+    public virtual DbSet<TbComImpuesto> TbComImpuestos { get; set; }
 
     public virtual DbSet<TbComMarca> TbComMarcas { get; set; }
 
@@ -81,7 +83,7 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbSisUsuario> TbSisUsuarios { get; set; }
 
-    public virtual DbSet<TbVenDetalleDevolucionVenta> TbVenDetalleDevolucionVenta { get; set; }
+    public virtual DbSet<TbVenDetalleDevolucionVentum> TbVenDetalleDevolucionVenta { get; set; }
 
     public virtual DbSet<TbVenDetalleVenta> TbVenDetalleVenta { get; set; }
 
@@ -106,11 +108,6 @@ public partial class TiendaDbContext : DbContext
             entity.Property(e => e.ValorCompra).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.ValorVenta).HasColumnType("numeric(18, 4)");
 
-            entity.HasOne(d => d.IdImpuestoNavigation).WithMany(p => p.TbComArticulos)
-                .HasForeignKey(d => d.IdImpuesto)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TbComArticulos_TbComImpuestosArticulos");
-
             entity.HasOne(d => d.IdMarcaNavigation).WithMany(p => p.TbComArticulos)
                 .HasForeignKey(d => d.IdMarca)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -134,6 +131,21 @@ public partial class TiendaDbContext : DbContext
                 .HasForeignKey(d => d.IdUsuarioCreador)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbComArticulos_TbSisUsuarios");
+        });
+
+        modelBuilder.Entity<TbComArticulosImpuesto>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_TbComImpuestosArticulos");
+
+            entity.HasOne(d => d.IdArticuloNavigation).WithMany(p => p.TbComArticulosImpuestos)
+                .HasForeignKey(d => d.IdArticulo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbComArticulosImpuestos_TbComArticulos");
+
+            entity.HasOne(d => d.IdImpuestoNavigation).WithMany(p => p.TbComArticulosImpuestos)
+                .HasForeignKey(d => d.IdImpuesto)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbComArticulosImpuestos_TbComImpuestos");
         });
 
         modelBuilder.Entity<TbComCliente>(entity =>
@@ -213,16 +225,11 @@ public partial class TiendaDbContext : DbContext
             entity.Property(e => e.Nombre).HasMaxLength(100);
         });
 
-        modelBuilder.Entity<TbComImpuestosArticulo>(entity =>
+        modelBuilder.Entity<TbComImpuesto>(entity =>
         {
-            entity.Property(e => e.Descripcion).HasMaxLength(200);
-            entity.Property(e => e.Nombre).HasMaxLength(100);
-            entity.Property(e => e.ValorImpuesto).HasColumnType("numeric(18, 4)");
-
-            entity.HasOne(d => d.IdEstadoImpuestoNavigation).WithMany(p => p.TbComImpuestosArticulos)
-                .HasForeignKey(d => d.IdEstadoImpuesto)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TbComImpuestosArticulos_TbComEstadosImpuestos");
+            entity.Property(e => e.Nombre).HasMaxLength(50);
+            entity.Property(e => e.TipoCalculo).HasMaxLength(50);
+            entity.Property(e => e.Valor).HasColumnType("numeric(18, 4)");
         });
 
         modelBuilder.Entity<TbComMarca>(entity =>
@@ -566,7 +573,7 @@ public partial class TiendaDbContext : DbContext
                 .HasConstraintName("FK_TbSisUsuarios_TbSisRol");
         });
 
-        modelBuilder.Entity<TbVenDetalleDevolucionVenta>(entity =>
+        modelBuilder.Entity<TbVenDetalleDevolucionVentum>(entity =>
         {
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Motivo)

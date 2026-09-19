@@ -19,5 +19,5 @@ public partial class TbVenDevolucionVenta
 
     public virtual TbVenta IdVentaNavigation { get; set; } = null!;
 
-    public virtual ICollection<TbVenDetalleDevolucionVenta> TbVenDetalleDevolucionVenta { get; set; } = new List<TbVenDetalleDevolucionVenta>();
+    public virtual ICollection<TbVenDetalleDevolucionVentum> TbVenDetalleDevolucionVenta { get; set; } = new List<TbVenDetalleDevolucionVentum>();
 }

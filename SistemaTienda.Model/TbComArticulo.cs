@@ -41,8 +41,6 @@ public partial class TbComArticulo
 
     public bool? Papeleria { get; set; }
 
-    public virtual TbComImpuestosArticulo IdImpuestoNavigation { get; set; } = null!;
-
     public virtual TbComMarca IdMarcaNavigation { get; set; } = null!;
 
     public virtual TbComPorcentajeGanancia? IdPorcentajeGananciaNavigation { get; set; }
@@ -52,6 +50,8 @@ public partial class TbComArticulo
     public virtual TbComUnidadesMedida IdUnidadNavigation { get; set; } = null!;
 
     public virtual TbSisUsuario IdUsuarioCreadorNavigation { get; set; } = null!;
+
+    public virtual ICollection<TbComArticulosImpuesto> TbComArticulosImpuestos { get; set; } = new List<TbComArticulosImpuesto>();
 
     public virtual ICollection<TbComDetallesCompra> TbComDetallesCompras { get; set; } = new List<TbComDetallesCompra>();
 
