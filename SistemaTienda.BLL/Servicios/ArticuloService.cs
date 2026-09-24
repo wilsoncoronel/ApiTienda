@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace SistemaTienda.BLL.Servicios
 {
-    public class ArticuloService : IArticuloService
+    public class ArticuloService : IArticuloService 
     {
         private readonly TiendaDbContext tiendaDbContext;
         public readonly IGenericRepository<TbComArticulo> _articuloRepository;
@@ -29,10 +29,13 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<int> CrearArticulo(ArticuloCreacionDTO articuloCreacionDto)
         {
+            if (articuloCreacionDto.Impuestos.Count() == 0)
+                throw new BadRequestException("No se puede registrar un articulo sin impuestos!!");
             var articuloTb = this._mapper.MapeoArticuloCreacionDtoAArticuloTb(articuloCreacionDto);
             articuloTb.FechaCreacion = DateTime.Now;
             articuloTb.Estado = true;
             articuloTb.EstadoVisual = true;
+
                 var articuloCreado =  await this._articuloRepository.Crear(articuloTb);
             if (articuloCreado.Id == null)
                 throw new DbUpdateException("No se pudo crear el artículo!!!");
@@ -52,13 +55,35 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<bool> EditarArticulo(ArticuloEdicionDTO articuloEditarDto)
         {
+            await using var transaccion = await this.tiendaDbContext.Database.BeginTransactionAsync();
+
             var articuloTb = await this._articuloRepository.ListarId(a => a.Id == articuloEditarDto.Id);
             if (articuloTb == null)
                 throw new NotFoundException("No se pudo editar el articulo , no existen en la bd!!");
-            articuloTb.IdImpuesto = articuloEditarDto.IdImpuesto;
+
+            var impuestosSolicitados = (articuloEditarDto.Impuestos ?? new List<int>()).ToHashSet();
+            var impuestosActuales = await this.tiendaDbContext.TbComArticulosImpuestos
+                .Where(ai => ai.IdArticulo == articuloTb.Id)
+                .ToListAsync();
+
+            this.tiendaDbContext.TbComArticulosImpuestos.RemoveRange(
+                impuestosActuales.Where(ai => !impuestosSolicitados.Contains(ai.IdImpuesto)));
+
+            foreach (var impuestoActual in impuestosActuales.Where(ai => impuestosSolicitados.Contains(ai.IdImpuesto)))
+                impuestoActual.Estado = true;
+
+            var impuestosNuevos = impuestosSolicitados
+                .Except(impuestosActuales.Select(ai => ai.IdImpuesto))
+                .Select(idImpuesto => new TbComArticulosImpuesto
+                {
+                    IdArticulo = articuloTb.Id,
+                    IdImpuesto = idImpuesto,
+                    Estado = true
+                });
+            await this.tiendaDbContext.TbComArticulosImpuestos.AddRangeAsync(impuestosNuevos);
+
             articuloTb.IdMarca = articuloEditarDto.IdMarca;
             articuloTb.Nombre = articuloEditarDto.Nombre;
-            articuloTb.IdImpuesto = articuloEditarDto.IdImpuesto;
             articuloTb.IdTipoArticulo = articuloEditarDto.IdTipoArticulo;
             articuloTb.FechaActualizacion = DateTime.Now;
             articuloTb.IdUnidad = articuloEditarDto.IdUnidad;
@@ -70,10 +95,25 @@ namespace SistemaTienda.BLL.Servicios
             articuloTb.FechaCaducidad = articuloEditarDto.FechaCaducidad;
             articuloTb.Papeleria = articuloEditarDto.Papeleria;
             articuloTb.IdPorcentajeGanancia = articuloEditarDto.IdPorcentajeGanancia;
+
             var resp = await this._articuloRepository.Editar(articuloTb);
             if (resp == false)
                 throw new DbUpdateException("No se pudo editar el articulo , no existen en la bd!!");
+
+            await this.tiendaDbContext.SaveChangesAsync();
+            await transaccion.CommitAsync();
             return resp;
+        }
+
+        public async Task<List<ArticuloCompraDTO>> ListarCompraArticulos()
+        {
+            var listaArticulos = await this.tiendaDbContext.TbComArticulos.Where(art => art.EstadoVisual == true)
+                .Include(mar => mar.IdMarcaNavigation)
+                .Include(tip => tip.IdTipoArticuloNavigation)
+                .Include(uni => uni.IdUnidadNavigation)
+                .ToListAsync();
+            var resultado = this._mapper.MapeoArticulosCompras(listaArticulos);
+            return resultado;
         }
 
         public async Task<List<ArticuloInventarioDTO>> ListarTodosArticulos(bool esVenta)
@@ -174,7 +214,8 @@ namespace SistemaTienda.BLL.Servicios
                     Id = t.Id,
                     Nombre = t.Nombre,
                     TipoCalculo = t.TipoCalculo,
-                    Valor = t.Valor
+                    Valor = t.Valor,
+                    Estado = t.Estado
                 }).ToListAsync();
             return listaImpuestosArticulos;
         }
@@ -189,7 +230,6 @@ namespace SistemaTienda.BLL.Servicios
                 Nombre = t.Nombre
             }).ToListAsync();
             return listaMarcasArticulos;
-
         }
 
         public async Task<bool> CrearArticulosLista(List<ArticuloCreacionDTO> articulosCreacionDto)
@@ -206,7 +246,23 @@ namespace SistemaTienda.BLL.Servicios
                 await transaction.RollbackAsync();
                 throw;
             }
-            
+        }
+
+        public async Task<List<ImpuestoDTO>> CargarListaImpuestosArticuloId(int idArticulo)
+        {
+            var listaImpuestosArticulos = await this.tiendaDbContext.TbComArticulosImpuestos
+                .Where(i => i.Estado && i.IdArticulo == idArticulo)
+                .Select(t => new ImpuestoDTO
+                {
+                    Id = t.IdImpuestoNavigation.Id,
+                    Nombre = t.IdImpuestoNavigation.Nombre,
+                    TipoCalculo = t.IdImpuestoNavigation.TipoCalculo,
+                    Valor = t.IdImpuestoNavigation.Valor,
+                    Estado = t.IdImpuestoNavigation.Estado
+                })
+                .ToListAsync();
+
+            return listaImpuestosArticulos;
         }
     }
 }

@@ -253,6 +253,7 @@ namespace SistemaTienda.BLL.Servicios
                 .Include(est => est.IdEstadoVentaNavigation)
                 .Include(det => det.TbVenDetalleVenta)
                 .ThenInclude(art => art.IdArticuloNavigation)
+                .ThenInclude(ai => ai.TbComArticulosImpuestos)
                 .ThenInclude(imp => imp.IdImpuestoNavigation)
                 .Include(det => det.TbVenDetalleVenta)
                 .ThenInclude(art => art.IdArticuloNavigation)

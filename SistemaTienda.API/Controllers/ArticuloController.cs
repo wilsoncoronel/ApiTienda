@@ -32,12 +32,25 @@ namespace SistemaTienda.API.Controllers
 
         [HttpGet]
         [Route("CargarListaImpuestosArticulos")]
-        public async Task<ActionResult<List<ImpuestoArticuloDTO>>> CargarListaImpuestos()
+        public async Task<ActionResult<List<ImpuestoDTO>>> CargarListaImpuestos()
         {
-            var resp = new Response<List<ImpuestoArticuloDTO>>();
+            var resp = new Response<List<ImpuestoDTO>>();
            
             resp.status = true;
             resp.Value = await this._articuloService.CargarListaImpuestos();
+            resp.msg = "Lista de impuestos de artículos cargada correctamente.";
+
+            return Ok(resp);
+        }
+
+        [HttpGet]
+        [Route("CargarListaImpuestosArticulo")]
+        public async Task<ActionResult<List<ImpuestoDTO>>> CargarListaImpuestosArticuloId(int idArticulo)
+        {
+            var resp = new Response<List<ImpuestoDTO>>();
+
+            resp.status = true;
+            resp.Value = await this._articuloService.CargarListaImpuestosArticuloId(idArticulo);
             resp.msg = "Lista de impuestos de artículos cargada correctamente.";
 
             return Ok(resp);
@@ -53,6 +66,18 @@ namespace SistemaTienda.API.Controllers
             resp.Value = await this._articuloService.CargarListaMarca();
             resp.msg = "Lista de marcas de artículos cargada correctamente.";
 
+            return Ok(resp);
+        }
+
+        [HttpGet]
+        [Route("ListaCompraArticulos")]
+        public async Task<ActionResult<List<ArticuloCompraDTO>>> ListaCompraArticulos()
+        {
+            var resp = new Response<List<ArticuloCompraDTO>>();
+
+            resp.status = true;
+            resp.Value = await this._articuloService.ListarCompraArticulos();
+            resp.msg = "Error al cargar la lista de artículos.";
             return Ok(resp);
         }
 

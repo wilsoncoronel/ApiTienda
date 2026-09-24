@@ -36,8 +36,9 @@ namespace SistemaTienda.BLL.Servicios
                 .Where(tra => tra.IdTransaccionInventario == 1)
                 .Include(m => m.TbInvLotes)
                     .ThenInclude(l => l.IdArticuloNavigation)
-                        .ThenInclude(a => a.IdImpuestoNavigation) // Asegurar carga del impuesto para evitar NullReference
-                .ToListAsync();
+                        .ThenInclude(a => a.TbComArticulosImpuestos)
+                        .ThenInclude(imp => imp.IdImpuestoNavigation)
+                        .ToListAsync();
 
             // Aplanar los lotes de todos los movimientos
             var lotes = listaMovimientos.SelectMany(m => m.TbInvLotes).ToList();
@@ -76,6 +77,7 @@ namespace SistemaTienda.BLL.Servicios
                 var listaResultado = new List<TbInvLote>();
                 listaResultado = tbInvLote.Where(det => det.IdMovimiento == IdMovimiento)
                     .Include(art => art.IdArticuloNavigation)
+                    .ThenInclude(ai => ai.TbComArticulosImpuestos)
                     .ThenInclude(imp => imp.IdImpuestoNavigation)
                     .ToList();
                 listaIventarioDto = this.mapeo.MapeoListaDetallesLotesTbAListaDetallesLotesDto(listaResultado);
@@ -87,6 +89,7 @@ namespace SistemaTienda.BLL.Servicios
                 listaResultado = tbInvConsumo.Where(con => con.IdMovimiento == IdMovimiento)
                     .Include(det => det.IdDetalleVentaNavigation)
                         .ThenInclude(art => art.IdArticuloNavigation)
+                        .ThenInclude(ai => ai.TbComArticulosImpuestos)
                         .ThenInclude(imp => imp.IdImpuestoNavigation)
                     .Include(lot => lot.IdLoteNavigation)
                     .ToList();

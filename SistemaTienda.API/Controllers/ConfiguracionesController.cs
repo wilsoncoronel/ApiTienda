@@ -185,10 +185,10 @@ namespace SistemaTienda.API.Controllers
         }
 
         [HttpGet]
-        [Route("ListarImpuestosArticulos")]
+        [Route("ListarImpuestos")]
         public async Task<IActionResult> ListarImpuestosArticulos()
         {
-            var resp = new Response<List<ImpuestoArticuloDTO>>();
+            var resp = new Response<List<ImpuestoDTO>>();
             
             resp.status = true;
             resp.Value = await this._impuestoArticuloService.ListarImpuestos();
@@ -209,7 +209,7 @@ namespace SistemaTienda.API.Controllers
 
         [HttpPost]
         [Route("CrearImpuesto")]
-        public async Task<IActionResult> CrearImpuesto(ImpuestoArticuloCreacionDTO impuestoCrearDto)
+        public async Task<IActionResult> CrearImpuesto(ImpuestoCrearDTO impuestoCrearDto)
         {
             var resp = new Response<int>();
             resp.status = true;
@@ -220,12 +220,12 @@ namespace SistemaTienda.API.Controllers
 
         [HttpPut]
         [Route("EditarImpuesto")]
-        public async Task<IActionResult> EditarImpuesto(ImpuestoArticuloEditarDTO impuestoEditarDto)
+        public async Task<IActionResult> EditarImpuesto(ImpuestoDTO impuestoEditarDto)
         {
             var resp = new Response<bool>();
             resp.status = true;
             resp.Value = await this._impuestoArticuloService.EditarImpuesto(impuestoEditarDto);
-            resp.msg = "Marca editada exitosamente";
+            resp.msg = "Impuesto editado exitosamente";
             return Ok(resp);
         }
     }

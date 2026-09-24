@@ -1,6 +1,32 @@
 [
   {
     "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
+    "Method": "CargarListaImpuestosArticuloId",
+    "RelativePath": "api/Articulo/CargarListaImpuestosArticulo",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idArticulo",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[SistemaTienda.DTO.ImpuestoDTO, SistemaTienda.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
     "Method": "CargarListaImpuestos",
     "RelativePath": "api/Articulo/CargarListaImpuestosArticulos",
     "HttpMethod": "GET",
@@ -9,7 +35,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.List\u00601[[SistemaTienda.DTO.ImpuestoArticuloDTO, SistemaTienda.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.List\u00601[[SistemaTienda.DTO.ImpuestoDTO, SistemaTienda.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -185,6 +211,26 @@
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.List\u00601[[SistemaTienda.DTO.ArticuloDTO, SistemaTienda.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
+    "Method": "ListaCompraArticulos",
+    "RelativePath": "api/Articulo/ListaCompraArticulos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[SistemaTienda.DTO.ArticuloCompraDTO, SistemaTienda.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -455,7 +501,7 @@
     "Parameters": [
       {
         "Name": "impuestoCrearDto",
-        "Type": "SistemaTienda.DTO.ImpuestoArticuloCreacionDTO",
+        "Type": "SistemaTienda.DTO.ImpuestoCrearDTO",
         "IsRequired": true
       }
     ],
@@ -535,7 +581,7 @@
     "Parameters": [
       {
         "Name": "impuestoEditarDto",
-        "Type": "SistemaTienda.DTO.ImpuestoArticuloEditarDTO",
+        "Type": "SistemaTienda.DTO.ImpuestoDTO",
         "IsRequired": true
       }
     ],
@@ -618,7 +664,7 @@
   {
     "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
     "Method": "ListarImpuestosArticulos",
-    "RelativePath": "api/Configuraciones/ListarImpuestosArticulos",
+    "RelativePath": "api/Configuraciones/ListarImpuestos",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

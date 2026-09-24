@@ -15,8 +15,6 @@ namespace SistemaTienda.DTO
         public int IdTipoArticulo { get; set; }
 
         public int IdUsuarioCreador { get; set; }
-
-        public int IdImpuesto { get; set; }
         public int? IdPorcentajeGanancia { get; set; }
         public int IdUnidad { get; set; }
         public string Nombre { get; set; } = null!;
@@ -39,5 +37,6 @@ namespace SistemaTienda.DTO
 
         public decimal ValorVenta { get; set; }
         public bool? Papeleria { get; set; }
+        public List<int> Impuestos { get; set; } = new List<int>();
     }
 }

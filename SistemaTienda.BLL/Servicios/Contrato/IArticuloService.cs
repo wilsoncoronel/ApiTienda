@@ -11,11 +11,13 @@ namespace SistemaTienda.BLL.Servicios.Contrato
     {
         Task<int> CrearArticulo(ArticuloCreacionDTO articuloCreacionDto);
         Task<bool> CrearArticulosLista(List<ArticuloCreacionDTO> articulosCreacionDto);
+        Task<List<ArticuloCompraDTO>> ListarCompraArticulos();
         Task<List<ArticuloDTO>> ListarArticulos(DateTime fechaInicio, DateTime fechaFinal);
         Task<bool> EditarArticulo(ArticuloEdicionDTO articuloEditarDto);
         Task<bool> DesactivarArticulo(int idArticulo);
         Task<List<TipoArticuloDTO>> CargarListaTiposArticulos();
         Task<List<ImpuestoDTO>> CargarListaImpuestos();
+        Task<List<ImpuestoDTO>> CargarListaImpuestosArticuloId(int idArticulo);
         Task<List<MarcaDTO>> CargarListaMarca();
         Task<List<ArticuloInventarioDTO>> ListarTodosArticulos(bool esVenta);
     }

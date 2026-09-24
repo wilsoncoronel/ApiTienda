@@ -21,7 +21,7 @@ namespace SistemaTienda.DTO
         public int IdMarca { get; set; }
         public int? IdPorcentajeGanancia { get; set; }
         public int IdTipoArticulo { get; set; }
-        public int IdImpuesto { get; set; }
+        public List<int> Impuestos { get; set; } = new List<int>();
         public int IdUnidad { get; set; }
         public bool? Papeleria { get; set; }
     }

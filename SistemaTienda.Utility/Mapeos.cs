@@ -82,11 +82,18 @@ namespace SistemaTienda.Utility
         TbComUnidadesMedida MapeoUnidadCreacionDtoAUnidadTb(UnidadCreacionDTO unidadDto);
         List<UnidadMedidaDTO> MapeoListaUnidadTbAListaUnidadDto(List<TbComUnidadesMedida> listaUnidadesTb);
         UnidadMedidaDTO MapeoUnidadTbAUnidadDto(TbComUnidadesMedida unidadTb);
+        List<ArticuloCompraDTO> MapeoArticulosCompras(List<TbComArticulo> articulos);
     }
     public class Mapeos : IMapeos
     {
         private DateTime FechaGrl = DateTime.Now;
-
+        public List<ArticuloCompraDTO> MapeoArticulosCompras(List<TbComArticulo> articulos) {
+            return articulos.Select(a => new ArticuloCompraDTO
+            {
+                Id = a.Id,
+                Nombre = $"Id: {a.Id} Art: {a.Nombre} {a.Descripcion ?? string.Empty} Mar: {a.IdMarcaNavigation.Nombre} Tip: {a.IdTipoArticuloNavigation.Nombre} Uni: {a.IdUnidadNavigation.Nombre}"
+            }).ToList();
+        }
         public TransaccionInventarioDTO MapeoTransaccionInventarioTbADto(TbInvTransacciones transaccionTb)
         {
             return new TransaccionInventarioDTO
@@ -272,10 +279,12 @@ namespace SistemaTienda.Utility
             };
         }
 
-            public List<ImpuestoDTO> MapeoListaImpuestosTbAListaImpuestosDto(List<TbComImpuesto> listaImpuestosTb)
-            {
-                return listaImpuestosTb.Select(imp => this.MapeoImpuestoTbAImpuestoDto(imp)).ToList();
-            }
+        public List<ImpuestoDTO> MapeoListaImpuestosTbAListaImpuestosDto(List<TbComImpuesto> listaImpuestosTb)
+        {
+            return listaImpuestosTb.Select(imp => this.MapeoImpuestoTbAImpuestoDto(imp)).ToList();
+        }
+
+        //MapeoImpuestoTbAImpuestoDto
         public TbComImpuesto MapeoImpuestoDtoAImpuestoTb(ImpuestoCrearDTO ImpuestoCreacionDTO)
         {
             return new TbComImpuesto
@@ -297,7 +306,6 @@ namespace SistemaTienda.Utility
                     Estado = impuestoTb.Estado,
                     TipoCalculo = impuestoTb.TipoCalculo,
                     Valor = impuestoTb.Valor,
-
                 };
             }
 
@@ -480,7 +488,6 @@ namespace SistemaTienda.Utility
                     FechaCreacion = articuloCreacionDto.FechaCreacion,
                     Estado = articuloCreacionDto.Estado,
                     EstadoVisual = articuloCreacionDto.EstadoVisual,
-                    IdImpuesto = articuloCreacionDto.IdImpuesto,
                     IdPorcentajeGanancia = articuloCreacionDto.IdPorcentajeGanancia,
                     Nombre = articuloCreacionDto.Nombre,
                     IdUnidad = articuloCreacionDto.IdUnidad,
@@ -490,11 +497,25 @@ namespace SistemaTienda.Utility
                     IdTipoArticulo = articuloCreacionDto.IdTipoArticulo,
                     IdMarca = articuloCreacionDto.IdMarca,
                     IdUsuarioCreador = articuloCreacionDto.IdUsuarioCreador,
-                    Papeleria = articuloCreacionDto.Papeleria
+                    Papeleria = articuloCreacionDto.Papeleria,
+                    TbComArticulosImpuestos = this.ImpuestosId(articuloCreacionDto.Impuestos)
                 };
                 return articuloTb;
             }
+            
+            public List<TbComArticulosImpuesto> ImpuestosId(List<int> listaImpuestos)
+            {
+                return listaImpuestos.Select(i => this.MapeoImpuestoDtoIdImpuestoTb(i)).ToList();
+            }
 
+            public TbComArticulosImpuesto MapeoImpuestoDtoIdImpuestoTb(int imp)
+            {
+                return new TbComArticulosImpuesto
+                {
+                    IdImpuesto = imp,
+                    Estado = true
+                };
+            }
             public TbComArticulo MapeoArticuloDtoAArticuloTb(ArticuloDTO articuloDto)
             {
                 var articuloTb = new TbComArticulo

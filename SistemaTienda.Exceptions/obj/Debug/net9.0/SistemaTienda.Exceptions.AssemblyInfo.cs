@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SistemaTienda.Exceptions")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a174f7074a4758fa1de0200345b5a6241a20d382")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c694d02450feb13597693d3c4277e2eebf9ef10c")]
 [assembly: System.Reflection.AssemblyProductAttribute("SistemaTienda.Exceptions")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SistemaTienda.Exceptions")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
