@@ -287,6 +287,32 @@
     ]
   },
   {
+    "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
+    "Method": "ObtenerArticuloId",
+    "RelativePath": "api/Articulo/ObtenerArticuloId",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idArticulo",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "SistemaTienda.DTO.ArticuloDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "SistemaTienda.API.Controllers.ClienteController",
     "Method": "BuscarClienteCI",
     "RelativePath": "api/Cliente/BuscarClienteCI",

@@ -52,6 +52,17 @@ namespace SistemaTienda.BLL.Servicios
                 throw new DbUpdateException("No se pudo desactivar el artículo!!");
             return resp;
         }
+        public async Task<ArticuloDTO> ObtenerArticuloId(int idArticulo)
+        {
+            var articuloTb = await this.tiendaDbContext.TbComArticulos.Include(a => a.IdTipoArticuloNavigation)
+                .Include(a => a.IdMarcaNavigation)
+                .Include(a => a.IdUnidadNavigation)
+                .Include(a => a.TbComArticulosImpuestos)
+                    .ThenInclude(ai => ai.IdImpuestoNavigation).FirstOrDefaultAsync(a => a.Id == idArticulo);
+            if (articuloTb == null)
+                throw new NotFoundException("El artículo no existe!!");
+            return this._mapper.MapeoArticuloTbAArticuloDto(articuloTb);
+        }
 
         public async Task<bool> EditarArticulo(ArticuloEdicionDTO articuloEditarDto)
         {

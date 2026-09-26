@@ -57,6 +57,19 @@ namespace SistemaTienda.API.Controllers
         }
 
         [HttpGet]
+        [Route("ObtenerArticuloId")]
+        public async Task<ActionResult<ArticuloDTO>> ObtenerArticuloId(int idArticulo)
+        {
+            var resp = new Response<ArticuloDTO>();
+
+            resp.status = true;
+            resp.Value = await this._articuloService.ObtenerArticuloId(idArticulo);
+            resp.msg = "Artículos cargado correctamente.";
+
+            return Ok(resp);
+        }
+
+        [HttpGet]
         [Route("CargarListaMarcasArticulos")]
         public async Task<ActionResult<List<MarcaDTO>>> CargarListaMarcas()
         {

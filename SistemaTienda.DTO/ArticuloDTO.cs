@@ -28,7 +28,7 @@ namespace SistemaTienda.DTO
         public int IdTipoArticulo { get; set; }
         public TipoArticuloDTO TipoArticuloDTO { get; set; }
 
-        public  List<ArticuloImpuestoDTO> ArticulosImpuestosDTO { get; set; } = new List<ArticuloImpuestoDTO>();
+        public  List<ArticuloImpuestoMinDTO> ArticulosImpuestosDTO { get; set; } = new List<ArticuloImpuestoMinDTO>();
         public UnidadMedidaDTO UnidadMedidaDto{ get; set; }
         public virtual PorcentajeGananciaDTO? PorcentajeDTO{ get; set; }
         public bool? Papeleria { get; set; }

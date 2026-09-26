@@ -83,6 +83,8 @@ namespace SistemaTienda.Utility
         List<UnidadMedidaDTO> MapeoListaUnidadTbAListaUnidadDto(List<TbComUnidadesMedida> listaUnidadesTb);
         UnidadMedidaDTO MapeoUnidadTbAUnidadDto(TbComUnidadesMedida unidadTb);
         List<ArticuloCompraDTO> MapeoArticulosCompras(List<TbComArticulo> articulos);
+
+        ArticuloDTO MapeoArticuloTbAArticuloDto(TbComArticulo articuloTb);
     }
     public class Mapeos : IMapeos
     {
@@ -527,7 +529,6 @@ namespace SistemaTienda.Utility
                     TbComArticulosImpuestos = articuloDto.ArticulosImpuestosDTO.Select(ai => new TbComArticulosImpuesto
                     {
                         Id = ai.Id,
-                        IdArticulo = ai.IdArticulo,
                         IdImpuesto = ai.IdImpuesto,
                         Estado = ai.Estado
                     }).ToList(),
@@ -550,7 +551,49 @@ namespace SistemaTienda.Utility
                 };
                 return articuloTb;
             }
-            public List<ArticuloDTO> MapeoListaArticulosDtoVentas(List<TbComArticulo> listaArticulosTb)
+
+        public ArticuloDTO MapeoArticuloTbAArticuloDto(TbComArticulo articuloTb)
+        {
+            var articuloDto = new ArticuloDTO
+            {
+                Id = articuloTb.Id,
+                Descripcion = articuloTb.Descripcion,
+                Estado = articuloTb.Estado,
+                EstadoVisual = articuloTb.EstadoVisual,
+                ArticulosImpuestosDTO = articuloTb.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoMinDTO
+                {
+                    Id = ai.Id,
+                    IdImpuesto = ai.IdImpuesto,
+                    ImpuestoDTO = new ImpuestoDTO
+                    {
+                        Id = ai.IdImpuestoNavigation.Id,
+                        Nombre = ai.IdImpuestoNavigation.Nombre,
+                        TipoCalculo = ai.IdImpuestoNavigation.TipoCalculo,
+                        Valor = ai.IdImpuestoNavigation.Valor
+                    },
+                    Estado = ai.Estado
+                }).ToList(),
+                Nombre = articuloTb.Nombre,
+                UnidadMedidaDto = new UnidadMedidaDTO
+                {
+                    Id = articuloTb.IdUnidad,
+                    Nombre = articuloTb.IdUnidadNavigation.Nombre
+                },
+                ValorCompra = articuloTb.ValorCompra,
+                UnidadValor = articuloTb.UnidadValor,
+                ValorVenta = articuloTb.ValorVenta,
+                TipoArticuloDTO = new TipoArticuloDTO
+                {
+                    Id = articuloTb.IdTipoArticulo,
+                    Descripcion = articuloTb.IdTipoArticuloNavigation.Descripcion,
+                    Nombre = articuloTb.IdTipoArticuloNavigation.Nombre,
+                },
+                Papeleria = articuloTb.Papeleria
+            };
+            return articuloDto;
+        }
+
+        public List<ArticuloDTO> MapeoListaArticulosDtoVentas(List<TbComArticulo> listaArticulosTb)
             {
                 return listaArticulosTb.Select(a => this.MapeoArticuloTbAArticuloDtoVentas(a)).ToList();
             }
@@ -570,10 +613,9 @@ namespace SistemaTienda.Utility
                         Valor = articuloTb.IdPorcentajeGananciaNavigation.Valor,
                         EstadoVisual = articuloTb.IdPorcentajeGananciaNavigation.EstadoVisual,
                     } : null,
-                    ArticulosImpuestosDTO = articuloTb.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoDTO
+                    ArticulosImpuestosDTO = articuloTb.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoMinDTO
                     {
                         Id = ai.Id,
-                        IdArticulo = ai.IdArticulo,
                         IdImpuesto = ai.IdImpuesto,
                         Estado = ai.Estado,
                         ImpuestoDTO = new ImpuestoDTO
@@ -638,10 +680,9 @@ namespace SistemaTienda.Utility
                     Descripcion = articuloTb.Descripcion,
                     Estado = articuloTb.Estado,
                     EstadoVisual = articuloTb.EstadoVisual,
-                    ArticulosImpuestosDTO = articuloTb.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoDTO
+                    ArticulosImpuestosDTO = articuloTb.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoMinDTO
                     {
                         Id = ai.Id,
-                        IdArticulo = ai.IdArticulo,
                         IdImpuesto = ai.IdImpuesto,
                         Estado = ai.Estado,
                         ImpuestoDTO = new ImpuestoDTO
@@ -691,10 +732,9 @@ namespace SistemaTienda.Utility
                 Descripcion = articuloTb.Descripcion,
                 Estado = articuloTb.Estado,
                 EstadoVisual = articuloTb.EstadoVisual,
-                ArticulosImpuestosDTO = articuloTb.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoDTO
+                ArticulosImpuestosDTO = articuloTb.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoMinDTO
                 {
                     Id = ai.Id,
-                    IdArticulo = ai.IdArticulo,
                     IdImpuesto = ai.IdImpuesto,
                     Estado = ai.Estado,
                     ImpuestoDTO = new ImpuestoDTO
@@ -816,7 +856,6 @@ namespace SistemaTienda.Utility
                             TbComArticulosImpuestos = d.ArticuloDTO.ArticulosImpuestosDTO.Select(ai => new TbComArticulosImpuesto
                             {
                                 Id = ai.Id,
-                                IdArticulo = ai.IdArticulo,
                                 IdImpuesto = ai.IdImpuesto,
                                 Estado = ai.Estado
                             }).ToList(),
@@ -1063,12 +1102,10 @@ namespace SistemaTienda.Utility
                     Codigo = detalleComraCreacionDto.Codigo,
                     FechaExpiracion = detalleComraCreacionDto.FechaExpiracion,
                     NumeroLote = detalleComraCreacionDto.NumeroLote,
-                    ImpuestoValor = detalleComraCreacionDto.ImpuestoValor,
                     ValorCompra = detalleComraCreacionDto.ValorCompra,
                     ValorVenta = detalleComraCreacionDto.ValorVenta,
                     ValorTotal = detalleComraCreacionDto.ValorTotal,
                 };
-
             }
 
             public TbVenta MapeoVentaCreacionDtoAVentaTb(VentaCreacionDTO ventaCreacionDto)
@@ -1420,10 +1457,9 @@ namespace SistemaTienda.Utility
                             UnidadValor = d.IdArticuloNavigation.UnidadValor,
                             FechaActualizacion = d.IdArticuloNavigation.FechaActualizacion?? d.IdArticuloNavigation.FechaCreacion,
                             FechaCreacion = d.IdArticuloNavigation.FechaCreacion,
-                            ArticulosImpuestosDTO = d.IdArticuloNavigation.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoDTO
+                            ArticulosImpuestosDTO = d.IdArticuloNavigation.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoMinDTO
                             {
                                 Id = ai.Id,
-                                IdArticulo = ai.IdArticulo,
                                 IdImpuesto = ai.IdImpuesto,
                                 Estado = ai.Estado,
                                 ImpuestoDTO = new ImpuestoDTO
@@ -1452,7 +1488,6 @@ namespace SistemaTienda.Utility
                         FechaCaducidad = d.FechaExpiracion?.ToDateTime(TimeOnly.MinValue),
                         Cantidad = d.Cantidad,
                         Descripcion = d.Descripcion,
-                        ImpuestoValor = d.ImpuestoValor,
                         ValorCompra = d.ValorCompra,
                         ValorVenta = d.ValorVenta,
                         ValorTotal = d.ValorTotal,
@@ -1520,10 +1555,9 @@ namespace SistemaTienda.Utility
                             FechaActualizacion = d.IdArticuloNavigation.FechaActualizacion ?? DateTime.Now,
                             FechaCreacion = d.IdArticuloNavigation.FechaCreacion,
                             FechaCaducidad = d.IdArticuloNavigation.FechaCaducidad ?? DateTime.Now,
-                            ArticulosImpuestosDTO = d.IdArticuloNavigation.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoDTO
+                            ArticulosImpuestosDTO = d.IdArticuloNavigation.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoMinDTO
                             {
                                 Id = ai.Id,
-                                IdArticulo = ai.IdArticulo,
                                 IdImpuesto = ai.IdImpuesto,
                                 Estado = ai.Estado,
                                 ImpuestoDTO = new ImpuestoDTO

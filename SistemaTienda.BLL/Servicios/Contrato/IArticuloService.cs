@@ -20,5 +20,6 @@ namespace SistemaTienda.BLL.Servicios.Contrato
         Task<List<ImpuestoDTO>> CargarListaImpuestosArticuloId(int idArticulo);
         Task<List<MarcaDTO>> CargarListaMarca();
         Task<List<ArticuloInventarioDTO>> ListarTodosArticulos(bool esVenta);
+        Task<ArticuloDTO> ObtenerArticuloId(int idArticulo);
     }
 }

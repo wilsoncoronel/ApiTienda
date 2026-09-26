@@ -391,7 +391,6 @@ namespace SistemaTienda.BLL.Servicios
                         existente.IdArticulo = detDto.ArticuloId;
                         existente.Cantidad = detDto.Cantidad;
                         existente.Descripcion = detDto.Descripcion;
-                        existente.ImpuestoValor = detDto.ImpuestoValor;
                         existente.ValorCompra = detDto.ValorCompra;
                         existente.ValorVenta = detDto.ValorVenta;
                         existente.ValorTotal = detDto.ValorTotal;
@@ -410,7 +409,6 @@ namespace SistemaTienda.BLL.Servicios
                             FechaExpiracion = detDto.FechaCaducidad,
                             NumeroLote = detDto.NumeroLote,
                             Descripcion = detDto.Descripcion,
-                            ImpuestoValor = detDto.ImpuestoValor,
                             ValorCompra = detDto.ValorCompra,
                             ValorVenta = detDto.ValorVenta,
                             ValorTotal = detDto.ValorTotal

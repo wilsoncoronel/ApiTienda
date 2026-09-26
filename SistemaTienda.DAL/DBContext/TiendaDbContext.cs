@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+
 using SistemaTienda.Model;
 namespace SistemaTienda.DAL.DBContext;
 
@@ -32,6 +33,8 @@ public partial class TiendaDbContext : DbContext
     public virtual DbSet<TbComEstadosImpuesto> TbComEstadosImpuestos { get; set; }
 
     public virtual DbSet<TbComImpuesto> TbComImpuestos { get; set; }
+
+    public virtual DbSet<TbComImpuestoDetalle> TbComImpuestoDetalles { get; set; }
 
     public virtual DbSet<TbComMarca> TbComMarcas { get; set; }
 
@@ -179,7 +182,6 @@ public partial class TiendaDbContext : DbContext
                 .HasMaxLength(50)
                 .IsFixedLength();
             entity.Property(e => e.Descripcion).HasMaxLength(500);
-            entity.Property(e => e.ImpuestoValor).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.NumeroLote)
                 .HasMaxLength(50)
                 .IsFixedLength();
@@ -232,6 +234,20 @@ public partial class TiendaDbContext : DbContext
             entity.Property(e => e.Nombre).HasMaxLength(50);
             entity.Property(e => e.TipoCalculo).HasMaxLength(50);
             entity.Property(e => e.Valor).HasColumnType("numeric(18, 4)");
+        });
+
+        modelBuilder.Entity<TbComImpuestoDetalle>(entity =>
+        {
+            entity.ToTable("TbComImpuestoDetalle");
+
+            entity.Property(e => e.Nombre).HasMaxLength(50);
+            entity.Property(e => e.TipoCalculo).HasMaxLength(50);
+            entity.Property(e => e.Valor).HasColumnType("numeric(18, 4)");
+
+            entity.HasOne(d => d.IdDetalleCompraNavigation).WithMany(p => p.TbComImpuestoDetalles)
+                .HasForeignKey(d => d.IdDetalleCompra)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbComImpuestoDetalle_TbComDetallesCompras");
         });
 
         modelBuilder.Entity<TbComMarca>(entity =>
