@@ -289,7 +289,7 @@
   {
     "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
     "Method": "ObtenerArticuloId",
-    "RelativePath": "api/Articulo/ObtenerArticuloId",
+    "RelativePath": "api/Articulo/ObtenerArticulo",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

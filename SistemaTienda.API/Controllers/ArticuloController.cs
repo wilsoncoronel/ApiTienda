@@ -57,7 +57,7 @@ namespace SistemaTienda.API.Controllers
         }
 
         [HttpGet]
-        [Route("ObtenerArticuloId")]
+        [Route("ObtenerArticulo")]
         public async Task<ActionResult<ArticuloDTO>> ObtenerArticuloId(int idArticulo)
         {
             var resp = new Response<ArticuloDTO>();

@@ -56,6 +56,7 @@ namespace SistemaTienda.BLL.Servicios
         {
             var articuloTb = await this.tiendaDbContext.TbComArticulos.Include(a => a.IdTipoArticuloNavigation)
                 .Include(a => a.IdMarcaNavigation)
+                .Include(p => p.IdPorcentajeGananciaNavigation)
                 .Include(a => a.IdUnidadNavigation)
                 .Include(a => a.TbComArticulosImpuestos)
                     .ThenInclude(ai => ai.IdImpuestoNavigation).FirstOrDefaultAsync(a => a.Id == idArticulo);
