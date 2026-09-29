@@ -1,0 +1,359 @@
+﻿## PROCESSES
+Currently debugging:
+- SistemaTienda.API.exe (PID: 31412)
+
+## EXCEPTION
+Exception Type: System.NullReferenceException
+Exception Message: Object reference not set to an instance of an object.
+Piece of code that has the exception:
+```csharp C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Utility\Mapeos.cs
+1455:             public CompraDTO MapeoCompraTbACompraCompletaDto (TbCompra compraTb)
+1456:             {
+1457:                 DateOnly fechaSolo = DateOnly.FromDateTime(DateTime.Now);
+1458:                 var compra = new CompraDTO
+1459:                 {
+1460:                     Id = compraTb.Id,
+1461:                     IdProveedor = compraTb.IdProveedor,
+1462:                     UsuarioCreador = new UsuarioDTO
+1463:                     {
+1464:                         Id = compraTb.IdUsuarioCreadorNavigation.Id,
+1465:                         Apellidos = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Apellidos,
+1466:                         Nombres = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Nombres,
+1467:                         Identificacion = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Identificacion,
+1468:                         Mail = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Mail,
+1469:                     },
+1470:                     ProveedorDto = new ProveedorDTO
+1471:                     {
+1472:                         Id = compraTb.IdProveedorNavigation.Id,
+1473:                         RazonSocial = compraTb.IdProveedorNavigation.RazonSocial,
+1474:                         Descripcion = compraTb.IdProveedorNavigation.Descripcion,
+1475:                         Identificacion = compraTb.IdProveedorNavigation.IdPersonaNavigation.Identificacion,
+1476:                         DireccionDto = new DireccionDTO
+1477:                         {
+1478:                             Descripcion = compraTb.IdProveedorNavigation.IdPersonaNavigation.TbGrlDireccione.Descripcion,
+1479:                             Ciudad = new CiudadDTO
+1480:                             {
+1481:                                 Id = compraTb.IdProveedorNavigation.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Id,
+1482:                                 Nombre = compraTb.IdProveedorNavigation.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Nombre,
+1483:                             },
+1484:                         },
+1485:                     },
+1486:                     Documento = compraTb.Documento,
+1487:                     FechaCompra = compraTb.FechaCompra,
+1488:                     FechaCreacion = compraTb.FechaCreacion,
+1489:                     FechaModificacion = compraTb.FechaModificacion?? compraTb.FechaCompra,
+1490:                     IdEstado = compraTb.IdEstadoCompra,
+1491:                     EstadoCompra = new EstadoCompraDTO
+1492:                     {
+1493:                         Id = compraTb.IdEstadoCompraNavigation.Id,
+1494:                         Nombre = compraTb.IdEstadoCompraNavigation.Nombre,
+1495:                     },
+1496:                     DetalleCompras = compraTb.TbComDetallesCompras.Select(d => new DetalleCompraDTO
+1497:                     {
+1498:                         Id = d.Id,
+1499:                         ArticuloDTO = new ArticuloDTO
+1500:                         {
+1501:                             Id = d.IdArticuloNavigation.Id,
+1502:                             Descripcion = d.IdArticuloNavigation.Descripcion,
+1503:                             Nombre = d.IdArticuloNavigation.Nombre,
+1504:                             UnidadMedidaDto = new UnidadMedidaDTO
+1505:                             {
+1506:                                 Id = d.IdArticuloNavigation.IdUnidadNavigation.Id,
+1507:                                 Nombre = d.IdArticuloNavigation.IdUnidadNavigation.Nombre
+1508:                             },
+1509:                             UnidadValor = d.IdArticuloNavigation.UnidadValor,
+1510:                             FechaActualizacion = d.IdArticuloNavigation.FechaActualizacion?? d.IdArticuloNavigation.FechaCreacion,
+1511:                             FechaCreacion = d.IdArticuloNavigation.FechaCreacion,
+1512:                             TipoArticuloDTO = new TipoArticuloDTO
+1513:                             {
+1514:                                 Id = d.IdArticuloNavigation.IdTipoArticuloNavigation.Id,
+1515:                                 Nombre = d.IdArticuloNavigation.IdTipoArticuloNavigation.Nombre,
+1516:                                 Descripcion = d.IdArticuloNavigation.IdTipoArticuloNavigation.Descripcion,
+1517:                             },
+1518:                             MarcaDTO = new MarcaDTO
+1519:                             {
+1520:                                 Id = d.IdArticuloNavigation.IdMarcaNavigation.Id,
+1521:                                 Nombre = d.IdArticuloNavigation.IdMarcaNavigation.Nombre,
+1522:                                 Descripcion = d.IdArticuloNavigation.IdMarcaNavigation.Descripcion,
+1523:                             },
+1524:                         },
+1525:                         Codigo = d.Codigo,
+1526:                         Lote = d.NumeroLote,
+1527:                         FechaCaducidad = d.FechaExpiracion?.ToDateTime(TimeOnly.MinValue),
+1528:                         Cantidad = d.Cantidad,
+1529:                         Descripcion = d.Descripcion,
+1530:                         ValorCompra = d.ValorCompra,
+1531:                         ValorVenta = d.ValorVenta,
+1532:                         ValorTotal = d.ValorTotal,
+1533:                         Impuestos = d.TbComImpuestoDetalles.Select(i => new DetalleImpuestoDTO
+1534:                         {
+1535:                             Id = i.Id,
+1536:                             IdDetalleCompra = i.IdDetalleCompra,
+1537:                             Nombre = i.Nombre,
+1538:                             Valor = i.Valor,
+1539:                             TipoCalculo = i.TipoCalculo,
+1540:                         }).ToList(),
+1541:                     }).ToList(),
+1542: 
+1543:                 };
+1544:                 return compra;
+1545:             }
+```
+Exception is on lines 1496-1541
+The callstack context, if included, corresponds to the thread where this exception occurred. There is no need to identify this thread by other means.
+The top most frame in the callstack context should correspond to the place the exception message was thrown from. Code may or may not have been provided for it but can be requested.
+
+## CALLSTACK
+Thread ID: 28432
+[1] SistemaTienda.Utility.dll!SistemaTienda.Utility.Mapeos.MapeoCompraTbACompraCompletaDto.AnonymousMethod__81_0
+This is the current user focused stack frame. The provided locals context corresponds to this stack frame, but you may evaluate expressions and retrieve code for any frame.
+Code for the stack frame:
+```csharp SistemaTienda.Utility\Mapeos.cs
+1455:             public CompraDTO MapeoCompraTbACompraCompletaDto (TbCompra compraTb)
+1456:             {
+1457:                 DateOnly fechaSolo = DateOnly.FromDateTime(DateTime.Now);
+1458:                 var compra = new CompraDTO
+1459:                 {
+1460:                     Id = compraTb.Id,
+1461:                     IdProveedor = compraTb.IdProveedor,
+1462:                     UsuarioCreador = new UsuarioDTO
+1463:                     {
+1464:                         Id = compraTb.IdUsuarioCreadorNavigation.Id,
+1465:                         Apellidos = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Apellidos,
+1466:                         Nombres = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Nombres,
+1467:                         Identificacion = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Identificacion,
+1468:                         Mail = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Mail,
+1469:                     },
+1470:                     ProveedorDto = new ProveedorDTO
+1471:                     {
+1472:                         Id = compraTb.IdProveedorNavigation.Id,
+1473:                         RazonSocial = compraTb.IdProveedorNavigation.RazonSocial,
+1474:                         Descripcion = compraTb.IdProveedorNavigation.Descripcion,
+1475:                         Identificacion = compraTb.IdProveedorNavigation.IdPersonaNavigation.Identificacion,
+1476:                         DireccionDto = new DireccionDTO
+1477:                         {
+1478:                             Descripcion = compraTb.IdProveedorNavigation.IdPersonaNavigation.TbGrlDireccione.Descripcion,
+1479:                             Ciudad = new CiudadDTO
+1480:                             {
+1481:                                 Id = compraTb.IdProveedorNavigation.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Id,
+1482:                                 Nombre = compraTb.IdProveedorNavigation.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Nombre,
+1483:                             },
+1484:                         },
+1485:                     },
+1486:                     Documento = compraTb.Documento,
+1487:                     FechaCompra = compraTb.FechaCompra,
+1488:                     FechaCreacion = compraTb.FechaCreacion,
+1489:                     FechaModificacion = compraTb.FechaModificacion?? compraTb.FechaCompra,
+1490:                     IdEstado = compraTb.IdEstadoCompra,
+1491:                     EstadoCompra = new EstadoCompraDTO
+1492:                     {
+1493:                         Id = compraTb.IdEstadoCompraNavigation.Id,
+1494:                         Nombre = compraTb.IdEstadoCompraNavigation.Nombre,
+1495:                     },
+1496:                     DetalleCompras = compraTb.TbComDetallesCompras.Select(d => new DetalleCompraDTO
+1497:                     {
+1498:                         Id = d.Id,
+1499:                         ArticuloDTO = new ArticuloDTO
+1500:                         {
+1501:                             Id = d.IdArticuloNavigation.Id,
+1502:                             Descripcion = d.IdArticuloNavigation.Descripcion,
+1503:                             Nombre = d.IdArticuloNavigation.Nombre,
+1504:                             UnidadMedidaDto = new UnidadMedidaDTO
+1505:                             {
+1506:                                 Id = d.IdArticuloNavigation.IdUnidadNavigation.Id,
+1507:                                 Nombre = d.IdArticuloNavigation.IdUnidadNavigation.Nombre
+1508:                             },
+1509:                             UnidadValor = d.IdArticuloNavigation.UnidadValor,
+1510:                             FechaActualizacion = d.IdArticuloNavigation.FechaActualizacion?? d.IdArticuloNavigation.FechaCreacion,
+1511:                             FechaCreacion = d.IdArticuloNavigation.FechaCreacion,
+1512:                             TipoArticuloDTO = new TipoArticuloDTO
+1513:                             {
+1514:                                 Id = d.IdArticuloNavigation.IdTipoArticuloNavigation.Id,
+1515:                                 Nombre = d.IdArticuloNavigation.IdTipoArticuloNavigation.Nombre,
+1516:                                 Descripcion = d.IdArticuloNavigation.IdTipoArticuloNavigation.Descripcion,
+1517:                             },
+1518:                             MarcaDTO = new MarcaDTO
+1519:                             {
+1520:                                 Id = d.IdArticuloNavigation.IdMarcaNavigation.Id,
+1521:                                 Nombre = d.IdArticuloNavigation.IdMarcaNavigation.Nombre,
+1522:                                 Descripcion = d.IdArticuloNavigation.IdMarcaNavigation.Descripcion,
+1523:                             },
+1524:                         },
+1525:                         Codigo = d.Codigo,
+1526:                         Lote = d.NumeroLote,
+1527:                         FechaCaducidad = d.FechaExpiracion?.ToDateTime(TimeOnly.MinValue),
+1528:                         Cantidad = d.Cantidad,
+1529:                         Descripcion = d.Descripcion,
+1530:                         ValorCompra = d.ValorCompra,
+1531:                         ValorVenta = d.ValorVenta,
+1532:                         ValorTotal = d.ValorTotal,
+1533:                         Impuestos = d.TbComImpuestoDetalles.Select(i => new DetalleImpuestoDTO
+1534:                         {
+1535:                             Id = i.Id,
+1536:                             IdDetalleCompra = i.IdDetalleCompra,
+1537:                             Nombre = i.Nombre,
+1538:                             Valor = i.Valor,
+1539:                             TipoCalculo = i.TipoCalculo,
+1540:                         }).ToList(),
+1541:                     }).ToList(),
+1542: 
+1543:                 };
+1544:                 return compra;
+1545:             }
+```
+Current statement: lines 1496-1541
+[2] [Código externo]
+[3] SistemaTienda.Utility.dll!SistemaTienda.Utility.Mapeos.MapeoCompraTbACompraCompletaDto
+Code for the stack frame:
+```csharp SistemaTienda.Utility\Mapeos.cs
+1455:             public CompraDTO MapeoCompraTbACompraCompletaDto (TbCompra compraTb)
+1456:             {
+1457:                 DateOnly fechaSolo = DateOnly.FromDateTime(DateTime.Now);
+1458:                 var compra = new CompraDTO
+1459:                 {
+1460:                     Id = compraTb.Id,
+1461:                     IdProveedor = compraTb.IdProveedor,
+1462:                     UsuarioCreador = new UsuarioDTO
+1463:                     {
+1464:                         Id = compraTb.IdUsuarioCreadorNavigation.Id,
+1465:                         Apellidos = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Apellidos,
+1466:                         Nombres = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Nombres,
+1467:                         Identificacion = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Identificacion,
+1468:                         Mail = compraTb.IdUsuarioCreadorNavigation.IdPersonaNavigation.Mail,
+1469:                     },
+1470:                     ProveedorDto = new ProveedorDTO
+1471:                     {
+1472:                         Id = compraTb.IdProveedorNavigation.Id,
+1473:                         RazonSocial = compraTb.IdProveedorNavigation.RazonSocial,
+1474:                         Descripcion = compraTb.IdProveedorNavigation.Descripcion,
+1475:                         Identificacion = compraTb.IdProveedorNavigation.IdPersonaNavigation.Identificacion,
+1476:                         DireccionDto = new DireccionDTO
+1477:                         {
+1478:                             Descripcion = compraTb.IdProveedorNavigation.IdPersonaNavigation.TbGrlDireccione.Descripcion,
+1479:                             Ciudad = new CiudadDTO
+1480:                             {
+1481:                                 Id = compraTb.IdProveedorNavigation.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Id,
+1482:                                 Nombre = compraTb.IdProveedorNavigation.IdPersonaNavigation.TbGrlDireccione.IdCiudadNavigation.Nombre,
+1483:                             },
+1484:                         },
+1485:                     },
+1486:                     Documento = compraTb.Documento,
+1487:                     FechaCompra = compraTb.FechaCompra,
+1488:                     FechaCreacion = compraTb.FechaCreacion,
+1489:                     FechaModificacion = compraTb.FechaModificacion?? compraTb.FechaCompra,
+1490:                     IdEstado = compraTb.IdEstadoCompra,
+1491:                     EstadoCompra = new EstadoCompraDTO
+1492:                     {
+1493:                         Id = compraTb.IdEstadoCompraNavigation.Id,
+1494:                         Nombre = compraTb.IdEstadoCompraNavigation.Nombre,
+1495:                     },
+1496:                     DetalleCompras = compraTb.TbComDetallesCompras.Select(d => new DetalleCompraDTO
+1497:                     {
+1498:                         Id = d.Id,
+1499:                         ArticuloDTO = new ArticuloDTO
+1500:                         {
+1501:                             Id = d.IdArticuloNavigation.Id,
+1502:                             Descripcion = d.IdArticuloNavigation.Descripcion,
+1503:                             Nombre = d.IdArticuloNavigation.Nombre,
+1504:                             UnidadMedidaDto = new UnidadMedidaDTO
+1505:                             {
+1506:                                 Id = d.IdArticuloNavigation.IdUnidadNavigation.Id,
+1507:                                 Nombre = d.IdArticuloNavigation.IdUnidadNavigation.Nombre
+1508:                             },
+1509:                             UnidadValor = d.IdArticuloNavigation.UnidadValor,
+1510:                             FechaActualizacion = d.IdArticuloNavigation.FechaActualizacion?? d.IdArticuloNavigation.FechaCreacion,
+1511:                             FechaCreacion = d.IdArticuloNavigation.FechaCreacion,
+1512:                             TipoArticuloDTO = new TipoArticuloDTO
+1513:                             {
+1514:                                 Id = d.IdArticuloNavigation.IdTipoArticuloNavigation.Id,
+1515:                                 Nombre = d.IdArticuloNavigation.IdTipoArticuloNavigation.Nombre,
+1516:                                 Descripcion = d.IdArticuloNavigation.IdTipoArticuloNavigation.Descripcion,
+1517:                             },
+1518:                             MarcaDTO = new MarcaDTO
+1519:                             {
+1520:                                 Id = d.IdArticuloNavigation.IdMarcaNavigation.Id,
+1521:                                 Nombre = d.IdArticuloNavigation.IdMarcaNavigation.Nombre,
+1522:                                 Descripcion = d.IdArticuloNavigation.IdMarcaNavigation.Descripcion,
+1523:                             },
+1524:                         },
+1525:                         Codigo = d.Codigo,
+1526:                         Lote = d.NumeroLote,
+1527:                         FechaCaducidad = d.FechaExpiracion?.ToDateTime(TimeOnly.MinValue),
+1528:                         Cantidad = d.Cantidad,
+1529:                         Descripcion = d.Descripcion,
+1530:                         ValorCompra = d.ValorCompra,
+1531:                         ValorVenta = d.ValorVenta,
+1532:                         ValorTotal = d.ValorTotal,
+1533:                         Impuestos = d.TbComImpuestoDetalles.Select(i => new DetalleImpuestoDTO
+1534:                         {
+1535:                             Id = i.Id,
+1536:                             IdDetalleCompra = i.IdDetalleCompra,
+1537:                             Nombre = i.Nombre,
+1538:                             Valor = i.Valor,
+1539:                             TipoCalculo = i.TipoCalculo,
+1540:                         }).ToList(),
+1541:                     }).ToList(),
+1542: 
+1543:                 };
+1544:                 return compra;
+1545:             }
+```
+Current statement: lines 1458-1543
+[4] SistemaTienda.BLL.dll!SistemaTienda.BLL.Servicios.CompraService.ObtenerCompra
+Code for the stack frame:
+```csharp SistemaTienda.BLL\Servicios\CompraService.cs
+127:         public async Task<CompraDTO> ObtenerCompra(int idCompra)
+128:         {   
+129:             TbCompra tbCompra = await this._tiendaDbContext.TbCompras
+130:                 .Include(u => u.IdUsuarioCreadorNavigation)
+131:                 .ThenInclude(p => p.IdPersonaNavigation)
+132:                 .ThenInclude(id => id.IdTipoIdentificacionNavigation)
+133:                 .Include(prov => prov.IdProveedorNavigation)
+134:                 .ThenInclude(per => per.IdPersonaNavigation)
+135:                 .ThenInclude(dir => dir.TbGrlDireccione)
+136:                     .ThenInclude(ciu => ciu.IdCiudadNavigation)
+137:                 .Include(est => est.IdEstadoCompraNavigation)
+138:                 .Include(art => art.TbComDetallesCompras)
+139:                     .ThenInclude(art => art.IdArticuloNavigation)
+140:                 .Include(det => det.TbComDetallesCompras)
+141:                     .ThenInclude(art => art.IdArticuloNavigation)
+142:                         .ThenInclude(imp => imp.TbComArticulosImpuestos)
+143:                             .ThenInclude(ai => ai.IdImpuestoNavigation)
+144:                 .Include(det => det.TbComDetallesCompras)
+145:                     .ThenInclude(art=> art.IdArticuloNavigation)
+146:                         .ThenInclude(mar => mar.IdMarcaNavigation)
+147:                 .Include(det => det.TbComDetallesCompras)
+148:                     .ThenInclude(art => art.IdArticuloNavigation)
+149:                         .ThenInclude(tp => tp.IdTipoArticuloNavigation)
+150:                 .FirstOrDefaultAsync(c => c.Id == idCompra);
+151: 
+152:             if (tbCompra == null)
+153:                 throw new NotFoundException("No se encontró la compra");
+154:                 
+155:             var compraDto = this._mapper.MapeoCompraTbACompraCompletaDto(tbCompra);
+156:             return compraDto;
+157:         }
+```
+Current statement: line 155
+[5] [Pila de llamadas asincrónicas]
+[6] [Asincrónico] SistemaTienda.API.dll!SistemaTienda.API.Controllers.ComprasController.ObtenerCompra
+Code for the stack frame:
+```csharp SistemaTienda.API\Controllers\ComprasController.cs
+86:         [HttpGet]
+87:         [Route("ObtenerCompra")]
+88:         public async Task<IActionResult> ObtenerCompra(int idCompra)
+89:         {
+90: 
+91:             var resp = new Response<CompraDTO>();
+92:             resp.status = true;
+93:             resp.Value = await this._compraService.ObtenerCompra(idCompra);
+94:             resp.msg = "Compra obtenida correctamente";
+95:             return Ok(resp);
+96:         }
+```
+Current statement: line 93
+[7] [Código externo]
+
+## LOCALS
+Variable: 'd' of type 'SistemaTienda.Model.TbComDetallesCompra' is a complex object with child properties and has value: {SistemaTienda.Model.TbComDetallesCompra}
+

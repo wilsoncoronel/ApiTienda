@@ -146,7 +146,12 @@ namespace SistemaTienda.BLL.Servicios
                         .ThenInclude(mar => mar.IdMarcaNavigation)
                 .Include(det => det.TbComDetallesCompras)
                     .ThenInclude(art => art.IdArticuloNavigation)
+                        .ThenInclude(mar => mar.IdUnidadNavigation)
+                .Include(det => det.TbComDetallesCompras)
+                    .ThenInclude(art => art.IdArticuloNavigation)
                         .ThenInclude(tp => tp.IdTipoArticuloNavigation)
+                .Include(det => det.TbComDetallesCompras)
+                    .ThenInclude(imp => imp.TbComImpuestoDetalles)
                 .FirstOrDefaultAsync(c => c.Id == idCompra);
 
             if (tbCompra == null)
@@ -166,8 +171,22 @@ namespace SistemaTienda.BLL.Servicios
                 if (tbCompra.Id == 0)
                     throw new BadRequestException("No se pudo registrar la compra");
                 tbCompra = await this._tiendaDbContext.TbCompras.Where(c => c.Id == tbCompra.Id)
+                    .Include(usu => usu.IdUsuarioCreadorNavigation)
+                        .ThenInclude(per => per.IdPersonaNavigation)
+                    .Include(pro => pro.IdProveedorNavigation)
+                        .ThenInclude(per => per.IdPersonaNavigation)
+                    .Include(est => est.IdEstadoCompraNavigation)
                     .Include(det => det.TbComDetallesCompras)
-                    .ThenInclude(art => art.IdArticuloNavigation).FirstOrDefaultAsync();
+                        .ThenInclude(art => art.IdArticuloNavigation)
+                            .ThenInclude(uni => uni.IdUnidadNavigation)
+                    .Include(det => det.TbComDetallesCompras)
+                        .ThenInclude(art => art.IdArticuloNavigation)
+                            .ThenInclude(uni => uni.IdMarcaNavigation)
+                    .Include(det => det.TbComDetallesCompras)
+                        .ThenInclude(art => art.IdArticuloNavigation)
+                            .ThenInclude(uni => uni.IdTipoArticuloNavigation)
+                    .Include(det => det.TbComDetallesCompras)
+                        .ThenInclude(imp => imp.TbComImpuestoDetalles).FirstOrDefaultAsync();
                     
                 var respInv = await this.AlimentarInventario(tbCompra);
                 if (respInv == false)
