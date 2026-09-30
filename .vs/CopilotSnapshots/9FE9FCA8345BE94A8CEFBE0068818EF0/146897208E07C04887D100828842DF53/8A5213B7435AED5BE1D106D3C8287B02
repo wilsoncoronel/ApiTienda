@@ -398,11 +398,6 @@ namespace SistemaTienda.BLL.Servicios
 
                 foreach (var e in eliminados)
                 {
-                    var impuestosDetalle = await _tiendaDbContext.TbComImpuestoDetalles
-                        .Where(x => x.IdDetalleCompra == e.Id)
-                        .ToListAsync();
-
-                    _tiendaDbContext.TbComImpuestoDetalles.RemoveRange(impuestosDetalle);
                     _tiendaDbContext.TbComDetallesCompras.Remove(e);
                 }
 

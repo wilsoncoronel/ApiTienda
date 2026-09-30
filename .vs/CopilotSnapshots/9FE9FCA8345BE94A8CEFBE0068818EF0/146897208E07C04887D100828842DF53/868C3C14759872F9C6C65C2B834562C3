@@ -1,5 +1,19 @@
-﻿SistemaTienda.BLL.Servicios.CompraService Class (C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\Servicios\CompraService.cs):
-```
+﻿using Microsoft.EntityFrameworkCore;
+using SistemaTienda.API.Exceptions;
+using SistemaTienda.BLL.Servicios.Contrato;
+using SistemaTienda.DAL.DBContext;
+using SistemaTienda.DAL.Repositorios.Contrato;
+using SistemaTienda.DTO;
+using SistemaTienda.Model;
+using SistemaTienda.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SistemaTienda.BLL.Servicios
+{
     public class CompraService : ICompraServicio
     {
         private readonly TiendaDbContext _tiendaDbContext;
@@ -132,7 +146,12 @@
                         .ThenInclude(mar => mar.IdMarcaNavigation)
                 .Include(det => det.TbComDetallesCompras)
                     .ThenInclude(art => art.IdArticuloNavigation)
+                        .ThenInclude(mar => mar.IdUnidadNavigation)
+                .Include(det => det.TbComDetallesCompras)
+                    .ThenInclude(art => art.IdArticuloNavigation)
                         .ThenInclude(tp => tp.IdTipoArticuloNavigation)
+                .Include(det => det.TbComDetallesCompras)
+                    .ThenInclude(imp => imp.TbComImpuestoDetalles)
                 .FirstOrDefaultAsync(c => c.Id == idCompra);
 
             if (tbCompra == null)
@@ -152,9 +171,20 @@
                 if (tbCompra.Id == 0)
                     throw new BadRequestException("No se pudo registrar la compra");
                 tbCompra = await this._tiendaDbContext.TbCompras.Where(c => c.Id == tbCompra.Id)
+                    .Include(usu => usu.IdUsuarioCreadorNavigation)
+                        .ThenInclude(per => per.IdPersonaNavigation)
+                    .Include(pro => pro.IdProveedorNavigation)
+                        .ThenInclude(per => per.IdPersonaNavigation)
+                    .Include(est => est.IdEstadoCompraNavigation)
                     .Include(det => det.TbComDetallesCompras)
                         .ThenInclude(art => art.IdArticuloNavigation)
-                        .ThenInclude(uni => uni.IdUnidadNavigation)
+                            .ThenInclude(uni => uni.IdUnidadNavigation)
+                    .Include(det => det.TbComDetallesCompras)
+                        .ThenInclude(art => art.IdArticuloNavigation)
+                            .ThenInclude(uni => uni.IdMarcaNavigation)
+                    .Include(det => det.TbComDetallesCompras)
+                        .ThenInclude(art => art.IdArticuloNavigation)
+                            .ThenInclude(uni => uni.IdTipoArticuloNavigation)
                     .Include(det => det.TbComDetallesCompras)
                         .ThenInclude(imp => imp.TbComImpuestoDetalles).FirstOrDefaultAsync();
                     
@@ -470,4 +500,4 @@
             return listaDto;
         }
     }
-```
+}
