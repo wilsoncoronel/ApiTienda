@@ -90,7 +90,6 @@ namespace SistemaTienda.BLL.Servicios
             // Los lotes que queden en lotesExistentes ya no existen en la compra: eliminarlos
             foreach (var loteRemover in lotesExistentes.Values)
             {
-                movimientoOrigen.TbInvLotes.Remove(loteRemover);
                 _tiendaDbContext.TbInvLotes.Remove(loteRemover);
             }
 
@@ -364,13 +363,9 @@ namespace SistemaTienda.BLL.Servicios
                 // Cargar movimientos de inventario asociados a la referencia (documento)
                 var movimientos = await _tiendaDbContext.TbInvMovimientos
                     .Where(m => m.Referencia == (tbCompra.Documento + "ID" + tbCompra.Id))
-                    .Include(m => m.IdTransaccionInventarioNavigation)
                     .Include(m => m.TbInvLotes)
                         .ThenInclude(l => l.TbInvConsumoLotes)
-                    .Include(m => m.TbInvLotes)
-                        .ThenInclude(l => l.TbInvDevolucionLotes)
                     .Include(m => m.TbInvConsumoLotes)
-                    .Include(m => m.TbInvDevolucionLotes)
                     .ToListAsync();
 
                 TbInvMovimiento movimientoOrigen = null;
@@ -386,14 +381,6 @@ namespace SistemaTienda.BLL.Servicios
                         || movimientoOrigen.TbInvLotes.Any(l => l.TbInvConsumoLotes != null && l.TbInvConsumoLotes.Any());
                     if (movimientoTieneConsumos)
                         throw new ConflictException("No se puede editar la compra: existen consumos por venta relacionados.");
-
-                    bool movimientoTieneDevoluciones = (movimientoOrigen.TbInvDevolucionLotes != null && movimientoOrigen.TbInvDevolucionLotes.Any())
-                        || movimientoOrigen.TbInvLotes.Any(l => l.TbInvDevolucionLotes != null && l.TbInvDevolucionLotes.Any());
-                    if (movimientoTieneDevoluciones)
-                        throw new ConflictException("No se puede editar la compra: existen devoluciones relacionadas.");
-
-                    if (movimientoOrigen.IdTransaccionInventarioNavigation?.Nombre.Contains("reversion", StringComparison.OrdinalIgnoreCase) == true)
-                        throw new ConflictException("No se puede editar la compra: el movimiento ya está reversado.");
 
                     // Si existe algún movimiento que tenga IdMovimientoOrigen apuntando al movimientoOrigen -> no permitir edición
                     var movimientosRelacionados = await _tiendaDbContext.TbInvMovimientos.Where(m => m.IdMovimientoOrigen == movimientoOrigen.Id).ToListAsync();
@@ -417,7 +404,6 @@ namespace SistemaTienda.BLL.Servicios
 
                     _tiendaDbContext.TbComImpuestoDetalles.RemoveRange(impuestosDetalle);
                     _tiendaDbContext.TbComDetallesCompras.Remove(e);
-                    tbCompra.TbComDetallesCompras.Remove(e);
                 }
 
                 foreach (var detDto in compraEditarDTO.DetalleComprasEditarDto)
@@ -468,7 +454,6 @@ namespace SistemaTienda.BLL.Servicios
                     await ProcesarMovimientoInventario(movimientoOrigen, tbCompra, eliminados);
                 }
 
-                await _tiendaDbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
                 return true;
             }

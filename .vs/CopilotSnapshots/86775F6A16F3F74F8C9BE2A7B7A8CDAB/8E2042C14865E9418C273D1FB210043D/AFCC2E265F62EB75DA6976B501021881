@@ -468,7 +468,6 @@ namespace SistemaTienda.BLL.Servicios
                     await ProcesarMovimientoInventario(movimientoOrigen, tbCompra, eliminados);
                 }
 
-                await _tiendaDbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
                 return true;
             }

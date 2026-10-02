@@ -90,7 +90,6 @@ namespace SistemaTienda.BLL.Servicios
             // Los lotes que queden en lotesExistentes ya no existen en la compra: eliminarlos
             foreach (var loteRemover in lotesExistentes.Values)
             {
-                movimientoOrigen.TbInvLotes.Remove(loteRemover);
                 _tiendaDbContext.TbInvLotes.Remove(loteRemover);
             }
 
@@ -468,7 +467,6 @@ namespace SistemaTienda.BLL.Servicios
                     await ProcesarMovimientoInventario(movimientoOrigen, tbCompra, eliminados);
                 }
 
-                await _tiendaDbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
                 return true;
             }
