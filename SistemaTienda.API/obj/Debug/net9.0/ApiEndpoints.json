@@ -505,7 +505,7 @@
     "ContainingType": "SistemaTienda.API.Controllers.ComprasController",
     "Method": "ReversarCompra",
     "RelativePath": "api/Compras/ReversarCompra",
-    "HttpMethod": "GET",
+    "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [

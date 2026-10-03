@@ -103,7 +103,6 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
-
         [HttpGet]
         [Route("ListarTransacciones")]
         public async Task<IActionResult> ListarTransacciones()
@@ -116,6 +115,19 @@ namespace SistemaTienda.API.Controllers
             
             return Ok(resp);
         }
+
+        /*[HttpGet]
+        [Route("ListarTransaccionesDevolucionCompra")]
+        public async Task<IActionResult> ListarTransaccionesDevolucionCompra()
+        {
+            var resp = new Response<List<TransaccionInventarioDTO>>();
+
+            resp.status = true;
+            resp.Value = await this._transaccionInventarioService.ListarTransaccionesDevolucionCompra();
+            resp.msg = "Transacciones listadas exitosamente";
+
+            return Ok(resp);
+        }*/
 
         [HttpGet]
         [Route("ListarMarcas")]

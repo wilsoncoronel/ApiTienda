@@ -128,6 +128,17 @@ namespace SistemaTienda.BLL.Servicios
             return resultado;
         }
 
+        public async Task<List<ArticuloCompraDTO>> ListarVentaArticulos()
+        {
+            var listaArticulos = await this.tiendaDbContext.TbComArticulos.Where(art => art.EstadoVisual == true)
+                .Include(mar => mar.IdMarcaNavigation)
+                .Include(tip => tip.IdTipoArticuloNavigation)
+                .Include(uni => uni.IdUnidadNavigation)
+                .ToListAsync();
+            var resultado = this._mapper.MapeoArticulosVentas(listaArticulos);
+            return resultado;
+        }
+
         public async Task<List<ArticuloInventarioDTO>> ListarTodosArticulos(bool esVenta)
         {
             // Identificar transacciones que representan reversiones (por nombre)

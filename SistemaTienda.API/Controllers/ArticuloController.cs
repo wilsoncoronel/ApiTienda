@@ -102,7 +102,7 @@ namespace SistemaTienda.API.Controllers
            
             resp.status = true;
             resp.Value = await this._articuloService.ListarArticulos(fechaInicial, fechaFinal);            
-            resp.msg = "Error al cargar la lista de artículos.";
+            resp.msg = "Artículos cargados correctamente!!";
             return Ok(resp);
         }
 

@@ -83,7 +83,7 @@ namespace SistemaTienda.Utility
         List<UnidadMedidaDTO> MapeoListaUnidadTbAListaUnidadDto(List<TbComUnidadesMedida> listaUnidadesTb);
         UnidadMedidaDTO MapeoUnidadTbAUnidadDto(TbComUnidadesMedida unidadTb);
         List<ArticuloCompraDTO> MapeoArticulosCompras(List<TbComArticulo> articulos);
-
+        List<ArticuloCompraDTO> MapeoArticulosVentas(List<TbComArticulo> articulos);
         ArticuloDTO MapeoArticuloTbAArticuloDto(TbComArticulo articuloTb);
     }
     public class Mapeos : IMapeos
@@ -93,7 +93,16 @@ namespace SistemaTienda.Utility
             return articulos.Select(a => new ArticuloCompraDTO
             {
                 Id = a.Id,
-                Nombre = $"{a.Nombre} Id: {a.Id} {a.Descripcion ?? string.Empty} Mar: {a.IdMarcaNavigation.Nombre} Tip: {a.IdTipoArticuloNavigation.Nombre} Uni: {a.IdUnidadNavigation.Nombre.TrimEnd()} {a.UnidadValor}"
+                Nombre = $"{a.Nombre} Id: {a.Id} {a.Descripcion ?? string.Empty} Mar: {a.IdMarcaNavigation.Nombre} Tip: {a.IdTipoArticuloNavigation.Nombre} Uni: {a.IdUnidadNavigation.Nombre.TrimEnd()} {a.UnidadValor} {a.ValorCompra}$"
+            }).ToList();
+        }
+
+        public List<ArticuloCompraDTO> MapeoArticulosVentas(List<TbComArticulo> articulos)
+        {
+            return articulos.Select(a => new ArticuloCompraDTO
+            {
+                Id = a.Id,
+                Nombre = $"{a.Nombre} Id: {a.Id} {a.Descripcion ?? string.Empty} Mar: {a.IdMarcaNavigation.Nombre} Tip: {a.IdTipoArticuloNavigation.Nombre} Uni: {a.IdUnidadNavigation.Nombre.TrimEnd()} {a.UnidadValor} {a.ValorVenta}$"
             }).ToList();
         }
         public TransaccionInventarioDTO MapeoTransaccionInventarioTbADto(TbInvTransacciones transaccionTb)

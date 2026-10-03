@@ -95,11 +95,11 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
-        [HttpGet]
+        [HttpPut]
         [Route("ReversarCompra")]
         public async Task<IActionResult> ReversarCompra(int idCompra)
         {
-            var resp = new Response<bool>();    
+            var resp = new Response<bool>(); 
             resp.status = true;
             resp.Value = await this._compraService.ReversarCompra(idCompra);
             resp.msg = "Reversion de la compra exitosa";
