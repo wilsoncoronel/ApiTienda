@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-
 using SistemaTienda.Model;
 namespace SistemaTienda.DAL.DBContext;
 
@@ -611,7 +610,6 @@ public partial class TiendaDbContext : DbContext
         {
             entity.Property(e => e.Descripcion).HasMaxLength(200);
             entity.Property(e => e.FechaVencimiento).HasColumnType("datetime");
-            entity.Property(e => e.ImpuestoValor).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.ValorCompra).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.ValorVenta).HasColumnType("numeric(18, 4)");
 

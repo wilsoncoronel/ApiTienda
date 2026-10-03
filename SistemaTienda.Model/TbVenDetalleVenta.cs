@@ -21,8 +21,6 @@ public partial class TbVenDetalleVenta
 
     public decimal ValorVenta { get; set; }
 
-    public decimal ImpuestoValor { get; set; }
-
     public virtual TbComArticulo IdArticuloNavigation { get; set; } = null!;
 
     public virtual TbVenta IdVentaNavigation { get; set; } = null!;

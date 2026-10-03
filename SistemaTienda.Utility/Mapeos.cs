@@ -1072,7 +1072,6 @@ namespace SistemaTienda.Utility
                     IdArticulo = detalleVentaCreacionDto.IdArticulo,
                     Cantidad = detalleVentaCreacionDto.Cantidad,
                     Descripcion = detalleVentaCreacionDto.Descripcion,
-                    ImpuestoValor = detalleVentaCreacionDto.ImpuestoValor,
                     ValorCompra = detalleVentaCreacionDto.ValorCompra,
                     IdVenta = detalleVentaCreacionDto.IdVenta,
                 };
@@ -1190,7 +1189,6 @@ namespace SistemaTienda.Utility
                     IdArticulo = detalleVentaCreacionDto.IdArticulo,
                     Cantidad = detalleVentaCreacionDto.Cantidad,
                     Descripcion = detalleVentaCreacionDto.Descripcion,
-                    ImpuestoValor = detalleVentaCreacionDto.ImpuestoValor,
                     ValorCompra = detalleVentaCreacionDto.ValorCompra,
                     ValorVenta = detalleVentaCreacionDto.ValorVenta,
                 };
@@ -1612,19 +1610,6 @@ namespace SistemaTienda.Utility
                             FechaActualizacion = d.IdArticuloNavigation.FechaActualizacion ?? DateTime.Now,
                             FechaCreacion = d.IdArticuloNavigation.FechaCreacion,
                             FechaCaducidad = d.IdArticuloNavigation.FechaCaducidad ?? DateTime.Now,
-                            ArticulosImpuestosDTO = d.IdArticuloNavigation.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoMinDTO
-                            {
-                                Id = ai.Id,
-                                IdImpuesto = ai.IdImpuesto,
-                                Estado = ai.Estado,
-                                ImpuestoDTO = new ImpuestoDTO
-                                {
-                                    Id = ai.IdImpuestoNavigation.Id,
-                                    Nombre = ai.IdImpuestoNavigation.Nombre,
-                                    TipoCalculo = ai.IdImpuestoNavigation.TipoCalculo,
-                                    Valor = ai.IdImpuestoNavigation.Valor
-                                }
-                            }).ToList(),
                             TipoArticuloDTO = new TipoArticuloDTO
                             {
                                 Id = d.IdArticuloNavigation.IdTipoArticuloNavigation.Id,
@@ -1640,7 +1625,6 @@ namespace SistemaTienda.Utility
                         },
                         Cantidad = d.Cantidad,
                         Descripcion = d.Descripcion,
-                        ImpuestoValor = d.ImpuestoValor,
                         ValorCompra = d.ValorCompra,
                         ValorVenta = d.ValorVenta,
                     }).ToList(),

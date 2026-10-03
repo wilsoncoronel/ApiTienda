@@ -52,7 +52,6 @@ namespace SistemaTienda.BLL.Servicios
                         Descripcion = d.Descripcion ?? string.Empty,
                         ValorCompra = d.ValorCompra,
                         ValorVenta = d.ValorVenta,
-                        ImpuestoValor = d.ImpuestoValor,
                     })
                     .ToList();
 
@@ -185,7 +184,6 @@ namespace SistemaTienda.BLL.Servicios
                             existente.IdArticulo = detDto.ArticuloId;
                             existente.Cantidad = detDto.Cantidad;
                             existente.Descripcion = detDto.Descripcion;
-                            existente.ImpuestoValor = detDto.ImpuestoValor;
                             existente.ValorCompra = detDto.ValorCompra;
                             existente.ValorVenta = detDto.ValorVenta;
                         }
@@ -197,7 +195,6 @@ namespace SistemaTienda.BLL.Servicios
                                 IdArticulo = detDto.ArticuloId,
                                 Cantidad = detDto.Cantidad,
                                 Descripcion = detDto.Descripcion,
-                                ImpuestoValor = detDto.ImpuestoValor,
                                 ValorCompra = detDto.ValorCompra,
                                 ValorVenta = detDto.ValorVenta,
                             });
@@ -252,15 +249,14 @@ namespace SistemaTienda.BLL.Servicios
                 .ThenInclude(ciu => ciu.IdCiudadNavigation)
                 .Include(est => est.IdEstadoVentaNavigation)
                 .Include(det => det.TbVenDetalleVenta)
-                .ThenInclude(art => art.IdArticuloNavigation)
-                .ThenInclude(ai => ai.TbComArticulosImpuestos)
-                .ThenInclude(imp => imp.IdImpuestoNavigation)
+                    .ThenInclude(art => art.IdArticuloNavigation)
+                        .ThenInclude(mar => mar.IdMarcaNavigation)
                 .Include(det => det.TbVenDetalleVenta)
-                .ThenInclude(art => art.IdArticuloNavigation)
-                .ThenInclude(mar => mar.IdMarcaNavigation)
+                    .ThenInclude(art => art.IdArticuloNavigation)
+                        .ThenInclude(tp => tp.IdTipoArticuloNavigation)
                 .Include(det => det.TbVenDetalleVenta)
-                .ThenInclude(art => art.IdArticuloNavigation)
-                .ThenInclude(tp => tp.IdTipoArticuloNavigation)
+                    .ThenInclude(art => art.IdArticuloNavigation)
+                        .ThenInclude(tp => tp.IdUnidadNavigation)
                 .FirstOrDefaultAsync(c => c.Id == idVenta);
             if (tbVenta is null)
                 throw new NotFoundException("No se encontró la venta!!");
