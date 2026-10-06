@@ -64,8 +64,21 @@ namespace SistemaTienda.API.Controllers
 
             resp.status = true;
             resp.Value = await this._articuloService.ObtenerArticuloId(idArticulo);
-            resp.msg = "Artículos cargado correctamente.";
+            resp.msg = "Artículos cargados correctamente.";
 
+            return Ok(resp);
+        }
+
+
+        [HttpGet]
+        [Route("ObtenerArticuloInventario")]
+        public async Task<ActionResult<ArticuloInventarioDTO>> ObtenerArticuloInventario(int idArticulo)
+        {
+            var resp = new Response<ArticuloInventarioDTO>();
+
+            resp.status = true;
+            resp.Value = await this._articuloService.ObtenerArticuloInventario(idArticulo);
+            resp.msg = "Artículo cargado correctamente.";
             return Ok(resp);
         }
 
@@ -90,7 +103,19 @@ namespace SistemaTienda.API.Controllers
 
             resp.status = true;
             resp.Value = await this._articuloService.ListarCompraArticulos();
-            resp.msg = "Error al cargar la lista de artículos.";
+            resp.msg = "Lista de artículos cargados correctamente.";
+            return Ok(resp);
+        }
+
+        [HttpGet]
+        [Route("ListaVentaArticulos")]
+        public async Task<ActionResult<List<ArticuloVentaDTO>>> ListaVentaArticulos()
+        {
+            var resp = new Response<List<ArticuloVentaDTO>>();
+
+            resp.status = true;
+            resp.Value = await this._articuloService.ListarVentaArticulos();
+            resp.msg = "Lista de artículos cargados correctamente.";
             return Ok(resp);
         }
 

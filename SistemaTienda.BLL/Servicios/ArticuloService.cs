@@ -65,10 +65,65 @@ namespace SistemaTienda.BLL.Servicios
             return this._mapper.MapeoArticuloTbAArticuloDto(articuloTb);
         }
 
+        public async Task<ArticuloInventarioDTO> ObtenerArticuloInventario(int idArticulo)
+        {
+            var articuloTb = await this.tiendaDbContext.TbComArticulos
+                .Where(a => a.Id == idArticulo && a.Estado == true)
+                .Include(a => a.IdTipoArticuloNavigation)
+                .Include(a => a.IdMarcaNavigation)
+                .Include(p => p.IdPorcentajeGananciaNavigation)
+                .Include(a => a.IdUnidadNavigation)
+                .Include(a => a.TbComArticulosImpuestos)
+                    .ThenInclude(ai => ai.IdImpuestoNavigation)
+                .FirstOrDefaultAsync();
+            if (articuloTb == null)
+                throw new NotFoundException("El artículo no existe o está inactivo!!");
+
+            var idsTransReversion = await this.tiendaDbContext.TbInvTransacciones
+                .Where(t => t.Nombre.ToLower().Contains("reversion compra"))
+                .Select(t => t.Id)
+                .ToListAsync();
+
+            var lote = await this.tiendaDbContext.TbInvLotes
+                .Where(l => l.IdArticulo == idArticulo
+                    && l.Estado == true
+                    && l.StockDisponible > 0
+                    && !idsTransReversion.Contains(l.IdMovimientoNavigation.IdTransaccionInventario))
+                .Include(l => l.IdMovimientoNavigation)
+                .Include(l => l.IdArticuloNavigation)
+                    .ThenInclude(a => a.IdMarcaNavigation)
+                .Include(l => l.IdArticuloNavigation)
+                    .ThenInclude(a => a.IdTipoArticuloNavigation)
+                .Include(l => l.IdArticuloNavigation)
+                    .ThenInclude(a => a.TbComArticulosImpuestos)
+                        .ThenInclude(ai => ai.IdImpuestoNavigation)
+                .Include(l => l.IdArticuloNavigation)
+                    .ThenInclude(a => a.IdUnidadNavigation)
+                .OrderBy(l => l.FechaExpiracion == null)
+                .ThenBy(l => l.FechaExpiracion)
+                .ThenBy(l => l.FechaIngreso == null)
+                .ThenBy(l => l.FechaIngreso)
+                .FirstOrDefaultAsync();
+
+            if (lote == null)
+                throw new NotFoundException("El artículo no tiene inventario disponible!!");
+
+            return new ArticuloInventarioDTO
+            {
+                Articulo = this._mapper.MapeoArticuloTbAArticuloDto(lote.IdArticuloNavigation, false),
+                NumeroLote = lote.NumeroLote ?? string.Empty,
+                Codigo = lote.Codigo ?? string.Empty,
+                FechaIngreso = lote.FechaIngreso,
+                FechaExpiracion = lote.FechaExpiracion,
+                StockDisponible = lote.StockDisponible,
+                StockMinimo = lote.StockMinimo,
+                CostoUnitario = lote.CostoUnitario
+            };
+        }
+
         public async Task<bool> EditarArticulo(ArticuloEdicionDTO articuloEditarDto)
         {
             await using var transaccion = await this.tiendaDbContext.Database.BeginTransactionAsync();
-
             var articuloTb = await this._articuloRepository.ListarId(a => a.Id == articuloEditarDto.Id);
             if (articuloTb == null)
                 throw new NotFoundException("No se pudo editar el articulo , no existen en la bd!!");
@@ -128,14 +183,18 @@ namespace SistemaTienda.BLL.Servicios
             return resultado;
         }
 
-        public async Task<List<ArticuloCompraDTO>> ListarVentaArticulos()
+        public async Task<List<ArticuloVentaDTO>> ListarVentaArticulos()
         {
-            var listaArticulos = await this.tiendaDbContext.TbComArticulos.Where(art => art.EstadoVisual == true)
-                .Include(mar => mar.IdMarcaNavigation)
-                .Include(tip => tip.IdTipoArticuloNavigation)
-                .Include(uni => uni.IdUnidadNavigation)
+            var lotesDisponibles = await this.tiendaDbContext.TbInvLotes
+                .Where(lote => lote.StockDisponible > 0 && lote.IdArticuloNavigation.EstadoVisual == true)
+                .Include(lote => lote.IdArticuloNavigation)
+                    .ThenInclude(articulo => articulo.IdMarcaNavigation)
+                .Include(lote => lote.IdArticuloNavigation)
+                    .ThenInclude(articulo => articulo.IdTipoArticuloNavigation)
+                .Include(lote => lote.IdArticuloNavigation)
+                    .ThenInclude(articulo => articulo.IdUnidadNavigation)
                 .ToListAsync();
-            var resultado = this._mapper.MapeoArticulosVentas(listaArticulos);
+            var resultado = this._mapper.MapeoArticulosVentas(lotesDisponibles);
             return resultado;
         }
 

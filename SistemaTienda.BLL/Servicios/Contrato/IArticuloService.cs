@@ -12,6 +12,7 @@ namespace SistemaTienda.BLL.Servicios.Contrato
         Task<int> CrearArticulo(ArticuloCreacionDTO articuloCreacionDto);
         Task<bool> CrearArticulosLista(List<ArticuloCreacionDTO> articulosCreacionDto);
         Task<List<ArticuloCompraDTO>> ListarCompraArticulos();
+        Task<List<ArticuloVentaDTO>> ListarVentaArticulos();
         Task<List<ArticuloDTO>> ListarArticulos(DateTime fechaInicio, DateTime fechaFinal);
         Task<bool> EditarArticulo(ArticuloEdicionDTO articuloEditarDto);
         Task<bool> DesactivarArticulo(int idArticulo);
@@ -21,5 +22,6 @@ namespace SistemaTienda.BLL.Servicios.Contrato
         Task<List<MarcaDTO>> CargarListaMarca();
         Task<List<ArticuloInventarioDTO>> ListarTodosArticulos(bool esVenta);
         Task<ArticuloDTO> ObtenerArticuloId(int idArticulo);
+        Task<ArticuloInventarioDTO> ObtenerArticuloInventario(int idArticulo);
     }
 }

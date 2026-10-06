@@ -83,7 +83,7 @@ namespace SistemaTienda.Utility
         List<UnidadMedidaDTO> MapeoListaUnidadTbAListaUnidadDto(List<TbComUnidadesMedida> listaUnidadesTb);
         UnidadMedidaDTO MapeoUnidadTbAUnidadDto(TbComUnidadesMedida unidadTb);
         List<ArticuloCompraDTO> MapeoArticulosCompras(List<TbComArticulo> articulos);
-        List<ArticuloCompraDTO> MapeoArticulosVentas(List<TbComArticulo> articulos);
+        List<ArticuloVentaDTO> MapeoArticulosVentas(List<TbInvLote> lotes);
         ArticuloDTO MapeoArticuloTbAArticuloDto(TbComArticulo articuloTb);
     }
     public class Mapeos : IMapeos
@@ -97,12 +97,14 @@ namespace SistemaTienda.Utility
             }).ToList();
         }
 
-        public List<ArticuloCompraDTO> MapeoArticulosVentas(List<TbComArticulo> articulos)
+        public List<ArticuloVentaDTO> MapeoArticulosVentas(List<TbInvLote> lotes)
         {
-            return articulos.Select(a => new ArticuloCompraDTO
+            return lotes.Select(lote => new ArticuloVentaDTO
             {
-                Id = a.Id,
-                Nombre = $"{a.Nombre} Id: {a.Id} {a.Descripcion ?? string.Empty} Mar: {a.IdMarcaNavigation.Nombre} Tip: {a.IdTipoArticuloNavigation.Nombre} Uni: {a.IdUnidadNavigation.Nombre.TrimEnd()} {a.UnidadValor} {a.ValorVenta}$"
+                Id = lote.IdArticuloNavigation.Id,
+                Nombre = $"{lote.IdArticuloNavigation.Nombre} Id: {lote.IdArticuloNavigation.Id} {lote.IdArticuloNavigation.Descripcion ?? string.Empty} Mar: {lote.IdArticuloNavigation.IdMarcaNavigation.Nombre} Tip: {lote.IdArticuloNavigation.IdTipoArticuloNavigation.Nombre} Uni: {lote.IdArticuloNavigation.IdUnidadNavigation.Nombre.TrimEnd()} {lote.IdArticuloNavigation.UnidadValor} {lote.IdArticuloNavigation.ValorVenta}$",
+                Lote = lote.NumeroLote.Trim(),
+                Codigo = lote.Codigo.Trim() ?? string.Empty
             }).ToList();
         }
         public TransaccionInventarioDTO MapeoTransaccionInventarioTbADto(TbInvTransacciones transaccionTb)

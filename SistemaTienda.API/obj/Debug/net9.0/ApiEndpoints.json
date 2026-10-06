@@ -288,6 +288,26 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
+    "Method": "ListaVentaArticulos",
+    "RelativePath": "api/Articulo/ListaVentaArticulos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[SistemaTienda.DTO.ArticuloVentaDTO, SistemaTienda.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
     "Method": "ObtenerArticuloId",
     "RelativePath": "api/Articulo/ObtenerArticulo",
     "HttpMethod": "GET",
@@ -303,6 +323,32 @@
     "ReturnTypes": [
       {
         "Type": "SistemaTienda.DTO.ArticuloDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
+    "Method": "ObtenerArticuloInventario",
+    "RelativePath": "api/Articulo/ObtenerArticuloInventario",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idArticulo",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "SistemaTienda.DTO.ArticuloInventarioDTO",
         "MediaTypes": [
           "text/plain",
           "application/json",
