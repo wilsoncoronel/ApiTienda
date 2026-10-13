@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SistemaTienda.DTO
+{
+    public class DevolucionCompraDTO
+    {
+        public int Id { get; set; }
+        public int IdCompra { get; set; }
+        public int IdTipoDevolucion { get; set; }
+        public TipoDevolucionDTO TipoDevolucionDTO { get; set; } = null!;
+        public DateTime FechaCreacion { get; set; }
+        public int Estado { get; set; }
+        public string Motivo { get; set; } = string.Empty;
+        public CompraDTO CompraDTO { get; set; } = null!;
+    }
+}

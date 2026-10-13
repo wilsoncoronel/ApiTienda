@@ -1,0 +1,68 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using SistemaTienda.API.Utilidad;
+using SistemaTienda.BLL.Servicios.Contrato;
+using SistemaTienda.DTO;
+using System.Threading.Tasks;
+
+namespace SistemaTienda.API.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class DevolucionCompraController : ControllerBase
+    {
+        private readonly IDevolucionCompraService _devolucionService;
+
+        public DevolucionCompraController(IDevolucionCompraService devolucionService)
+        {
+            _devolucionService = devolucionService;
+        }
+
+        [HttpPost("CrearDevolucionCompra")]
+        public async Task<IActionResult> CrearDevolucionCompra([FromBody] DevolucionCompraCreacionDTO dto)
+        {
+            var resp = new Response<int>();
+            resp.status = true;
+            resp.Value = await this._devolucionService.CrearDevolucionCompra(dto);
+            resp.msg = "Devolucion creada con éxito!!";
+            return Ok(resp);
+        }
+
+        [HttpPost("ReversarDevolucion/{id:int}")]
+        public async Task<IActionResult> ReversarDevolucion(int id)
+        {
+            await _devolucionService.ReversarDevolucionCompra(id);
+            return Ok(new Response<object>
+            {
+                status = true,
+                Value = null,
+                msg = "Devolución reversada correctamente"
+            });
+        }
+
+        [HttpGet("ListarTiposDevolucion")]
+        public async Task<IActionResult> ListarTiposDevolucion()
+        {
+            var tipos = await _devolucionService.ListaTiposDevolucion();
+            return Ok(new Response<List<TipoDevolucionDTO>>
+            {
+                status = true,
+                Value = tipos,
+                msg = "Tipos de devolución listados correctamente"
+            });
+        }
+
+        [HttpGet("ListarDevolucionesFechas")]
+        public async Task<IActionResult> ListarDevolucionesFechas(
+            [FromQuery] DateOnly fechaInicio,
+            [FromQuery] DateOnly fechaFin)
+        {
+            var devoluciones = await _devolucionService.ListarDevolucionesFechas(fechaInicio, fechaFin);
+            return Ok(new Response<List<DevolucionCompraDTO>>
+            {
+                status = true,
+                Value = devoluciones,
+                msg = "Devoluciones listadas correctamente"
+            });
+        }
+    }
+}

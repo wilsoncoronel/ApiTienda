@@ -1,0 +1,210 @@
+﻿## PROCESSES
+Currently debugging:
+- SistemaTienda.API.exe (PID: 36208)
+
+## EXCEPTION
+Exception Type: Microsoft.EntityFrameworkCore.DbUpdateException
+Exception Message: An error occurred while saving the entity changes. See the inner exception for details.
+Inner Exceptions:
+1- Microsoft.Data.SqlClient.SqlException:Los datos de cadena o binarios se truncarían.
+This exception was originally thrown at this call stack:
+[1] Microsoft.Data.SqlClient.SqlConnection.OnError(Microsoft.Data.SqlClient.SqlException, bool, System.Action<System.Action>)
+[2] Microsoft.Data.SqlClient.SqlInternalConnection.OnError(Microsoft.Data.SqlClient.SqlException, bool, System.Action<System.Action>)
+[3] Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(Microsoft.Data.SqlClient.TdsParserStateObject, bool, bool)
+[4] Microsoft.Data.SqlClient.TdsParser.TryRun(Microsoft.Data.SqlClient.RunBehavior, Microsoft.Data.SqlClient.SqlCommand, Microsoft.Data.SqlClient.SqlDataReader, Microsoft.Data.SqlClient.BulkCopySimpleResultSet, Microsoft.Data.SqlClient.TdsParserStateObject, out bool)
+[5] Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(out bool)
+[6] Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(bool, out bool)
+[7] Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(System.Threading.Tasks.Task, object)
+[8] Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(int, Microsoft.EntityFrameworkCore.Storage.RelationalDataReader, System.Threading.CancellationToken)
+The callstack context, if included, corresponds to the thread where this exception occurred. There is no need to identify this thread by other means.
+The top most frame in the callstack context should correspond to the place the exception message was thrown from. Code may or may not have been provided for it but can be requested.
+
+## CALLSTACK
+Thread ID: 36904
+[1] [Código externo]
+[15] [Excepción] SistemaTienda.DAL.dll!SistemaTienda.DAL.Repositorios.GenericRepository<TModelo>.Crear
+This is the current user focused stack frame. The provided locals context corresponds to this stack frame, but you may evaluate expressions and retrieve code for any frame.
+Code for the stack frame:
+```csharp SistemaTienda.DAL\Repositorios\GenericRepository.cs
+33:         public async Task<TModelo> Crear(TModelo modelo)
+34:         {
+35:             try
+36:             {
+37:                 _context.Set<TModelo>().Add(modelo);
+38:                 await _context.SaveChangesAsync();
+39:                 return modelo;
+40:             }
+41:             catch
+42:             {
+43:                 throw;
+44:             }
+45:         }
+```
+Current statement: line 38
+[16] [Excepción] SistemaTienda.BLL.dll!SistemaTienda.BLL.Servicios.CompraService.AlimentarInventario
+Code for the stack frame:
+```csharp SistemaTienda.BLL\Servicios\CompraService.cs
+301:         private async Task<bool> AlimentarInventario(TbCompra tbCompra) {
+302:             var tbinvMovimiento = new TbInvMovimiento
+303:             {
+304:                 Referencia = tbCompra.Documento + "ID" + tbCompra.Id,
+305:                 Fecha = DateTime.Now,
+306:                 IdTransaccionInventario = tbCompra.IdTransaccion,
+307:                 TbInvLotes = tbCompra.TbComDetallesCompras.Select(det => new TbInvLote
+308:                 {
+309:                     NumeroLote = det.NumeroLote,
+310:                     CostoUnitario = det.ValorCompra,
+311:                     IdArticulo = det.IdArticulo,
+312:                     Codigo = det.Codigo,
+313:                     FechaIngreso = DateTime.Now,
+314:                     FechaExpiracion = det.FechaExpiracion,
+315:                     StockDisponible = det.Cantidad,
+316:                     StockMinimo = 6,
+317:                     Estado = true
+318:                 }).ToList()
+319:             };
+320:             await this._movInventarioRepository.Crear(tbinvMovimiento);
+321:             return true;
+322:         }
+```
+Current statement: line 320
+[17] [Excepción] SistemaTienda.BLL.dll!SistemaTienda.BLL.Servicios.CompraService.RegistrarCompra
+Code for the stack frame:
+```csharp SistemaTienda.BLL\Servicios\CompraService.cs
+245:         public async Task<int> RegistrarCompra(CompraCreacionDTO compraDto)
+246:         {
+247:             using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync();
+248:             try
+249:             {
+250:                 if (compraDto.IdCredito is > 0)
+251:                     await _creditoProveedorService.VerCredito(compraDto.IdCredito.Value);
+252: 
+253:                 var tbCompra = this._mapper.MapeoCompraCreacionDtoACompraTb(compraDto);
+254:                 await this._compraRepository.Crear(tbCompra);
+255:                 if (tbCompra.Id == 0)
+256:                     throw new BadRequestException("No se pudo registrar la compra");
+257:                 tbCompra = await this._tiendaDbContext.TbCompras.Where(c => c.Id == tbCompra.Id)
+258:                     .Include(usu => usu.IdUsuarioCreadorNavigation)
+259:                         .ThenInclude(per => per.IdPersonaNavigation)
+260:                     .Include(pro => pro.IdProveedorNavigation)
+261:                         .ThenInclude(per => per.IdPersonaNavigation)
+262:                     .Include(est => est.IdEstadoCompraNavigation)
+263:                     .Include(det => det.TbComDetallesCompras)
+264:                         .ThenInclude(art => art.IdArticuloNavigation)
+265:                             .ThenInclude(uni => uni.IdUnidadNavigation)
+266:                     .Include(det => det.TbComDetallesCompras)
+267:                         .ThenInclude(art => art.IdArticuloNavigation)
+268:                             .ThenInclude(uni => uni.IdMarcaNavigation)
+269:                     .Include(det => det.TbComDetallesCompras)
+270:                         .ThenInclude(art => art.IdArticuloNavigation)
+271:                             .ThenInclude(uni => uni.IdTipoArticuloNavigation)
+272:                     .Include(det => det.TbComDetallesCompras)
+273:                         .ThenInclude(imp => imp.TbComImpuestoDetalles).FirstOrDefaultAsync();
+274:                     
+275:                 var respInv = await this.AlimentarInventario(tbCompra);
+276:                 if (respInv == false)
+277:                     throw new BadRequestException("No se pudo actualizar el inventario");
+278: 
+279:                 if (compraDto.IdCredito is > 0)
+280:                 {
+281:                     await _creditoProveedorService.AplicarCreditoCompra(new AplicarCreditoCompraDTO
+282:                     {
+283:                         IdCreditoProveedor = compraDto.IdCredito.Value,
+284:                         IdCompra = tbCompra.Id
+285:                     });
+286:                 }
+287: 
+288:                 await transaction.CommitAsync();
+289:                 return tbCompra.Id;
+290:             }
+291:             catch
+292:             {
+293:                 await transaction.RollbackAsync();
+294:                 throw;
+295:             }
+296:             
+297:         }
+```
+Current statement: line 275
+[18] [Excepción] SistemaTienda.BLL.dll!SistemaTienda.BLL.Servicios.CompraService.RegistrarCompra
+Code for the stack frame:
+```csharp SistemaTienda.BLL\Servicios\CompraService.cs
+245:         public async Task<int> RegistrarCompra(CompraCreacionDTO compraDto)
+246:         {
+247:             using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync();
+248:             try
+249:             {
+250:                 if (compraDto.IdCredito is > 0)
+251:                     await _creditoProveedorService.VerCredito(compraDto.IdCredito.Value);
+252: 
+253:                 var tbCompra = this._mapper.MapeoCompraCreacionDtoACompraTb(compraDto);
+254:                 await this._compraRepository.Crear(tbCompra);
+255:                 if (tbCompra.Id == 0)
+256:                     throw new BadRequestException("No se pudo registrar la compra");
+257:                 tbCompra = await this._tiendaDbContext.TbCompras.Where(c => c.Id == tbCompra.Id)
+258:                     .Include(usu => usu.IdUsuarioCreadorNavigation)
+259:                         .ThenInclude(per => per.IdPersonaNavigation)
+260:                     .Include(pro => pro.IdProveedorNavigation)
+261:                         .ThenInclude(per => per.IdPersonaNavigation)
+262:                     .Include(est => est.IdEstadoCompraNavigation)
+263:                     .Include(det => det.TbComDetallesCompras)
+264:                         .ThenInclude(art => art.IdArticuloNavigation)
+265:                             .ThenInclude(uni => uni.IdUnidadNavigation)
+266:                     .Include(det => det.TbComDetallesCompras)
+267:                         .ThenInclude(art => art.IdArticuloNavigation)
+268:                             .ThenInclude(uni => uni.IdMarcaNavigation)
+269:                     .Include(det => det.TbComDetallesCompras)
+270:                         .ThenInclude(art => art.IdArticuloNavigation)
+271:                             .ThenInclude(uni => uni.IdTipoArticuloNavigation)
+272:                     .Include(det => det.TbComDetallesCompras)
+273:                         .ThenInclude(imp => imp.TbComImpuestoDetalles).FirstOrDefaultAsync();
+274:                     
+275:                 var respInv = await this.AlimentarInventario(tbCompra);
+276:                 if (respInv == false)
+277:                     throw new BadRequestException("No se pudo actualizar el inventario");
+278: 
+279:                 if (compraDto.IdCredito is > 0)
+280:                 {
+281:                     await _creditoProveedorService.AplicarCreditoCompra(new AplicarCreditoCompraDTO
+282:                     {
+283:                         IdCreditoProveedor = compraDto.IdCredito.Value,
+284:                         IdCompra = tbCompra.Id
+285:                     });
+286:                 }
+287: 
+288:                 await transaction.CommitAsync();
+289:                 return tbCompra.Id;
+290:             }
+291:             catch
+292:             {
+293:                 await transaction.RollbackAsync();
+294:                 throw;
+295:             }
+296:             
+297:         }
+```
+Current statement: line 294
+[19] [Excepción] SistemaTienda.API.dll!SistemaTienda.API.Controllers.ComprasController.RegistrarCompra
+Code for the stack frame:
+```csharp SistemaTienda.API\Controllers\ComprasController.cs
+29:         [HttpPost]
+30:         [Route("RegistrarCompra")]
+31:         public async Task<IActionResult> RegistrarCompra(CompraCreacionDTO compraCreacionDto)
+32:         {
+33:            
+34:             var resp = new Response<int>();
+35:             resp.status = true;
+36:             resp.Value = await this._compraService.RegistrarCompra(compraCreacionDto); // Simulación de ID de compra registrada
+37:             resp.msg = "Compra registrada correctamente";
+38:             return Ok(resp);
+39:         }
+```
+Current statement: line 36
+[20] [Código externo]
+[25] [En espera de una operación asincrónica, haga doble clic o presione ENTRAR para ver las pilas de llamadas asincrónicas]
+[26] [Código externo]
+[27] [Pila de llamadas asincrónicas]
+........3 more stack frames omitted.
+
+## LOCALS
+

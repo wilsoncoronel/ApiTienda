@@ -39,7 +39,7 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("ReversarVenta")]
         public async Task<IActionResult> ReversarVenta(int id, string documento)
         {
@@ -49,6 +49,7 @@ namespace SistemaTienda.API.Controllers
             resp.msg = "Venta reversada!!";
             return Ok(resp);
         }
+
         [HttpGet]
         [Route("ListarEstadosVenta")]
         public async Task<IActionResult> ListarEstadosVenta()

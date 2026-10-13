@@ -21,16 +21,96 @@ namespace SistemaTienda.BLL.Servicios
         public readonly IGenericRepository<TbInvMovimiento> _movInventarioRepository;
         public readonly IGenericRepository<TbComDetallesCompra> _detalleRepository;
         private readonly IMapeos _mapper;
-        public CompraService(TiendaDbContext tiendaDbContext, IGenericRepository<TbCompra> compraRepository, IGenericRepository<TbComDetallesCompra> detalleRepository, IGenericRepository<TbInvMovimiento> movInventarioRepository, IMapeos mapper)
+        private readonly ICreditoProveedorService _creditoProveedorService;
+        public CompraService(TiendaDbContext tiendaDbContext, IGenericRepository<TbCompra> compraRepository, IGenericRepository<TbComDetallesCompra> detalleRepository, IGenericRepository<TbInvMovimiento> movInventarioRepository, IMapeos mapper, ICreditoProveedorService creditoProveedorService)
         {
             _tiendaDbContext = tiendaDbContext;
             _compraRepository = compraRepository;
             _detalleRepository = detalleRepository;
             _movInventarioRepository = movInventarioRepository;
             _mapper = mapper;
+            _creditoProveedorService = creditoProveedorService;
         }
 
+        public async Task<List<CompraMinDTO>> BuscarCompraArticulo(string? codigo = null, string? lote = null, int? idArticulo = null)
+        {
+            codigo = string.IsNullOrWhiteSpace(codigo) ? null : codigo.Trim();
+            lote = string.IsNullOrWhiteSpace(lote) ? null : lote.Trim();
+            idArticulo = idArticulo is > 0 ? idArticulo : null;
 
+            if (codigo == null && lote == null && idArticulo == null)
+                return new List<CompraMinDTO>();
+
+            var detallesQuery = _tiendaDbContext.TbComDetallesCompras
+                .AsNoTracking()
+                .AsQueryable();
+
+            if (idArticulo.HasValue)
+                detallesQuery = detallesQuery.Where(det => det.IdArticulo == idArticulo.Value);
+
+            if (lote != null)
+                detallesQuery = detallesQuery.Where(det => det.NumeroLote == lote);
+
+            if (codigo != null)
+                detallesQuery = detallesQuery.Where(det => det.Codigo == codigo);
+
+            var idsCompra = await detallesQuery
+                .Select(det => det.IdCompra)
+                .Distinct()
+                .ToListAsync();
+
+            if (idsCompra.Count == 0)
+                return new List<CompraMinDTO>();
+
+            var referenciasCompra = await _tiendaDbContext.TbCompras
+                .AsNoTracking()
+                .Where(compra => idsCompra.Contains(compra.Id))
+                .Select(compra => new { compra.Id, Referencia = compra.Documento + "ID" + compra.Id })
+                .ToListAsync();
+
+            var referencias = referenciasCompra
+                .Select(compra => compra.Referencia)
+                .ToList();
+
+            var movimientos = await _tiendaDbContext.TbInvMovimientos
+                .AsNoTracking()
+                .Where(movimiento => referencias.Contains(movimiento.Referencia!))
+                .Include(movimiento => movimiento.IdTransaccionInventarioNavigation)
+                .Include(movimiento => movimiento.TbInvLotes)
+                .ToListAsync();
+
+            var idsCompraConInventarioDisponible = movimientos
+                .Where(movimiento => !string.Equals(
+                    movimiento.IdTransaccionInventarioNavigation.Nombre,
+                    "reversion compra",
+                    StringComparison.OrdinalIgnoreCase))
+                .Where(movimiento => movimiento.TbInvLotes.Any(loteInventario =>
+                    loteInventario.Estado &&
+                    loteInventario.StockDisponible > 0 &&
+                    (!idArticulo.HasValue || loteInventario.IdArticulo == idArticulo.Value) &&
+                    (lote == null || loteInventario.NumeroLote == lote) &&
+                    (codigo == null || loteInventario.Codigo == codigo)))
+                .SelectMany(movimiento => referenciasCompra
+                    .Where(compra => compra.Referencia == movimiento.Referencia)
+                    .Select(compra => compra.Id))
+                .Distinct()
+                .ToList();
+
+            if (idsCompraConInventarioDisponible.Count == 0)
+                return new List<CompraMinDTO>();
+
+            var compras = await _tiendaDbContext.TbCompras
+                .AsNoTracking()
+                .Where(compra => idsCompraConInventarioDisponible.Contains(compra.Id))
+                .Include(compra => compra.IdUsuarioCreadorNavigation)
+                    .ThenInclude(usuario => usuario.IdPersonaNavigation)
+                .Include(compra => compra.IdEstadoCompraNavigation)
+                .Include(compra => compra.IdProveedorNavigation)
+                    .ThenInclude(proveedor => proveedor.IdPersonaNavigation)
+                .ToListAsync();
+
+            return _mapper.MapeoListaCompraTbAListaCompraDto(compras);
+        }
 
         private async Task ProcesarMovimientoInventario(TbInvMovimiento movimientoOrigen, TbCompra tbCompra, List<TbComDetallesCompra> detallesEliminados)
         {
@@ -167,6 +247,9 @@ namespace SistemaTienda.BLL.Servicios
             using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync();
             try
             {
+                if (compraDto.IdCredito is > 0)
+                    await _creditoProveedorService.VerCredito(compraDto.IdCredito.Value);
+
                 var tbCompra = this._mapper.MapeoCompraCreacionDtoACompraTb(compraDto);
                 await this._compraRepository.Crear(tbCompra);
                 if (tbCompra.Id == 0)
@@ -192,6 +275,16 @@ namespace SistemaTienda.BLL.Servicios
                 var respInv = await this.AlimentarInventario(tbCompra);
                 if (respInv == false)
                     throw new BadRequestException("No se pudo actualizar el inventario");
+
+                if (compraDto.IdCredito is > 0)
+                {
+                    await _creditoProveedorService.AplicarCreditoCompra(new AplicarCreditoCompraDTO
+                    {
+                        IdCreditoProveedor = compraDto.IdCredito.Value,
+                        IdCompra = tbCompra.Id
+                    });
+                }
+
                 await transaction.CommitAsync();
                 return tbCompra.Id;
             }
@@ -287,6 +380,8 @@ namespace SistemaTienda.BLL.Servicios
                 {
                     // Procesar cambios de inventario en método separado
                     var movimientoReversion = await ProcesarReversionInventarioAsync(movimientoOrigen, tbCompra.Documento, transReversar, transReversion);
+
+                    await _creditoProveedorService.ReversarCreditosCompra(tbCompra.Id);
 
                     // Actualizar estado de la compra a 'Reversada' (acción relacionada con la compra)
                     tbCompra.IdEstadoCompra = estadoReversada.Id;
@@ -505,7 +600,7 @@ namespace SistemaTienda.BLL.Servicios
                 .Where(m => m.Referencia == referencia)
                 .Include(m => m.TbInvLotes)
                     .ThenInclude(l => l.IdArticuloNavigation)
-                .ToListAsync();
+                    .ToListAsync();
 
             // Obtener todos los lotes con stock disponible mayor a cero
             var lotes = movimientos.SelectMany(m => m.TbInvLotes)
@@ -513,7 +608,8 @@ namespace SistemaTienda.BLL.Servicios
                 .ToList();
 
             // Obtener los detalles de compra originales para usar el valor de compra registrado
-            var detallesCompra = await _tiendaDbContext.TbComDetallesCompras.Where(d => d.IdCompra == idCompra).ToListAsync();
+            var detallesCompra = await _tiendaDbContext.TbComDetallesCompras.Where(d => d.IdCompra == idCompra).
+                Include(imp => imp.TbComImpuestoDetalles).ToListAsync();
 
             // Mapear lotes a DetalleCompraDTO usando el mapeador y los detalles de compra para tomar el precio
             var listaDto = this._mapper.MapeoListaLotesTbAListaDetallesCompraDto(lotes, idCompra, detallesCompra);

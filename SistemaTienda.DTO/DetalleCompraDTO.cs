@@ -19,7 +19,6 @@ namespace SistemaTienda.DTO
         public decimal ValorCompra { get; set; }
         public decimal ValorVenta { get; set; }
         public decimal ValorTotal { get; set; }
-        public decimal ImpuestoValor { get; set; }
         public ArticuloDTO ArticuloDTO { get; set; }
         public DateTime? FechaCaducidad { get; set; }
         public List<DetalleImpuestoDTO> Impuestos { get; set; }

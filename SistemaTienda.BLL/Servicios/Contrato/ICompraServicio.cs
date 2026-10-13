@@ -11,6 +11,7 @@ namespace SistemaTienda.BLL.Servicios.Contrato
 {
     public interface ICompraServicio
     {
+        Task<List<CompraMinDTO>> BuscarCompraArticulo(string? codigo = null, string? lote = null, int? idArticulo = null);
         Task<List<EstadoCompraDTO>> ListarEstadosCompras();
         Task<int> RegistrarCompra(CompraCreacionDTO compraDto);
         Task<bool> EditarCompra(CompraEditarDTO compraDto);

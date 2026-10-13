@@ -21,6 +21,10 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbComCliente> TbComClientes { get; set; }
 
+    public virtual DbSet<TbComCreditoProveedor> TbComCreditoProveedors { get; set; }
+
+    public virtual DbSet<TbComCreditoProveedorMovimiento> TbComCreditoProveedorMovimientos { get; set; }
+
     public virtual DbSet<TbComDetalleDevolucionCompra> TbComDetalleDevolucionCompras { get; set; }
 
     public virtual DbSet<TbComDetallesCompra> TbComDetallesCompras { get; set; }
@@ -40,6 +44,10 @@ public partial class TiendaDbContext : DbContext
     public virtual DbSet<TbComPorcentajeGanancia> TbComPorcentajeGanancia { get; set; }
 
     public virtual DbSet<TbComProveedores> TbComProveedores { get; set; }
+
+    public virtual DbSet<TbComTipoDevolucionCompra> TbComTipoDevolucionCompras { get; set; }
+
+    public virtual DbSet<TbComTipoMovimientoCredito> TbComTipoMovimientoCreditos { get; set; }
 
     public virtual DbSet<TbComTiposArticulo> TbComTiposArticulos { get; set; }
 
@@ -158,6 +166,44 @@ public partial class TiendaDbContext : DbContext
                 .HasConstraintName("FK_TbComClientes_TbGrlPersonas");
         });
 
+        modelBuilder.Entity<TbComCreditoProveedor>(entity =>
+        {
+            entity.ToTable("TbComCreditoProveedor");
+
+            entity.HasIndex(e => e.IdDevolucionCompra, "UX_TbComCreditoProveedor_IdDevolucionCompra").IsUnique();
+
+            entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+            entity.Property(e => e.ValorDisponible).HasColumnType("numeric(18, 4)");
+            entity.Property(e => e.ValorOriginal).HasColumnType("numeric(18, 4)");
+
+            entity.HasOne(d => d.IdDevolucionCompraNavigation).WithOne(p => p.TbComCreditoProveedor)
+                .HasForeignKey<TbComCreditoProveedor>(d => d.IdDevolucionCompra)
+                .HasConstraintName("FK_TbComCreditoProveedor_TbComDevolucionCompra");
+        });
+
+        modelBuilder.Entity<TbComCreditoProveedorMovimiento>(entity =>
+        {
+            entity.ToTable("TbComCreditoProveedorMovimiento");
+
+            entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+            entity.Property(e => e.Observacion).HasMaxLength(200);
+            entity.Property(e => e.Valor).HasColumnType("numeric(18, 4)");
+
+            entity.HasOne(d => d.IdCompraNavigation).WithMany(p => p.TbComCreditoProveedorMovimientos)
+                .HasForeignKey(d => d.IdCompra)
+                .HasConstraintName("FK_TbComCreditoProveedorMovimiento_TbCompras");
+
+            entity.HasOne(d => d.IdCreditoProveedorNavigation).WithMany(p => p.TbComCreditoProveedorMovimientos)
+                .HasForeignKey(d => d.IdCreditoProveedor)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbComCreditoProveedorMovimiento_TbComCreditoProveedor");
+
+            entity.HasOne(d => d.IdTipoMovimientoNavigation).WithMany(p => p.TbComCreditoProveedorMovimientos)
+                .HasForeignKey(d => d.IdTipoMovimiento)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbComCreditoProveedorMovimiento_TbComTipoMovimientoCredito");
+        });
+
         modelBuilder.Entity<TbComDetalleDevolucionCompra>(entity =>
         {
             entity.ToTable("TbComDetalleDevolucionCompra");
@@ -211,6 +257,11 @@ public partial class TiendaDbContext : DbContext
                 .HasForeignKey(d => d.IdCompra)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbComDevolucionCompra_TbCompras");
+
+            entity.HasOne(d => d.IdTipoDevolucionNavigation).WithMany(p => p.TbComDevolucionCompras)
+                .HasForeignKey(d => d.IdTipoDevolucion)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbComDevolucionCompra_TbComTipoDevolucionCompra");
         });
 
         modelBuilder.Entity<TbComEstadosCompra>(entity =>
@@ -274,6 +325,20 @@ public partial class TiendaDbContext : DbContext
                 .HasForeignKey(d => d.IdPersona)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbComProveedores_TbGrlPersonas");
+        });
+
+        modelBuilder.Entity<TbComTipoDevolucionCompra>(entity =>
+        {
+            entity.ToTable("TbComTipoDevolucionCompra");
+
+            entity.Property(e => e.Nombre).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<TbComTipoMovimientoCredito>(entity =>
+        {
+            entity.ToTable("TbComTipoMovimientoCredito");
+
+            entity.Property(e => e.Nombre).HasMaxLength(100);
         });
 
         modelBuilder.Entity<TbComTiposArticulo>(entity =>

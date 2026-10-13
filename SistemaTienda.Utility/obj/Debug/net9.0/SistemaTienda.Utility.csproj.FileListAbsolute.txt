@@ -52,3 +52,9 @@ C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Utility\obj\Debug\net9.
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Utility\obj\Debug\net9.0\refint\SistemaTienda.Utility.dll
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Utility\obj\Debug\net9.0\SistemaTienda.Utility.pdb
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Utility\obj\Debug\net9.0\ref\SistemaTienda.Utility.dll
+C:\Temp\ApiTiendaBuild\Debug\net9.0\SistemaTienda.Utility.deps.json
+C:\Temp\ApiTiendaBuild\Debug\net9.0\SistemaTienda.Utility.dll
+C:\Temp\ApiTiendaBuild\Debug\net9.0\SistemaTienda.Utility.pdb
+C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.Utility.deps.json
+C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.Utility.dll
+C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.Utility.pdb

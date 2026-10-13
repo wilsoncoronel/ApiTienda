@@ -72,3 +72,9 @@ C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.IOC\obj\Debug\net9.0\Si
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.IOC\obj\Debug\net9.0\ref\SistemaTienda.IOC.dll
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.IOC\bin\Debug\net9.0\SistemaTienda.Exceptions.dll
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.IOC\bin\Debug\net9.0\SistemaTienda.Exceptions.pdb
+C:\Temp\ApiTiendaBuild\Debug\net9.0\SistemaTienda.IOC.deps.json
+C:\Temp\ApiTiendaBuild\Debug\net9.0\SistemaTienda.IOC.dll
+C:\Temp\ApiTiendaBuild\Debug\net9.0\SistemaTienda.IOC.pdb
+C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.IOC.deps.json
+C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.IOC.dll
+C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.IOC.pdb

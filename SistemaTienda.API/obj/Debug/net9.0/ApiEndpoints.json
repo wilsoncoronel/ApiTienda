@@ -438,6 +438,32 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ComprasController",
+    "Method": "BuscarCompraArticulo",
+    "RelativePath": "api/Compras/BuscarCompraArticulo",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "codigo",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "lote",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "idArticulo",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ComprasController",
     "Method": "EditarCompra",
     "RelativePath": "api/Compras/EditarCompra",
     "HttpMethod": "PUT",
@@ -794,6 +820,54 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SistemaTienda.API.Controllers.CreditosProveedorController",
+    "Method": "AplicarCreditoCompra",
+    "RelativePath": "api/CreditosProveedor/AplicarCreditoCompra",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "SistemaTienda.DTO.AplicarCreditoCompraDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.CreditosProveedorController",
+    "Method": "ListarCreditosProveedor",
+    "RelativePath": "api/CreditosProveedor/ListarCreditosProveedor/{idProveedor}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idProveedor",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.CreditosProveedorController",
+    "Method": "VerCredito",
+    "RelativePath": "api/CreditosProveedor/VerCredito/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaTienda.API.Controllers.DevolucionCompraController",
     "Method": "CrearDevolucionCompra",
     "RelativePath": "api/DevolucionCompra/CrearDevolucionCompra",
@@ -805,6 +879,85 @@
         "Name": "dto",
         "Type": "SistemaTienda.DTO.DevolucionCompraCreacionDTO",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.DevolucionCompraController",
+    "Method": "ListarDetallesDevolucion",
+    "RelativePath": "api/DevolucionCompra/ListarDetallesDevolucion",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idDevolucionCompra",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.DevolucionCompraController",
+    "Method": "ListarDevolucionesFechas",
+    "RelativePath": "api/DevolucionCompra/ListarDevolucionesFechas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fechaInicio",
+        "Type": "System.DateOnly",
+        "IsRequired": false
+      },
+      {
+        "Name": "fechaFin",
+        "Type": "System.DateOnly",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.DevolucionCompraController",
+    "Method": "ListarTiposDevolucion",
+    "RelativePath": "api/DevolucionCompra/ListarTiposDevolucion",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.DevolucionCompraController",
+    "Method": "ReversarDevolucion",
+    "RelativePath": "api/DevolucionCompra/ReversarDevolucion/{id}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.DevolucionCompraController",
+    "Method": "VerCreditoPorDevolucion",
+    "RelativePath": "api/DevolucionCompra/VerCreditoPorDevolucion",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idDevolucion",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -1222,7 +1375,7 @@
     "ContainingType": "SistemaTienda.API.Controllers.VentasController",
     "Method": "ReversarVenta",
     "RelativePath": "api/Ventas/ReversarVenta",
-    "HttpMethod": "POST",
+    "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [

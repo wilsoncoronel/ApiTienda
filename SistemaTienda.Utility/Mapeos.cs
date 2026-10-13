@@ -156,7 +156,9 @@ namespace SistemaTienda.Utility
                 ValorVenta = valorVenta,
                 ValorTotal = valorCompra * loteTb.StockDisponible,
                 ArticuloDTO = loteTb.IdArticuloNavigation != null ? this.MapeoArticuloTbAArticuloDtoDevolucion(loteTb.IdArticuloNavigation, false) : new ArticuloDTO { Id = loteTb.IdArticulo, Nombre = loteTb.NumeroLote ?? string.Empty, Descripcion = loteTb.IdArticuloNavigation?.Descripcion ?? string.Empty, ValorCompra = 0, ValorVenta = 0 },
-                FechaCaducidad = loteTb.FechaExpiracion?.ToDateTime(TimeOnly.MinValue)
+                FechaCaducidad = loteTb.FechaExpiracion?.ToDateTime(TimeOnly.MinValue),
+                Impuestos = detalleCompra.TbComImpuestoDetalles.Select(imp => new DetalleImpuestoDTO { Id = imp.Id, 
+                Nombre = imp.Nombre, TipoCalculo = imp.TipoCalculo, Valor = imp.Valor, IdDetalleCompra = imp.IdDetalleCompra}).ToList()
             };
         }
             

@@ -40,6 +40,7 @@ namespace SistemaTienda.IOC
             services.AddTransient<ICompraServicio, CompraService>();
             services.AddTransient<IVentaService, VentaService>();
             services.AddTransient<IDevolucionCompraService, DevolucionCompraService>();
+            services.AddTransient<ICreditoProveedorService, CreditoProveedorService>();
             services.AddTransient<IMapeoDevolucionCompra, MapeoDevolucionCompra>();
             services.AddTransient<IClienteService, ClienteService>();
             services.AddTransient<IUnidadMedidaService, UnidadMedidaService>();

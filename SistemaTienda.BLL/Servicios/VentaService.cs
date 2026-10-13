@@ -98,6 +98,21 @@ namespace SistemaTienda.BLL.Servicios
             return movimiento;
         }
 
+        private async Task RestaurarConsumosActivosAsync(IEnumerable<TbInvConsumoLote> consumos)
+        {
+            foreach (var consumo in consumos.Where(c => c.Estado == true))
+            {
+                var lote = await _tiendaDbContext.TbInvLotes
+                    .FirstOrDefaultAsync(l => l.Id == consumo.IdLote);
+
+                if (lote == null)
+                    throw new NotFoundException($"Lote no encontrado para IdLote {consumo.IdLote}");
+
+                lote.StockDisponible += consumo.Cantidad;
+                consumo.Estado = false;
+            }
+        }
+
         private async Task ConsumirLotesParaDetalleAsync(TbInvMovimiento movimiento, TbVenDetalleVenta detalle)
         {
             decimal cantidadRestante = detalle.Cantidad;
@@ -157,61 +172,113 @@ namespace SistemaTienda.BLL.Servicios
                 _tiendaDbContext.TbInvLotes.Update(primerLote);
             }
         }
+        private async Task<TbInvMovimiento> ObtenerMovimientoVentaAsync(TbVenta venta)
+        {
+            var movimiento = await _tiendaDbContext.TbInvMovimientos
+                .Include(m => m.TbInvConsumoLotes)
+                .Where(m => m.Referencia == venta.Documento)
+                .Where(m => m.IdTransaccionInventario == venta.IdTransaccion)
+                .OrderByDescending(m => m.Id)
+                .FirstOrDefaultAsync();
+
+            if (movimiento != null)
+                return movimiento;
+
+            if (!venta.IdTransaccion.HasValue)
+                throw new ConflictException("La venta no tiene transacción de inventario de origen");
+
+            return await CrearMovimientoInventarioAsync(venta.IdTransaccion.Value, venta.Documento);
+        }
+
         public async Task<bool> EditarVenta(VentaEditarDTO ventaDto)
         {
-            using (var transaction = _tiendaDbContext.Database.BeginTransaction())
+            await using var transaction = await _tiendaDbContext.Database
+                .BeginTransactionAsync(IsolationLevel.Serializable);
+            try
             {
-                try
-                {
-                    var tbVenta = await this._tiendaDbContext.TbVentas.Include(c => c.IdEstadoVentaNavigation)
-                        .Include(d => d.TbVenDetalleVenta)
-                        .FirstOrDefaultAsync(c => c.Id == ventaDto.Id);
-                    var idsDto = ventaDto.DetalleVentaEditarDto.Select(x => x.Id).ToList();
-                    var eliminados = tbVenta.TbVenDetalleVenta
-                        .Where(x => !idsDto.Contains(x.Id)).ToList();
+                var tbVenta = await _tiendaDbContext.TbVentas
+                    .Include(v => v.IdEstadoVentaNavigation)
+                    .Include(v => v.TbVenDetalleVenta)
+                    .FirstOrDefaultAsync(v => v.Id == ventaDto.Id);
 
-                    foreach (var e in eliminados)
-                    {
-                        _tiendaDbContext.TbVenDetalleVenta.Remove(e);
-                    }
+                if (tbVenta == null)
+                    throw new NotFoundException("Venta no encontrada");
 
-                    foreach (var detDto in ventaDto.DetalleVentaEditarDto)
-                    {
-                        var existente = tbVenta.TbVenDetalleVenta.FirstOrDefault(x => x.Id == detDto.Id);
-                        if (existente != null)
-                        {
-                            // actualizar
-                            existente.IdArticulo = detDto.ArticuloId;
-                            existente.Cantidad = detDto.Cantidad;
-                            existente.Descripcion = detDto.Descripcion;
-                            existente.ValorCompra = detDto.ValorCompra;
-                            existente.ValorVenta = detDto.ValorVenta;
-                        }
-                        else
-                        {
-                            // nuevo
-                            tbVenta.TbVenDetalleVenta.Add(new TbVenDetalleVenta
-                            {
-                                IdArticulo = detDto.ArticuloId,
-                                Cantidad = detDto.Cantidad,
-                                Descripcion = detDto.Descripcion,
-                                ValorCompra = detDto.ValorCompra,
-                                ValorVenta = detDto.ValorVenta,
-                            });
-                        }
-                    }
-                    this._mapper.MapeoVentaEdicionDtoAVentaTb(ventaDto, tbVenta);
-                    var resp = await this._ventaRepository.Editar(tbVenta);
-                    if (resp == false)
-                        throw new Exception("No se pudo editar la venta!!!");
-                    transaction.Commit();
-                    return resp;
-                }
-                catch
+                var transRev = await _tiendaDbContext.TbInvTransacciones
+                    .FirstOrDefaultAsync(t => t.Nombre.ToLower() == "reversion venta");
+                var estadoAnteriorReversado = tbVenta.IdEstadoVentaNavigation.Nombre
+                    .Equals("Reversada", StringComparison.OrdinalIgnoreCase);
+
+                if ((transRev != null && tbVenta.IdTransaccion == transRev.Id) || estadoAnteriorReversado)
+                    throw new ConflictException("No se puede editar una venta ya revertida");
+
+                var movimiento = await ObtenerMovimientoVentaAsync(tbVenta);
+                await RestaurarConsumosActivosAsync(movimiento.TbInvConsumoLotes);
+
+                var idsDto = ventaDto.DetalleVentaEditarDto.Select(x => x.Id).ToHashSet();
+                var eliminados = tbVenta.TbVenDetalleVenta
+                    .Where(x => !idsDto.Contains(x.Id))
+                    .ToList();
+
+                foreach (var eliminado in eliminados)
                 {
-                    transaction.Rollback();
-                    throw;
+                    var consumosHistoricos = movimiento.TbInvConsumoLotes
+                        .Where(c => c.IdDetalleVenta == eliminado.Id)
+                        .ToList();
+                    _tiendaDbContext.TbInvConsumoLotes.RemoveRange(consumosHistoricos);
+                    _tiendaDbContext.TbVenDetalleVenta.Remove(eliminado);
+                    tbVenta.TbVenDetalleVenta.Remove(eliminado);
                 }
+
+                foreach (var detDto in ventaDto.DetalleVentaEditarDto)
+                {
+                    var existente = tbVenta.TbVenDetalleVenta.FirstOrDefault(x => x.Id == detDto.Id);
+                    if (existente != null)
+                    {
+                        existente.IdArticulo = detDto.ArticuloId;
+                        existente.Cantidad = detDto.Cantidad;
+                        existente.Descripcion = detDto.Descripcion;
+                        existente.ValorCompra = detDto.ValorCompra;
+                        existente.ValorVenta = detDto.ValorVenta;
+                    }
+                    else
+                    {
+                        tbVenta.TbVenDetalleVenta.Add(new TbVenDetalleVenta
+                        {
+                            IdArticulo = detDto.ArticuloId,
+                            Cantidad = detDto.Cantidad,
+                            Descripcion = detDto.Descripcion,
+                            ValorCompra = detDto.ValorCompra,
+                            ValorVenta = detDto.ValorVenta
+                        });
+                    }
+                }
+
+                var referenciaAnterior = tbVenta.Documento;
+                _mapper.MapeoVentaEdicionDtoAVentaTb(ventaDto, tbVenta);
+                var estadoReversado = await _tiendaDbContext.TbVenEstadosVentas
+                    .AnyAsync(e => e.Id == ventaDto.IdEstado &&
+                                   e.Nombre.ToLower() == "reversada");
+                if (estadoReversado && transRev != null)
+                    tbVenta.IdTransaccion = transRev.Id;
+
+                movimiento.Referencia = tbVenta.Documento ?? referenciaAnterior;
+                await _tiendaDbContext.SaveChangesAsync();
+
+                if (!estadoReversado)
+                {
+                    foreach (var detalle in tbVenta.TbVenDetalleVenta)
+                        await ConsumirLotesParaDetalleAsync(movimiento, detalle);
+                }
+
+                await _tiendaDbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
             }
         }
 
@@ -310,9 +377,17 @@ namespace SistemaTienda.BLL.Servicios
             // Buscar movimiento origen por referencia exacta, evitando movimientos que ya sean reversiones
             var movimientoOrigen = await _tiendaDbContext.TbInvMovimientos
                 .Include(m => m.TbInvConsumoLotes)
-                .FirstOrDefaultAsync(m => m.Referencia == tbVenta.Documento && m.IdTransaccionInventario != transRev.Id);
+                .Where(m => m.Referencia == tbVenta.Documento && m.IdTransaccionInventario != transRev.Id)
+                .OrderByDescending(m => m.Id)
+                .FirstOrDefaultAsync();
 
             if (movimientoOrigen == null) throw new NotFoundException("Movimiento origen no encontrado para la venta");
+
+            var consumosActivos = movimientoOrigen.TbInvConsumoLotes
+                .Where(c => c.Estado == true)
+                .ToList();
+            if (consumosActivos.Count == 0)
+                throw new ConflictException("La venta ya fue reversada");
 
             using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync(IsolationLevel.Serializable);
             try
@@ -321,14 +396,8 @@ namespace SistemaTienda.BLL.Servicios
                 var movimientoReversion = await CrearMovimientoInventarioAsync(transRev.Id, $"Reversión de venta {tbVenta.Documento} (mov {movimientoOrigen.Id})", movimientoOrigen.Id);
 
                 // Procesar consumos del movimiento origen
-                foreach (var consumo in movimientoOrigen.TbInvConsumoLotes)
+                foreach (var consumo in consumosActivos)
                 {
-                    if (consumo.Estado == false)
-                    {
-                        await transaction.RollbackAsync();
-                        throw new ConflictException("La venta ya fue reversada (consumo ya marcado)");
-                    }
-
                     var lote = await _tiendaDbContext.TbInvLotes.FirstOrDefaultAsync(l => l.Id == consumo.IdLote);
                     if (lote == null)
                     {

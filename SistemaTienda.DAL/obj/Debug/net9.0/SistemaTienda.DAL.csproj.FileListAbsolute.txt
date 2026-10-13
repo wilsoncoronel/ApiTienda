@@ -46,3 +46,9 @@ C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.DAL\obj\Debug\net9.0\Si
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.DAL\obj\Debug\net9.0\refint\SistemaTienda.DAL.dll
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.DAL\obj\Debug\net9.0\SistemaTienda.DAL.pdb
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.DAL\obj\Debug\net9.0\ref\SistemaTienda.DAL.dll
+C:\Temp\ApiTiendaBuild\Debug\net9.0\SistemaTienda.DAL.deps.json
+C:\Temp\ApiTiendaBuild\Debug\net9.0\SistemaTienda.DAL.dll
+C:\Temp\ApiTiendaBuild\Debug\net9.0\SistemaTienda.DAL.pdb
+C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.DAL.deps.json
+C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.DAL.dll
+C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.DAL.pdb

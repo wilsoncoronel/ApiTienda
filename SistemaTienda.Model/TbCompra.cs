@@ -33,6 +33,8 @@ public partial class TbCompra
 
     public virtual TbSisUsuario IdUsuarioCreadorNavigation { get; set; } = null!;
 
+    public virtual ICollection<TbComCreditoProveedorMovimiento> TbComCreditoProveedorMovimientos { get; set; } = new List<TbComCreditoProveedorMovimiento>();
+
     public virtual ICollection<TbComDetallesCompra> TbComDetallesCompras { get; set; } = new List<TbComDetallesCompra>();
 
     public virtual ICollection<TbComDevolucionCompra> TbComDevolucionCompras { get; set; } = new List<TbComDevolucionCompra>();

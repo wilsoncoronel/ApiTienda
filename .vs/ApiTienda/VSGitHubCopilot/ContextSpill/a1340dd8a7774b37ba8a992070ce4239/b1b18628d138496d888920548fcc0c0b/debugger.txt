@@ -1,0 +1,174 @@
+﻿## PROCESSES
+Currently debugging:
+- SistemaTienda.API.exe (PID: 36208)
+
+## EXCEPTION
+Exception Type: SistemaTienda.API.Exceptions.NotFoundException
+Exception Message: El artículo no tiene inventario disponible!!
+Piece of code that has the exception:
+```csharp C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\Servicios\ArticuloService.cs
+68:         public async Task<ArticuloInventarioDTO> ObtenerArticuloInventario(int idArticulo)
+69:         {
+70:             var articuloTb = await this.tiendaDbContext.TbComArticulos
+71:                 .Where(a => a.Id == idArticulo && a.Estado == true)
+72:                 .Include(a => a.IdTipoArticuloNavigation)
+73:                 .Include(a => a.IdMarcaNavigation)
+74:                 .Include(p => p.IdPorcentajeGananciaNavigation)
+75:                 .Include(a => a.IdUnidadNavigation)
+76:                 .Include(a => a.TbComArticulosImpuestos)
+77:                     .ThenInclude(ai => ai.IdImpuestoNavigation)
+78:                 .FirstOrDefaultAsync();
+79:             if (articuloTb == null)
+80:                 throw new NotFoundException("El artículo no existe o está inactivo!!");
+81: 
+82:             var idsTransReversion = await this.tiendaDbContext.TbInvTransacciones
+83:                 .Where(t => t.Nombre.ToLower().Contains("reversion compra"))
+84:                 .Select(t => t.Id)
+85:                 .ToListAsync();
+86: 
+87:             var lote = await this.tiendaDbContext.TbInvLotes
+88:                 .Where(l => l.IdArticulo == idArticulo
+89:                     && l.Estado == true
+90:                     && l.StockDisponible > 0
+91:                     && !idsTransReversion.Contains(l.IdMovimientoNavigation.IdTransaccionInventario))
+92:                 .Include(l => l.IdMovimientoNavigation)
+93:                 .Include(l => l.IdArticuloNavigation)
+94:                     .ThenInclude(a => a.IdMarcaNavigation)
+95:                 .Include(l => l.IdArticuloNavigation)
+96:                     .ThenInclude(a => a.IdTipoArticuloNavigation)
+97:                 .Include(l => l.IdArticuloNavigation)
+98:                     .ThenInclude(a => a.TbComArticulosImpuestos)
+99:                         .ThenInclude(ai => ai.IdImpuestoNavigation)
+100:                 .Include(l => l.IdArticuloNavigation)
+101:                     .ThenInclude(a => a.IdUnidadNavigation)
+102:                 .OrderBy(l => l.FechaExpiracion == null)
+103:                 .ThenBy(l => l.FechaExpiracion)
+104:                 .ThenBy(l => l.FechaIngreso == null)
+105:                 .ThenBy(l => l.FechaIngreso)
+106:                 .FirstOrDefaultAsync();
+107: 
+108:             if (lote == null)
+109:                 throw new NotFoundException("El artículo no tiene inventario disponible!!");
+110: 
+111:             return new ArticuloInventarioDTO
+112:             {
+113:                 Articulo = this._mapper.MapeoArticuloTbAArticuloDto(lote.IdArticuloNavigation, false),
+114:                 NumeroLote = lote.NumeroLote ?? string.Empty,
+115:                 Codigo = lote.Codigo ?? string.Empty,
+116:                 FechaIngreso = lote.FechaIngreso,
+117:                 FechaExpiracion = lote.FechaExpiracion,
+118:                 StockDisponible = lote.StockDisponible,
+119:                 StockMinimo = lote.StockMinimo,
+120:                 CostoUnitario = lote.CostoUnitario
+121:             };
+122:         }
+```
+Exception is on line 109
+The callstack context, if included, corresponds to the thread where this exception occurred. There is no need to identify this thread by other means.
+The top most frame in the callstack context should correspond to the place the exception message was thrown from. Code may or may not have been provided for it but can be requested.
+
+## CALLSTACK
+Thread ID: 31444
+[1] [Excepción] SistemaTienda.BLL.dll!SistemaTienda.BLL.Servicios.ArticuloService.ObtenerArticuloInventario
+This is the current user focused stack frame. The provided locals context corresponds to this stack frame, but you may evaluate expressions and retrieve code for any frame.
+Code for the stack frame:
+```csharp SistemaTienda.BLL\Servicios\ArticuloService.cs
+68:         public async Task<ArticuloInventarioDTO> ObtenerArticuloInventario(int idArticulo)
+69:         {
+70:             var articuloTb = await this.tiendaDbContext.TbComArticulos
+71:                 .Where(a => a.Id == idArticulo && a.Estado == true)
+72:                 .Include(a => a.IdTipoArticuloNavigation)
+73:                 .Include(a => a.IdMarcaNavigation)
+74:                 .Include(p => p.IdPorcentajeGananciaNavigation)
+75:                 .Include(a => a.IdUnidadNavigation)
+76:                 .Include(a => a.TbComArticulosImpuestos)
+77:                     .ThenInclude(ai => ai.IdImpuestoNavigation)
+78:                 .FirstOrDefaultAsync();
+79:             if (articuloTb == null)
+80:                 throw new NotFoundException("El artículo no existe o está inactivo!!");
+81: 
+82:             var idsTransReversion = await this.tiendaDbContext.TbInvTransacciones
+83:                 .Where(t => t.Nombre.ToLower().Contains("reversion compra"))
+84:                 .Select(t => t.Id)
+85:                 .ToListAsync();
+86: 
+87:             var lote = await this.tiendaDbContext.TbInvLotes
+88:                 .Where(l => l.IdArticulo == idArticulo
+89:                     && l.Estado == true
+90:                     && l.StockDisponible > 0
+91:                     && !idsTransReversion.Contains(l.IdMovimientoNavigation.IdTransaccionInventario))
+92:                 .Include(l => l.IdMovimientoNavigation)
+93:                 .Include(l => l.IdArticuloNavigation)
+94:                     .ThenInclude(a => a.IdMarcaNavigation)
+95:                 .Include(l => l.IdArticuloNavigation)
+96:                     .ThenInclude(a => a.IdTipoArticuloNavigation)
+97:                 .Include(l => l.IdArticuloNavigation)
+98:                     .ThenInclude(a => a.TbComArticulosImpuestos)
+99:                         .ThenInclude(ai => ai.IdImpuestoNavigation)
+100:                 .Include(l => l.IdArticuloNavigation)
+101:                     .ThenInclude(a => a.IdUnidadNavigation)
+102:                 .OrderBy(l => l.FechaExpiracion == null)
+103:                 .ThenBy(l => l.FechaExpiracion)
+104:                 .ThenBy(l => l.FechaIngreso == null)
+105:                 .ThenBy(l => l.FechaIngreso)
+106:                 .FirstOrDefaultAsync();
+107: 
+108:             if (lote == null)
+109:                 throw new NotFoundException("El artículo no tiene inventario disponible!!");
+110: 
+111:             return new ArticuloInventarioDTO
+112:             {
+113:                 Articulo = this._mapper.MapeoArticuloTbAArticuloDto(lote.IdArticuloNavigation, false),
+114:                 NumeroLote = lote.NumeroLote ?? string.Empty,
+115:                 Codigo = lote.Codigo ?? string.Empty,
+116:                 FechaIngreso = lote.FechaIngreso,
+117:                 FechaExpiracion = lote.FechaExpiracion,
+118:                 StockDisponible = lote.StockDisponible,
+119:                 StockMinimo = lote.StockMinimo,
+120:                 CostoUnitario = lote.CostoUnitario
+121:             };
+122:         }
+```
+Current statement: line 109
+[2] [Excepción] SistemaTienda.API.dll!SistemaTienda.API.Controllers.ArticuloController.ObtenerArticuloInventario
+Code for the stack frame:
+```csharp SistemaTienda.API\Controllers\ArticuloController.cs
+73:         [HttpGet]
+74:         [Route("ObtenerArticuloInventario")]
+75:         public async Task<ActionResult<ArticuloInventarioDTO>> ObtenerArticuloInventario(int idArticulo)
+76:         {
+77:             var resp = new Response<ArticuloInventarioDTO>();
+78: 
+79:             resp.status = true;
+80:             resp.Value = await this._articuloService.ObtenerArticuloInventario(idArticulo);
+81:             resp.msg = "Artículo cargado correctamente.";
+82:             return Ok(resp);
+83:         }
+```
+Current statement: line 80
+[3] [Código externo]
+[8] [En espera de una operación asincrónica, haga doble clic o presione ENTRAR para ver las pilas de llamadas asincrónicas]
+[9] [Código externo]
+[10] [Pila de llamadas asincrónicas]
+[11] [Código externo]
+[12] [Asincrónico] SistemaTienda.API.dll!SistemaTienda.API.Middleware.ExceptionMiddleware.InvokeAsync
+Code for the stack frame:
+```csharp SistemaTienda.API\Middleware\ExceptionMiddleware.cs
+20:         public async Task InvokeAsync(HttpContext context)
+21:         {
+22:             try
+23:             {
+24:                 await _next(context);
+25:             }
+26:             catch (Exception ex)
+27:             {
+28:                 await HandleExceptionAsync(context, ex);
+29:             }
+30:         }
+```
+Current statement: line 24
+[13] [Código externo]
+
+## LOCALS
+Variable: 'this' of type 'SistemaTienda.BLL.Servicios.ArticuloService' is a complex object with child properties and has value: {SistemaTienda.BLL.Servicios.ArticuloService}
+

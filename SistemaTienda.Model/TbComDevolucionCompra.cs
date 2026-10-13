@@ -9,6 +9,8 @@ public partial class TbComDevolucionCompra
 
     public int IdCompra { get; set; }
 
+    public int IdTipoDevolucion { get; set; }
+
     public DateTime FechaCreacion { get; set; }
 
     public DateTime? FechaReversion { get; set; }
@@ -18,6 +20,10 @@ public partial class TbComDevolucionCompra
     public string Motivo { get; set; } = null!;
 
     public virtual TbCompra IdCompraNavigation { get; set; } = null!;
+
+    public virtual TbComTipoDevolucionCompra IdTipoDevolucionNavigation { get; set; } = null!;
+
+    public virtual TbComCreditoProveedor? TbComCreditoProveedor { get; set; }
 
     public virtual ICollection<TbComDetalleDevolucionCompra> TbComDetalleDevolucionCompras { get; set; } = new List<TbComDetalleDevolucionCompra>();
 }

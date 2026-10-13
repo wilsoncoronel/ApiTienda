@@ -15,6 +15,17 @@ namespace SistemaTienda.API.Controllers
             this._compraService = compraService;
         }
 
+        [HttpGet]
+        [Route("BuscarCompraArticulo")]
+        public async Task<IActionResult> BuscarCompraArticulo(string? codigo = null, string? lote = null, int? idArticulo = null)
+        {
+            var resp = new Response<List<CompraMinDTO>>();
+            resp.status = true;
+            resp.Value = await this._compraService.BuscarCompraArticulo(codigo, lote, idArticulo);
+            resp.msg = "Compras listadas correctamente";
+            return Ok(resp);
+        }
+
         [HttpPost]
         [Route("RegistrarCompra")]
         public async Task<IActionResult> RegistrarCompra(CompraCreacionDTO compraCreacionDto)
