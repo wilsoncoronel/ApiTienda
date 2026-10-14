@@ -54,6 +54,7 @@ namespace SistemaTienda.Utility
                     Id = detalleCompra.Id,
                     IdCompra = detalleCompra.IdCompra,
                     IdArticulo = detalleCompra.IdArticulo,
+                    Lote = detalleCompra.NumeroLote,
                     Cantidad = detalleCompra.Cantidad,
                     ValorCompra = detalleCompra.ValorCompra,
                     ArticuloDTO= producto == null ? null! : new ArticuloDTO
@@ -68,6 +69,7 @@ namespace SistemaTienda.Utility
                     Impuestos = detalleCompra.TbComImpuestoDetalles.Select(impuesto => new DetalleImpuestoDTO
                     {
                         Id = impuesto.Id,
+                        IdImpuesto = 0,
                         IdDetalleCompra = impuesto.IdDetalleCompra,
                         Valor = impuesto.Valor,
                         Nombre = impuesto.Nombre ?? string.Empty,

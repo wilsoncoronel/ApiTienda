@@ -16,10 +16,11 @@ namespace SistemaTienda.API.Controllers
         {
             _devolucionService = devolucionService;
         }
-        //ListarDetallesDevolucion
+        
         [HttpGet("ListarDetallesDevolucion")]
         public async Task<IActionResult> ListarDetallesDevolucion(int idDevolucionCompra)
         {
+            
             var detalles = await _devolucionService.ListarDetallesDevolucion(idDevolucionCompra);
             return Ok(new Response<List<DetalleDevolucionCompraDTO>>
             {
