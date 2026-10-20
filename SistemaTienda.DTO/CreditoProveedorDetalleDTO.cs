@@ -3,8 +3,8 @@ namespace SistemaTienda.DTO;
 public class CreditoProveedorDetalleDTO
 {
     public int Id { get; set; }
-    public int IdDetalleCompra { get; set; }
     public int IdArticulo { get; set; }
+    public ArticuloMinDTO ArticuloDTO { get; set; }
     public string Descripcion { get; set; } = string.Empty;
     public int Cantidad { get; set; }
     public decimal ValorCompra { get; set; }

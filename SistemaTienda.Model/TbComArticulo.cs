@@ -51,6 +51,8 @@ public partial class TbComArticulo
 
     public virtual ICollection<TbComArticulosImpuesto> TbComArticulosImpuestos { get; set; } = new List<TbComArticulosImpuesto>();
 
+    public virtual ICollection<TbComDetalleDevolucionCompra> TbComDetalleDevolucionCompras { get; set; } = new List<TbComDetalleDevolucionCompra>();
+
     public virtual ICollection<TbComDetallesCompra> TbComDetallesCompras { get; set; } = new List<TbComDetallesCompra>();
 
     public virtual ICollection<TbInvLote> TbInvLotes { get; set; } = new List<TbInvLote>();

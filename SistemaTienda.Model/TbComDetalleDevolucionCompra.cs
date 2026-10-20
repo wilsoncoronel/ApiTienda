@@ -9,15 +9,19 @@ public partial class TbComDetalleDevolucionCompra
 
     public int IdDevolucionCompra { get; set; }
 
-    public int IdDetalleCompra { get; set; }
+    public int IdArticulo { get; set; }
+
+    public decimal Valor { get; set; }
 
     public int Cantidad { get; set; }
 
     public bool Estado { get; set; }
 
-    public virtual TbComDetallesCompra IdDetalleCompraNavigation { get; set; } = null!;
+    public virtual TbComArticulo IdArticuloNavigation { get; set; } = null!;
 
     public virtual TbComDevolucionCompra IdDevolucionCompraNavigation { get; set; } = null!;
+
+    public virtual ICollection<TbComImpuestoDetalleDevolucionCompra> TbComImpuestoDetalleDevolucionCompras { get; set; } = new List<TbComImpuestoDetalleDevolucionCompra>();
 
     public virtual ICollection<TbInvDevolucionLote> TbInvDevolucionLotes { get; set; } = new List<TbInvDevolucionLote>();
 }

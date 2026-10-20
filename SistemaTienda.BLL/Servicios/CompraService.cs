@@ -324,7 +324,7 @@ namespace SistemaTienda.BLL.Servicios
         public async Task<bool> ReversarCompra(int id)
         {
             // Paso 1: validaciones y búsquedas iniciales
-            var tbCompra = await this._tiendaDbContext.TbCompras.Where(c => c.Id == id).FirstOrDefaultAsync();
+            /*var tbCompra = await this._tiendaDbContext.TbCompras.Where(c => c.Id == id).FirstOrDefaultAsync();
             if (tbCompra is null)
                 throw new NotFoundException("No existe una compra con el id indicado!!!!");
             if (string.IsNullOrWhiteSpace(tbCompra.Documento))
@@ -398,7 +398,8 @@ namespace SistemaTienda.BLL.Servicios
                     transaction.Rollback();
                     throw;
                 }
-            }
+            }*/
+            return true;
         }
 
         /// <summary>

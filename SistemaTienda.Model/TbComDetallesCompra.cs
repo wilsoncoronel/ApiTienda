@@ -31,7 +31,5 @@ public partial class TbComDetallesCompra
 
     public virtual TbCompra IdCompraNavigation { get; set; } = null!;
 
-    public virtual ICollection<TbComDetalleDevolucionCompra> TbComDetalleDevolucionCompras { get; set; } = new List<TbComDetalleDevolucionCompra>();
-
     public virtual ICollection<TbComImpuestoDetalle> TbComImpuestoDetalles { get; set; } = new List<TbComImpuestoDetalle>();
 }

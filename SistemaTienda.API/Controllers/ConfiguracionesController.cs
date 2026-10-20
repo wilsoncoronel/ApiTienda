@@ -110,7 +110,7 @@ namespace SistemaTienda.API.Controllers
             var resp = new Response<List<TransaccionInventarioDTO>>();
             
             resp.status = true;
-            resp.Value = await this._transaccionInventarioService.ListarTransaccionesInventario();
+            //resp.Value = await this._transaccionInventarioService.ListarTransaccionesInventario();
             resp.msg = "Transacciones listadas exitosamente";
             
             return Ok(resp);

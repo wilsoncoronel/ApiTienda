@@ -7,9 +7,9 @@ public partial class TbComDevolucionCompra
 {
     public int Id { get; set; }
 
-    public int IdCompra { get; set; }
-
     public int IdTipoDevolucion { get; set; }
+
+    public int IdProveedor { get; set; }
 
     public DateTime FechaCreacion { get; set; }
 
@@ -19,7 +19,7 @@ public partial class TbComDevolucionCompra
 
     public string Motivo { get; set; } = null!;
 
-    public virtual TbCompra IdCompraNavigation { get; set; } = null!;
+    public virtual TbComProveedores IdProveedorNavigation { get; set; } = null!;
 
     public virtual TbComTipoDevolucionCompra IdTipoDevolucionNavigation { get; set; } = null!;
 

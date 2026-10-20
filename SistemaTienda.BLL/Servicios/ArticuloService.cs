@@ -198,6 +198,21 @@ namespace SistemaTienda.BLL.Servicios
             return resultado;
         }
 
+        public async Task<List<ArticuloVentaDTO>> ListarDevolucionArticulos()
+        {
+            var lotesDisponibles = await this.tiendaDbContext.TbInvLotes
+                .Where(lote => lote.StockDisponible > 0 && lote.IdArticuloNavigation.EstadoVisual == true)
+                .Include(lote => lote.IdArticuloNavigation)
+                    .ThenInclude(articulo => articulo.IdMarcaNavigation)
+                .Include(lote => lote.IdArticuloNavigation)
+                    .ThenInclude(articulo => articulo.IdTipoArticuloNavigation)
+                .Include(lote => lote.IdArticuloNavigation)
+                    .ThenInclude(articulo => articulo.IdUnidadNavigation)
+                .ToListAsync();
+            var resultado = this._mapper.MapeoArticulosDevolucion(lotesDisponibles);
+            return resultado;
+        }
+
         public async Task<List<ArticuloInventarioDTO>> ListarTodosArticulos(bool esVenta)
         {
             // Identificar transacciones que representan reversiones (por nombre)

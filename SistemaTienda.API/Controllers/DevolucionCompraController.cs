@@ -42,6 +42,18 @@ namespace SistemaTienda.API.Controllers
             });
         }
 
+        [HttpGet("DevolucionCompra")]
+        public async Task<IActionResult> DevolucionCompra(int idDevolucion)
+        {
+            var tipos = await _devolucionService.DevolucionCompra(idDevolucion);
+            return Ok(new Response<DevolucionCompraDTO>
+            {
+                status = true,
+                msg = "Devolución cargada correctamente!!",
+                Value = tipos,
+            });
+        }
+
         [HttpPost("CrearDevolucionCompra")]
         public async Task<IActionResult> CrearDevolucionCompra([FromBody] DevolucionCompraCreacionDTO dto)
         {

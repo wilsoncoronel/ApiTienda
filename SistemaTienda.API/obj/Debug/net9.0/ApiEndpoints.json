@@ -242,6 +242,26 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
+    "Method": "ListaDevolucionArticulos",
+    "RelativePath": "api/Articulo/ListarDevolucionArticulos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[SistemaTienda.DTO.ArticuloVentaDTO, SistemaTienda.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ArticuloController",
     "Method": "ListaPorcentajes",
     "RelativePath": "api/Articulo/ListarPorcentajes",
     "HttpMethod": "GET",
@@ -1192,6 +1212,16 @@
     "ContainingType": "SistemaTienda.API.Controllers.ProveedorController",
     "Method": "ListarTiposIdentificacion",
     "RelativePath": "api/Proveedor/ListarTiposIdentificacion",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ProveedorController",
+    "Method": "ProveedoresMin",
+    "RelativePath": "api/Proveedor/ProveedoresMin",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

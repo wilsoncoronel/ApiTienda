@@ -1,0 +1,153 @@
+﻿using SistemaTienda.DTO;
+using SistemaTienda.Model;
+using System.Linq;
+
+namespace SistemaTienda.Utility
+{
+    public interface IMapeoDevolucionCompra
+    {
+        TbComDevolucionCompra MapeoDevolucionCompraCreacionDtoATb(DevolucionCompraCreacionDTO dto);
+        DevolucionCompraDTO MapeoDevolucionCompraTbADto(TbComDevolucionCompra devolucion);
+        List<DevolucionCompraDTO> MapeoListaDevolucionesCompraTbADto(List<TbComDevolucionCompra> devoluciones);
+        List<DetalleDevolucionCompraDTO> MapeoListaDetallesDevolucionTbADto(List<TbComDetalleDevolucionCompra> detallesDevolucion);
+    }
+
+    public class MapeoDevolucionCompra : IMapeoDevolucionCompra
+    {
+        public TbComDevolucionCompra MapeoDevolucionCompraCreacionDtoATb(DevolucionCompraCreacionDTO dto)
+        {
+            var tb = new TbComDevolucionCompra
+            {
+                IdTipoDevolucion = dto.IdTipoDevolucion,
+                IdProveedor = dto.IdProveedor,
+                FechaCreacion = dto.FechaCreacion == default ? System.DateTime.Now : dto.FechaCreacion,
+                Estado = dto.Estado,
+                Motivo = dto.Motivo ?? string.Empty
+            };
+            if (dto.DetalleDevolucionCompraCreacionDTO != null && dto.DetalleDevolucionCompraCreacionDTO.Any())
+            {
+                tb.TbComDetalleDevolucionCompras = dto.DetalleDevolucionCompraCreacionDTO.Select(d => new TbComDetalleDevolucionCompra
+                {
+                    IdArticulo = d.IdArticulo,
+                    Cantidad = d.Cantidad,
+                    Valor = d.Valor,
+                    Estado = d.Estado
+                }).ToList();
+            }
+            return tb;
+        }
+
+        public List<DetalleDevolucionCompraDTO> MapeoListaDetallesDevolucionTbADto(List<TbComDetalleDevolucionCompra> detallesDevolucion)
+        {
+            return detallesDevolucion.Select(det => this.MapeoDetalleDevolucion(det)).ToList();
+        }
+        public DetalleDevolucionCompraDTO MapeoDetalleDevolucion(TbComDetalleDevolucionCompra detalle)
+        {
+            var producto = detalle?.IdArticuloNavigation;
+            return new DetalleDevolucionCompraDTO
+            {
+                Id = detalle.Id,
+                IdArticulo = detalle.IdArticulo,
+                Cantidad = detalle.Cantidad,
+                Estado = detalle.Estado,
+                Valor = detalle.Valor,
+                ArticuloDTO = producto == null ? null! : new ArticuloDTO
+                {
+                    Id = producto.Id,
+                    Nombre = producto.Nombre,
+                    Descripcion = producto.Descripcion,
+                    ValorCompra = producto.ValorCompra,
+                    EstadoVisual = producto.EstadoVisual,
+                    Estado = producto.Estado
+                },
+                
+                Impuestos = detalle.TbComImpuestoDetalleDevolucionCompras.Select(impuesto => new ImpuestoDetalleDevolucionDTO
+                {
+                    Id = impuesto.Id,
+                    IdDetalleDevolucionCompra = impuesto.IdDetalleDevolucionCompra,
+                    IdImpuesto = impuesto.IdImpuesto,
+                    Nombre = impuesto.Nombre,
+                    Estado = impuesto.Estado,
+                    TipoCalculo = impuesto.TipoCalculo,
+                    Valor = impuesto.Valor
+                }).ToList()
+            };
+        }
+
+        public DevolucionCompraDTO MapeoDevolucionCompraTbADto(TbComDevolucionCompra devolucion)
+        {
+            return new DevolucionCompraDTO
+            {
+                Id = devolucion.Id,
+                IdTipoDevolucion = devolucion.IdTipoDevolucion,
+                TipoDevolucionDTO = devolucion.IdTipoDevolucionNavigation == null ? null! : new TipoDevolucionDTO
+                {
+                    Id = devolucion.IdTipoDevolucionNavigation.Id,
+                    Nombre = devolucion.IdTipoDevolucionNavigation.Nombre
+                },
+                IdProveedor = devolucion.IdProveedor,
+                ProveedorDTO = devolucion.IdProveedorNavigation == null ? null! : new ProveedorDTO
+                {
+                    Id = devolucion.IdProveedorNavigation.Id,
+                    Nombres = devolucion.IdProveedorNavigation.IdPersonaNavigation?.Nombres,
+                    Apellidos = devolucion.IdProveedorNavigation.IdPersonaNavigation?.Apellidos,
+                    Mail = devolucion.IdProveedorNavigation.IdPersonaNavigation?.Mail,
+                    Identificacion = devolucion.IdProveedorNavigation.IdPersonaNavigation?.Identificacion,
+                    Telefono = devolucion.IdProveedorNavigation.IdPersonaNavigation?.Telefono,
+                    RazonSocial = devolucion.IdProveedorNavigation.RazonSocial,
+                    Descripcion = devolucion.IdProveedorNavigation.Descripcion,
+                    EstadoVisual = devolucion.IdProveedorNavigation.EstadoVisual,
+                    Estado = devolucion.IdProveedorNavigation.Estado,
+                    FechaCreacion = devolucion.IdProveedorNavigation.IdPersonaNavigation?.FechaCreacion,
+                    FechaModificacion = devolucion.IdProveedorNavigation.IdPersonaNavigation?.FechaModificacion
+                },
+                FechaCreacion = devolucion.FechaCreacion,
+                Estado = devolucion.Estado,
+                Motivo = devolucion.Motivo,
+                Detalles = devolucion.TbComDetalleDevolucionCompras
+                    .Select(MapeoDetalleDevolucion)
+                    .ToList()
+            };
+        }
+
+        public List<DevolucionCompraDTO> MapeoListaDevolucionesCompraTbADto(List<TbComDevolucionCompra> devoluciones)
+        {
+            return devoluciones.Select(devolucion =>
+            {
+
+                return new DevolucionCompraDTO
+                {
+                    Id = devolucion.Id,
+                    IdTipoDevolucion = devolucion.IdTipoDevolucion,
+                    TipoDevolucionDTO = devolucion.IdTipoDevolucionNavigation == null ? null! : new TipoDevolucionDTO
+                    {
+                        Id = devolucion.IdTipoDevolucionNavigation.Id,
+                        Nombre = devolucion.IdTipoDevolucionNavigation.Nombre
+                    },
+                    IdProveedor = devolucion.IdProveedor,
+                    ProveedorDTO = devolucion.IdProveedorNavigation == null ? null! : new ProveedorDTO
+                    {
+                        Id = devolucion.IdProveedorNavigation.Id,
+                        Nombres = devolucion.IdProveedorNavigation.IdPersonaNavigation?.Nombres,
+                        Apellidos = devolucion.IdProveedorNavigation.IdPersonaNavigation?.Apellidos,
+                        Mail = devolucion.IdProveedorNavigation.IdPersonaNavigation?.Mail,
+                        Identificacion = devolucion.IdProveedorNavigation.IdPersonaNavigation?.Identificacion,
+                        Telefono = devolucion.IdProveedorNavigation.IdPersonaNavigation?.Telefono,
+                        RazonSocial = devolucion.IdProveedorNavigation.RazonSocial,
+                        Descripcion = devolucion.IdProveedorNavigation.Descripcion,
+                        EstadoVisual = devolucion.IdProveedorNavigation.EstadoVisual,
+                        Estado = devolucion.IdProveedorNavigation.Estado,
+                        FechaCreacion = devolucion.IdProveedorNavigation.IdPersonaNavigation?.FechaCreacion,
+                        FechaModificacion = devolucion.IdProveedorNavigation.IdPersonaNavigation?.FechaModificacion
+                    },
+                    FechaCreacion = devolucion.FechaCreacion,
+                    Estado = devolucion.Estado,
+                    Motivo = devolucion.Motivo,
+                    Detalles = devolucion.TbComDetalleDevolucionCompras
+                        .Select(detalle => MapeoDetalleDevolucion(detalle))
+                        .ToList(),
+                };
+            }).ToList();
+        }
+    }
+}

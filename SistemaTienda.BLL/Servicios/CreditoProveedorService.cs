@@ -19,7 +19,7 @@ public class CreditoProveedorService : ICreditoProveedorService
 
     public async Task<List<CreditoProveedorListaDTO>> ListarCreditosProveedor(int idProveedor)
     {
-        if (idProveedor <= 0)
+        /*if (idProveedor <= 0)
             throw new BadRequestException("El proveedor indicado no es válido");
 
         var proveedorExiste = await _context.TbComProveedores.AnyAsync(p => p.Id == idProveedor);
@@ -40,7 +40,8 @@ public class CreditoProveedorService : ICreditoProveedorService
                 FechaCreacion = c.FechaCreacion,
                 Estado = c.Estado
             })
-            .ToListAsync();
+            .ToListAsync();*/
+        return new List<CreditoProveedorListaDTO>(); // Placeholder return statement
     }
 
     public async Task<CreditoProveedorDTO> VerCredito(int id)
@@ -52,12 +53,13 @@ public class CreditoProveedorService : ICreditoProveedorService
         if (credito == null)
             throw new NotFoundException("No existe el crédito indicado");
 
-        return MapearCredito(credito);
+        //return MapearCredito(credito);
+        return new CreditoProveedorDTO(); // Placeholder return statement
     }
 
     public async Task AplicarCreditoCompra(AplicarCreditoCompraDTO dto)
     {
-        if (dto == null || dto.IdCreditoProveedor <= 0 || dto.IdCompra <= 0)
+        /*if (dto == null || dto.IdCreditoProveedor <= 0 || dto.IdCompra <= 0)
             throw new BadRequestException("Los datos de aplicación del crédito son inválidos");
 
         var transaction = _context.Database.CurrentTransaction == null
@@ -151,7 +153,7 @@ public class CreditoProveedorService : ICreditoProveedorService
         {
             if (transaction != null)
                 await transaction.DisposeAsync();
-        }
+        }*/
     }
 
     private static decimal CalcularTotalCompra(TbCompra compra)
@@ -290,12 +292,9 @@ public class CreditoProveedorService : ICreditoProveedorService
     {
         var query = _context.TbComCreditoProveedors
             .Include(c => c.IdDevolucionCompraNavigation)
-                .ThenInclude(d => d.IdCompraNavigation)
                     .ThenInclude(c => c.IdProveedorNavigation)
             .Include(c => c.IdDevolucionCompraNavigation)
                 .ThenInclude(d => d.TbComDetalleDevolucionCompras)
-                    .ThenInclude(d => d.IdDetalleCompraNavigation)
-                        .ThenInclude(d => d.TbComImpuestoDetalles)
             .Include(c => c.TbComCreditoProveedorMovimientos)
                 .ThenInclude(m => m.IdTipoMovimientoNavigation)
             .Where(c => c.Id == id);
@@ -303,16 +302,13 @@ public class CreditoProveedorService : ICreditoProveedorService
         return await query.FirstOrDefaultAsync();
     }
 
-    private static CreditoProveedorDTO MapearCredito(TbComCreditoProveedor credito)
+    /*private static CreditoProveedorDTO MapearCredito(TbComCreditoProveedor credito)
     {
         var devolucion = credito.IdDevolucionCompraNavigation;
-        var compra = devolucion.IdCompraNavigation;
         var result = new CreditoProveedorDTO
         {
             Id = credito.Id,
             IdDevolucionCompra = credito.IdDevolucionCompra,
-            IdProveedor = compra.IdProveedor,
-            Proveedor = compra.IdProveedorNavigation.RazonSocial,
             ValorOriginal = credito.ValorOriginal,
             ValorDisponible = credito.ValorDisponible,
             FechaCreacion = credito.FechaCreacion,
@@ -321,7 +317,6 @@ public class CreditoProveedorService : ICreditoProveedorService
 
         foreach (var detalle in devolucion.TbComDetalleDevolucionCompras)
         {
-            var compraDetalle = detalle.IdDetalleCompraNavigation;
             var subtotal = detalle.Cantidad * compraDetalle.ValorCompra;
             var total = subtotal;
             foreach (var impuesto in compraDetalle.TbComImpuestoDetalles)
@@ -334,7 +329,6 @@ public class CreditoProveedorService : ICreditoProveedorService
             result.Detalles.Add(new CreditoProveedorDetalleDTO
             {
                 Id = detalle.Id,
-                IdDetalleCompra = detalle.IdDetalleCompra,
                 IdArticulo = compraDetalle.IdArticulo,
                 Descripcion = compraDetalle.Descripcion,
                 Cantidad = detalle.Cantidad,
@@ -362,5 +356,5 @@ public class CreditoProveedorService : ICreditoProveedorService
             .ToList();
 
         return result;
-    }
+    }*/
 }

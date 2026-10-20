@@ -120,6 +120,17 @@ namespace SistemaTienda.API.Controllers
         }
 
         [HttpGet]
+        [Route("ListarDevolucionArticulos")]
+        public async Task<ActionResult<List<ArticuloVentaDTO>>> ListaDevolucionArticulos()
+        {
+            var resp = new Response<List<ArticuloVentaDTO>>();
+            resp.status = true;
+            resp.Value = await this._articuloService.ListarDevolucionArticulos();
+            resp.msg = "Lista de artículos cargados correctamente.";
+            return Ok(resp);
+        }
+
+        [HttpGet]
         [Route("ListaArticulos")]
         public async Task<ActionResult<List<ArticuloDTO>>> ListaArticulos(DateTime fechaInicial, DateTime fechaFinal)
         {

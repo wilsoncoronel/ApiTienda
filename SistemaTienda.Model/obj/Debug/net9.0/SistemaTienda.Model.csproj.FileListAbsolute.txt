@@ -51,4 +51,7 @@ C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.Model.deps.json
 C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.Model.runtimeconfig.json
 C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.Model.dll
 C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.Model.pdb
-C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Model\obj\Debug\net9.0\SistemaT.936470BF.Up2Date
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.Model.deps.json
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.Model.runtimeconfig.json
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.Model.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.Model.pdb

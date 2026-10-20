@@ -11,6 +11,6 @@ namespace SistemaTienda.BLL.Servicios.Contrato
         Task<List<DevolucionCompraDTO>> ListarDevolucionesFechas(DateOnly fechaInicio, DateOnly fechaFin);
         Task<CreditoProveedorDTO> ObtenerCreditoPorDevolucion(int idDevolucion);
         Task<List<DetalleDevolucionCompraDTO>> ListarDetallesDevolucion(int idDevolucionCompra);
-
+        Task<DevolucionCompraDTO> DevolucionCompra(int idDevolucion);
     }
 }

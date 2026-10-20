@@ -5,6 +5,7 @@ namespace SistemaTienda.BLL.Servicios.Contrato
     public interface IProveedorService
     {
         Task<List<ProveedorDTO>> ListarProveedores();
+        Task<List<ProveedorMinDTO>> ProveedoresMin();
         Task<List<CiudadDTO>> ListarCiudades();
         Task<List<TipoIdentificacionDTO>> ListarTiposIdentificacion();
         Task<int> CrearProveedor(ProveedorCreacionDTO proveedorCreacionDto);

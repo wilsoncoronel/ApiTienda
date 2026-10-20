@@ -1,0 +1,423 @@
+﻿using Microsoft.EntityFrameworkCore;
+using SistemaTienda.API.Exceptions;
+using SistemaTienda.BLL.Servicios.Contrato;
+using SistemaTienda.DAL.DBContext;
+using SistemaTienda.DAL.Repositorios.Contrato;
+using SistemaTienda.DTO;
+using SistemaTienda.Model;
+using SistemaTienda.Utility;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace SistemaTienda.BLL.Servicios
+{
+    public class DevolucionCompraService : IDevolucionCompraService
+    {
+        private readonly TiendaDbContext _tiendaDbContext;
+        private readonly IGenericRepository<TbComDevolucionCompra> _devolucionRepository;
+        private readonly IGenericRepository<TbComDetalleDevolucionCompra> _detalleDevolucionRepository;
+        private readonly IMapeoDevolucionCompra _mapeo;
+
+        public DevolucionCompraService(TiendaDbContext tiendaDbContext,
+            IGenericRepository<TbComDevolucionCompra> devolucionRepository,
+            IGenericRepository<TbComDetalleDevolucionCompra> detalleDevolucionRepository,
+            IMapeoDevolucionCompra mapeo)
+        {
+            _tiendaDbContext = tiendaDbContext;
+            _devolucionRepository = devolucionRepository;
+            _detalleDevolucionRepository = detalleDevolucionRepository;
+            _mapeo = mapeo;
+        }
+
+        public async Task<int> CrearDevolucionCompra(DevolucionCompraCreacionDTO dto)
+        {
+            if (dto == null || dto.IdProveedor <= 0 || dto.IdTipoDevolucion <= 0 || dto.DetalleDevolucionCompraCreacionDTO == null || !dto.DetalleDevolucionCompraCreacionDTO.Any())
+                throw new BadRequestException("Los datos de la devolución son inválidos");
+
+            if (dto.DetalleDevolucionCompraCreacionDTO.Any(d => d.IdArticulo <= 0 || d.Cantidad <= 0 || d.Valor < 0))
+                throw new BadRequestException("Cada detalle debe tener un artículo válido, una cantidad mayor que cero y un valor no negativo");
+
+            if (dto.DetalleDevolucionCompraCreacionDTO
+                .SelectMany(d => d.ImpuestosDetalleDTO ?? Enumerable.Empty<DetalleDevolucionCompraImpuestoDTO>())
+                .Any(i => i.IdImpuesto <= 0 || string.IsNullOrWhiteSpace(i.TipoCalculo) || i.Valor < 0))
+                throw new BadRequestException("Cada impuesto debe tener un identificador, tipo de cálculo y valor válidos");
+
+            if (dto.DetalleDevolucionCompraCreacionDTO.GroupBy(d => d.IdArticulo).Any(g => g.Count() > 1))
+                throw new BadRequestException("No se puede repetir el mismo artículo en los detalles de la devolución");
+
+            var proveedor = await _tiendaDbContext.TbComProveedores
+                .FirstOrDefaultAsync(p => p.Id == dto.IdProveedor && p.Estado);
+            if (proveedor == null)
+                throw new NotFoundException("No existe el proveedor indicado o está inactivo");
+
+            var idsArticulos = dto.DetalleDevolucionCompraCreacionDTO
+                .Select(d => d.IdArticulo)
+                .ToList();
+            var articulos = await _tiendaDbContext.TbComArticulos
+                .Where(a => idsArticulos.Contains(a.Id))
+                .ToDictionaryAsync(a => a.Id);
+
+            var articuloInvalido = idsArticulos.FirstOrDefault(id => !articulos.ContainsKey(id) || !articulos[id].Estado);
+            if (articuloInvalido > 0)
+                throw new NotFoundException($"No existe el artículo indicado o está inactivo: {articuloInvalido}");
+
+            var tipoDevolucion = await _tiendaDbContext.TbComTipoDevolucionCompras
+                .FirstOrDefaultAsync(t => t.Id == dto.IdTipoDevolucion && t.Estado);
+            if (tipoDevolucion == null)
+                throw new BadRequestException("El tipo de devolución no existe o está inactivo");
+
+            await using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
+            try
+            {
+                var tbDevolucion = await CrearEntidadDevolucionAsync(dto);
+                await PersistirImpuestosAsync(tbDevolucion, dto);
+
+                if (tipoDevolucion.Nombre.Equals("CREDITO", StringComparison.OrdinalIgnoreCase))
+                    await GenerarCreditoProveedorAsync(tbDevolucion);
+
+                // Crear movimiento y registros en TbInvDevolucionLote (reduce stock)
+                await CrearMovimientoYDevolucionLotesAsync(tbDevolucion);
+
+                await transaction.CommitAsync();
+                return tbDevolucion.Id;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task ReversarDevolucionCompra(int id)
+        {
+            if (id <= 0)
+                throw new BadRequestException("La devolución indicada no es válida");
+
+            await using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
+            try
+            {
+                var devolucion = await _tiendaDbContext.TbComDevolucionCompras
+                    .Include(d => d.IdTipoDevolucionNavigation)
+                    .Include(d => d.TbComCreditoProveedor)
+                    .ThenInclude(c => c!.TbComCreditoProveedorMovimientos)
+                            .ThenInclude(m => m.IdTipoMovimientoNavigation)
+                    .FirstOrDefaultAsync(d => d.Id == id);
+
+                if (devolucion == null)
+                    throw new NotFoundException("No existe la devolución indicada");
+
+                if (devolucion.FechaReversion.HasValue)
+                    throw new ConflictException("La devolución ya fue reversada");
+
+                if (devolucion.IdTipoDevolucionNavigation.Nombre.Equals("CREDITO", StringComparison.OrdinalIgnoreCase))
+                {
+                    var credito = devolucion.TbComCreditoProveedor;
+                    if (credito == null)
+                        throw new NotFoundException("No existe el crédito generado para la devolución");
+
+                    var usoActivo = credito.TbComCreditoProveedorMovimientos.Any(m =>
+                        m.Estado && m.IdTipoMovimientoNavigation.Nombre.Equals("USO", StringComparison.OrdinalIgnoreCase));
+                    if (usoActivo)
+                        throw new ConflictException("No se puede reversar la devolución porque el crédito generado ya fue aplicado a una o varias compras.");
+
+                    credito.Estado = false;
+                    credito.ValorDisponible = 0;
+                }
+
+                devolucion.Estado = 0;
+                devolucion.FechaReversion = DateTime.Now;
+                await _tiendaDbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        private async Task<TbComDevolucionCompra> CrearEntidadDevolucionAsync(DevolucionCompraCreacionDTO dto)
+        {
+            var tbDevolucion = _mapeo.MapeoDevolucionCompraCreacionDtoATb(dto);
+            tbDevolucion.FechaCreacion = DateTime.Now;
+            _tiendaDbContext.TbComDevolucionCompras.Add(tbDevolucion);
+            await _tiendaDbContext.SaveChangesAsync();
+            return tbDevolucion;
+        }
+
+        private async Task PersistirImpuestosAsync(
+            TbComDevolucionCompra devolucion,
+            DevolucionCompraCreacionDTO dto)
+        {
+            var detallesDto = dto.DetalleDevolucionCompraCreacionDTO.ToList();
+            var detallesEntidad = devolucion.TbComDetalleDevolucionCompras.ToList();
+
+            if (detallesDto.Count != detallesEntidad.Count)
+                throw new ConflictException("No se pudieron asociar los impuestos con los detalles de la devolución");
+
+            for (var i = 0; i < detallesDto.Count; i++)
+            {
+                foreach (var impuesto in detallesDto[i].ImpuestosDetalleDTO ?? Enumerable.Empty<DetalleDevolucionCompraImpuestoDTO>())
+                {
+                    await _tiendaDbContext.Database.ExecuteSqlInterpolatedAsync($"""
+                        INSERT INTO TbComImpuestoDetalleDevolucionCompra
+                            (IdDetalleDevolucionCompra, IdImpuesto, Nombre, TipoCalculo, Valor, Estado)
+                        VALUES
+                            ({detallesEntidad[i].Id}, {impuesto.IdImpuesto}, {impuesto.Nombre},
+                             {impuesto.TipoCalculo}, {impuesto.Valor}, {impuesto.Estado})
+                        """);
+                }
+            }
+        }
+
+        private async Task<decimal> CalcularValorCreditoAsync(TbComDevolucionCompra devolucion)
+        {
+            var idsDetalle = devolucion.TbComDetalleDevolucionCompras
+                .Select(d => d.Id)
+                .ToList();
+
+            var impuestos = await _tiendaDbContext.TbComImpuestoDetalleDevolucionCompras
+                .AsNoTracking()
+                .Where(i => idsDetalle.Contains(i.IdDetalleDevolucionCompra))
+                .ToListAsync();
+
+            var impuestosPorDetalle = impuestos
+                .GroupBy(i => i.IdDetalleDevolucionCompra)
+                .ToDictionary(g => g.Key, g => g.ToList());
+            decimal total = 0m;
+
+            foreach (var detalleDevolucion in devolucion.TbComDetalleDevolucionCompras)
+            {
+                var valor = detalleDevolucion.Cantidad * detalleDevolucion.Valor;
+                var valorUnidad = valor;
+
+                if (impuestosPorDetalle.TryGetValue(detalleDevolucion.Id, out var impuestosDetalle))
+                {
+                    foreach (var impuesto in impuestosDetalle)
+                    {
+                        if (impuesto.TipoCalculo.Equals("UNIDAD", StringComparison.OrdinalIgnoreCase))
+                        {
+                            valor += detalleDevolucion.Cantidad * impuesto.Valor;
+                        }
+                        else if (impuesto.TipoCalculo.Equals("PORCENTAJE", StringComparison.OrdinalIgnoreCase))
+                        {
+                            valor += valorUnidad * impuesto.Valor;
+                        }
+                        else
+                        {
+                            throw new BadRequestException($"El tipo de cálculo de impuesto '{impuesto.TipoCalculo}' no es válido");
+                        }
+                    }
+                }
+
+                total += valor;
+            }
+            return decimal.Round(total, 4, MidpointRounding.AwayFromZero);
+        }
+
+        private async Task GenerarCreditoProveedorAsync(TbComDevolucionCompra devolucion)
+        {
+            var creditoExistente = await _tiendaDbContext.TbComCreditoProveedors
+                .AnyAsync(c => c.IdDevolucionCompra == devolucion.Id);
+            if (creditoExistente)
+                throw new ConflictException("La devolución ya tiene un crédito generado");
+
+            var valor = await CalcularValorCreditoAsync(devolucion);
+            if (valor <= 0)
+                throw new BadRequestException("El valor del crédito debe ser mayor que cero");
+
+            var credito = new TbComCreditoProveedor
+            {
+                IdDevolucionCompra = devolucion.Id,
+                ValorOriginal = valor,
+                ValorDisponible = valor,
+                FechaCreacion = DateTime.Now,
+                Estado = true
+            };
+            _tiendaDbContext.TbComCreditoProveedors.Add(credito);
+            await _tiendaDbContext.SaveChangesAsync();
+        }
+
+        private async Task CrearMovimientoYDevolucionLotesAsync(TbComDevolucionCompra devolucion)
+        {
+            var trans = await _tiendaDbContext.TbInvTransacciones
+                .FirstOrDefaultAsync(t => t.Nombre.ToLower() == "devolucion compra");
+            if (trans == null)
+                throw new NotFoundException("No existe la transacción 'Devolucion Compra' en TbInvTransacciones");
+
+            var referenciasCompras = await _tiendaDbContext.TbCompras
+                .Where(c => c.IdProveedor == devolucion.IdProveedor
+                    && c.IdEstadoCompraNavigation.Nombre.ToLower() != "reversada")
+                .Select(c => c.Documento + "ID" + c.Id)
+                .ToListAsync();
+
+            if (!referenciasCompras.Any())
+                throw new ConflictException("El proveedor no tiene compras vigentes para los artículos de la devolución");
+
+            var movimiento = new TbInvMovimiento
+            {
+                IdTransaccionInventario = trans.Id,
+                Referencia = devolucion.Id.ToString(),
+                Fecha = DateTime.Now
+            };
+            _tiendaDbContext.TbInvMovimientos.Add(movimiento);
+            await _tiendaDbContext.SaveChangesAsync();
+
+            // Por cada detalle de la devolucion, crear TbInvDevolucionLote y reducir stock del lote
+            foreach (var detalleDevolucion in devolucion.TbComDetalleDevolucionCompras)
+            {
+                var lotes = await _tiendaDbContext.TbInvLotes
+                    .Include(l => l.IdMovimientoNavigation)
+                    .Where(l => l.IdArticulo == detalleDevolucion.IdArticulo
+                        && l.Estado
+                        && l.StockDisponible > 0
+                        && !l.IdMovimientoNavigation.IdMovimientoOrigen.HasValue
+                        && l.IdMovimientoNavigation.Referencia != null
+                        && referenciasCompras.Contains(l.IdMovimientoNavigation.Referencia))
+                    .OrderBy(l => l.FechaExpiracion.HasValue ? 0 : 1)
+                    .ThenBy(l => l.FechaExpiracion)
+                    .ThenBy(l => l.FechaIngreso)
+                    .ToListAsync();
+
+                if (!lotes.Any())
+                    throw new ConflictException($"No existe stock elegible del artículo {detalleDevolucion.IdArticulo} para el proveedor indicado");
+
+                var idsMovimientos = lotes.Select(l => l.IdMovimiento).Distinct().ToList();
+                var movimientosReversados = await _tiendaDbContext.TbInvMovimientos
+                    .Where(m => m.IdMovimientoOrigen.HasValue
+                        && idsMovimientos.Contains(m.IdMovimientoOrigen.Value))
+                    .Select(m => m.IdMovimientoOrigen!.Value)
+                    .Distinct()
+                    .ToListAsync();
+
+                var cantidadRestante = (decimal)detalleDevolucion.Cantidad;
+                foreach (var lote in lotes.Where(l => !movimientosReversados.Contains(l.IdMovimiento)))
+                {
+                    if (cantidadRestante <= 0)
+                        break;
+
+                    var cantidad = Math.Min(cantidadRestante, lote.StockDisponible);
+                    _tiendaDbContext.TbInvDevolucionLotes.Add(new TbInvDevolucionLote
+                    {
+                        IdMovimiento = movimiento.Id,
+                        IdDetalleDevolucionCompra = detalleDevolucion.Id,
+                        IdLote = lote.Id,
+                        Cantidad = cantidad,
+                        CostoUnitario = lote.CostoUnitario,
+                        Estado = true
+                    });
+
+                    lote.StockDisponible -= cantidad;
+                    cantidadRestante -= cantidad;
+                }
+
+                if (cantidadRestante > 0)
+                    throw new ConflictException($"La cantidad a devolver del artículo {detalleDevolucion.IdArticulo} excede el stock disponible elegible");
+            }
+            
+            await _tiendaDbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<TipoDevolucionDTO>> ListaTiposDevolucion()
+        {
+            var TiposDevoluciones = await _tiendaDbContext.TbComTipoDevolucionCompras.Where(t => t.Estado == true && t.EstadoVisual == true).ToListAsync();
+            return TiposDevoluciones.Select(t => new TipoDevolucionDTO
+            {
+                Id = t.Id,
+                Nombre = t.Nombre
+            }).ToList();
+        }
+        public async Task<List<DevolucionCompraDTO>> ListarDevolucionesFechas(DateOnly fechaInicio, DateOnly fechaFin)
+        {
+            if (fechaInicio > fechaFin)
+                throw new BadRequestException("La fecha inicial no puede ser mayor que la fecha final");
+
+            var inicio = fechaInicio.ToDateTime(TimeOnly.MinValue);
+            var fin = fechaFin.ToDateTime(TimeOnly.MaxValue);
+
+            var devoluciones = await _tiendaDbContext.TbComDevolucionCompras
+                .AsNoTracking()
+                .Where(d => d.FechaCreacion >= inicio && d.FechaCreacion <= fin)
+                .Include(d => d.IdTipoDevolucionNavigation)
+                .Include(d => d.IdCompraNavigation)
+                    .ThenInclude(c => c.IdProveedorNavigation)
+                        .ThenInclude(p => p.IdPersonaNavigation)
+                .Include(d => d.IdCompraNavigation)
+                    .ThenInclude(c => c.IdEstadoCompraNavigation)
+                .Include(d => d.IdCompraNavigation)
+                    .ThenInclude(c => c.IdUsuarioCreadorNavigation)
+                        .ThenInclude(u => u.IdPersonaNavigation)
+                .OrderByDescending(d => d.FechaCreacion)
+                .ToListAsync();
+
+             return _mapeo.MapeoListaDevolucionesCompraTbADto(devoluciones);
+        }
+
+        public async Task<CreditoProveedorDTO> ObtenerCreditoPorDevolucion(int idDevolucion)
+        {
+            if (idDevolucion <= 0)
+                throw new BadRequestException("La devolución indicada no es válida");
+
+            var devolucion = await _tiendaDbContext.TbComDevolucionCompras
+                .AsNoTracking()
+                .Include(d => d.IdCompraNavigation)
+                    .ThenInclude(c => c.IdProveedorNavigation)
+                .Include(d => d.TbComCreditoProveedor)
+                    .ThenInclude(c => c!.TbComCreditoProveedorMovimientos)
+                        .ThenInclude(m => m.IdTipoMovimientoNavigation)
+                .FirstOrDefaultAsync(d => d.Id == idDevolucion);
+
+            if (devolucion == null)
+                throw new NotFoundException("No existe la devolución indicada");
+
+            var credito = devolucion.TbComCreditoProveedor;
+            if (credito == null)
+                throw new NotFoundException("No existe un crédito asociado a la devolución indicada");
+
+            return new CreditoProveedorDTO
+            {
+                Id = credito.Id,
+                IdDevolucionCompra = credito.IdDevolucionCompra,
+                IdProveedor = devolucion.IdCompraNavigation.IdProveedor,
+                Proveedor = devolucion.IdCompraNavigation.IdProveedorNavigation.RazonSocial,
+                ValorOriginal = credito.ValorOriginal,
+                ValorDisponible = credito.ValorDisponible,
+                FechaCreacion = credito.FechaCreacion,
+                Detalles = [],
+                Estado = credito.Estado,
+                Movimientos = credito.TbComCreditoProveedorMovimientos
+                    .Select(m => new CreditoProveedorMovimientoDTO
+                    {
+                        Id = m.Id,
+                        IdCreditoProveedor = m.IdCreditoProveedor,
+                        IdCompra = m.IdCompra,
+                        IdTipoMovimiento = m.IdTipoMovimiento,
+                        TipoMovimiento = m.IdTipoMovimientoNavigation.Nombre,
+                        Valor = m.Valor,
+                        FechaCreacion = m.FechaCreacion,
+                        Observacion = m.Observacion,
+                        Estado = m.Estado
+                    })
+                    .ToList()
+            };
+        }
+
+        public async Task<List<DetalleDevolucionCompraDTO>> ListarDetallesDevolucion(int idDevolucionCompra)
+        {
+            var detalles = await _tiendaDbContext.TbComDetalleDevolucionCompras
+                 .AsNoTracking()
+                 .Where(d => d.IdDevolucionCompra == idDevolucionCompra)
+                 .Include(d => d.IdDetalleCompraNavigation)
+                     .ThenInclude(dc => dc.IdArticuloNavigation)
+                 .Include(d => d.IdDetalleCompraNavigation)
+                     .ThenInclude(dc => dc.TbComImpuestoDetalles)
+                 .ToListAsync();
+             if(detalles == null)
+                 throw new NotFoundException("No se encontraron detalles para la devolución indicada");
+
+
+            return this._mapeo.MapeoListaDetallesDevolucionTbADto(detalles);
+        }
+    }
+}

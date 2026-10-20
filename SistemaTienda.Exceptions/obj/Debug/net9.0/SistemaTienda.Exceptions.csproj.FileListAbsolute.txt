@@ -16,3 +16,6 @@ C:\Temp\ApiTiendaBuild\Debug\net9.0\SistemaTienda.Exceptions.pdb
 C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.Exceptions.deps.json
 C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.Exceptions.dll
 C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.Exceptions.pdb
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.Exceptions.deps.json
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.Exceptions.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.Exceptions.pdb

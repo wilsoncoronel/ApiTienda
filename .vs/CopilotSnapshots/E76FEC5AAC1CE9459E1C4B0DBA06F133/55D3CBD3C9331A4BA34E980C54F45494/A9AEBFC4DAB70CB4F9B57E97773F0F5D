@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace SistemaTienda.DTO
+{
+    public class DetalleDevolucionCompraCreacionDTO
+    {
+        public int IdArticulo { get; set; }
+        public int Cantidad { get; set; }
+
+        public bool Estado { get; set; }
+
+        public decimal Valor { get; set; }
+        public List<DetalleDevolucionCompraImpuestoDTO> ImpuestosDetalleDTO { get; set; } = new List<DetalleDevolucionCompraImpuestoDTO>();
+    }
+}

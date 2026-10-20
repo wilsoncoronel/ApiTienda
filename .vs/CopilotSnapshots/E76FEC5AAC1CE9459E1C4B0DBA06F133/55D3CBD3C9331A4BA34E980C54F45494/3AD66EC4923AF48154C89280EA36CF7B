@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace SistemaTienda.DTO
+{
+    public class DevolucionCompraCreacionDTO
+    {
+        public int IdCompra { get; set; }
+        public int IdTipoDevolucion { get; set; }
+        public int IdProveedor { get; set; }
+        public DateTime FechaCreacion { get; set; }
+        public int Estado { get; set; }
+        public string Motivo { get; set; } = string.Empty;
+        // Nota: Se omite la propiedad de navegación a TbCompra para evitar dependencia directa al proyecto de modelos
+        public ICollection<DetalleDevolucionCompraCreacionDTO> DetalleDevolucionCompraCreacionDTO { get; set; } = new List<DetalleDevolucionCompraCreacionDTO>();
+    }
+}

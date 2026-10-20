@@ -8,6 +8,7 @@ namespace SistemaTienda.DTO
 {
     public class ImpuestoCrearDTO
     {
+        public int IdImpuesto { get; set; }
         public string Nombre { get; set; } = null!;
 
         public string TipoCalculo { get; set; } = null!;

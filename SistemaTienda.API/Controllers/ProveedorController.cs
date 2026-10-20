@@ -81,6 +81,19 @@ namespace SistemaTienda.API.Controllers
         }
 
         [HttpGet]
+        [Route("ProveedoresMin")]
+        public async Task<IActionResult> ProveedoresMin()
+        {
+            var resp = new Response<List<ProveedorMinDTO>>();
+
+            resp.status = true;
+            resp.Value = await this.proveedorService.ProveedoresMin();
+            resp.msg = "Proveedores mínimos listados exitosamente";
+
+            return Ok(resp);
+        }
+
+        [HttpGet]
         [Route("ListarCiudades")]
         public async Task<IActionResult> ListarCiudades()
         {

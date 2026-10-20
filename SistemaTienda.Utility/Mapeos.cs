@@ -85,6 +85,7 @@ namespace SistemaTienda.Utility
         List<ArticuloCompraDTO> MapeoArticulosCompras(List<TbComArticulo> articulos);
         List<ArticuloVentaDTO> MapeoArticulosVentas(List<TbInvLote> lotes);
         ArticuloDTO MapeoArticuloTbAArticuloDto(TbComArticulo articuloTb);
+        List<ArticuloVentaDTO> MapeoArticulosDevolucion(List<TbInvLote> lotes);
     }
     public class Mapeos : IMapeos
     {
@@ -96,13 +97,24 @@ namespace SistemaTienda.Utility
                 Nombre = $"{a.Nombre} Id: {a.Id} {a.Descripcion ?? string.Empty} Mar: {a.IdMarcaNavigation.Nombre} Tip: {a.IdTipoArticuloNavigation.Nombre} Uni: {a.IdUnidadNavigation.Nombre.TrimEnd()} {a.UnidadValor} {a.ValorCompra}$"
             }).ToList();
         }
-
+        
         public List<ArticuloVentaDTO> MapeoArticulosVentas(List<TbInvLote> lotes)
         {
             return lotes.Select(lote => new ArticuloVentaDTO
             {
                 Id = lote.IdArticuloNavigation.Id,
-                Nombre = $"{lote.IdArticuloNavigation.Nombre} Id: {lote.IdArticuloNavigation.Id} {lote.IdArticuloNavigation.Descripcion ?? string.Empty} Mar: {lote.IdArticuloNavigation.IdMarcaNavigation.Nombre} Tip: {lote.IdArticuloNavigation.IdTipoArticuloNavigation.Nombre} Uni: {lote.IdArticuloNavigation.IdUnidadNavigation.Nombre.TrimEnd()} {lote.IdArticuloNavigation.UnidadValor} {lote.IdArticuloNavigation.ValorVenta}$",
+                Nombre = $"{lote.IdArticuloNavigation.IdMarcaNavigation.Nombre} {lote.IdArticuloNavigation.Nombre} Id: {lote.IdArticuloNavigation.Id} {lote.IdArticuloNavigation.Descripcion ?? string.Empty} Tip: {lote.IdArticuloNavigation.IdTipoArticuloNavigation.Nombre} Uni: {lote.IdArticuloNavigation.IdUnidadNavigation.Nombre.TrimEnd()} {lote.IdArticuloNavigation.UnidadValor} {lote.IdArticuloNavigation.ValorVenta}$",
+                Lote = lote.NumeroLote.Trim(),
+                Codigo = lote.Codigo.Trim() ?? string.Empty
+            }).ToList();
+        }
+
+        public List<ArticuloVentaDTO> MapeoArticulosDevolucion(List<TbInvLote> lotes)
+        {
+            return lotes.Select(lote => new ArticuloVentaDTO
+            {
+                Id = lote.IdArticuloNavigation.Id,
+                Nombre = $"{lote.IdArticuloNavigation.IdMarcaNavigation.Nombre} {lote.IdArticuloNavigation.Nombre} Id: {lote.IdArticuloNavigation.Id} {lote.IdArticuloNavigation.Descripcion ?? string.Empty} Tip: {lote.IdArticuloNavigation.IdTipoArticuloNavigation.Nombre} Uni: {lote.IdArticuloNavigation.IdUnidadNavigation.Nombre.TrimEnd()} {lote.IdArticuloNavigation.UnidadValor} {lote.IdArticuloNavigation.ValorCompra}$",
                 Lote = lote.NumeroLote.Trim(),
                 Codigo = lote.Codigo.Trim() ?? string.Empty
             }).ToList();

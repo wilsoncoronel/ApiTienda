@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+
 using SistemaTienda.Model;
 namespace SistemaTienda.DAL.DBContext;
 
@@ -38,6 +39,8 @@ public partial class TiendaDbContext : DbContext
     public virtual DbSet<TbComImpuesto> TbComImpuestos { get; set; }
 
     public virtual DbSet<TbComImpuestoDetalle> TbComImpuestoDetalles { get; set; }
+
+    public virtual DbSet<TbComImpuestoDetalleDevolucionCompra> TbComImpuestoDetalleDevolucionCompras { get; set; }
 
     public virtual DbSet<TbComMarca> TbComMarcas { get; set; }
 
@@ -208,10 +211,12 @@ public partial class TiendaDbContext : DbContext
         {
             entity.ToTable("TbComDetalleDevolucionCompra");
 
-            entity.HasOne(d => d.IdDetalleCompraNavigation).WithMany(p => p.TbComDetalleDevolucionCompras)
-                .HasForeignKey(d => d.IdDetalleCompra)
+            entity.Property(e => e.Valor).HasColumnType("numeric(18, 4)");
+
+            entity.HasOne(d => d.IdArticuloNavigation).WithMany(p => p.TbComDetalleDevolucionCompras)
+                .HasForeignKey(d => d.IdArticulo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TbComDetalleDevolucionCompra_TbComDetallesCompras");
+                .HasConstraintName("FK_TbComDetalleDevolucionCompra_TbComArticulos");
 
             entity.HasOne(d => d.IdDevolucionCompraNavigation).WithMany(p => p.TbComDetalleDevolucionCompras)
                 .HasForeignKey(d => d.IdDevolucionCompra)
@@ -253,10 +258,10 @@ public partial class TiendaDbContext : DbContext
                 .HasMaxLength(200)
                 .IsFixedLength();
 
-            entity.HasOne(d => d.IdCompraNavigation).WithMany(p => p.TbComDevolucionCompras)
-                .HasForeignKey(d => d.IdCompra)
+            entity.HasOne(d => d.IdProveedorNavigation).WithMany(p => p.TbComDevolucionCompras)
+                .HasForeignKey(d => d.IdProveedor)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TbComDevolucionCompra_TbCompras");
+                .HasConstraintName("FK_TbComDevolucionCompra_TbComProveedores");
 
             entity.HasOne(d => d.IdTipoDevolucionNavigation).WithMany(p => p.TbComDevolucionCompras)
                 .HasForeignKey(d => d.IdTipoDevolucion)
@@ -296,6 +301,20 @@ public partial class TiendaDbContext : DbContext
                 .HasForeignKey(d => d.IdDetalleCompra)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbComImpuestoDetalle_TbComDetallesCompras");
+        });
+
+        modelBuilder.Entity<TbComImpuestoDetalleDevolucionCompra>(entity =>
+        {
+            entity.ToTable("TbComImpuestoDetalleDevolucionCompra");
+
+            entity.Property(e => e.Nombre).HasMaxLength(50);
+            entity.Property(e => e.TipoCalculo).HasMaxLength(50);
+            entity.Property(e => e.Valor).HasColumnType("numeric(18, 4)");
+
+            entity.HasOne(d => d.IdDetalleDevolucionCompraNavigation).WithMany(p => p.TbComImpuestoDetalleDevolucionCompras)
+                .HasForeignKey(d => d.IdDetalleDevolucionCompra)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbComImpuestoDetalleDevolucionCompra_TbComDetalleDevolucionCompra");
         });
 
         modelBuilder.Entity<TbComMarca>(entity =>
@@ -548,7 +567,7 @@ public partial class TiendaDbContext : DbContext
             entity.ToTable("TbInvMovimiento");
 
             entity.Property(e => e.Fecha).HasColumnType("datetime");
-            entity.Property(e => e.Referencia).HasMaxLength(50);
+            entity.Property(e => e.Referencia).HasMaxLength(200);
 
             entity.HasOne(d => d.IdTransaccionInventarioNavigation).WithMany(p => p.TbInvMovimientos)
                 .HasForeignKey(d => d.IdTransaccionInventario)

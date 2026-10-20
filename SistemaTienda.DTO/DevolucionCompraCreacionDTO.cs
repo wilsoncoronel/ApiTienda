@@ -5,8 +5,8 @@ namespace SistemaTienda.DTO
 {
     public class DevolucionCompraCreacionDTO
     {
-        public int IdCompra { get; set; }
         public int IdTipoDevolucion { get; set; }
+        public int IdProveedor { get; set; }
         public DateTime FechaCreacion { get; set; }
         public int Estado { get; set; }
         public string Motivo { get; set; } = string.Empty;

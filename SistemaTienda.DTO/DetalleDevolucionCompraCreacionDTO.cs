@@ -5,10 +5,11 @@ namespace SistemaTienda.DTO
 {
     public class DetalleDevolucionCompraCreacionDTO
     {
-        public int IdDetalleCompra { get; set; }
-
+        public int IdArticulo { get; set; }
         public int Cantidad { get; set; }
 
+        public decimal Valor { get; set; }
         public bool Estado { get; set; }
+        public List<DetalleDevolucionCompraImpuestoDTO> ImpuestosDetalleDTO { get; set; } = new List<DetalleDevolucionCompraImpuestoDTO>();
     }
 }

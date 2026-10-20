@@ -78,3 +78,6 @@ C:\Temp\ApiTiendaBuild\Debug\net9.0\SistemaTienda.IOC.pdb
 C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.IOC.deps.json
 C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.IOC.dll
 C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.IOC.pdb
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.IOC.deps.json
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.IOC.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.IOC.pdb

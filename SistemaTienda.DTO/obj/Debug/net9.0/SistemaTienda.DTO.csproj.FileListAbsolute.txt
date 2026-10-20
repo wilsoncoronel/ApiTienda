@@ -40,4 +40,7 @@ C:\Temp\ApiTiendaBuild\Debug\net9.0\SistemaTienda.DTO.pdb
 C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.DTO.deps.json
 C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.DTO.dll
 C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.DTO.pdb
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.DTO.deps.json
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.DTO.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.DTO.pdb
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.DTO\obj\Debug\net9.0\SistemaT.40C3DF83.Up2Date

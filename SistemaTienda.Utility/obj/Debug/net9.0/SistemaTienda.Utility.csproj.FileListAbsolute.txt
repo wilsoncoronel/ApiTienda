@@ -58,3 +58,6 @@ C:\Temp\ApiTiendaBuild\Debug\net9.0\SistemaTienda.Utility.pdb
 C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.Utility.deps.json
 C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.Utility.dll
 C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.Utility.pdb
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.Utility.deps.json
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.Utility.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.Utility.pdb

@@ -152,6 +152,19 @@ namespace SistemaTienda.BLL.Servicios
             return this.mapper.MapeoProveedorTbListaAProveedorDtoLista(proveedoresList);
         }
 
+        public async Task<List<ProveedorMinDTO>> ProveedoresMin()
+        {
+            return await this._tiendaDbContext.TbComProveedores
+                .AsNoTracking()
+                .Where(prov => prov.Estado == true && prov.EstadoVisual == true)
+                .Select(prov => new ProveedorMinDTO
+                {
+                    Id = prov.Id,
+                    RazonSocial = prov.RazonSocial
+                })
+                .ToListAsync();
+        }
+
         public async Task<List<CiudadDTO>> ListarCiudades()
         {
             List<TbGrlCiudades> tbCiudades = await this._tiendaDbContext.TbGrlCiudades.Where(est => est.EstadoVisual == true).ToListAsync();
