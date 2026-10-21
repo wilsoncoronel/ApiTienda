@@ -19,7 +19,7 @@ public class CreditoProveedorService : ICreditoProveedorService
 
     public async Task<List<CreditoProveedorListaDTO>> ListarCreditosProveedor(int idProveedor)
     {
-        /*if (idProveedor <= 0)
+        if (idProveedor <= 0)
             throw new BadRequestException("El proveedor indicado no es válido");
 
         var proveedorExiste = await _context.TbComProveedores.AnyAsync(p => p.Id == idProveedor);
@@ -28,20 +28,19 @@ public class CreditoProveedorService : ICreditoProveedorService
 
         return await _context.TbComCreditoProveedors
             .AsNoTracking()
-            .Where(c => c.IdDevolucionCompraNavigation.IdCompraNavigation.IdProveedor == idProveedor)
+            .Where(c => c.IdDevolucionCompraNavigation.IdProveedor == idProveedor)
             .Select(c => new CreditoProveedorListaDTO
             {
                 Id = c.Id,
                 IdDevolucionCompra = c.IdDevolucionCompra,
-                IdProveedor = c.IdDevolucionCompraNavigation.IdCompraNavigation.IdProveedor,
-                Proveedor = c.IdDevolucionCompraNavigation.IdCompraNavigation.IdProveedorNavigation.RazonSocial,
+                IdProveedor = c.IdDevolucionCompraNavigation.IdProveedor,
+                Proveedor = c.IdDevolucionCompraNavigation.IdProveedorNavigation.RazonSocial,
                 ValorOriginal = c.ValorOriginal,
                 ValorDisponible = c.ValorDisponible,
                 FechaCreacion = c.FechaCreacion,
                 Estado = c.Estado
             })
-            .ToListAsync();*/
-        return new List<CreditoProveedorListaDTO>(); // Placeholder return statement
+            .ToListAsync();
     }
 
     public async Task<CreditoProveedorDTO> VerCredito(int id)
@@ -59,7 +58,7 @@ public class CreditoProveedorService : ICreditoProveedorService
 
     public async Task AplicarCreditoCompra(AplicarCreditoCompraDTO dto)
     {
-        /*if (dto == null || dto.IdCreditoProveedor <= 0 || dto.IdCompra <= 0)
+        if (dto == null || dto.IdCreditoProveedor <= 0 || dto.IdCompra <= 0)
             throw new BadRequestException("Los datos de aplicación del crédito son inválidos");
 
         var transaction = _context.Database.CurrentTransaction == null
@@ -82,7 +81,7 @@ public class CreditoProveedorService : ICreditoProveedorService
             if (compra == null)
                 throw new NotFoundException("No existe la compra indicada");
 
-            var proveedorCredito = credito.IdDevolucionCompraNavigation.IdCompraNavigation.IdProveedor;
+            var proveedorCredito = credito.IdDevolucionCompraNavigation.IdProveedor;
             if (proveedorCredito != compra.IdProveedor)
                 throw new BadRequestException("El proveedor del crédito no coincide con el proveedor de la compra");
 
@@ -153,7 +152,7 @@ public class CreditoProveedorService : ICreditoProveedorService
         {
             if (transaction != null)
                 await transaction.DisposeAsync();
-        }*/
+        }
     }
 
     private static decimal CalcularTotalCompra(TbCompra compra)

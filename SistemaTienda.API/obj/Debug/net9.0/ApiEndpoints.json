@@ -905,6 +905,22 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.DevolucionCompraController",
+    "Method": "DevolucionCompra",
+    "RelativePath": "api/DevolucionCompra/DevolucionCompra",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idDevolucion",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.DevolucionCompraController",
     "Method": "ListarDetallesDevolucion",
     "RelativePath": "api/DevolucionCompra/ListarDetallesDevolucion",
     "HttpMethod": "GET",
