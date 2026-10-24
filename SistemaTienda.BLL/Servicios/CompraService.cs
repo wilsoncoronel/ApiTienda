@@ -249,7 +249,9 @@ namespace SistemaTienda.BLL.Servicios
             {
                 if (compraDto.IdCredito is > 0)
                     await _creditoProveedorService.VerCredito(compraDto.IdCredito.Value);
-
+                if (compraDto.Documento is null || compraDto.Documento == "") {
+                    compraDto.Documento = this.GenerarDocumentoCompra();
+                }
                 var tbCompra = this._mapper.MapeoCompraCreacionDtoACompraTb(compraDto);
                 await this._compraRepository.Crear(tbCompra);
                 if (tbCompra.Id == 0)
@@ -293,11 +295,40 @@ namespace SistemaTienda.BLL.Servicios
                 await transaction.RollbackAsync();
                 throw;
             }
-            
+        }
+
+
+        //Generacion de numero de documento
+        private string GenerarDocumentoCompra()
+        {
+            var fechaActual = DateTime.Now;
+            var anio = fechaActual.Year.ToString().Substring(2, 2); // Obtener los últimos dos dígitos del año
+            var mes = fechaActual.Month.ToString("D2"); // Formatear el mes con dos dígitos
+            var dia = fechaActual.Day.ToString("D2"); // Formatear el día con dos dígitos
+            // Obtener el último número de documento registrado en la base de datos
+            var ultimoDocumento = _tiendaDbContext.TbCompras
+                .OrderByDescending(c => c.Id)
+                .Select(c => c.Documento)
+                .FirstOrDefault();
+            int numeroSecuencial = 1; // Valor por defecto si no hay documentos previos
+            if (!string.IsNullOrEmpty(ultimoDocumento) && ultimoDocumento.Length >= 8)
+            {
+                // Extraer la parte secuencial del último documento (los últimos 4 dígitos)
+                var parteSecuencial = ultimoDocumento.Substring(6, 4);
+                if (int.TryParse(parteSecuencial, out int ultimoNumero))
+                {
+                    numeroSecuencial = ultimoNumero + 1; // Incrementar el número secuencial
+                }
+            }
+            // Formatear el número secuencial con cuatro dígitos
+            var numeroSecuencialFormateado = numeroSecuencial.ToString("D4");
+            // Construir el nuevo número de documento
+            var nuevoDocumento = $"{anio}{mes}{dia}{numeroSecuencialFormateado}";
+            return nuevoDocumento;
         }
 
         // Nueva sobrecarga: editar movimiento/lotes por idCompra y documento (referencia)
-        
+
         private async Task<bool> AlimentarInventario(TbCompra tbCompra) {
             var tbinvMovimiento = new TbInvMovimiento
             {
