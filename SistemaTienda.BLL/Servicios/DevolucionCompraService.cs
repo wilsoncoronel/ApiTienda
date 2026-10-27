@@ -40,7 +40,7 @@ namespace SistemaTienda.BLL.Servicios
 
             if (dto.DetalleDevolucionCompraCreacionDTO
                 .SelectMany(d => d.ImpuestosDetalleDTO ?? Enumerable.Empty<DetalleDevolucionCompraImpuestoDTO>())
-                .Any(i => i.IdImpuesto <= 0 || string.IsNullOrWhiteSpace(i.TipoCalculo) || i.Valor < 0))
+                .Any(i => i.IdImpuesto <= 0 || i.IdTipoCalculo <= 0 || i.Valor < 0))
                 throw new BadRequestException("Cada impuesto debe tener un identificador, tipo de cálculo y valor válidos");
 
             if (dto.DetalleDevolucionCompraCreacionDTO.GroupBy(d => d.IdArticulo).Any(g => g.Count() > 1))
@@ -212,10 +212,10 @@ namespace SistemaTienda.BLL.Servicios
                 {
                     await _tiendaDbContext.Database.ExecuteSqlInterpolatedAsync($"""
                         INSERT INTO TbComImpuestoDetalleDevolucionCompra
-                            (IdDetalleDevolucionCompra, IdImpuesto, Nombre, TipoCalculo, Valor, Estado)
+                            (IdDetalleDevolucionCompra, IdImpuesto, Nombre, IdTipoCalculo, Valor, Estado)
                         VALUES
                             ({detallesEntidad[i].Id}, {impuesto.IdImpuesto}, {impuesto.Nombre},
-                             {impuesto.TipoCalculo}, {impuesto.Valor}, {impuesto.Estado})
+                             {impuesto.IdTipoCalculo}, {impuesto.Valor}, {impuesto.Estado})
                         """);
                 }
             }
@@ -246,17 +246,17 @@ namespace SistemaTienda.BLL.Servicios
                 {
                     foreach (var impuesto in impuestosDetalle)
                     {
-                        if (impuesto.TipoCalculo.Equals("UNIDAD", StringComparison.OrdinalIgnoreCase))
+                        if (impuesto.IdTipoCalculoNavigation.TipoCalculo.Equals("UNIDAD", StringComparison.OrdinalIgnoreCase))
                         {
                             valor += detalleDevolucion.Cantidad * impuesto.Valor;
                         }
-                        else if (impuesto.TipoCalculo.Equals("PORCENTAJE", StringComparison.OrdinalIgnoreCase))
+                        else if (impuesto.IdTipoCalculoNavigation.TipoCalculo.Equals("PORCENTAJE", StringComparison.OrdinalIgnoreCase))
                         {
                             valor += valorUnidad * impuesto.Valor;
                         }
                         else
                         {
-                            throw new BadRequestException($"El tipo de cálculo de impuesto '{impuesto.TipoCalculo}' no es válido");
+                            throw new BadRequestException($"El tipo de cálculo de impuesto '{impuesto.IdTipoCalculoNavigation.TipoCalculo}' no es válido");
                         }
                     }
                 }

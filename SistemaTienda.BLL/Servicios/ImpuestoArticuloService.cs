@@ -54,7 +54,7 @@ namespace SistemaTienda.BLL.Servicios
             if (imp is null)
                 throw new NotFoundException("No se encontró el impuesto a editar!!");
             imp.Nombre = impuestoArticuloEditarDto.Nombre;
-            imp.TipoCalculo = impuestoArticuloEditarDto.TipoCalculo;
+            imp.IdTipoCalculo = impuestoArticuloEditarDto.IdTipoCalculo;
             imp.Valor = impuestoArticuloEditarDto.Valor;
             imp.Estado = impuestoArticuloEditarDto.Estado;
             var resp = await this._impuestosRepository.Editar(imp);

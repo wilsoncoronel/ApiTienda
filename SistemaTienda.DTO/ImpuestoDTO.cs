@@ -9,5 +9,6 @@ namespace SistemaTienda.DTO
     public class ImpuestoDTO: ImpuestoCrearDTO
     {
         public int Id { get; set; }
+        public TipoImpuestoDTO TipoImpuestoDTO { get; set; }
     }
 }

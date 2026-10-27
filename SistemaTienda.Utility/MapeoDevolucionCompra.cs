@@ -68,7 +68,7 @@ namespace SistemaTienda.Utility
                     IdImpuesto = impuesto.IdImpuesto,
                     Nombre = impuesto.Nombre,
                     Estado = impuesto.Estado,
-                    TipoCalculo = impuesto.TipoCalculo,
+                    //IdTipoCalculo = impuesto.IdTipoCalculo,
                     Valor = impuesto.Valor
                 }).ToList()
             };

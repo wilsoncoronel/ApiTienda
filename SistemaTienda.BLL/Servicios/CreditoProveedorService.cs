@@ -166,12 +166,12 @@ public class CreditoProveedorService : ICreditoProveedorService
 
             foreach (var impuesto in detalle.TbComImpuestoDetalles)
             {
-                if (impuesto.TipoCalculo.Equals("UNIDAD", StringComparison.OrdinalIgnoreCase))
+                if (impuesto.IdTipoCalculoNavigation.TipoCalculo.Equals("UNIDAD", StringComparison.OrdinalIgnoreCase))
                     totalDetalle += detalle.Cantidad * impuesto.Valor;
-                else if (impuesto.TipoCalculo.Equals("PORCENTAJE", StringComparison.OrdinalIgnoreCase))
+                else if (impuesto.IdTipoCalculoNavigation.TipoCalculo.Equals("PORCENTAJE", StringComparison.OrdinalIgnoreCase))
                     totalDetalle += subtotal * impuesto.Valor;
                 else
-                    throw new BadRequestException($"El tipo de cálculo de impuesto '{impuesto.TipoCalculo}' no es válido");
+                    throw new BadRequestException($"El tipo de cálculo de impuesto '{impuesto.IdTipoCalculoNavigation.TipoCalculo}' no es válido");
             }
 
             total += totalDetalle;

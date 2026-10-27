@@ -310,7 +310,7 @@ namespace SistemaTienda.BLL.Servicios
                 {
                     Id = t.Id,
                     Nombre = t.Nombre,
-                    TipoCalculo = t.TipoCalculo,
+                    IdTipoCalculo = t.IdTipoCalculo,
                     Valor = t.Valor,
                     Estado = t.Estado
                 }).ToListAsync();
@@ -353,7 +353,7 @@ namespace SistemaTienda.BLL.Servicios
                 {
                     Id = t.IdImpuestoNavigation.Id,
                     Nombre = t.IdImpuestoNavigation.Nombre,
-                    TipoCalculo = t.IdImpuestoNavigation.TipoCalculo,
+                    IdTipoCalculo = t.IdImpuestoNavigation.IdTipoCalculo,
                     Valor = t.IdImpuestoNavigation.Valor,
                     Estado = t.IdImpuestoNavigation.Estado
                 })

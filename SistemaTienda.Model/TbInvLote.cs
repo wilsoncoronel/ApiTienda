@@ -33,5 +33,7 @@ public partial class TbInvLote
 
     public virtual ICollection<TbInvConsumoLote> TbInvConsumoLotes { get; set; } = new List<TbInvConsumoLote>();
 
+    public virtual ICollection<TbInvDetalleAjusteInventario> TbInvDetalleAjusteInventarios { get; set; } = new List<TbInvDetalleAjusteInventario>();
+
     public virtual ICollection<TbInvDevolucionLote> TbInvDevolucionLotes { get; set; } = new List<TbInvDevolucionLote>();
 }

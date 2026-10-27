@@ -11,9 +11,11 @@ public partial class TbComImpuestoDetalle
 
     public string Nombre { get; set; } = null!;
 
-    public string TipoCalculo { get; set; } = null!;
+    public int IdTipoCalculo { get; set; }
 
     public decimal Valor { get; set; }
 
     public virtual TbComDetallesCompra IdDetalleCompraNavigation { get; set; } = null!;
+
+    public virtual TbComTipoCalculoImpuesto IdTipoCalculoNavigation { get; set; } = null!;
 }

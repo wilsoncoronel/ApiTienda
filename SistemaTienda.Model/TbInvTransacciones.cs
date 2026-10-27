@@ -15,6 +15,8 @@ public partial class TbInvTransacciones
 
     public virtual ICollection<TbCompra> TbCompras { get; set; } = new List<TbCompra>();
 
+    public virtual ICollection<TbInvAjusteInventario> TbInvAjusteInventarios { get; set; } = new List<TbInvAjusteInventario>();
+
     public virtual ICollection<TbInvMovimiento> TbInvMovimientos { get; set; } = new List<TbInvMovimiento>();
 
     public virtual ICollection<TbVenta> TbVenta { get; set; } = new List<TbVenta>();
