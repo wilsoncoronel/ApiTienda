@@ -15,9 +15,11 @@ public partial class TbInvAjusteInventario
 
     public DateTime FechaCreacion { get; set; }
 
-    public int Estado { get; set; }
+    public int IdEstado { get; set; }
 
     public DateTime? FechaReversion { get; set; }
+
+    public virtual TbInvEstadosAjuste IdEstadoNavigation { get; set; } = null!;
 
     public virtual TbInvTransacciones IdTransaccionNavigation { get; set; } = null!;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+
 using SistemaTienda.Model;
 namespace SistemaTienda.DAL.DBContext;
 
@@ -81,6 +82,8 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbInvDevolucionLote> TbInvDevolucionLotes { get; set; }
 
+    public virtual DbSet<TbInvEstadosAjuste> TbInvEstadosAjustes { get; set; }
+
     public virtual DbSet<TbInvLote> TbInvLotes { get; set; }
 
     public virtual DbSet<TbInvMovimiento> TbInvMovimientos { get; set; }
@@ -111,7 +114,9 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbVenta> TbVentas { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {}
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=DESKTOP-QO2URC6\\SQLEXPRESS;Database=TiendaDb;User Id=sa;Password=wili199308; TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -525,6 +530,11 @@ public partial class TiendaDbContext : DbContext
             entity.Property(e => e.FechaReversion).HasColumnType("datetime");
             entity.Property(e => e.Motivo).HasMaxLength(100);
 
+            entity.HasOne(d => d.IdEstadoNavigation).WithMany(p => p.TbInvAjusteInventarios)
+                .HasForeignKey(d => d.IdEstado)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbInvAjusteInventario_TbInvEstadosAjsutes");
+
             entity.HasOne(d => d.IdTransaccionNavigation).WithMany(p => p.TbInvAjusteInventarios)
                 .HasForeignKey(d => d.IdTransaccion)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -592,6 +602,14 @@ public partial class TiendaDbContext : DbContext
                 .HasForeignKey(d => d.IdMovimiento)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbInvDevolucionLote_TbInvMovimiento");
+        });
+
+        modelBuilder.Entity<TbInvEstadosAjuste>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_TbInvEstadosAjsutes");
+
+            entity.Property(e => e.Descripcion).HasMaxLength(100);
+            entity.Property(e => e.Nombre).HasMaxLength(50);
         });
 
         modelBuilder.Entity<TbInvLote>(entity =>
