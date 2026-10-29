@@ -9,11 +9,8 @@ namespace SistemaTienda.DTO
     public class TipoImpuestoDTO
     {
         public int Id { get; set; }
-
         public string TipoCalculo { get; set; } = null!;
-
         public bool Estado { get; set; }
-
         public bool EstadoVisual { get; set; }
     }
 }

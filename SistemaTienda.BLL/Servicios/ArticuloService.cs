@@ -183,6 +183,8 @@ namespace SistemaTienda.BLL.Servicios
             return resultado;
         }
 
+        
+
         public async Task<List<ArticuloVentaDTO>> ListarVentaArticulos()
         {
             var lotesDisponibles = await this.tiendaDbContext.TbInvLotes

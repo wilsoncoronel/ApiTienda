@@ -13,5 +13,6 @@ namespace SistemaTienda.BLL.Servicios.Contrato
         Task<bool> EditarImpuesto(ImpuestoDTO impuestoArticuloEditarDto);
         Task<List<ImpuestoDTO>> ListarImpuestos();
         Task<List<EstadoImpuestoDTO>> ListarEstados();
+        Task<List<TipoImpuestoDTO>> ListarTipoImpuestos();
     }
 }

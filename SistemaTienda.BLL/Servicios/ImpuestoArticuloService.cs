@@ -47,6 +47,20 @@ namespace SistemaTienda.BLL.Servicios
             }
         }
 
+        public async Task<List<TipoImpuestoDTO>> ListarTipoImpuestos()
+        {
+            var listaArticulos = await this._tiendaDbContext.TbComTipoCalculoImpuestos.Where(art => art.EstadoVisual == true && art.Estado == true)
+                .ToListAsync();
+
+            return listaArticulos.Select(a => new TipoImpuestoDTO
+            {
+                Id = a.Id,
+                TipoCalculo = a.TipoCalculo,
+                Estado = a.Estado,
+                EstadoVisual = a.EstadoVisual
+            }).ToList();
+        }
+
         public async Task<bool> EditarImpuesto(ImpuestoDTO impuestoArticuloEditarDto)
         {
             var imp = await this._tiendaDbContext.TbComImpuestos.Where(c => c.Id == impuestoArticuloEditarDto.Id)

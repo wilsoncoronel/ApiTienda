@@ -28,6 +28,18 @@ namespace SistemaTienda.API.Controllers
         }
 
         [HttpGet]
+        [Route("CargarListaTiposImpuestos")]
+        public async Task<ActionResult<List<TipoImpuestoDTO>>> CargarListaTipoImpuestos()
+        {
+            var resp = new Response<List<TipoImpuestoDTO>>();
+
+            resp.status = true;
+            resp.Value = await this._impuestoArticuloService.ListarTipoImpuestos();
+            resp.msg = "Lista de tipos impuestos cargada correctamente.";
+            return Ok(resp);
+        }
+
+        [HttpGet]
         [Route("ListarUnidadesMedida")]
         public async Task<IActionResult> ListarUnidadesMerdida()
         {

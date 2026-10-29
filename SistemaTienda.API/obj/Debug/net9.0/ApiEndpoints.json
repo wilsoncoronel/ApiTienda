@@ -611,6 +611,26 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
+    "Method": "CargarListaTipoImpuestos",
+    "RelativePath": "api/Configuraciones/CargarListaTiposImpuestos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[SistemaTienda.DTO.TipoImpuestoDTO, SistemaTienda.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.ConfiguracionesController",
     "Method": "CrearImpuesto",
     "RelativePath": "api/Configuraciones/CrearImpuesto",
     "HttpMethod": "POST",
