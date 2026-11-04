@@ -18,4 +18,6 @@ public partial class TbComTipoCalculoImpuesto
     public virtual ICollection<TbComImpuestoDetalle> TbComImpuestoDetalles { get; set; } = new List<TbComImpuestoDetalle>();
 
     public virtual ICollection<TbComImpuesto> TbComImpuestos { get; set; } = new List<TbComImpuesto>();
+
+    public virtual ICollection<TbInvImpuestosDetalleAjuste> TbInvImpuestosDetalleAjustes { get; set; } = new List<TbInvImpuestosDetalleAjuste>();
 }

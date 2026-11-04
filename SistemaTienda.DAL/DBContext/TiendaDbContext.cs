@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-
 using SistemaTienda.Model;
 namespace SistemaTienda.DAL.DBContext;
+
 
 public partial class TiendaDbContext : DbContext
 {
@@ -76,6 +76,8 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbInvAjusteInventario> TbInvAjusteInventarios { get; set; }
 
+    public virtual DbSet<TbInvAjusteLote> TbInvAjusteLotes { get; set; }
+
     public virtual DbSet<TbInvConsumoLote> TbInvConsumoLotes { get; set; }
 
     public virtual DbSet<TbInvDetalleAjusteInventario> TbInvDetalleAjusteInventarios { get; set; }
@@ -83,6 +85,8 @@ public partial class TiendaDbContext : DbContext
     public virtual DbSet<TbInvDevolucionLote> TbInvDevolucionLotes { get; set; }
 
     public virtual DbSet<TbInvEstadosAjuste> TbInvEstadosAjustes { get; set; }
+
+    public virtual DbSet<TbInvImpuestosDetalleAjuste> TbInvImpuestosDetalleAjustes { get; set; }
 
     public virtual DbSet<TbInvLote> TbInvLotes { get; set; }
 
@@ -541,6 +545,28 @@ public partial class TiendaDbContext : DbContext
                 .HasConstraintName("FK_TbInvAjusteInventario_TbInvTransacciones");
         });
 
+        modelBuilder.Entity<TbInvAjusteLote>(entity =>
+        {
+            entity.ToTable("TbInvAjusteLote");
+
+            entity.Property(e => e.PrecioUnitario).HasColumnType("numeric(18, 4)");
+
+            entity.HasOne(d => d.IdDetalleAjusteNavigation).WithMany(p => p.TbInvAjusteLotes)
+                .HasForeignKey(d => d.IdDetalleAjuste)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbInvAjusteLote_TbInvDetalleAjusteInventario");
+
+            entity.HasOne(d => d.IdLoteNavigation).WithMany(p => p.TbInvAjusteLotes)
+                .HasForeignKey(d => d.IdLote)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbInvAjusteLote_TbInvLote");
+
+            entity.HasOne(d => d.IdMovimientoNavigation).WithMany(p => p.TbInvAjusteLotes)
+                .HasForeignKey(d => d.IdMovimiento)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbInvAjusteLote_TbInvMovimiento");
+        });
+
         modelBuilder.Entity<TbInvConsumoLote>(entity =>
         {
             entity.ToTable("TbInvConsumoLote");
@@ -575,8 +601,13 @@ public partial class TiendaDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbInvDetalleAjusteInventario_TbInvAjusteInventario");
 
-            entity.HasOne(d => d.IdLoteNavigation).WithMany(p => p.TbInvDetalleAjusteInventarios)
-                .HasForeignKey(d => d.IdLote)
+            entity.HasOne(d => d.IdArticuloNavigation).WithMany(p => p.TbInvDetalleAjusteInventarios)
+                .HasForeignKey(d => d.IdArticulo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbInvDetalleAjusteInventario_TbComArticulos");
+
+            entity.HasOne(d => d.IdArticulo1).WithMany(p => p.TbInvDetalleAjusteInventarios)
+                .HasForeignKey(d => d.IdArticulo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbInvDetalleAjusteInventario_TbInvLote");
         });
@@ -610,6 +641,24 @@ public partial class TiendaDbContext : DbContext
 
             entity.Property(e => e.Descripcion).HasMaxLength(100);
             entity.Property(e => e.Nombre).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<TbInvImpuestosDetalleAjuste>(entity =>
+        {
+            entity.ToTable("TbInvImpuestosDetalleAjuste");
+
+            entity.Property(e => e.Nombre).HasMaxLength(50);
+            entity.Property(e => e.Valor).HasColumnType("numeric(18, 4)");
+
+            entity.HasOne(d => d.IdDetalleAjusteNavigation).WithMany(p => p.TbInvImpuestosDetalleAjustes)
+                .HasForeignKey(d => d.IdDetalleAjuste)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbInvImpuestosDetalleAjuste_TbInvDetalleAjusteInventario");
+
+            entity.HasOne(d => d.IdTipoCalculoNavigation).WithMany(p => p.TbInvImpuestosDetalleAjustes)
+                .HasForeignKey(d => d.IdTipoCalculo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbInvImpuestosDetalleAjuste_TbComTipoCalculoImpuestos");
         });
 
         modelBuilder.Entity<TbInvLote>(entity =>

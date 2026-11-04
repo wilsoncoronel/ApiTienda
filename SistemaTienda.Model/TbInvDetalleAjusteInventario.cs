@@ -9,7 +9,7 @@ public partial class TbInvDetalleAjusteInventario
 
     public int IdAjusteInventario { get; set; }
 
-    public int IdLote { get; set; }
+    public int IdArticulo { get; set; }
 
     public int Cantidad { get; set; }
 
@@ -19,5 +19,11 @@ public partial class TbInvDetalleAjusteInventario
 
     public virtual TbInvAjusteInventario IdAjusteInventarioNavigation { get; set; } = null!;
 
-    public virtual TbInvLote IdLoteNavigation { get; set; } = null!;
+    public virtual TbInvLote IdArticulo1 { get; set; } = null!;
+
+    public virtual TbComArticulo IdArticuloNavigation { get; set; } = null!;
+
+    public virtual ICollection<TbInvAjusteLote> TbInvAjusteLotes { get; set; } = new List<TbInvAjusteLote>();
+
+    public virtual ICollection<TbInvImpuestosDetalleAjuste> TbInvImpuestosDetalleAjustes { get; set; } = new List<TbInvImpuestosDetalleAjuste>();
 }

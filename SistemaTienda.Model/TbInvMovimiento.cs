@@ -17,6 +17,8 @@ public partial class TbInvMovimiento
 
     public virtual TbInvTransacciones IdTransaccionInventarioNavigation { get; set; } = null!;
 
+    public virtual ICollection<TbInvAjusteLote> TbInvAjusteLotes { get; set; } = new List<TbInvAjusteLote>();
+
     public virtual ICollection<TbInvConsumoLote> TbInvConsumoLotes { get; set; } = new List<TbInvConsumoLote>();
 
     public virtual ICollection<TbInvDevolucionLote> TbInvDevolucionLotes { get; set; } = new List<TbInvDevolucionLote>();
