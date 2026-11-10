@@ -25,6 +25,8 @@ public partial class TbSisUsuario
 
     public virtual ICollection<TbCompra> TbCompras { get; set; } = new List<TbCompra>();
 
+    public virtual ICollection<TbInvAjusteInventario> TbInvAjusteInventarios { get; set; } = new List<TbInvAjusteInventario>();
+
     public virtual ICollection<TbPedidos> TbPedidos { get; set; } = new List<TbPedidos>();
 
     public virtual ICollection<TbVenta> TbVenta { get; set; } = new List<TbVenta>();

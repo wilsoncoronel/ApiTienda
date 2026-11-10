@@ -23,5 +23,7 @@ public partial class TbInvAjusteInventario
 
     public virtual TbInvTransacciones IdTransaccionNavigation { get; set; } = null!;
 
+    public virtual TbSisUsuario IdUsuarioCreadorNavigation { get; set; } = null!;
+
     public virtual ICollection<TbInvDetalleAjusteInventario> TbInvDetalleAjusteInventarios { get; set; } = new List<TbInvDetalleAjusteInventario>();
 }

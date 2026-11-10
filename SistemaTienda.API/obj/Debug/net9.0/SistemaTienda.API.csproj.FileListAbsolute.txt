@@ -588,3 +588,4 @@ C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaT
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.API.dll
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.API.pdb
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\bin\Debug\net9.0\SistemaTienda.API.staticwebassets.runtime.json

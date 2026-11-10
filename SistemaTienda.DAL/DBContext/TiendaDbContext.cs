@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+
 using SistemaTienda.Model;
 namespace SistemaTienda.DAL.DBContext;
-
 
 public partial class TiendaDbContext : DbContext
 {
@@ -118,9 +118,7 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbVenta> TbVentas { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-QO2URC6\\SQLEXPRESS;Database=TiendaDb;User Id=sa;Password=wili199308; TrustServerCertificate=True;");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -543,6 +541,11 @@ public partial class TiendaDbContext : DbContext
                 .HasForeignKey(d => d.IdTransaccion)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbInvAjusteInventario_TbInvTransacciones");
+
+            entity.HasOne(d => d.IdUsuarioCreadorNavigation).WithMany(p => p.TbInvAjusteInventarios)
+                .HasForeignKey(d => d.IdUsuarioCreador)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbInvAjusteInventario_TbSisUsuarios");
         });
 
         modelBuilder.Entity<TbInvAjusteLote>(entity =>
@@ -672,10 +675,10 @@ public partial class TiendaDbContext : DbContext
             entity.Property(e => e.StockDisponible).HasColumnType("numeric(18, 4)");
             entity.Property(e => e.StockMinimo).HasColumnType("numeric(18, 4)");
 
-            entity.HasOne(d => d.IdArticuloNavigation).WithMany(p => p.TbInvLotes)
-                .HasForeignKey(d => d.IdArticulo)
+            entity.HasOne(d => d.IdDetalleCompraNavigation).WithMany(p => p.TbInvLotes)
+                .HasForeignKey(d => d.IdDetalleCompra)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TbInvLote_TbComArticulos");
+                .HasConstraintName("FK_TbInvLote_TbComDetallesCompras");
 
             entity.HasOne(d => d.IdMovimientoNavigation).WithMany(p => p.TbInvLotes)
                 .HasForeignKey(d => d.IdMovimiento)

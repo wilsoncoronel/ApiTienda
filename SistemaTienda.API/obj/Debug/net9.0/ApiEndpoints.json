@@ -1020,6 +1020,22 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
+    "Method": "CrearAjusteInventario",
+    "RelativePath": "api/Inventario/CrearAjusteInventario",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "modelo",
+        "Type": "SistemaTienda.DTO.AjusteInventarioCrearDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
     "Method": "ExistenciasInventario",
     "RelativePath": "api/Inventario/ExistenciasInventario",
     "HttpMethod": "GET",
@@ -1052,6 +1068,16 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
+    "Method": "ListaEstadosAjuste",
+    "RelativePath": "api/Inventario/ListaEstadosAjuste",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
     "Method": "ListaInventario",
     "RelativePath": "api/Inventario/ListaInventario",
     "HttpMethod": "GET",
@@ -1065,6 +1091,53 @@
       },
       {
         "Name": "fechaFin",
+        "Type": "System.DateOnly",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
+    "Method": "ListaLotesInventario",
+    "RelativePath": "api/Inventario/ListaLotesInventario",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
+    "Method": "ListarAjusteInventarioCompleto",
+    "RelativePath": "api/Inventario/ListarAjusteInventarioCompleto",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idAjuste",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
+    "Method": "ListarAjusteInventarioFechas",
+    "RelativePath": "api/Inventario/ListarAjusteInventarioFechas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "FechaInicio",
+        "Type": "System.DateOnly",
+        "IsRequired": false
+      },
+      {
+        "Name": "FechaFinal",
         "Type": "System.DateOnly",
         "IsRequired": false
       }
@@ -1092,6 +1165,22 @@
       {
         "Name": "fechaResumen",
         "Type": "System.DateOnly",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.InventarioController",
+    "Method": "ReversarAjusteInventario",
+    "RelativePath": "api/Inventario/ReversarAjusteInventario",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "IdAjuste",
+        "Type": "System.Int32",
         "IsRequired": false
       }
     ],

@@ -85,19 +85,19 @@ namespace SistemaTienda.BLL.Servicios
                 .ToListAsync();
 
             var lote = await this.tiendaDbContext.TbInvLotes
-                .Where(l => l.IdArticulo == idArticulo
+                .Where(l => l.IdDetalleCompraNavigation.IdArticulo == idArticulo
                     && l.Estado == true
                     && l.StockDisponible > 0
                     && !idsTransReversion.Contains(l.IdMovimientoNavigation.IdTransaccionInventario))
                 .Include(l => l.IdMovimientoNavigation)
-                .Include(l => l.IdArticuloNavigation)
+                .Include(l => l.IdDetalleCompraNavigation.IdArticuloNavigation)
                     .ThenInclude(a => a.IdMarcaNavigation)
-                .Include(l => l.IdArticuloNavigation)
+                .Include(l => l.IdDetalleCompraNavigation.IdArticuloNavigation)
                     .ThenInclude(a => a.IdTipoArticuloNavigation)
-                .Include(l => l.IdArticuloNavigation)
+                .Include(l => l.IdDetalleCompraNavigation.IdArticuloNavigation)
                     .ThenInclude(a => a.TbComArticulosImpuestos)
                         .ThenInclude(ai => ai.IdImpuestoNavigation)
-                .Include(l => l.IdArticuloNavigation)
+                .Include(l => l.IdDetalleCompraNavigation.IdArticuloNavigation)
                     .ThenInclude(a => a.IdUnidadNavigation)
                 .OrderBy(l => l.FechaExpiracion == null)
                 .ThenBy(l => l.FechaExpiracion)
@@ -110,7 +110,7 @@ namespace SistemaTienda.BLL.Servicios
 
             return new ArticuloInventarioDTO
             {
-                Articulo = this._mapper.MapeoArticuloTbAArticuloDto(lote.IdArticuloNavigation, false),
+                Articulo = this._mapper.MapeoArticuloTbAArticuloDto(lote.IdDetalleCompraNavigation.IdArticuloNavigation, false),
                 NumeroLote = lote.NumeroLote ?? string.Empty,
                 Codigo = lote.Codigo ?? string.Empty,
                 FechaIngreso = lote.FechaIngreso,
@@ -188,12 +188,12 @@ namespace SistemaTienda.BLL.Servicios
         public async Task<List<ArticuloVentaDTO>> ListarVentaArticulos()
         {
             var lotesDisponibles = await this.tiendaDbContext.TbInvLotes
-                .Where(lote => lote.StockDisponible > 0 && lote.IdArticuloNavigation.EstadoVisual == true)
-                .Include(lote => lote.IdArticuloNavigation)
+                .Where(lote => lote.StockDisponible > 0 && lote.IdDetalleCompraNavigation.IdArticuloNavigation.EstadoVisual == true)
+                .Include(lote => lote.IdDetalleCompraNavigation.IdArticuloNavigation)
                     .ThenInclude(articulo => articulo.IdMarcaNavigation)
-                .Include(lote => lote.IdArticuloNavigation)
+                .Include(lote => lote.IdDetalleCompraNavigation.IdArticuloNavigation)
                     .ThenInclude(articulo => articulo.IdTipoArticuloNavigation)
-                .Include(lote => lote.IdArticuloNavigation)
+                .Include(lote => lote.IdDetalleCompraNavigation.IdArticuloNavigation)
                     .ThenInclude(articulo => articulo.IdUnidadNavigation)
                 .ToListAsync();
             var resultado = this._mapper.MapeoArticulosVentas(lotesDisponibles);
@@ -203,12 +203,12 @@ namespace SistemaTienda.BLL.Servicios
         public async Task<List<ArticuloVentaDTO>> ListarDevolucionArticulos()
         {
             var lotesDisponibles = await this.tiendaDbContext.TbInvLotes
-                .Where(lote => lote.StockDisponible > 0 && lote.IdArticuloNavigation.EstadoVisual == true)
-                .Include(lote => lote.IdArticuloNavigation)
+                .Where(lote => lote.StockDisponible > 0 && lote.IdDetalleCompraNavigation.IdArticuloNavigation.EstadoVisual == true)
+                .Include(lote => lote.IdDetalleCompraNavigation.IdArticuloNavigation)
                     .ThenInclude(articulo => articulo.IdMarcaNavigation)
-                .Include(lote => lote.IdArticuloNavigation)
+                .Include(lote => lote.IdDetalleCompraNavigation.IdArticuloNavigation)
                     .ThenInclude(articulo => articulo.IdTipoArticuloNavigation)
-                .Include(lote => lote.IdArticuloNavigation)
+                .Include(lote => lote.IdDetalleCompraNavigation.IdArticuloNavigation)
                     .ThenInclude(articulo => articulo.IdUnidadNavigation)
                 .ToListAsync();
             var resultado = this._mapper.MapeoArticulosDevolucion(lotesDisponibles);
@@ -228,14 +228,14 @@ namespace SistemaTienda.BLL.Servicios
             var lotes = await this.tiendaDbContext.TbInvLotes
                 .Where(l => l.Estado == true && l.StockDisponible > 0 && !idsTransReversion.Contains(l.IdMovimientoNavigation.IdTransaccionInventario))
                 .Include(l => l.IdMovimientoNavigation)
-                .Include(l => l.IdArticuloNavigation)
+                .Include(l => l.IdDetalleCompraNavigation.IdArticuloNavigation)
                     .ThenInclude(a => a.IdMarcaNavigation)
-                .Include(l => l.IdArticuloNavigation)
+                .Include(l => l.IdDetalleCompraNavigation.IdArticuloNavigation)
                     .ThenInclude(a => a.IdTipoArticuloNavigation)
-                .Include(l => l.IdArticuloNavigation)
+                .Include(l => l.IdDetalleCompraNavigation.IdArticuloNavigation)
                     .ThenInclude(a => a.TbComArticulosImpuestos)
                         .ThenInclude(ai => ai.IdImpuestoNavigation)
-                .Include(l => l.IdArticuloNavigation)
+                .Include(l => l.IdDetalleCompraNavigation.IdArticuloNavigation)
                     .ThenInclude(u => u.IdUnidadNavigation)
                 .ToListAsync();
 
@@ -244,7 +244,7 @@ namespace SistemaTienda.BLL.Servicios
             // Mapear cada lote a ArticuloInventarioDTO (una entrada por lote)
             resultado.AddRange(lotes.Select(l => new ArticuloInventarioDTO
             {
-                Articulo = this._mapper.MapeoArticuloTbAArticuloDto(l.IdArticuloNavigation, esVenta),
+                Articulo = this._mapper.MapeoArticuloTbAArticuloDto(l.IdDetalleCompraNavigation.IdArticuloNavigation, esVenta),
                 NumeroLote = l.NumeroLote ?? string.Empty,
                 Codigo = l.Codigo ?? string.Empty,
                 FechaIngreso = l.FechaIngreso,
@@ -255,7 +255,7 @@ namespace SistemaTienda.BLL.Servicios
             }));
 
             // Agregar artículos activos que no tienen lotes con stock
-            var idsConLote = lotes.Select(l => l.IdArticulo).Distinct().ToList();
+            var idsConLote = lotes.Select(l => l.IdDetalleCompraNavigation.IdArticuloNavigation.Id).Distinct().ToList();
             var articulosSinLote = await this.tiendaDbContext.TbComArticulos
                 .Where(a => a.Estado == true && a.EstadoVisual == true && !idsConLote.Contains(a.Id))
                 .Include(a => a.TbComArticulosImpuestos)

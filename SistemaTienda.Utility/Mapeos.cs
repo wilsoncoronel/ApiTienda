@@ -102,8 +102,8 @@ namespace SistemaTienda.Utility
         {
             return lotes.Select(lote => new ArticuloVentaDTO
             {
-                Id = lote.IdArticuloNavigation.Id,
-                Nombre = $"{lote.IdArticuloNavigation.IdMarcaNavigation.Nombre} {lote.IdArticuloNavigation.Nombre} Id: {lote.IdArticuloNavigation.Id} {lote.IdArticuloNavigation.Descripcion ?? string.Empty} Tip: {lote.IdArticuloNavigation.IdTipoArticuloNavigation.Nombre} Uni: {lote.IdArticuloNavigation.IdUnidadNavigation.Nombre.TrimEnd()} {lote.IdArticuloNavigation.UnidadValor} {lote.IdArticuloNavigation.ValorVenta}$",
+                Id = lote.IdDetalleCompraNavigation.IdArticuloNavigation.Id,
+                Nombre = $"{lote.IdDetalleCompraNavigation.IdArticuloNavigation.IdMarcaNavigation.Nombre} {lote.IdDetalleCompraNavigation.IdArticuloNavigation.Nombre} Id: {lote.IdDetalleCompraNavigation.IdArticuloNavigation.Id} {lote.IdDetalleCompraNavigation.IdArticuloNavigation.Descripcion ?? string.Empty} Tip: {lote.IdDetalleCompraNavigation.IdArticuloNavigation.IdTipoArticuloNavigation.Nombre} Uni: {lote.IdDetalleCompraNavigation.IdArticuloNavigation.IdUnidadNavigation.Nombre.TrimEnd()} {lote.IdDetalleCompraNavigation.IdArticuloNavigation.UnidadValor} {lote.IdDetalleCompraNavigation.IdArticuloNavigation.ValorVenta}$",
                 Lote = lote.NumeroLote.Trim(),
                 Codigo = lote.Codigo.Trim() ?? string.Empty
             }).ToList();
@@ -113,8 +113,8 @@ namespace SistemaTienda.Utility
         {
             return lotes.Select(lote => new ArticuloVentaDTO
             {
-                Id = lote.IdArticuloNavigation.Id,
-                Nombre = $"{lote.IdArticuloNavigation.IdMarcaNavigation.Nombre} {lote.IdArticuloNavigation.Nombre} Id: {lote.IdArticuloNavigation.Id} {lote.IdArticuloNavigation.Descripcion ?? string.Empty} Tip: {lote.IdArticuloNavigation.IdTipoArticuloNavigation.Nombre} Uni: {lote.IdArticuloNavigation.IdUnidadNavigation.Nombre.TrimEnd()} {lote.IdArticuloNavigation.UnidadValor} {lote.IdArticuloNavigation.ValorCompra}$",
+                Id = lote.IdDetalleCompraNavigation.IdArticuloNavigation.Id,
+                Nombre = $"{lote.IdDetalleCompraNavigation.IdArticuloNavigation.IdMarcaNavigation.Nombre} {lote.IdDetalleCompraNavigation.IdArticuloNavigation.Nombre} Id: {lote.IdDetalleCompraNavigation.IdArticuloNavigation.Id} {lote.IdDetalleCompraNavigation.IdArticuloNavigation.Descripcion ?? string.Empty} Tip: {lote.IdDetalleCompraNavigation.IdArticuloNavigation.IdTipoArticuloNavigation.Nombre} Uni: {lote.IdDetalleCompraNavigation.IdArticuloNavigation.IdUnidadNavigation.Nombre.TrimEnd()} {lote.IdDetalleCompraNavigation.IdArticuloNavigation.UnidadValor} {lote.IdDetalleCompraNavigation.IdArticuloNavigation.ValorCompra}$",
                 Lote = lote.NumeroLote.Trim(),
                 Codigo = lote.Codigo.Trim() ?? string.Empty
             }).ToList();
@@ -137,7 +137,7 @@ namespace SistemaTienda.Utility
         {
             return listaLotes.Select(l =>
             {
-                var detalle = detallesCompra?.FirstOrDefault(d => (d.NumeroLote != null && d.NumeroLote == l.NumeroLote) || d.IdArticulo == l.IdArticulo);
+                var detalle = detallesCompra?.FirstOrDefault(d => (d.NumeroLote != null && d.NumeroLote == l.NumeroLote) || d.IdArticulo == l.IdDetalleCompraNavigation.IdArticulo);
                 return this.MapeoLoteTbADetalleCompraDto(l, idCompra, detalle);
             }).ToList();
         }
@@ -152,14 +152,14 @@ namespace SistemaTienda.Utility
             // Si se proporcionó un detalle de compra, usar su ValorCompra; en caso contrario, usar el costo del lote
             var valorCompra = detalleCompra != null ? detalleCompra.ValorCompra : loteTb.CostoUnitario;
             var id = detalleCompra?.Id ?? 0;
-            var descripcion = detalleCompra?.Descripcion ?? loteTb.IdArticuloNavigation?.Descripcion ?? loteTb.NumeroLote;
-            var valorVenta = detalleCompra != null ? detalleCompra.ValorVenta : loteTb.IdArticuloNavigation?.ValorVenta ?? 0;
+            var descripcion = detalleCompra?.Descripcion ?? loteTb.IdDetalleCompraNavigation?.IdArticuloNavigation?.Descripcion ?? loteTb.NumeroLote;
+            var valorVenta = detalleCompra != null ? detalleCompra.ValorVenta : loteTb.IdDetalleCompraNavigation?.IdArticuloNavigation?.ValorVenta ?? 0;
 
             return new DetalleCompraDTO
             {
                 Id = id,
                 IdCompra = idCompra,
-                IdArticulo = loteTb.IdArticulo,
+                IdArticulo = loteTb.IdDetalleCompraNavigation.IdArticulo,
                 Lote = loteTb.NumeroLote,
                 Codigo = loteTb.Codigo,
                 Descripcion = descripcion,
@@ -167,7 +167,7 @@ namespace SistemaTienda.Utility
                 ValorCompra = valorCompra,
                 ValorVenta = valorVenta,
                 ValorTotal = valorCompra * loteTb.StockDisponible,
-                ArticuloDTO = loteTb.IdArticuloNavigation != null ? this.MapeoArticuloTbAArticuloDtoDevolucion(loteTb.IdArticuloNavigation, false) : new ArticuloDTO { Id = loteTb.IdArticulo, Nombre = loteTb.NumeroLote ?? string.Empty, Descripcion = loteTb.IdArticuloNavigation?.Descripcion ?? string.Empty, ValorCompra = 0, ValorVenta = 0 },
+                ArticuloDTO = loteTb.IdDetalleCompraNavigation?.Id != null ? this.MapeoArticuloTbAArticuloDtoDevolucion(loteTb.IdDetalleCompraNavigation.IdArticuloNavigation, false) : new ArticuloDTO { Id = loteTb.IdDetalleCompraNavigation?.IdArticulo ?? 0, Nombre = loteTb.NumeroLote ?? string.Empty, Descripcion = loteTb.IdDetalleCompraNavigation?.IdArticuloNavigation?.Descripcion ?? string.Empty, ValorCompra = 0, ValorVenta = 0 },
                 FechaCaducidad = loteTb.FechaExpiracion?.ToDateTime(TimeOnly.MinValue),
                 Impuestos = detalleCompra.TbComImpuestoDetalles.Select(imp => new DetalleImpuestoDTO { Id = imp.Id, 
                 Nombre = imp.Nombre, IdTipoCalculo = imp.IdTipoCalculo, Valor = imp.Valor, IdDetalleCompra = imp.IdDetalleCompra}).ToList()
@@ -198,14 +198,14 @@ namespace SistemaTienda.Utility
             return new InventarioLoteDTO
             {
                 Id = detalleInvTb.Id,
-                IdArticulo = detalleInvTb.IdArticulo,
+                IdArticulo = detalleInvTb.IdDetalleCompraNavigation.IdArticulo,
                 StockDisponible = detalleInvTb.StockDisponible,
                 ArticuloDTO = new ArticuloMinDTO
                 {
-                    Id = detalleInvTb.IdArticuloNavigation.Id,
-                    Nombre = detalleInvTb.IdArticuloNavigation.Nombre,
-                    Descripcion = detalleInvTb.IdArticuloNavigation.Descripcion,
-                    ArticulosImpuestosDTO = detalleInvTb.IdArticuloNavigation.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoDTO
+                    Id = detalleInvTb.IdDetalleCompraNavigation.IdArticuloNavigation.Id,
+                    Nombre = detalleInvTb.IdDetalleCompraNavigation.IdArticuloNavigation.Nombre,
+                    Descripcion = detalleInvTb.IdDetalleCompraNavigation.IdArticuloNavigation.Descripcion,
+                    ArticulosImpuestosDTO = detalleInvTb.IdDetalleCompraNavigation.IdArticuloNavigation.TbComArticulosImpuestos.Select(ai => new ArticuloImpuestoDTO
                     {
                         ImpuestoDTO = new ImpuestoDTO
                         {
@@ -216,9 +216,9 @@ namespace SistemaTienda.Utility
 
                         }
                     }).ToList(),
-                    Papeleria = detalleInvTb.IdArticuloNavigation.Papeleria,
-                    ValorCompra = detalleInvTb.IdArticuloNavigation.ValorCompra,
-                    ValorVenta = detalleInvTb.IdArticuloNavigation.ValorVenta,
+                    Papeleria = detalleInvTb.IdDetalleCompraNavigation.IdArticuloNavigation.Papeleria,
+                    ValorCompra = detalleInvTb.IdDetalleCompraNavigation.IdArticuloNavigation.ValorCompra,
+                    ValorVenta = detalleInvTb.IdDetalleCompraNavigation.IdArticuloNavigation.ValorVenta,
                 },
                 CostoUnitario = detalleInvTb.CostoUnitario,
                 FechaExpiracion = detalleInvTb.FechaExpiracion,

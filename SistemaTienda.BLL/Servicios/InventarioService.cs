@@ -35,7 +35,7 @@ namespace SistemaTienda.BLL.Servicios
             var listaMovimientos = await this._tiendaDb.TbInvMovimientos
                 .Where(tra => tra.IdTransaccionInventario == 1)
                 .Include(m => m.TbInvLotes)
-                    .ThenInclude(l => l.IdArticuloNavigation)
+                    .ThenInclude(l => l.IdDetalleCompraNavigation.IdArticuloNavigation)
                         .ThenInclude(a => a.TbComArticulosImpuestos)
                         .ThenInclude(imp => imp.IdImpuestoNavigation)
                         .ToListAsync();
@@ -53,6 +53,21 @@ namespace SistemaTienda.BLL.Servicios
 
             return resultado;
         }
+        public async Task<List<LoteInventarioDTO>> ListaLotesInventario()
+        {
+            return await _tiendaDb.TbInvLotes
+                .Where(l => l.Estado)
+                .Select(l => new LoteInventarioDTO
+                {
+                    IdLote = l.Id,
+                    IdArticulo = l.IdDetalleCompraNavigation.IdArticulo,
+                    NumeroLote = l.NumeroLote,
+                    Codigo = l.Codigo,
+                    StockDisponible = l.StockDisponible
+                })
+                .ToListAsync();
+        }
+
         public async Task<List<MovimientoDTO>> ListaInventario(DateOnly FechaInicio, DateOnly FechaFinal)
         {
             var inicio = FechaInicio.ToDateTime(TimeOnly.MinValue);
@@ -76,7 +91,7 @@ namespace SistemaTienda.BLL.Servicios
                 IQueryable<TbInvLote> tbInvLote = await this._loteRepository.Consultar();
                 var listaResultado = new List<TbInvLote>();
                 listaResultado = tbInvLote.Where(det => det.IdMovimiento == IdMovimiento)
-                    .Include(art => art.IdArticuloNavigation)
+                    .Include(art => art.IdDetalleCompraNavigation.IdArticuloNavigation)
                     .ThenInclude(ai => ai.TbComArticulosImpuestos)
                     .ThenInclude(imp => imp.IdImpuestoNavigation)
                     .ToList();

@@ -11,11 +11,13 @@ namespace SistemaTienda.API.Controllers
     public class InventarioController : ControllerBase
     {
         private readonly IInventarioService _inventarioService;
+        private readonly IAjusteInventarioService _ajusteInventarioService;
         private readonly ILogger<InventarioController> logger;
 
-        public InventarioController(IInventarioService inventarioService, ILogger<InventarioController> logger)
+        public InventarioController(IInventarioService inventarioService, IAjusteInventarioService ajusteInventarioService, ILogger<InventarioController> logger)
         {
             this._inventarioService = inventarioService;
+            this._ajusteInventarioService = ajusteInventarioService;
             this.logger = logger;
         }
 
@@ -76,23 +78,90 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
-       /* [HttpGet]
-        [Route("ResumenVentasMensual")]
-        public async Task<IActionResult> ResumenVentasMensual(DateOnly fechaResumen)
+        [HttpGet]
+        [Route("ListaLotesInventario")]
+        public async Task<IActionResult> ListaLotesInventario()
         {
-            var resp = new Response<List<ResumenVentasDiarioDTO>>();
-            try
-            {
-                resp.status = true;
-                resp.Value = await this._inventarioService.ResumenVentasMensual(fechaResumen);
-            }
-            catch(Exception ex)
-            {
-                resp.status = false;
-                this.logger.LogError("Error en la conexion " + ex.Message);
-                throw;
-            }
+            var resp = new Response<List<LoteInventarioDTO>>();
+            resp.status = true;
+            resp.Value = await this._inventarioService.ListaLotesInventario();
+            resp.msg = "Lotes cargados con exito!!";
             return Ok(resp);
-        }*/
+        }
+
+        [HttpPost]
+        [Route("CrearAjusteInventario")]
+        public async Task<IActionResult> CrearAjusteInventario([FromBody] AjusteInventarioCrearDTO modelo)
+        {
+            var resp = new Response<int>();
+            resp.status = true;
+            resp.Value = await this._ajusteInventarioService.CrearAjusteInventario(modelo);
+            resp.msg = "Ajuste de inventario creado con exito!!";
+            return Ok(resp);
+        }
+
+        [HttpPut]
+        [Route("ReversarAjusteInventario")]
+        public async Task<IActionResult> ReversarAjusteInventario(int IdAjuste)
+        {
+            var resp = new Response<bool>();
+            resp.status = true;
+            resp.Value = await this._ajusteInventarioService.ReversarAjusteInventario(IdAjuste);
+            resp.msg = "Ajuste de inventario reversado con exito!!";
+            return Ok(resp);
+        }
+
+        [HttpGet]
+        [Route("ListarAjusteInventarioFechas")]
+        public async Task<IActionResult> ListarAjusteInventarioFechas(DateOnly FechaInicio, DateOnly FechaFinal)
+        {
+            var resp = new Response<List<AjusteInventarioDTO>>();
+            resp.status = true;
+            resp.Value = await this._ajusteInventarioService.ListarAjusteInventarioFechas(FechaInicio, FechaFinal);
+            resp.msg = "Ajustes de inventario cargados con exito!!";
+            return Ok(resp);
+        }
+
+        [HttpGet]
+        [Route("ListarAjusteInventarioCompleto")]
+        public async Task<IActionResult> ListarAjusteInventarioCompleto(int idAjuste)
+        {
+            var resp = new Response<AjusteInventarioCompletoDTO>();
+            resp.status = true;
+            resp.Value = await this._ajusteInventarioService.ListarAjusteInventarioCompleto(idAjuste);
+            resp.msg = "Ajuste de inventario cargado con exito!!";
+            return Ok(resp);
+        }
+
+        [HttpGet]
+        [Route("ListaEstadosAjuste")]
+        public async Task<IActionResult> ListaEstadosAjuste()
+        {
+            var resp = new Response<List<EstadosAjusteDTO>>();
+            resp.status = true;
+            resp.Value = await this._ajusteInventarioService.ListaEstadosAjuste();
+            resp.msg = "Estados de ajustes de inventario cargados con exito!!";
+            return Ok(resp);
+        }
+
+        //ListaEstadosAjuste
+        /* [HttpGet]
+         [Route("ResumenVentasMensual")]
+         public async Task<IActionResult> ResumenVentasMensual(DateOnly fechaResumen)
+         {
+             var resp = new Response<List<ResumenVentasDiarioDTO>>();
+             try
+             {
+                 resp.status = true;
+                 resp.Value = await this._inventarioService.ResumenVentasMensual(fechaResumen);
+             }
+             catch(Exception ex)
+             {
+                 resp.status = false;
+                 this.logger.LogError("Error en la conexion " + ex.Message);
+                 throw;
+             }
+             return Ok(resp);
+         }*/
     }
 }

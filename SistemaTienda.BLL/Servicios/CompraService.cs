@@ -87,7 +87,7 @@ namespace SistemaTienda.BLL.Servicios
                 .Where(movimiento => movimiento.TbInvLotes.Any(loteInventario =>
                     loteInventario.Estado &&
                     loteInventario.StockDisponible > 0 &&
-                    (!idArticulo.HasValue || loteInventario.IdArticulo == idArticulo.Value) &&
+                    (!idArticulo.HasValue || loteInventario.IdDetalleCompraNavigation.IdArticuloNavigation.Id == idArticulo.Value) &&
                     (lote == null || loteInventario.NumeroLote == lote) &&
                     (codigo == null || loteInventario.Codigo == codigo)))
                 .SelectMany(movimiento => referenciasCompra
@@ -115,7 +115,7 @@ namespace SistemaTienda.BLL.Servicios
         private async Task ProcesarMovimientoInventario(TbInvMovimiento movimientoOrigen, TbCompra tbCompra, List<TbComDetallesCompra> detallesEliminados)
         {
             // Crear diccionario de lotes existentes por llave (IdArticulo, NumeroLote, Codigo)
-            var lotesExistentes = movimientoOrigen.TbInvLotes.ToDictionary(l => (l.IdArticulo, l.NumeroLote ?? string.Empty, l.Codigo ?? string.Empty), l => l);
+            var lotesExistentes = movimientoOrigen.TbInvLotes.ToDictionary(l => (l.IdDetalleCompraNavigation.IdArticuloNavigation.Id, l.NumeroLote ?? string.Empty, l.Codigo ?? string.Empty), l => l);
 
             // Procesar eliminados: eliminar físicamente los lotes correspondientes a los detalles eliminados
             if (detallesEliminados != null && detallesEliminados.Any())
@@ -153,7 +153,7 @@ namespace SistemaTienda.BLL.Servicios
                     {
                         NumeroLote = detalle.NumeroLote,
                         CostoUnitario = detalle.ValorCompra,
-                        IdArticulo = detalle.IdArticulo,
+                        IdDetalleCompra = detalle.Id,
                         Codigo = detalle.Codigo,
                         FechaIngreso = DateTime.Now,
                         FechaExpiracion = detalle.FechaExpiracion,
@@ -339,7 +339,7 @@ namespace SistemaTienda.BLL.Servicios
                 {
                     NumeroLote = det.NumeroLote,
                     CostoUnitario = det.ValorCompra,
-                    IdArticulo = det.IdArticulo,
+                    IdDetalleCompra = det.Id,
                     Codigo = det.Codigo,
                     FechaIngreso = DateTime.Now,
                     FechaExpiracion = det.FechaExpiracion,
@@ -631,7 +631,6 @@ namespace SistemaTienda.BLL.Servicios
             var movimientos = await _tiendaDbContext.TbInvMovimientos
                 .Where(m => m.Referencia == referencia)
                 .Include(m => m.TbInvLotes)
-                    .ThenInclude(l => l.IdArticuloNavigation)
                     .ToListAsync();
 
             // Obtener todos los lotes con stock disponible mayor a cero

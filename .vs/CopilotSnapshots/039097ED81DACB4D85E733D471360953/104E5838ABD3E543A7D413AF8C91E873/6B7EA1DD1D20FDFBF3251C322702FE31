@@ -1,0 +1,260 @@
+﻿using Microsoft.EntityFrameworkCore;
+using SistemaTienda.API.Exceptions;
+using SistemaTienda.BLL.Servicios.Contrato;
+using SistemaTienda.DAL.DBContext;
+using SistemaTienda.DTO;
+using SistemaTienda.Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace SistemaTienda.BLL.Servicios
+{
+    public class AjusteInventarioService : IAjusteInventarioService
+    {
+        private readonly TiendaDbContext _tiendaDb;
+
+        public AjusteInventarioService(TiendaDbContext tiendaDb)
+        {
+            _tiendaDb = tiendaDb;
+        }
+
+        public async Task<int> CrearAjusteInventario(AjusteInventarioCrearDTO modelo)
+        {
+            if (modelo.Detalles == null || !modelo.Detalles.Any())
+                throw new BadRequestException("El ajuste debe tener al menos un detalle.");
+
+            var transaccion = await _tiendaDb.TbInvTransacciones.FirstOrDefaultAsync(t => t.Id == modelo.IdTransaccion)
+                ?? throw new NotFoundException("La transacción de inventario no existe.");
+
+            var estado = await _tiendaDb.TbInvEstadosAjustes.FirstOrDefaultAsync(e => e.Id == modelo.IdEstado)
+                ?? throw new NotFoundException("El estado de ajuste no existe.");
+
+            var esEntrada = transaccion.Signo > 0;
+
+            using var trx = await _tiendaDb.Database.BeginTransactionAsync();
+
+            var ajuste = new TbInvAjusteInventario
+            {
+                IdTransaccion = modelo.IdTransaccion,
+                IdUsuarioCreador = modelo.IdUsuarioCreador,
+                Motivo = modelo.Motivo,
+                FechaCreacion = DateTime.Now,
+                IdEstado = modelo.IdEstado,
+            };
+
+            _tiendaDb.TbInvAjusteInventarios.Add(ajuste);
+            await _tiendaDb.SaveChangesAsync();
+
+            var movimiento = new TbInvMovimiento
+            {
+                IdTransaccionInventario = modelo.IdTransaccion,
+                Fecha = DateTime.Now,
+                Referencia = "AIID" + ajuste.Id
+            };
+            _tiendaDb.TbInvMovimientos.Add(movimiento);
+            await _tiendaDb.SaveChangesAsync();
+
+            foreach (var det in modelo.Detalles)
+            {
+                var lote = await _tiendaDb.TbInvLotes.FirstOrDefaultAsync(l => l.Id == det.IdLote)
+                    ?? throw new NotFoundException($"El lote {det.IdLote} no existe.");
+
+                if (!lote.Estado)
+                    throw new BadRequestException($"El lote {det.IdLote} no está activo.");
+
+                if (lote.IdArticulo != det.IdArticulo)
+                    throw new BadRequestException($"El lote {det.IdLote} no corresponde al artículo {det.IdArticulo}.");
+
+                if (!esEntrada && lote.StockDisponible < det.Cantidad)
+                    throw new BadRequestException($"Stock insuficiente en el lote {det.IdLote}.");
+
+                lote.StockDisponible += esEntrada ? det.Cantidad : -det.Cantidad;
+
+                var detalle = new TbInvDetalleAjusteInventario
+                {
+                    IdAjusteInventario = ajuste.Id,
+                    IdArticulo = det.IdArticulo,
+                    Cantidad = det.Cantidad,
+                    CostoUnitario = det.CostoUnitario,
+                    Estado = true
+                };
+                _tiendaDb.TbInvDetalleAjusteInventarios.Add(detalle);
+                await _tiendaDb.SaveChangesAsync();
+
+                _tiendaDb.TbInvAjusteLotes.Add(new TbInvAjusteLote
+                {
+                    IdMovimiento = movimiento.Id,
+                    IdDetalleAjuste = detalle.Id,
+                    IdLote = lote.Id,
+                    Cantidad = det.Cantidad,
+                    PrecioUnitario = det.CostoUnitario,
+                    Estado = true
+                });
+            }
+
+            await _tiendaDb.SaveChangesAsync();
+            await trx.CommitAsync();
+
+            return ajuste.Id;
+        }
+
+        public async Task<bool> ReversarAjusteInventario(int idAjuste)
+        {
+            var ajuste = await _tiendaDb.TbInvAjusteInventarios
+                .Include(a => a.IdTransaccionNavigation)
+                .FirstOrDefaultAsync(a => a.Id == idAjuste)
+                ?? throw new NotFoundException("El ajuste no existe.");
+
+            if (ajuste.FechaReversion != null)
+                throw new BadRequestException("El ajuste ya fue reversado.");
+
+            var transaccionReversion = await _tiendaDb.TbInvTransacciones
+                .FirstOrDefaultAsync(t => t.Nombre == "Reversion Ajuste")
+                ?? throw new NotFoundException("No existe la transacción 'Reversion Ajuste'.");
+
+            var estadoReversion = await _tiendaDb.TbInvEstadosAjustes
+                .FirstOrDefaultAsync(e => e.Nombre == "Reversion Ajuste")
+                ?? throw new NotFoundException("No existe el estado 'Reversion Ajuste'.");
+
+            var esEntrada = ajuste.IdTransaccionNavigation.Signo > 0;
+
+            var ajusteLotes = await _tiendaDb.TbInvAjusteLotes
+                .Where(al => al.Estado && al.IdDetalleAjusteNavigation.IdAjusteInventario == idAjuste)
+                .Include(al => al.IdLoteNavigation)
+                .ToListAsync();
+
+            using var trx = await _tiendaDb.Database.BeginTransactionAsync();
+
+            foreach (var al in ajusteLotes)
+            {
+                al.IdLoteNavigation.StockDisponible += esEntrada ? -al.Cantidad : al.Cantidad;
+                al.Estado = false;
+            }
+
+            var movimientos = await _tiendaDb.TbInvMovimientos
+                .Where(m => m.Referencia == "AIID" + idAjuste)
+                .ToListAsync();
+            foreach (var m in movimientos)
+                m.IdTransaccionInventario = transaccionReversion.Id;
+
+            ajuste.FechaReversion = DateTime.Now;
+            ajuste.IdEstado = estadoReversion.Id;
+            await _tiendaDb.SaveChangesAsync();
+            await trx.CommitAsync();
+            return true;
+        }
+
+        public async Task<List<AjusteInventarioDTO>> ListarAjusteInventarioFechas(DateOnly fechaInicio, DateOnly fechaFinal)
+        {
+            var inicio = fechaInicio.ToDateTime(TimeOnly.MinValue);
+            var fin = fechaFinal.ToDateTime(TimeOnly.MaxValue);
+
+            var ajustes = await _tiendaDb.TbInvAjusteInventarios
+                .Where(a => a.FechaCreacion >= inicio && a.FechaCreacion <= fin && a.FechaReversion == null)
+                .Include(a => a.TbInvDetalleAjusteInventarios)
+                .Include(a => a.IdTransaccionNavigation)
+                .ToListAsync();
+
+            return ajustes.Select(a => new AjusteInventarioDTO
+            {
+                Id = a.Id,
+                IdTransaccion = a.IdTransaccion,
+                IdUsuarioCreador = a.IdUsuarioCreador,
+                Motivo = a.Motivo,
+                FechaCreacion = a.FechaCreacion,
+                IdEstado = a.IdEstado,
+                FechaReversion = a.FechaReversion,
+                TransaccionInventarioDTO = new TransaccionInventarioDTO
+                {
+                    Id = a.IdTransaccionNavigation.Id,
+                    Nombre = a.IdTransaccionNavigation.Nombre,
+                    Signo = a.IdTransaccionNavigation.Signo,
+                    Estado = a.IdTransaccionNavigation.Estado
+                },
+                Detalles = a.TbInvDetalleAjusteInventarios.Select(d => (DetalleAjusteInventarioCrearDTO)new DetalleAjusteInventarioDTO
+                {
+                    Id = d.Id,
+                    IdAjusteInventario = d.IdAjusteInventario,
+                    IdArticulo = d.IdArticulo,
+                    Cantidad = d.Cantidad,
+                    CostoUnitario = d.CostoUnitario,
+                    Estado = d.Estado
+                }).ToList()
+            }).ToList();
+        }
+
+        public Task<List<EstadosAjusteDTO>> ListaEstadosAjuste()
+        {
+            var lista = _tiendaDb.TbInvEstadosAjustes
+                .Select(e => new EstadosAjusteDTO
+                {
+                    Id = e.Id,
+                    Nombre = e.Nombre,
+                    EstadoVisual = e.EstadoVisual,
+                    Descripcion = e.Descripcion
+                });
+
+            return lista.ToListAsync();
+        }
+
+        public async Task<AjusteInventarioCompletoDTO> ListarAjusteInventarioCompleto(int idAjuste)
+        {
+            var ajuste = await _tiendaDb.TbInvAjusteInventarios
+                .AsNoTracking()
+                .Where(a => a.Id == idAjuste)
+                .Select(a => new AjusteInventarioCompletoDTO
+                {
+                    Id = a.Id,
+                    IdTransaccion = a.IdTransaccion,
+                    IdUsuarioCreador = a.IdUsuarioCreador,
+                    NombresUsuarioCreador = a.IdUsuarioCreadorNavigation.IdPersonaNavigation.Nombres,
+                    ApellidosUsuarioCreador = a.IdUsuarioCreadorNavigation.IdPersonaNavigation.Apellidos,
+                    Motivo = a.Motivo,
+                    FechaCreacion = a.FechaCreacion,
+                    IdEstado = a.IdEstado,
+                    NombreEstado = a.IdEstadoNavigation.Nombre,
+                    FechaReversion = a.FechaReversion,
+                    TransaccionInventarioDTO = new TransaccionInventarioDTO
+                    {
+                        Id = a.IdTransaccionNavigation.Id,
+                        Nombre = a.IdTransaccionNavigation.Nombre,
+                        Signo = a.IdTransaccionNavigation.Signo,
+                        Estado = a.IdTransaccionNavigation.Estado
+                    },
+                    Detalles = a.TbInvDetalleAjusteInventarios.Select(d => new DetalleAjusteInventarioCompletoDTO
+                    {
+                        Id = d.Id,
+                        IdArticulo = d.IdArticulo,
+                        Cantidad = d.Cantidad,
+                        CostoUnitario = d.CostoUnitario,
+                        Estado = d.Estado,
+                        Lotes = d.TbInvAjusteLotes.Select(al => new AjusteLoteDTO
+                        {
+                            Id = al.Id,
+                            IdLote = al.IdLote,
+                            NumeroLote = al.IdLoteNavigation.NumeroLote,
+                            Cantidad = al.Cantidad,
+                            PrecioUnitario = al.PrecioUnitario,
+                            Estado = al.Estado
+                        }).ToList(),
+                        Impuestos = d.TbInvImpuestosDetalleAjustes.Select(i => new ImpuestoDetalleAjusteDTO
+                        {
+                            Id = i.Id,
+                            IdDetalleAjuste = i.IdDetalleAjuste,
+                            IdTipoCalculo = i.IdTipoCalculo,
+                            IdImpuesto = i.IdImpuesto,
+                            Nombre = i.Nombre,
+                            Valor = i.Valor,
+                            Estado = i.Estado
+                        }).ToList()
+                    }).ToList()
+                })
+                .FirstOrDefaultAsync()
+                ?? throw new NotFoundException("El ajuste no existe.");
+
+            return ajuste;
+        }
+    }
+}

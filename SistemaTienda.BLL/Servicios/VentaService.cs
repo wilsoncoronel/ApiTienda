@@ -118,7 +118,7 @@ namespace SistemaTienda.BLL.Servicios
             decimal cantidadRestante = detalle.Cantidad;
 
             var lotes = await _tiendaDbContext.TbInvLotes
-                .Where(l => l.IdArticulo == detalle.IdArticulo)
+                .Where(l => l.IdDetalleCompraNavigation.IdArticuloNavigation.Id  == detalle.IdArticulo)
                 .OrderBy(l => l.FechaExpiracion.HasValue ? 0 : 1)
                 .ThenBy(l => l.FechaExpiracion)
                 .ThenBy(l => l.FechaIngreso)

@@ -9,7 +9,7 @@ public partial class TbInvLote
 
     public int IdMovimiento { get; set; }
 
-    public int IdArticulo { get; set; }
+    public int IdDetalleCompra { get; set; }
 
     public string NumeroLote { get; set; } = null!;
 
@@ -27,7 +27,7 @@ public partial class TbInvLote
 
     public bool Estado { get; set; }
 
-    public virtual TbComArticulo IdArticuloNavigation { get; set; } = null!;
+    public virtual TbComDetallesCompra IdDetalleCompraNavigation { get; set; } = null!;
 
     public virtual TbInvMovimiento IdMovimientoNavigation { get; set; } = null!;
 

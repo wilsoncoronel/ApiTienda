@@ -319,7 +319,7 @@ namespace SistemaTienda.BLL.Servicios
             {
                 var lotes = await _tiendaDbContext.TbInvLotes
                     .Include(l => l.IdMovimientoNavigation)
-                    .Where(l => l.IdArticulo == detalleDevolucion.IdArticulo
+                    .Where(l => l.IdDetalleCompraNavigation.IdArticuloNavigation.Id == detalleDevolucion.IdArticulo
                         && l.Estado
                         && l.StockDisponible > 0
                         && !l.IdMovimientoNavigation.IdMovimientoOrigen.HasValue
