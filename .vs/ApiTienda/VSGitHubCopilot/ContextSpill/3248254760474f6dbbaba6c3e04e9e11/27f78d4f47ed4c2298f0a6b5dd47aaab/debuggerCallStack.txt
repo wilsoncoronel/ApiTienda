@@ -1,0 +1,294 @@
+﻿Thread ID: 34600
+[1] SistemaTienda.BLL.dll!SistemaTienda.BLL.Servicios.CompraService.ProcesarMovimientoInventario.AnonymousMethod__8_0
+This is the current user focused stack frame. The provided locals context corresponds to this stack frame, but you may evaluate expressions and retrieve code for any frame.
+Code for the stack frame:
+```csharp C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\Servicios\CompraService.cs
+115:         private async Task ProcesarMovimientoInventario(TbInvMovimiento movimientoOrigen, TbCompra tbCompra, List<TbComDetallesCompra> detallesEliminados)
+116:         {
+117:             // Crear diccionario de lotes existentes por llave (IdArticulo, NumeroLote, Codigo)
+118:             var lotesExistentes = movimientoOrigen.TbInvLotes.ToDictionary(l => (l.IdDetalleCompraNavigation.IdArticuloNavigation.Id, l.NumeroLote ?? string.Empty, l.Codigo ?? string.Empty), l => l);
+119: 
+120:             // Procesar eliminados: eliminar físicamente los lotes correspondientes a los detalles eliminados
+121:             if (detallesEliminados != null && detallesEliminados.Any())
+122:             {
+123:                 foreach (var detEl in detallesEliminados)
+124:                 {
+125:                     var keyEl = (detEl.IdArticulo, detEl.NumeroLote ?? string.Empty, detEl.Codigo ?? string.Empty);
+126:                     if (lotesExistentes.TryGetValue(keyEl, out var loteRemover))
+127:                     {
+128:                         // Eliminar lote físicamente
+129:                         movimientoOrigen.TbInvLotes.Remove(loteRemover);
+130:                         _tiendaDbContext.TbInvLotes.Remove(loteRemover);
+131:                         lotesExistentes.Remove(keyEl);
+132:                     }
+133:                 }
+134:             }
+135: 
+136:             // Para cada detalle actual en la compra, actualizar o crear lote en el movimientoOrigen
+137:             foreach (var detalle in tbCompra.TbComDetallesCompras)
+138:             {
+139:                 var key = (detalle.IdArticulo, detalle.NumeroLote ?? string.Empty, detalle.Codigo ?? string.Empty);
+140:                 if (lotesExistentes.TryGetValue(key, out var lote))
+141:                 {
+142:                     // Ajustar cantidad disponible al nuevo valor
+143:                     lote.StockDisponible = detalle.Cantidad;
+144:                     lote.CostoUnitario = detalle.ValorCompra;
+145:                     lote.FechaExpiracion = detalle.FechaExpiracion;
+146:                     _tiendaDbContext.TbInvLotes.Update(lote);
+147:                     lotesExistentes.Remove(key);
+148:                 }
+149:                 else
+150:                 {
+151:                     // Crear nuevo lote asociado al movimiento
+152:                     var nuevoLote = new TbInvLote
+153:                     {
+154:                         NumeroLote = detalle.NumeroLote,
+155:                         CostoUnitario = detalle.ValorCompra,
+156:                         IdDetalleCompra = detalle.Id,
+157:                         Codigo = detalle.Codigo,
+158:                         FechaIngreso = DateTime.Now,
+159:                         FechaExpiracion = detalle.FechaExpiracion,
+160:                         StockDisponible = detalle.Cantidad,
+161:                         StockMinimo = 6,
+162:                         Estado = true,
+163:                         // Relacionar con movimiento
+164:                     };
+165:                     movimientoOrigen.TbInvLotes.Add(nuevoLote);
+166:                     _tiendaDbContext.TbInvLotes.Add(nuevoLote);
+167:                 }
+168:             }
+169: 
+170:             // Los lotes que queden en lotesExistentes ya no existen en la compra: eliminarlos
+171:             foreach (var loteRemover in lotesExistentes.Values)
+172:             {
+173:                 movimientoOrigen.TbInvLotes.Remove(loteRemover);
+174:                 _tiendaDbContext.TbInvLotes.Remove(loteRemover);
+175:             }
+176: 
+177:             // Actualizar referencia y fecha del movimiento de inventario (usar formato Documento+"ID"+IdCompra)
+178:             movimientoOrigen.Referencia = tbCompra.Documento + "ID" + tbCompra.Id;
+179:             movimientoOrigen.Fecha = DateTime.Now;
+180:             _tiendaDbContext.TbInvMovimientos.Update(movimientoOrigen);
+181: 
+182:             await Task.CompletedTask;
+183:         }
+```
+Current statement: line 118 (`(l.IdDetalleCompraNavigation.IdArticuloNavigation.Id, l.NumeroLote ?? string.Empty, l.Codigo ?? string.Empty)`)
+[2] [Código externo]
+[5] SistemaTienda.BLL.dll!SistemaTienda.BLL.Servicios.CompraService.ProcesarMovimientoInventario
+Code for the stack frame:
+```csharp C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\Servicios\CompraService.cs
+115:         private async Task ProcesarMovimientoInventario(TbInvMovimiento movimientoOrigen, TbCompra tbCompra, List<TbComDetallesCompra> detallesEliminados)
+116:         {
+117:             // Crear diccionario de lotes existentes por llave (IdArticulo, NumeroLote, Codigo)
+118:             var lotesExistentes = movimientoOrigen.TbInvLotes.ToDictionary(l => (l.IdDetalleCompraNavigation.IdArticuloNavigation.Id, l.NumeroLote ?? string.Empty, l.Codigo ?? string.Empty), l => l);
+119: 
+120:             // Procesar eliminados: eliminar físicamente los lotes correspondientes a los detalles eliminados
+121:             if (detallesEliminados != null && detallesEliminados.Any())
+122:             {
+123:                 foreach (var detEl in detallesEliminados)
+124:                 {
+125:                     var keyEl = (detEl.IdArticulo, detEl.NumeroLote ?? string.Empty, detEl.Codigo ?? string.Empty);
+126:                     if (lotesExistentes.TryGetValue(keyEl, out var loteRemover))
+127:                     {
+128:                         // Eliminar lote físicamente
+129:                         movimientoOrigen.TbInvLotes.Remove(loteRemover);
+130:                         _tiendaDbContext.TbInvLotes.Remove(loteRemover);
+131:                         lotesExistentes.Remove(keyEl);
+132:                     }
+133:                 }
+134:             }
+135: 
+136:             // Para cada detalle actual en la compra, actualizar o crear lote en el movimientoOrigen
+137:             foreach (var detalle in tbCompra.TbComDetallesCompras)
+138:             {
+139:                 var key = (detalle.IdArticulo, detalle.NumeroLote ?? string.Empty, detalle.Codigo ?? string.Empty);
+140:                 if (lotesExistentes.TryGetValue(key, out var lote))
+141:                 {
+142:                     // Ajustar cantidad disponible al nuevo valor
+143:                     lote.StockDisponible = detalle.Cantidad;
+144:                     lote.CostoUnitario = detalle.ValorCompra;
+145:                     lote.FechaExpiracion = detalle.FechaExpiracion;
+146:                     _tiendaDbContext.TbInvLotes.Update(lote);
+147:                     lotesExistentes.Remove(key);
+148:                 }
+149:                 else
+150:                 {
+151:                     // Crear nuevo lote asociado al movimiento
+152:                     var nuevoLote = new TbInvLote
+153:                     {
+154:                         NumeroLote = detalle.NumeroLote,
+155:                         CostoUnitario = detalle.ValorCompra,
+156:                         IdDetalleCompra = detalle.Id,
+157:                         Codigo = detalle.Codigo,
+158:                         FechaIngreso = DateTime.Now,
+159:                         FechaExpiracion = detalle.FechaExpiracion,
+160:                         StockDisponible = detalle.Cantidad,
+161:                         StockMinimo = 6,
+162:                         Estado = true,
+163:                         // Relacionar con movimiento
+164:                     };
+165:                     movimientoOrigen.TbInvLotes.Add(nuevoLote);
+166:                     _tiendaDbContext.TbInvLotes.Add(nuevoLote);
+167:                 }
+168:             }
+169: 
+170:             // Los lotes que queden en lotesExistentes ya no existen en la compra: eliminarlos
+171:             foreach (var loteRemover in lotesExistentes.Values)
+172:             {
+173:                 movimientoOrigen.TbInvLotes.Remove(loteRemover);
+174:                 _tiendaDbContext.TbInvLotes.Remove(loteRemover);
+175:             }
+176: 
+177:             // Actualizar referencia y fecha del movimiento de inventario (usar formato Documento+"ID"+IdCompra)
+178:             movimientoOrigen.Referencia = tbCompra.Documento + "ID" + tbCompra.Id;
+179:             movimientoOrigen.Fecha = DateTime.Now;
+180:             _tiendaDbContext.TbInvMovimientos.Update(movimientoOrigen);
+181: 
+182:             await Task.CompletedTask;
+183:         }
+```
+Current statement: line 118
+[6] SistemaTienda.BLL.dll!SistemaTienda.BLL.Servicios.CompraService.EditarCompra
+Code for the stack frame:
+```csharp C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\Servicios\CompraService.cs
+475:         public async Task<bool> EditarCompra(CompraEditarDTO compraEditarDTO)
+476:         {
+477:             using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync();
+478:             try
+479:             {
+480:                 var tbCompra = await this._tiendaDbContext.TbCompras.Where(c => c.Id == compraEditarDTO.Id)
+481:                     .Include(det => det.TbComDetallesCompras)
+482:                     .Include(est => est.IdEstadoCompraNavigation)
+483:                     .FirstOrDefaultAsync();
+484:                     
+485:                 if (tbCompra == null)
+486:                     throw new NotFoundException("No existe la compra indicada");
+487:                 if(tbCompra.IdEstadoCompraNavigation.Nombre.ToUpper() == "REVERSADA")
+488:                 {
+489:                     throw new ConflictException("No se puede editar una compra ya reversada!!");
+490:                 }
+491:                 // Cargar movimientos de inventario asociados a la referencia (documento)
+492:                 var movimientos = await _tiendaDbContext.TbInvMovimientos
+493:                     .Where(m => m.Referencia == (tbCompra.Documento + "ID" + tbCompra.Id))
+494:                     .Include(m => m.IdTransaccionInventarioNavigation)
+495:                     .Include(m => m.TbInvLotes)
+496:                         .ThenInclude(l => l.TbInvConsumoLotes)
+497:                     .Include(m => m.TbInvLotes)
+498:                         .ThenInclude(l => l.TbInvDevolucionLotes)
+499:                     .Include(m => m.TbInvConsumoLotes)
+500:                     .Include(m => m.TbInvDevolucionLotes)
+501:                     .ToListAsync();
+502: 
+503:                 TbInvMovimiento movimientoOrigen = null;
+504:                 if (movimientos != null && movimientos.Any())
+505:                 {
+506:                     movimientoOrigen = movimientos.FirstOrDefault(m => m.IdTransaccionInventario == tbCompra.IdTransaccion) ?? movimientos.First();
+507: 
+508:                     // Obtener transacción de reversion venta si existe
+509:                     var transReversionVenta = await _tiendaDbContext.TbInvTransacciones.FirstOrDefaultAsync(t => t.Nombre.ToLower() == "reversion venta");
+510: 
+511:                     // Si el movimiento origen tiene consumos, no se puede editar
+512:                     bool movimientoTieneConsumos = (movimientoOrigen.TbInvConsumoLotes != null && movimientoOrigen.TbInvConsumoLotes.Any())
+513:                         || movimientoOrigen.TbInvLotes.Any(l => l.TbInvConsumoLotes != null && l.TbInvConsumoLotes.Any());
+514:                     if (movimientoTieneConsumos)
+515:                         throw new ConflictException("No se puede editar la compra: existen consumos por venta relacionados.");
+516: 
+517:                     bool movimientoTieneDevoluciones = (movimientoOrigen.TbInvDevolucionLotes != null && movimientoOrigen.TbInvDevolucionLotes.Any())
+518:                         || movimientoOrigen.TbInvLotes.Any(l => l.TbInvDevolucionLotes != null && l.TbInvDevolucionLotes.Any());
+519:                     if (movimientoTieneDevoluciones)
+520:                         throw new ConflictException("No se puede editar la compra: existen devoluciones relacionadas.");
+521: 
+522:                     if (movimientoOrigen.IdTransaccionInventarioNavigation?.Nombre.Contains("reversion", StringComparison.OrdinalIgnoreCase) == true)
+523:                         throw new ConflictException("No se puede editar la compra: el movimiento ya está reversado.");
+524: 
+525:                     // Si existe algún movimiento que tenga IdMovimientoOrigen apuntando al movimientoOrigen -> no permitir edición
+526:                     var movimientosRelacionados = await _tiendaDbContext.TbInvMovimientos.Where(m => m.IdMovimientoOrigen == movimientoOrigen.Id).ToListAsync();
+527:                     if (movimientosRelacionados.Any())
+528:                         throw new ConflictException("No se puede editar la compra: existen movimientos relacionados al movimiento de inventario.");
+529: 
+530:                     // Si existe una venta reversada relacionada (movimiento con transacción 'Reversion Venta')
+531:                     if (transReversionVenta != null && movimientos.Any(m => m.IdTransaccionInventario == transReversionVenta.Id))
+532:                         throw new ConflictException("No se puede editar la compra: existe una venta reversada relacionada.");
+533:                 }
+534: 
+535:                 // Aplicar eliminados/actualizaciones/creaciones en detalles de la compra
+536:                 var idsDto = compraEditarDTO.DetalleComprasEditarDto.Select(x => x.Id).ToList();
+537:                 var eliminados = tbCompra.TbComDetallesCompras.Where(x => !idsDto.Contains(x.Id)).ToList();
+538: 
+539:                 foreach (var e in eliminados)
+540:                 {
+541:                     var impuestosDetalle = await _tiendaDbContext.TbComImpuestoDetalles
+542:                         .Where(x => x.IdDetalleCompra == e.Id)
+543:                         .ToListAsync();
+544: 
+545:                     _tiendaDbContext.TbComImpuestoDetalles.RemoveRange(impuestosDetalle);
+546:                     _tiendaDbContext.TbComDetallesCompras.Remove(e);
+547:                     tbCompra.TbComDetallesCompras.Remove(e);
+548:                 }
+549: 
+550:                 foreach (var detDto in compraEditarDTO.DetalleComprasEditarDto)
+551:                 {
+552:                     var existente = tbCompra.TbComDetallesCompras.FirstOrDefault(x => x.Id == detDto.Id);
+553:                     if (existente != null)
+554:                     {
+555:                         // actualizar
+556:                         existente.IdArticulo = detDto.ArticuloId;
+557:                         existente.Cantidad = detDto.Cantidad;
+558:                         existente.Descripcion = detDto.Descripcion;
+559:                         existente.ValorCompra = detDto.ValorCompra;
+560:                         existente.ValorVenta = detDto.ValorVenta;
+561:                         existente.ValorTotal = detDto.ValorTotal;
+562:                         existente.FechaExpiracion = detDto.FechaCaducidad;
+563:                         existente.NumeroLote = detDto.NumeroLote;
+564:                         existente.Codigo = detDto.Codigo;
+565:                     }
+566:                     else
+567:                     {
+568:                         // nuevo
+569:                         tbCompra.TbComDetallesCompras.Add(new TbComDetallesCompra
+570:                         {
+571:                             IdArticulo = detDto.ArticuloId,
+572:                             Cantidad = detDto.Cantidad,
+573:                             Codigo = detDto.Codigo,
+574:                             FechaExpiracion = detDto.FechaCaducidad,
+575:                             NumeroLote = detDto.NumeroLote,
+576:                             Descripcion = detDto.Descripcion,
+577:                             ValorCompra = detDto.ValorCompra,
+578:                             ValorVenta = detDto.ValorVenta,
+579:                             ValorTotal = detDto.ValorTotal
+580:                         });
+581:                     }
+582:                 }
+583: 
+584:                 // Mapear campos de la compra y actualizar fecha de modificación
+585:                 this._mapper.MapeoCompraEdicionDtoACompraTb(compraEditarDTO, tbCompra);
+586:                 tbCompra.FechaModificacion = DateTime.Now;
+587: 
+588:                 var resp = await this._compraRepository.Editar(tbCompra);
+589:                 if (resp == false)
+590:                     throw new BadRequestException("No se pudo editar la compra!!");
+591: 
+592:                 // Si existe movimiento de inventario asociado, actualizar sus lotes para reflejar los cambios en la compra
+593:                 if (movimientoOrigen != null)
+594:                 {
+595:                     await ProcesarMovimientoInventario(movimientoOrigen, tbCompra, eliminados);
+596:                 }
+597: 
+598:                 await _tiendaDbContext.SaveChangesAsync();
+599:                 await transaction.CommitAsync();
+600:                 return true;
+601:             }
+602:             catch
+603:             {
+604:                 await transaction.RollbackAsync();
+605:                 throw;
+606:             }
+607:         }
+```
+Current statement: line 595
+[7] [Reanudando método asincrónico]
+[8] [Código externo]
+[43] [Reanudando método asincrónico]
+[44] [Código externo]
+........5 more stack frames omitted.

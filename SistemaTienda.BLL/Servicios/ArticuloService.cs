@@ -59,7 +59,9 @@ namespace SistemaTienda.BLL.Servicios
                 .Include(p => p.IdPorcentajeGananciaNavigation)
                 .Include(a => a.IdUnidadNavigation)
                 .Include(a => a.TbComArticulosImpuestos)
-                    .ThenInclude(ai => ai.IdImpuestoNavigation).FirstOrDefaultAsync(a => a.Id == idArticulo);
+                    .ThenInclude(ai => ai.IdImpuestoNavigation)
+                        .ThenInclude(i => i.IdTipoCalculoNavigation)
+                .FirstOrDefaultAsync(a => a.Id == idArticulo);
             if (articuloTb == null)
                 throw new NotFoundException("El artículo no existe!!");
             return this._mapper.MapeoArticuloTbAArticuloDto(articuloTb);
@@ -75,6 +77,7 @@ namespace SistemaTienda.BLL.Servicios
                 .Include(a => a.IdUnidadNavigation)
                 .Include(a => a.TbComArticulosImpuestos)
                     .ThenInclude(ai => ai.IdImpuestoNavigation)
+                        .ThenInclude(i => i.IdTipoCalculoNavigation)
                 .FirstOrDefaultAsync();
             if (articuloTb == null)
                 throw new NotFoundException("El artículo no existe o está inactivo!!");
@@ -97,6 +100,7 @@ namespace SistemaTienda.BLL.Servicios
                 .Include(l => l.IdDetalleCompraNavigation.IdArticuloNavigation)
                     .ThenInclude(a => a.TbComArticulosImpuestos)
                         .ThenInclude(ai => ai.IdImpuestoNavigation)
+                            .ThenInclude(i => i.IdTipoCalculoNavigation)
                 .Include(l => l.IdDetalleCompraNavigation.IdArticuloNavigation)
                     .ThenInclude(a => a.IdUnidadNavigation)
                 .OrderBy(l => l.FechaExpiracion == null)
@@ -255,7 +259,8 @@ namespace SistemaTienda.BLL.Servicios
             }));
 
             // Agregar artículos activos que no tienen lotes con stock
-            var idsConLote = lotes.Select(l => l.IdDetalleCompraNavigation.IdArticuloNavigation.Id).Distinct().ToList();
+            var idsConLote = lotes.Select(l => l.IdDetalleCompraNavigation.IdArticuloNavigation.Id
+            ).Distinct().ToList();
             var articulosSinLote = await this.tiendaDbContext.TbComArticulos
                 .Where(a => a.Estado == true && a.EstadoVisual == true && !idsConLote.Contains(a.Id))
                 .Include(a => a.TbComArticulosImpuestos)

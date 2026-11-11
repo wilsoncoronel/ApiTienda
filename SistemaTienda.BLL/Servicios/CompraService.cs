@@ -115,7 +115,7 @@ namespace SistemaTienda.BLL.Servicios
         private async Task ProcesarMovimientoInventario(TbInvMovimiento movimientoOrigen, TbCompra tbCompra, List<TbComDetallesCompra> detallesEliminados)
         {
             // Crear diccionario de lotes existentes por llave (IdArticulo, NumeroLote, Codigo)
-            var lotesExistentes = movimientoOrigen.TbInvLotes.ToDictionary(l => (l.IdDetalleCompraNavigation.IdArticuloNavigation.Id, l.NumeroLote ?? string.Empty, l.Codigo ?? string.Empty), l => l);
+            var lotesExistentes = movimientoOrigen.TbInvLotes.ToDictionary(l => (l.IdDetalleCompraNavigation.IdArticulo, l.NumeroLote ?? string.Empty, l.Codigo ?? string.Empty), l => l);
 
             // Procesar eliminados: eliminar físicamente los lotes correspondientes a los detalles eliminados
             if (detallesEliminados != null && detallesEliminados.Any())
@@ -180,6 +180,18 @@ namespace SistemaTienda.BLL.Servicios
             _tiendaDbContext.TbInvMovimientos.Update(movimientoOrigen);
 
             await Task.CompletedTask;
+        }
+
+        private static List<TbComImpuestoDetalle> MapearImpuestosDetalle(List<DetalleImpuestoCreacionDTO> impuestos)
+        {
+            return (impuestos ?? [])
+                .Select(impuesto => new TbComImpuestoDetalle
+                {
+                    IdTipoCalculo = impuesto.IdTipoCalculo,
+                    Nombre = impuesto.Nombre,
+                    Valor = impuesto.Valor
+                })
+                .ToList();
         }
 
         public async Task<List<EstadoCompraDTO>> ListarEstadosCompras()
@@ -479,6 +491,7 @@ namespace SistemaTienda.BLL.Servicios
             {
                 var tbCompra = await this._tiendaDbContext.TbCompras.Where(c => c.Id == compraEditarDTO.Id)
                     .Include(det => det.TbComDetallesCompras)
+                        .ThenInclude(det => det.TbComImpuestoDetalles)
                     .Include(est => est.IdEstadoCompraNavigation)
                     .FirstOrDefaultAsync();
                     
@@ -562,6 +575,14 @@ namespace SistemaTienda.BLL.Servicios
                         existente.FechaExpiracion = detDto.FechaCaducidad;
                         existente.NumeroLote = detDto.NumeroLote;
                         existente.Codigo = detDto.Codigo;
+
+                        var impuestosExistentes = existente.TbComImpuestoDetalles?.ToList() ?? [];
+                        if (impuestosExistentes.Any())
+                        {
+                            _tiendaDbContext.TbComImpuestoDetalles.RemoveRange(impuestosExistentes);
+                        }
+
+                        existente.TbComImpuestoDetalles = MapearImpuestosDetalle(detDto.Impuestos);
                     }
                     else
                     {
@@ -576,7 +597,8 @@ namespace SistemaTienda.BLL.Servicios
                             Descripcion = detDto.Descripcion,
                             ValorCompra = detDto.ValorCompra,
                             ValorVenta = detDto.ValorVenta,
-                            ValorTotal = detDto.ValorTotal
+                            ValorTotal = detDto.ValorTotal,
+                            TbComImpuestoDetalles = MapearImpuestosDetalle(detDto.Impuestos)
                         });
                     }
                 }

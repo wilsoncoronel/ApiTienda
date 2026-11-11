@@ -18,7 +18,7 @@ namespace SistemaTienda.DTO
         public decimal ValorVenta { get; set; }
         public int ArticuloId { get; set; }
         public decimal ValorTotal { get; set; }
-        public decimal ImpuestoValor { get; set; }
+        public List<DetalleImpuestoCreacionDTO> Impuestos { get; set; } = [];
         public DateOnly? FechaCaducidad { get; set; }
     }
 }
