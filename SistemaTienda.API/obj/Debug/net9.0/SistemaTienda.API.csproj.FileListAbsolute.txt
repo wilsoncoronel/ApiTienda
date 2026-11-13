@@ -589,14 +589,3 @@ C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaT
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.API.pdb
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\bin\Debug\net9.0\SistemaTienda.API.staticwebassets.runtime.json
-C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\dotnet-watch\Microsoft.NET.Sdk.BlazorWeb.DotNetWatch.lib.module.js
-C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\dotnet-watch\Microsoft.NET.Sdk.BlazorWeb.DotNetWatch.BrowserTools.js
-C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\dotnet-watch\Microsoft.NET.Sdk.BlazorWeb.DotNetWatch.BrowserTools.Config.js
-C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\dotnet-watch\browser-tools-key.public.json
-C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\dotnet-watch\browser-tools-key.private.json
-C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\jsmodules\jsmodules.build.manifest.json
-C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\scopedcss\scopedcss.cache
-C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\compressed\syy0qk12m2-{0}-hbxp78vwan-hbxp78vwan.gz
-C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\compressed\931ayczw37-{0}-wyw7k3ddmh-wyw7k3ddmh.gz
-C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\compressed\s6zsi84vgl-{0}-pmpabpnd9a-pmpabpnd9a.gz
-C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Debug\net9.0\compressed\q9kvtcbn4x-{0}-o299wl1apk-o299wl1apk.gz

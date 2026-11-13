@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "ZbUUz1SScv4=",
+  "dgSpecHash": "hEyYmi6CYXk=",
   "success": true,
   "projectFilePath": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.DTO\\SistemaTienda.DTO.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\DOOMSLAYER\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.21\\microsoft.netcore.app.ref.9.0.21.nupkg.sha512",
     "C:\\Users\\DOOMSLAYER\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.21\\microsoft.windowsdesktop.app.ref.9.0.21.nupkg.sha512",
+    "C:\\Users\\DOOMSLAYER\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.21\\microsoft.netcore.app.ref.9.0.21.nupkg.sha512",
     "C:\\Users\\DOOMSLAYER\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.21\\microsoft.aspnetcore.app.ref.9.0.21.nupkg.sha512"
   ],
   "logs": []

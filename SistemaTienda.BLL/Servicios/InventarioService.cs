@@ -106,6 +106,7 @@ namespace SistemaTienda.BLL.Servicios
                         .ThenInclude(art => art.IdArticuloNavigation)
                         .ThenInclude(ai => ai.TbComArticulosImpuestos)
                         .ThenInclude(imp => imp.IdImpuestoNavigation)
+                            .ThenInclude(i => i.IdTipoCalculoNavigation)
                     .Include(lot => lot.IdLoteNavigation)
                     .ToList();
                 listaIventarioDto = this.mapeo.MapeoListaDetallesConsumosTbAListaDetallesConsumosDto(listaResultado);

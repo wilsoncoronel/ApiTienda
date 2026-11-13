@@ -22,7 +22,6 @@ namespace SistemaTienda.DTO
         public int IdEstado { get; set; }
 
         public string NombreEstado { get; set; } = null!;
-
         public DateTime? FechaReversion { get; set; }
 
         public TransaccionInventarioDTO TransaccionInventarioDTO { get; set; } = null!;

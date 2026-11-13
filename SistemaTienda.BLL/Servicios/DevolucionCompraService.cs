@@ -229,6 +229,7 @@ namespace SistemaTienda.BLL.Servicios
 
             var impuestos = await _tiendaDbContext.TbComImpuestoDetalleDevolucionCompras
                 .AsNoTracking()
+                .Include(i => i.IdTipoCalculoNavigation)
                 .Where(i => idsDetalle.Contains(i.IdDetalleDevolucionCompra))
                 .ToListAsync();
 
