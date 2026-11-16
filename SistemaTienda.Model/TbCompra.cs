@@ -15,7 +15,7 @@ public partial class TbCompra
 
     public int IdUsuarioCreador { get; set; }
 
-    public string Documento { get; set; } = null!;
+    public string? Documento { get; set; }
 
     public DateTime FechaCompra { get; set; }
 

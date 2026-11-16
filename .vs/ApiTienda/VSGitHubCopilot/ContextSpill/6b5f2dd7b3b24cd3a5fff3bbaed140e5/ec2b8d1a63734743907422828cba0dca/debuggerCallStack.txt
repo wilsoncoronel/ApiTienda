@@ -1,0 +1,221 @@
+﻿Thread ID: 18868
+[1] System.Private.CoreLib.dll!System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw
+[2] System.Private.CoreLib.dll!System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess
+[3] System.Private.CoreLib.dll!System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification
+This is the current user focused stack frame. The provided locals context corresponds to this stack frame, but you may evaluate expressions and retrieve code for any frame.
+[4] System.Private.CoreLib.dll!System.Runtime.CompilerServices.TaskAwaiter<int>.GetResult
+[5] [En espera de una operación asincrónica, haga doble clic o presione ENTRAR para ver las pilas de llamadas asincrónicas]
+[6] SistemaTienda.API.dll!SistemaTienda.API.Controllers.InventarioController.CrearAjusteInventario
+Code for the stack frame:
+```csharp C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\Controllers\InventarioController.cs
+103:         [HttpPost]
+104:         [Route("CrearAjusteInventario")]
+105:         public async Task<IActionResult> CrearAjusteInventario([FromBody] AjusteInventarioCrearDTO modelo)
+106:         {
+107:             var resp = new Response<int>();
+108:             resp.status = true;
+109:             resp.Value = await this._ajusteInventarioService.CrearAjusteInventario(modelo);
+110:             resp.msg = "Ajuste de inventario creado con exito!!";
+111:             return Ok(resp);
+112:         }
+```
+Current statement: line 109
+[7] [Reanudando método asincrónico]
+[8] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<System.__Canon>.AsyncStateMachineBox<System.__Canon>.ExecutionContextCallback
+[9] System.Private.CoreLib.dll!System.Threading.ExecutionContext.RunInternal
+[10] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<Microsoft.AspNetCore.Mvc.IActionResult>.AsyncStateMachineBox<System.Runtime.CompilerServices.IAsyncStateMachine>.MoveNext
+[11] System.Private.CoreLib.dll!System.Runtime.CompilerServices.TaskAwaiter.OutputWaitEtwEvents.AnonymousMethod__12_0
+[12] System.Private.CoreLib.dll!System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction
+[13] System.Private.CoreLib.dll!System.Threading.Tasks.Task.RunContinuations
+[14] System.Private.CoreLib.dll!System.Threading.Tasks.Task.FinishSlow
+[15] System.Private.CoreLib.dll!System.Threading.Tasks.Task.TrySetException
+[16] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<int>.SetException
+[17] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<int>.SetException
+[18] [Completado] SistemaTienda.BLL.dll!SistemaTienda.BLL.Servicios.AjusteInventarioService.CrearAjusteInventario
+Code for the stack frame:
+```csharp C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\Servicios\AjusteInventarioService.cs
+23:         public async Task<int> CrearAjusteInventario(AjusteInventarioCrearDTO modelo)
+24:         {
+25:             if (modelo.Detalles == null || !modelo.Detalles.Any())
+26:                 throw new BadRequestException("El ajuste debe tener al menos un detalle.");
+27: 
+28:             var transaccion = await _tiendaDb.TbInvTransacciones.FirstOrDefaultAsync(t => t.Id == modelo.IdTransaccion)
+29:                 ?? throw new NotFoundException("La transacción de inventario no existe.");
+30: 
+31:             var estado = await _tiendaDb.TbInvEstadosAjustes.FirstOrDefaultAsync(e => e.Id == modelo.IdEstado)
+32:                 ?? throw new NotFoundException("El estado de ajuste no existe.");
+33: 
+34:             var esEntrada = transaccion.Signo > 0;
+35: 
+36:             using var trx = await _tiendaDb.Database.BeginTransactionAsync();
+37: 
+38:             var ajuste = new TbInvAjusteInventario
+39:             {
+40:                 IdTransaccion = modelo.IdTransaccion,
+41:                 IdUsuarioCreador = modelo.IdUsuarioCreador,
+42:                 Motivo = modelo.Motivo,
+43:                 FechaCreacion = DateTime.Now,
+44:                 IdEstado = modelo.IdEstado,
+45:             };
+46: 
+47:             _tiendaDb.TbInvAjusteInventarios.Add(ajuste);
+48:             await _tiendaDb.SaveChangesAsync();
+49: 
+50:             var movimiento = new TbInvMovimiento
+51:             {
+52:                 IdTransaccionInventario = modelo.IdTransaccion,
+53:                 Fecha = DateTime.Now,
+54:                 Referencia = "AIID" + ajuste.Id
+55:             };
+56:             _tiendaDb.TbInvMovimientos.Add(movimiento);
+57:             await _tiendaDb.SaveChangesAsync();
+58: 
+59:             foreach (var det in modelo.Detalles)
+60:             {
+61:                 var lote = await _tiendaDb.TbInvLotes.FirstOrDefaultAsync(l => l.Id == det.IdLote)
+62:                     ?? throw new NotFoundException($"El lote {det.IdLote} no existe.");
+63: 
+64:                 if (!lote.Estado)
+65:                     throw new BadRequestException($"El lote {det.IdLote} no está activo.");
+66: 
+67:                 if (lote.IdDetalleCompraNavigation.IdArticulo != det.IdArticulo)
+68:                     throw new BadRequestException($"El lote {det.IdLote} no corresponde al artículo {det.IdArticulo}.");
+69: 
+70:                 if (!esEntrada && lote.StockDisponible < det.Cantidad)
+71:                     throw new BadRequestException($"Stock insuficiente en el lote {det.IdLote}.");
+72: 
+73:                 lote.StockDisponible += esEntrada ? det.Cantidad : -det.Cantidad;
+74: 
+75:                 var detalle = new TbInvDetalleAjusteInventario
+76:                 {
+77:                     IdAjusteInventario = ajuste.Id,
+78:                     IdArticulo = det.IdArticulo,
+79:                     Cantidad = det.Cantidad,
+80:                     CostoUnitario = det.CostoUnitario,
+81:                     Estado = true
+82:                 };
+83:                 _tiendaDb.TbInvDetalleAjusteInventarios.Add(detalle);
+84:                 await _tiendaDb.SaveChangesAsync();
+85: 
+86:                 _tiendaDb.TbInvAjusteLotes.Add(new TbInvAjusteLote
+87:                 {
+88:                     IdMovimiento = movimiento.Id,
+89:                     IdDetalleAjuste = detalle.Id,
+90:                     IdLote = lote.Id,
+91:                     Cantidad = det.Cantidad,
+92:                     PrecioUnitario = det.CostoUnitario,
+93:                     Estado = true
+94:                 });
+95:             }
+96: 
+97:             await _tiendaDb.SaveChangesAsync();
+98:             await trx.CommitAsync();
+99: 
+100:             return ajuste.Id;
+101:         }
+```
+Current statement: line 100
+[19] System.Private.CoreLib.dll!System.Threading.ExecutionContext.RunInternal
+[20] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<int>.AsyncStateMachineBox<System.Runtime.CompilerServices.IAsyncStateMachine>.MoveNext
+[21] System.Private.CoreLib.dll!System.Runtime.CompilerServices.TaskAwaiter.OutputWaitEtwEvents.AnonymousMethod__12_0
+[22] System.Private.CoreLib.dll!System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction
+[23] System.Private.CoreLib.dll!System.Threading.Tasks.Task.RunContinuations
+[24] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<SistemaTienda.Model.TbInvLote>.SetResult
+[25] [Completado] Microsoft.EntityFrameworkCore.dll!Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync<SistemaTienda.Model.TbInvLote>
+[26] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<SistemaTienda.Model.TbInvLote>.AsyncStateMachineBox<Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.<SingleOrDefaultAsync>d__16<SistemaTienda.Model.TbInvLote>>.ExecutionContextCallback
+[27] System.Private.CoreLib.dll!System.Threading.ExecutionContext.RunInternal
+[28] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<SistemaTienda.Model.TbInvLote>.AsyncStateMachineBox<Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.<SingleOrDefaultAsync>d__16<SistemaTienda.Model.TbInvLote>>.MoveNext
+[29] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<System.__Canon>.AsyncStateMachineBox<Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.<SingleOrDefaultAsync>d__16<System.__Canon>>.MoveNext
+[30] System.Private.CoreLib.dll!System.Runtime.CompilerServices.TaskAwaiter.OutputWaitEtwEvents.AnonymousMethod__12_0
+[31] System.Private.CoreLib.dll!System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction
+[32] System.Private.CoreLib.dll!System.Threading.Tasks.Task.RunContinuations
+[33] System.Private.CoreLib.dll!System.Threading.Tasks.Task<bool>.TrySetResult
+[34] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<bool>.SetExistingTaskResult
+[35] [Completado] Microsoft.EntityFrameworkCore.Relational.dll!Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable<SistemaTienda.Model.TbInvLote>.AsyncEnumerator.MoveNextAsync
+[36] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<bool>.AsyncStateMachineBox<Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable<SistemaTienda.Model.TbInvLote>.AsyncEnumerator.<MoveNextAsync>d__20>.ExecutionContextCallback
+[37] System.Private.CoreLib.dll!System.Threading.ExecutionContext.RunInternal
+[38] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<bool>.AsyncStateMachineBox<Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable<SistemaTienda.Model.TbInvLote>.AsyncEnumerator.<MoveNextAsync>d__20>.MoveNext
+[39] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<bool>.AsyncStateMachineBox<Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable<System.__Canon>.AsyncEnumerator.<MoveNextAsync>d__20>.MoveNext
+[40] System.Private.CoreLib.dll!System.Runtime.CompilerServices.TaskAwaiter.OutputWaitEtwEvents.AnonymousMethod__12_0
+[41] System.Private.CoreLib.dll!System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction
+[42] System.Private.CoreLib.dll!System.Threading.Tasks.Task.RunContinuations
+[43] System.Private.CoreLib.dll!System.Threading.Tasks.Task<bool>.TrySetResult
+[44] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<bool>.SetExistingTaskResult
+[45] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<bool>.SetResult
+[46] [Completado] Microsoft.EntityFrameworkCore.SqlServer.dll!Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync<Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable<SistemaTienda.Model.TbInvLote>.AsyncEnumerator, bool>
+[47] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<bool>.AsyncStateMachineBox<Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.<ExecuteAsync>d__7<Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable<SistemaTienda.Model.TbInvLote>.AsyncEnumerator, bool>>.ExecutionContextCallback
+[48] System.Private.CoreLib.dll!System.Threading.ExecutionContext.RunInternal
+[49] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<bool>.AsyncStateMachineBox<Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.<ExecuteAsync>d__7<Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable<SistemaTienda.Model.TbInvLote>.AsyncEnumerator, bool>>.MoveNext
+[50] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<bool>.AsyncStateMachineBox<Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.<ExecuteAsync>d__7<System.__Canon, bool>>.MoveNext
+[51] System.Private.CoreLib.dll!System.Runtime.CompilerServices.TaskAwaiter.OutputWaitEtwEvents.AnonymousMethod__12_0
+[52] System.Private.CoreLib.dll!System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction
+[53] System.Private.CoreLib.dll!System.Threading.Tasks.Task.RunContinuations
+[54] System.Private.CoreLib.dll!System.Threading.Tasks.Task<bool>.TrySetResult
+[55] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<bool>.SetExistingTaskResult
+[56] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<bool>.SetResult
+[57] [Completado] Microsoft.EntityFrameworkCore.Relational.dll!Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable<SistemaTienda.Model.TbInvLote>.AsyncEnumerator.InitializeReaderAsync
+[58] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<bool>.AsyncStateMachineBox<Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable<SistemaTienda.Model.TbInvLote>.AsyncEnumerator.<InitializeReaderAsync>d__21>.ExecutionContextCallback
+[59] System.Private.CoreLib.dll!System.Threading.ExecutionContext.RunInternal
+[60] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<bool>.AsyncStateMachineBox<Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable<SistemaTienda.Model.TbInvLote>.AsyncEnumerator.<InitializeReaderAsync>d__21>.MoveNext
+[61] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<bool>.AsyncStateMachineBox<Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable<System.__Canon>.AsyncEnumerator.<InitializeReaderAsync>d__21>.MoveNext
+[62] System.Private.CoreLib.dll!System.Runtime.CompilerServices.TaskAwaiter.OutputWaitEtwEvents.AnonymousMethod__12_0
+[63] System.Private.CoreLib.dll!System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction
+[64] System.Private.CoreLib.dll!System.Threading.Tasks.Task.RunContinuations
+[65] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<Microsoft.EntityFrameworkCore.Storage.RelationalDataReader>.SetResult
+[66] [Completado] Microsoft.EntityFrameworkCore.Relational.dll!Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync
+[67] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<System.__Canon>.AsyncStateMachineBox<Microsoft.EntityFrameworkCore.Storage.RelationalCommand.<ExecuteReaderAsync>d__18>.ExecutionContextCallback
+[68] System.Private.CoreLib.dll!System.Threading.ExecutionContext.RunInternal
+[69] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<Microsoft.EntityFrameworkCore.Storage.RelationalDataReader>.AsyncStateMachineBox<Microsoft.EntityFrameworkCore.Storage.RelationalCommand.<ExecuteReaderAsync>d__18>.MoveNext
+[70] System.Private.CoreLib.dll!System.Runtime.CompilerServices.AsyncTaskMethodBuilder<System.__Canon>.AsyncStateMachineBox<Microsoft.EntityFrameworkCore.Storage.RelationalCommand.<ExecuteReaderAsync>d__18>.MoveNext
+[71] System.Private.CoreLib.dll!System.Runtime.CompilerServices.TaskAwaiter.OutputWaitEtwEvents.AnonymousMethod__12_0
+[72] System.Private.CoreLib.dll!System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction
+[73] System.Private.CoreLib.dll!System.Threading.Tasks.Task.RunContinuations
+[74] System.Private.CoreLib.dll!System.Threading.Tasks.Task.FinishSlow
+[75] System.Private.CoreLib.dll!System.Threading.Tasks.Task.ExecuteWithThreadLocal
+[76] System.Private.CoreLib.dll!System.Threading.Tasks.ThreadPoolTaskScheduler.TryExecuteTaskInline
+[77] System.Private.CoreLib.dll!System.Threading.Tasks.TaskScheduler.TryRunInline
+[78] System.Private.CoreLib.dll!System.Threading.Tasks.TaskContinuation.InlineIfPossibleOrElseQueue
+[79] System.Private.CoreLib.dll!System.Threading.Tasks.ContinueWithTaskContinuation.Run
+[80] System.Private.CoreLib.dll!System.Threading.Tasks.Task.RunContinuations
+[81] System.Private.CoreLib.dll!System.Threading.Tasks.Task<System.__Canon>.TrySetResult
+[82] System.Private.CoreLib.dll!System.Threading.Tasks.UnwrapPromise<Microsoft.Data.SqlClient.SqlDataReader>.TrySetFromTask
+[83] System.Private.CoreLib.dll!System.Threading.Tasks.UnwrapPromise<System.__Canon>.ProcessInnerTask
+[84] System.Private.CoreLib.dll!System.Threading.Tasks.Task.RunContinuations
+[85] System.Private.CoreLib.dll!System.Threading.Tasks.Task.FinishSlow
+[86] System.Private.CoreLib.dll!System.Threading.Tasks.Task.ExecuteWithThreadLocal
+[87] System.Private.CoreLib.dll!System.Threading.ThreadPoolWorkQueue.Dispatch
+[88] System.Private.CoreLib.dll!System.Threading.PortableThreadPool.WorkerThread.WorkerThreadStart
+[89] [Pila de llamadas asincrónicas]
+[90] [Asincrónico] Microsoft.AspNetCore.Mvc.Core.dll!Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute
+[91] [Asincrónico] Microsoft.AspNetCore.Mvc.Core.dll!Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync.__Awaited|12_0
+[92] [Asincrónico] Microsoft.AspNetCore.Mvc.Core.dll!Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync.__Awaited|10_0
+[93] [Asincrónico] Microsoft.AspNetCore.Mvc.Core.dll!Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync.__Awaited|10_0
+[94] [Asincrónico] Microsoft.AspNetCore.Mvc.Core.dll!Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync.__Awaited|13_0
+[95] [Asincrónico] Microsoft.AspNetCore.Mvc.Core.dll!Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync.__Awaited|20_0
+[96] [Asincrónico] Microsoft.AspNetCore.Mvc.Core.dll!Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeAsync.__Awaited|17_0
+[97] [Asincrónico] Microsoft.AspNetCore.Authorization.Policy.dll!Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke
+[98] [Asincrónico] SistemaTienda.API.dll!SistemaTienda.API.Middleware.ExceptionMiddleware.InvokeAsync
+Code for the stack frame:
+```csharp C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\Middleware\ExceptionMiddleware.cs
+20:         public async Task InvokeAsync(HttpContext context)
+21:         {
+22:             try
+23:             {
+24:                 await _next(context);
+25:             }
+26:             catch (Exception ex)
+27:             {
+28:                 await HandleExceptionAsync(context, ex);
+29:             }
+30:         }
+```
+Current statement: line 24
+[99] [Asincrónico] Microsoft.AspNetCore.Authentication.dll!Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke
+[100] [Asincrónico] Microsoft.AspNetCore.Diagnostics.dll!Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke
+[101] [Asincrónico] Microsoft.WebTools.BrowserLink.Net.dll!Microsoft.WebTools.BrowserLink.Net.BrowserLinkMiddleware.InvokeAsync
+[102] [Asincrónico] Microsoft.AspNetCore.Watch.BrowserRefresh.dll!Microsoft.AspNetCore.Watch.BrowserRefresh.BrowserRefreshMiddleware.InvokeAsync
+[103] [Asincrónico] Microsoft.AspNetCore.Server.Kestrel.Core.dll!Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests<Microsoft.AspNetCore.Hosting.HostingApplication.Context>
+[104] [Asincrónico] Microsoft.AspNetCore.Server.Kestrel.Core.dll!Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequestsAsync<Microsoft.AspNetCore.Hosting.HostingApplication.Context>
+[105] [Asincrónico] Microsoft.AspNetCore.Server.Kestrel.Core.dll!Microsoft.AspNetCore.Server.Kestrel.Core.Internal.HttpConnection.ProcessRequestsAsync<Microsoft.AspNetCore.Hosting.HostingApplication.Context>
+[106] [Asincrónico] Microsoft.AspNetCore.Server.Kestrel.Core.dll!Microsoft.AspNetCore.Server.Kestrel.Https.Internal.HttpsConnectionMiddleware.OnConnectionAsync
+[107] [Asincrónico] Microsoft.AspNetCore.Server.Kestrel.Core.dll!Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.KestrelConnection<Microsoft.AspNetCore.Connections.ConnectionContext>.ExecuteAsync

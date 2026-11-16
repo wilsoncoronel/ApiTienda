@@ -55,8 +55,6 @@ public partial class TbComArticulo
 
     public virtual ICollection<TbComDetallesCompra> TbComDetallesCompras { get; set; } = new List<TbComDetallesCompra>();
 
-    public virtual ICollection<TbInvDetalleAjusteInventario> TbInvDetalleAjusteInventarios { get; set; } = new List<TbInvDetalleAjusteInventario>();
-
     public virtual ICollection<TbPedDetallesPedido> TbPedDetallesPedidos { get; set; } = new List<TbPedDetallesPedido>();
 
     public virtual ICollection<TbVenDetalleVenta> TbVenDetalleVenta { get; set; } = new List<TbVenDetalleVenta>();

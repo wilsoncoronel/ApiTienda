@@ -58,14 +58,14 @@ namespace SistemaTienda.BLL.Servicios
 
             foreach (var det in modelo.Detalles)
             {
-                var lote = await _tiendaDb.TbInvLotes.FirstOrDefaultAsync(l => l.Id == det.IdLote)
+                var lote = await _tiendaDb.TbInvLotes.Include(lot => lot.IdDetalleCompraNavigation).FirstOrDefaultAsync(l => l.Id == det.IdLote)
                     ?? throw new NotFoundException($"El lote {det.IdLote} no existe.");
 
                 if (!lote.Estado)
                     throw new BadRequestException($"El lote {det.IdLote} no está activo.");
 
-                if (lote.IdDetalleCompraNavigation.IdArticulo != det.IdArticulo)
-                    throw new BadRequestException($"El lote {det.IdLote} no corresponde al artículo {det.IdArticulo}.");
+                if (det.IdArticulo.HasValue && lote.IdDetalleCompraNavigation.IdArticulo != det.IdArticulo.Value)
+                    throw new BadRequestException($"El lote {det.IdLote} no corresponde al artículo {det.IdArticulo.Value}.");
 
                 if (!esEntrada && lote.StockDisponible < det.Cantidad)
                     throw new BadRequestException($"Stock insuficiente en el lote {det.IdLote}.");
@@ -75,7 +75,7 @@ namespace SistemaTienda.BLL.Servicios
                 var detalle = new TbInvDetalleAjusteInventario
                 {
                     IdAjusteInventario = ajuste.Id,
-                    IdArticulo = det.IdArticulo,
+                    IdLote = det.IdLote,
                     Cantidad = det.Cantidad,
                     CostoUnitario = det.CostoUnitario,
                     Estado = true
@@ -166,18 +166,11 @@ namespace SistemaTienda.BLL.Servicios
                 FechaCreacion = a.FechaCreacion,
                 IdEstado = a.IdEstado,
                 FechaReversion = a.FechaReversion,
-                TransaccionInventarioDTO = new TransaccionInventarioDTO
-                {
-                    Id = a.IdTransaccionNavigation.Id,
-                    Nombre = a.IdTransaccionNavigation.Nombre,
-                    Signo = a.IdTransaccionNavigation.Signo,
-                    Estado = a.IdTransaccionNavigation.Estado
-                },
                 Detalles = a.TbInvDetalleAjusteInventarios.Select(d => (DetalleAjusteInventarioCrearDTO)new DetalleAjusteInventarioDTO
                 {
                     Id = d.Id,
                     IdAjusteInventario = d.IdAjusteInventario,
-                    IdArticulo = d.IdArticulo,
+                    IdLote = d.IdLoteNavigation.Id,
                     Cantidad = d.Cantidad,
                     CostoUnitario = d.CostoUnitario,
                     Estado = d.Estado
@@ -226,7 +219,7 @@ namespace SistemaTienda.BLL.Servicios
                     Detalles = a.TbInvDetalleAjusteInventarios.Select(d => new DetalleAjusteInventarioCompletoDTO
                     {
                         Id = d.Id,
-                        IdArticulo = d.IdArticulo,
+                        IdLote = d.IdLote,
                         Cantidad = d.Cantidad,
                         CostoUnitario = d.CostoUnitario,
                         Estado = d.Estado,

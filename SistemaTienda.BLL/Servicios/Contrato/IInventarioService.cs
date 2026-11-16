@@ -15,5 +15,6 @@ namespace SistemaTienda.BLL.Servicios.Contrato
         Task<List<InventarioLoteDTO>> ListaDetallesMovimiento(int idMovimiento);
         Task<List<ResumenVentasDiarioDTO>> ResumenVentasDiario(DateOnly fechaResumen);
         Task<List<LoteInventarioDTO>> ListaLotesInventario();
+        Task<List<ArticuloLoteInventarioDTO>> ListaArticulosInventario(string? lote = null, string? codigo = null, int? idArticulo = null, string? nombreArticulo = null);
     }
 }

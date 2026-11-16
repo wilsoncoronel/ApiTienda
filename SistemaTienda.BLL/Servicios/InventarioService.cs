@@ -68,6 +68,92 @@ namespace SistemaTienda.BLL.Servicios
                 .ToListAsync();
         }
 
+        public async Task<List<ArticuloLoteInventarioDTO>> ListaArticulosInventario(string? lote = null, string? codigo = null, int? idArticulo = null, string? nombreArticulo = null)
+        {
+            lote = string.IsNullOrWhiteSpace(lote) ? null : lote.Trim();
+            codigo = string.IsNullOrWhiteSpace(codigo) ? null : codigo.Trim();
+            nombreArticulo = string.IsNullOrWhiteSpace(nombreArticulo) ? null : nombreArticulo.Trim();
+
+            var idsMovimientosReversados = _tiendaDb.TbInvMovimientos
+                .Where(m => m.IdMovimientoOrigen.HasValue)
+                .Select(m => m.IdMovimientoOrigen!.Value);
+
+            var query = _tiendaDb.TbInvLotes
+                .AsNoTracking()
+                .Where(l => l.Estado)
+                .Where(l => !idsMovimientosReversados.Contains(l.IdMovimiento));
+
+            if (idArticulo.HasValue)
+                query = query.Where(l => l.IdDetalleCompraNavigation.IdArticulo == idArticulo.Value);
+
+            if (lote != null)
+                query = query.Where(l => l.NumeroLote == lote);
+
+            if (codigo != null)
+                query = query.Where(l => l.Codigo == codigo);
+
+            var datos = await query
+                .Select(l => new
+                {
+                    IdLote = l.Id,
+                    IdArticulo = l.IdDetalleCompraNavigation.IdArticulo,
+                    NumeroLote = l.NumeroLote,
+                    Codigo = l.Codigo,
+                    StockDisponible = l.StockDisponible,
+                    FechaExpiracion = l.FechaExpiracion,
+                    NombreArticulo = l.IdDetalleCompraNavigation.IdArticuloNavigation.Nombre,
+                    Marca = l.IdDetalleCompraNavigation.IdArticuloNavigation.IdMarcaNavigation.Nombre,
+                    UnidadMedida = l.IdDetalleCompraNavigation.IdArticuloNavigation.IdUnidadNavigation.Nombre,
+                    Unidad = l.IdDetalleCompraNavigation.IdArticuloNavigation.UnidadValor,
+                    PrecioCompra = l.CostoUnitario,
+                    Impuestos = l.IdDetalleCompraNavigation.TbComImpuestoDetalles
+                        .Select(i => new DetalleImpuestoDTO
+                        {
+                            Id = i.Id,
+                            IdDetalleCompra = i.IdDetalleCompra,
+                            IdImpuesto = 0,
+                            IdArticulo = l.IdDetalleCompraNavigation.IdArticulo,
+                            Nombre = i.Nombre,
+                            IdTipoCalculo = i.IdTipoCalculo,
+                            Valor = i.Valor
+                        }).ToList()
+                })
+                .ToListAsync();
+
+            var resultado = datos.Select(d => new ArticuloLoteInventarioDTO
+            {
+                IdLote = d.IdLote,
+                IdArticulo = d.IdArticulo,
+                NumeroLote = d.NumeroLote.Trim(),
+                Codigo = d.Codigo.Trim(),
+                StockDisponible = d.StockDisponible,
+                FechaExpiracion = d.FechaExpiracion,
+                NombreArticulo = d.NombreArticulo,
+                Marca = d.Marca.Trim(),
+                UnidadMedida = d.UnidadMedida.Trim(),
+                Unidad = d.Unidad,
+                PrecioCompra = d.PrecioCompra,
+                NombreCompuesto = $"{d.Marca} {d.NombreArticulo} {d.UnidadMedida.Trim()} {(d.Unidad?.ToString() ?? string.Empty)} {d.PrecioCompra}$",
+                Impuestos = d.Impuestos
+            }).ToList();
+
+            if (nombreArticulo == null)
+                return resultado;
+
+            var termino = nombreArticulo.ToLower();
+            decimal? precioFiltro = decimal.TryParse(nombreArticulo, out var precio) ? precio : null;
+
+            return resultado
+                .Where(r =>
+                    r.NombreCompuesto.ToLower().Contains(termino) ||
+                    r.Marca.ToLower().Contains(termino) ||
+                    r.NombreArticulo.ToLower().Contains(termino) ||
+                    r.UnidadMedida.ToLower().Contains(termino) ||
+                    (r.Unidad.HasValue && r.Unidad.Value.ToString().Contains(nombreArticulo)) ||
+                    (precioFiltro.HasValue && r.PrecioCompra == precioFiltro.Value))
+                .ToList();
+        }
+
         public async Task<List<MovimientoDTO>> ListaInventario(DateOnly FechaInicio, DateOnly FechaFinal)
         {
             var inicio = FechaInicio.ToDateTime(TimeOnly.MinValue);

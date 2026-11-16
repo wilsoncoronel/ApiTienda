@@ -89,6 +89,17 @@ namespace SistemaTienda.API.Controllers
             return Ok(resp);
         }
 
+        [HttpGet]
+        [Route("ListaArticulosInventario")]
+        public async Task<IActionResult> ListaArticulosInventario(string? lote = null, string? codigo = null, int? idArticulo = null, string? nombreArticulo = null)
+        {
+            var resp = new Response<List<ArticuloLoteInventarioDTO>>();
+            resp.status = true;
+            resp.Value = await this._inventarioService.ListaArticulosInventario(lote, codigo, idArticulo, nombreArticulo);
+            resp.msg = "Articulos de inventario cargados con exito!!";
+            return Ok(resp);
+        }
+
         [HttpPost]
         [Route("CrearAjusteInventario")]
         public async Task<IActionResult> CrearAjusteInventario([FromBody] AjusteInventarioCrearDTO modelo)

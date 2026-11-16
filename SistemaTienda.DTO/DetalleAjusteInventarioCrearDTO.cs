@@ -3,9 +3,7 @@ namespace SistemaTienda.DTO
     public class DetalleAjusteInventarioCrearDTO
     {
         public int IdAjusteInventario { get; set; }
-
-        public int IdArticulo { get; set; }
-
+        public int? IdArticulo { get; set; }
         public int IdLote { get; set; }
 
         public int Cantidad { get; set; }

@@ -12,7 +12,6 @@ namespace SistemaTienda.DTO
         public string Motivo { get; set; } = null!;
 
         public int IdEstado { get; set; }
-        public TransaccionInventarioDTO TransaccionInventarioDTO { get; set; } = null!;
         public ICollection<DetalleAjusteInventarioCrearDTO> Detalles { get; set; } = new List<DetalleAjusteInventarioCrearDTO>();
     }
 }

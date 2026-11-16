@@ -118,7 +118,9 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbVenta> TbVentas { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=DESKTOP-QO2URC6\\SQLEXPRESS;Database=TiendaDb;User Id=sa;Password=wili199308; TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -604,13 +606,8 @@ public partial class TiendaDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbInvDetalleAjusteInventario_TbInvAjusteInventario");
 
-            entity.HasOne(d => d.IdArticuloNavigation).WithMany(p => p.TbInvDetalleAjusteInventarios)
-                .HasForeignKey(d => d.IdArticulo)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TbInvDetalleAjusteInventario_TbComArticulos");
-
-            entity.HasOne(d => d.IdArticulo1).WithMany(p => p.TbInvDetalleAjusteInventarios)
-                .HasForeignKey(d => d.IdArticulo)
+            entity.HasOne(d => d.IdLoteNavigation).WithMany(p => p.TbInvDetalleAjusteInventarios)
+                .HasForeignKey(d => d.IdLote)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbInvDetalleAjusteInventario_TbInvLote");
         });
