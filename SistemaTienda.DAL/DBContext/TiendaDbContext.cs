@@ -598,7 +598,6 @@ public partial class TiendaDbContext : DbContext
         {
             entity.ToTable("TbInvDetalleAjusteInventario");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.CostoUnitario).HasColumnType("numeric(18, 4)");
 
             entity.HasOne(d => d.IdAjusteInventarioNavigation).WithMany(p => p.TbInvDetalleAjusteInventarios)
