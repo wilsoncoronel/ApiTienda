@@ -115,8 +115,8 @@ namespace SistemaTienda.BLL.Servicios
                 ?? throw new NotFoundException("No existe la transacción 'Reversion Ajuste'.");
 
             var estadoReversion = await _tiendaDb.TbInvEstadosAjustes
-                .FirstOrDefaultAsync(e => e.Nombre == "Reversion Ajuste")
-                ?? throw new NotFoundException("No existe el estado 'Reversion Ajuste'.");
+                .FirstOrDefaultAsync(e => e.Nombre.ToLower() == "reversada")
+                ?? throw new NotFoundException("No existe el estado 'Reversada'.");
 
             var esEntrada = ajuste.IdTransaccionNavigation.Signo > 0;
 
@@ -152,19 +152,43 @@ namespace SistemaTienda.BLL.Servicios
             var fin = fechaFinal.ToDateTime(TimeOnly.MaxValue);
 
             var ajustes = await _tiendaDb.TbInvAjusteInventarios
-                .Where(a => a.FechaCreacion >= inicio && a.FechaCreacion <= fin && a.FechaReversion == null)
+                .Where(a => a.FechaCreacion >= inicio && a.FechaCreacion <= fin)
+                .Include(usu => usu.IdUsuarioCreadorNavigation)
+                    .ThenInclude(per => per.IdPersonaNavigation)
                 .Include(a => a.TbInvDetalleAjusteInventarios)
+                    .ThenInclude(d => d.IdLoteNavigation)
                 .Include(a => a.IdTransaccionNavigation)
+                .Include(est => est.IdEstadoNavigation)
                 .ToListAsync();
 
             return ajustes.Select(a => new AjusteInventarioDTO
             {
                 Id = a.Id,
                 IdTransaccion = a.IdTransaccion,
+                transaccionInventarioDTO = new TransaccionInventarioDTO
+                {
+                    Id = a.IdTransaccionNavigation.Id,
+                    Nombre = a.IdTransaccionNavigation.Nombre,
+                    Signo = a.IdTransaccionNavigation.Signo,
+                    Estado = a.IdTransaccionNavigation.Estado
+                },
                 IdUsuarioCreador = a.IdUsuarioCreador,
+                UsuarioDTO = new UsuarioMinDTO
+                {
+                    Id = a.IdUsuarioCreador,
+                    Nombres = a.IdUsuarioCreadorNavigation.IdPersonaNavigation.Nombres,
+                    Apellidos = a.IdUsuarioCreadorNavigation.IdPersonaNavigation.Apellidos
+                },
                 Motivo = a.Motivo,
                 FechaCreacion = a.FechaCreacion,
                 IdEstado = a.IdEstado,
+                EstadosAjusteDTO = new EstadosAjusteDTO
+                {
+                    Id = a.IdEstado,
+                    Nombre = a.IdEstadoNavigation.Nombre,
+                    EstadoVisual = a.IdEstadoNavigation.EstadoVisual,
+                    Descripcion = a.IdEstadoNavigation.Descripcion
+                },
                 FechaReversion = a.FechaReversion,
                 Detalles = a.TbInvDetalleAjusteInventarios.Select(d => (DetalleAjusteInventarioCrearDTO)new DetalleAjusteInventarioDTO
                 {

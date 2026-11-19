@@ -1,0 +1,193 @@
+﻿## PROCESSES
+Currently debugging:
+- SistemaTienda.API.exe (PID: 34688)
+
+## EXCEPTION
+Exception Type: System.NullReferenceException
+Exception Message: Object reference not set to an instance of an object.
+This exception was originally thrown at this call stack:
+[1] SistemaTienda.BLL.Servicios.AjusteInventarioService.ListarAjusteInventarioFechas.AnonymousMethod__4_0(SistemaTienda.Model.TbInvAjusteInventario) en AjusteInventarioService.cs
+Code for the stack frame:
+```csharp SistemaTienda.BLL\Servicios\AjusteInventarioService.cs
+149:         public async Task<List<AjusteInventarioDTO>> ListarAjusteInventarioFechas(DateOnly fechaInicio, DateOnly fechaFinal)
+150:         {
+151:             var inicio = fechaInicio.ToDateTime(TimeOnly.MinValue);
+152:             var fin = fechaFinal.ToDateTime(TimeOnly.MaxValue);
+153: 
+154:             var ajustes = await _tiendaDb.TbInvAjusteInventarios
+155:                 .Where(a => a.FechaCreacion >= inicio && a.FechaCreacion <= fin && a.FechaReversion == null)
+156:                 .Include(usu => usu.IdUsuarioCreadorNavigation)
+157:                 .Include(a => a.TbInvDetalleAjusteInventarios)
+158:                     .ThenInclude(d => d.IdLoteNavigation)
+159:                 .Include(a => a.IdTransaccionNavigation)
+160:                 .Include(est => est.IdEstadoNavigation)
+161:                 .ToListAsync();
+162: 
+163:             return ajustes.Select(a => new AjusteInventarioDTO
+164:             {
+165:                 Id = a.Id,
+166:                 IdTransaccion = a.IdTransaccion,
+167:                 transaccionInventarioDTO = new TransaccionInventarioDTO
+168:                 {
+169:                     Id = a.IdTransaccionNavigation.Id,
+170:                     Nombre = a.IdTransaccionNavigation.Nombre,
+171:                     Signo = a.IdTransaccionNavigation.Signo,
+172:                     Estado = a.IdTransaccionNavigation.Estado
+173:                 },
+174:                 IdUsuarioCreador = a.IdUsuarioCreador,
+175:                 UsuarioDTO = new UsuarioMinDTO
+176:                 {
+177:                     Id = a.IdUsuarioCreador,
+178:                     Nombres = a.IdUsuarioCreadorNavigation.IdPersonaNavigation.Nombres,
+179:                     Apellidos = a.IdUsuarioCreadorNavigation.IdPersonaNavigation.Apellidos
+180:                 },
+181:                 Motivo = a.Motivo,
+182:                 FechaCreacion = a.FechaCreacion,
+183:                 IdEstado = a.IdEstado,
+184:                 EstadosAjusteDTO = new EstadosAjusteDTO
+185:                 {
+186:                     Id = a.IdEstado,
+187:                     Nombre = a.IdEstadoNavigation.Nombre,
+188:                     EstadoVisual = a.IdEstadoNavigation.EstadoVisual,
+189:                     Descripcion = a.IdEstadoNavigation.Descripcion
+190:                 },
+191:                 FechaReversion = a.FechaReversion,
+192:                 Detalles = a.TbInvDetalleAjusteInventarios.Select(d => (DetalleAjusteInventarioCrearDTO)new DetalleAjusteInventarioDTO
+193:                 {
+194:                     Id = d.Id,
+195:                     IdAjusteInventario = d.IdAjusteInventario,
+196:                     IdLote = d.IdLoteNavigation.Id,
+197:                     Cantidad = d.Cantidad,
+198:                     CostoUnitario = d.CostoUnitario,
+199:                     Estado = d.Estado
+200:                 }).ToList()
+201:             }).ToList();
+202:         }
+```
+Current statement: lines 163-201
+[2] System.Linq.Enumerable.ListSelectIterator<TSource, TResult>.ToList()
+[3] SistemaTienda.BLL.Servicios.AjusteInventarioService.ListarAjusteInventarioFechas(System.DateOnly, System.DateOnly) en AjusteInventarioService.cs
+Code for the stack frame:
+```csharp SistemaTienda.BLL\Servicios\AjusteInventarioService.cs
+149:         public async Task<List<AjusteInventarioDTO>> ListarAjusteInventarioFechas(DateOnly fechaInicio, DateOnly fechaFinal)
+150:         {
+151:             var inicio = fechaInicio.ToDateTime(TimeOnly.MinValue);
+152:             var fin = fechaFinal.ToDateTime(TimeOnly.MaxValue);
+153: 
+154:             var ajustes = await _tiendaDb.TbInvAjusteInventarios
+155:                 .Where(a => a.FechaCreacion >= inicio && a.FechaCreacion <= fin && a.FechaReversion == null)
+156:                 .Include(usu => usu.IdUsuarioCreadorNavigation)
+157:                 .Include(a => a.TbInvDetalleAjusteInventarios)
+158:                     .ThenInclude(d => d.IdLoteNavigation)
+159:                 .Include(a => a.IdTransaccionNavigation)
+160:                 .Include(est => est.IdEstadoNavigation)
+161:                 .ToListAsync();
+162: 
+163:             return ajustes.Select(a => new AjusteInventarioDTO
+164:             {
+165:                 Id = a.Id,
+166:                 IdTransaccion = a.IdTransaccion,
+167:                 transaccionInventarioDTO = new TransaccionInventarioDTO
+168:                 {
+169:                     Id = a.IdTransaccionNavigation.Id,
+170:                     Nombre = a.IdTransaccionNavigation.Nombre,
+171:                     Signo = a.IdTransaccionNavigation.Signo,
+172:                     Estado = a.IdTransaccionNavigation.Estado
+173:                 },
+174:                 IdUsuarioCreador = a.IdUsuarioCreador,
+175:                 UsuarioDTO = new UsuarioMinDTO
+176:                 {
+177:                     Id = a.IdUsuarioCreador,
+178:                     Nombres = a.IdUsuarioCreadorNavigation.IdPersonaNavigation.Nombres,
+179:                     Apellidos = a.IdUsuarioCreadorNavigation.IdPersonaNavigation.Apellidos
+180:                 },
+181:                 Motivo = a.Motivo,
+182:                 FechaCreacion = a.FechaCreacion,
+183:                 IdEstado = a.IdEstado,
+184:                 EstadosAjusteDTO = new EstadosAjusteDTO
+185:                 {
+186:                     Id = a.IdEstado,
+187:                     Nombre = a.IdEstadoNavigation.Nombre,
+188:                     EstadoVisual = a.IdEstadoNavigation.EstadoVisual,
+189:                     Descripcion = a.IdEstadoNavigation.Descripcion
+190:                 },
+191:                 FechaReversion = a.FechaReversion,
+192:                 Detalles = a.TbInvDetalleAjusteInventarios.Select(d => (DetalleAjusteInventarioCrearDTO)new DetalleAjusteInventarioDTO
+193:                 {
+194:                     Id = d.Id,
+195:                     IdAjusteInventario = d.IdAjusteInventario,
+196:                     IdLote = d.IdLoteNavigation.Id,
+197:                     Cantidad = d.Cantidad,
+198:                     CostoUnitario = d.CostoUnitario,
+199:                     Estado = d.Estado
+200:                 }).ToList()
+201:             }).ToList();
+202:         }
+```
+Current statement: lines 163-201
+[4] SistemaTienda.API.Controllers.InventarioController.ListarAjusteInventarioFechas(System.DateOnly, System.DateOnly) en InventarioController.cs
+Code for the stack frame:
+```csharp SistemaTienda.API\Controllers\InventarioController.cs
+125:         [HttpGet]
+126:         [Route("ListarAjusteInventarioFechas")]
+127:         public async Task<IActionResult> ListarAjusteInventarioFechas(DateOnly FechaInicio, DateOnly FechaFinal)
+128:         {
+129:             var resp = new Response<List<AjusteInventarioDTO>>();
+130:             resp.status = true;
+131:             resp.Value = await this._ajusteInventarioService.ListarAjusteInventarioFechas(FechaInicio, FechaFinal);
+132:             resp.msg = "Ajustes de inventario cargados con exito!!";
+133:             return Ok(resp);
+134:         }
+```
+Current statement: line 131
+The callstack context, if included, corresponds to the thread where this exception occurred. There is no need to identify this thread by other means.
+The top most frame in the callstack context should correspond to the place the exception message was thrown from. Code may or may not have been provided for it but can be requested.
+
+## CALLSTACK
+Thread ID: 34588
+[1] [Código externo]
+[5] [En espera de una operación asincrónica, haga doble clic o presione ENTRAR para ver las pilas de llamadas asincrónicas]
+[6] SistemaTienda.API.dll!SistemaTienda.API.Controllers.InventarioController.ListarAjusteInventarioFechas
+This is the current user focused stack frame. The provided locals context corresponds to this stack frame, but you may evaluate expressions and retrieve code for any frame.
+Code for the stack frame:
+```csharp SistemaTienda.API\Controllers\InventarioController.cs
+125:         [HttpGet]
+126:         [Route("ListarAjusteInventarioFechas")]
+127:         public async Task<IActionResult> ListarAjusteInventarioFechas(DateOnly FechaInicio, DateOnly FechaFinal)
+128:         {
+129:             var resp = new Response<List<AjusteInventarioDTO>>();
+130:             resp.status = true;
+131:             resp.Value = await this._ajusteInventarioService.ListarAjusteInventarioFechas(FechaInicio, FechaFinal);
+132:             resp.msg = "Ajustes de inventario cargados con exito!!";
+133:             return Ok(resp);
+134:         }
+```
+Current statement: line 131
+[7] [Pila de llamadas asincrónicas]
+[8] [Código externo]
+[9] [Asincrónico] SistemaTienda.API.dll!SistemaTienda.API.Middleware.ExceptionMiddleware.InvokeAsync
+Code for the stack frame:
+```csharp SistemaTienda.API\Middleware\ExceptionMiddleware.cs
+20:         public async Task InvokeAsync(HttpContext context)
+21:         {
+22:             try
+23:             {
+24:                 await _next(context);
+25:             }
+26:             catch (Exception ex)
+27:             {
+28:                 await HandleExceptionAsync(context, ex);
+29:             }
+30:         }
+```
+Current statement: line 24
+[10] [Código externo]
+
+## LOCALS
+| Name | Type | Value |
+| --- | --- | --- |
+| this | SistemaTienda.API.Controllers.InventarioController | {SistemaTienda.API.Controllers.InventarioController} |
+| FechaInicio | System.DateOnly | {System.DateOnly} |
+| FechaFinal | System.DateOnly | {System.DateOnly} |
+| resp | SistemaTienda.API.Utilidad.Response<System.Collections.Generic.List<SistemaTienda.DTO.AjusteInventarioDTO>> | {SistemaTienda.API.Utilidad.Response<System.Collections.Generic.List<SistemaTienda.DTO.AjusteInventarioDTO>>} |
+
