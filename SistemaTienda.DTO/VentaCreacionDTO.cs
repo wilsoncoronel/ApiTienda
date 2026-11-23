@@ -14,10 +14,12 @@ namespace SistemaTienda.DTO
 
         public DateTime FechaCompra { get; set; }
         public DateTime FechaCreacion { get; set; }
+        public decimal TotalVenta { get; set; }
         public int IdEstado { get; set; }
         public bool EstadoVisual { get; set; }
         [Required]
         public List<DetalleVentaCreacionDTO> DetalleVentaCreacionDto { get; set; }
+        public PagoVentaCreacionDTO PagoVenta { get; set; } = null!;
         public int UsuarioCreadorId { get; set; }
     }
 }

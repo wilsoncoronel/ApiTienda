@@ -26,6 +26,18 @@ namespace SistemaTienda.BLL.Servicios
         }
         public async Task<int> RegistrarVenta(VentaCreacionDTO ventaDto)
         {
+            if (ventaDto.TotalVenta < 0)
+                throw new ConflictException("El total de la venta no puede ser negativo");
+
+            var estadoVenta = await _tiendaDbContext.TbVenEstadosVentas
+                .FirstOrDefaultAsync(e => e.Id == ventaDto.IdEstado);
+            if (estadoVenta == null)
+                throw new NotFoundException("Estado de venta no encontrado");
+
+            var esVentaPendiente = estadoVenta.Nombre.Equals("pendiente", StringComparison.OrdinalIgnoreCase);
+            if (!esVentaPendiente && ventaDto.PagoVenta == null)
+                throw new ConflictException("La venta debe incluir la información del pago");
+
             // Transacción con aislamiento para reducir condiciones de carrera
             using var transaction = await _tiendaDbContext.Database.BeginTransactionAsync(IsolationLevel.Serializable);
             try
@@ -63,6 +75,54 @@ namespace SistemaTienda.BLL.Servicios
                     tbVenta.Documento = $"{codFech}{tbVenta.Id}1724525801";
                     await _ventaRepository.Editar(tbVenta);
                 }
+
+                var detallesPago = esVentaPendiente
+                    ? new List<DetallePagoCreacionDTO>()
+                    : ventaDto.PagoVenta!.DetallesPago
+                    .Where(d => d.Estado)
+                    .ToList();
+                if (detallesPago.Any(d => d.Valor <= 0))
+                    throw new ConflictException("El valor de cada detalle de pago debe ser mayor que cero");
+
+                var idsTiposPago = detallesPago.Select(d => d.IdTipoPago).Distinct().ToList();
+                var tiposPago = await _tiendaDbContext.TbVenTipoPagos
+                    .Where(t => idsTiposPago.Contains(t.Id) && t.Estado)
+                    .ToDictionaryAsync(t => t.Id, t => t.Nombre);
+                if (tiposPago.Count != idsTiposPago.Count)
+                    throw new NotFoundException("Uno o más tipos de pago no existen o están inactivos");
+
+                var totalPagado = esVentaPendiente ? 0m : detallesPago.Sum(d => d.Valor);
+                if (totalPagado > ventaDto.TotalVenta)
+                    throw new ConflictException("El total pagado no puede superar el total de la venta");
+
+                var estadoPago = await ObtenerEstadoPagoAsync(
+                    esVentaPendiente ? "pendiente" : ObtenerNombreEstadoPago(totalPagado, ventaDto.TotalVenta));
+                var ahora = DateTime.Now;
+                var pagoVenta = new TbVenPagoVenta
+                {
+                    IdVenta = tbVenta.Id,
+                    TotalVenta = ventaDto.TotalVenta,
+                    TotalPagado = totalPagado,
+                    SaldoPendiente = ventaDto.TotalVenta - totalPagado,
+                    IdEstadoPago = estadoPago.Id,
+                    Nota = ventaDto.PagoVenta?.Nota ?? string.Empty,
+                    FechaCreacion = ventaDto.PagoVenta == null || ventaDto.PagoVenta.FechaCreacion == default
+                        ? ahora
+                        : ventaDto.PagoVenta.FechaCreacion,
+                    FechaPago = totalPagado == ventaDto.TotalVenta ? ahora : null,
+                    TbVenDetallePagos = detallesPago.Select(d => new TbVenDetallePago
+                    {
+                        IdTipoPago = d.IdTipoPago,
+                        Valor = d.Valor,
+                        NumeroComprobante = d.NumeroComprobante,
+                        FechaPago = d.FechaPago == default ? ahora : d.FechaPago,
+                        Nota = d.Nota,
+                        Estado = true
+                    }).ToList()
+                };
+                _tiendaDbContext.TbVenPagoVenta.Add(pagoVenta);
+                await _tiendaDbContext.SaveChangesAsync();
+
                 // Para cada detalle, consumir lotes en orden FEFO (FechaExpiracion asc, nulos al final)
                 var tbMovimiento = await CrearMovimientoInventarioAsync(ventaDto.IdTransaccion.Value, tbVenta.Documento);
 
@@ -82,6 +142,21 @@ namespace SistemaTienda.BLL.Servicios
                 await transaction.RollbackAsync();
                 throw;
             }
+        }
+
+        private static string ObtenerNombreEstadoPago(decimal totalPagado, decimal totalVenta)
+        {
+            if (totalPagado == 0) return "pendiente";
+            return totalPagado >= totalVenta ? "pagado" : "parcial";
+        }
+
+        private async Task<TbVentEstadosPago> ObtenerEstadoPagoAsync(string nombre)
+        {
+            var estado = await _tiendaDbContext.TbVentEstadosPagos
+                .FirstOrDefaultAsync(e => e.Estado && e.Nombre.ToLower() == nombre);
+            if (estado == null)
+                throw new NotFoundException($"No existe el estado de pago '{nombre}'");
+            return estado;
         }
 
         private async Task<TbInvMovimiento> CrearMovimientoInventarioAsync(int idTransaccionInventario, string referencia, int? idMovimientoOrigen = null)
@@ -357,7 +432,10 @@ namespace SistemaTienda.BLL.Servicios
         public async Task<bool> ReversarVenta(int id, string documento)
         {
             // Cargar venta por id
-            var tbVenta = await _tiendaDbContext.TbVentas.FirstOrDefaultAsync(v => v.Id == id && v.Documento == documento);
+            var tbVenta = await _tiendaDbContext.TbVentas
+                .Include(v => v.TbVenPagoVentum)
+                    .ThenInclude(p => p.TbVenDetallePagos)
+                .FirstOrDefaultAsync(v => v.Id == id && v.Documento == documento);
             if (tbVenta == null) throw new NotFoundException("Venta no encontrada");
             if (string.IsNullOrWhiteSpace(tbVenta.Documento)) throw new Exception("Documento de la venta inválido");
 
@@ -410,6 +488,21 @@ namespace SistemaTienda.BLL.Servicios
 
                     consumo.Estado = false;
                     _tiendaDbContext.TbInvConsumoLotes.Update(consumo);
+                }
+
+                if (tbVenta.TbVenPagoVentum != null)
+                {
+                    var pago = tbVenta.TbVenPagoVentum;
+                    foreach (var detallePago in pago.TbVenDetallePagos.Where(d => d.Estado))
+                        detallePago.Estado = false;
+
+                    pago.TotalPagado = 0;
+                    pago.SaldoPendiente = pago.TotalVenta;
+                    pago.IdEstadoPago = await _tiendaDbContext.TbVentEstadosPagos
+                        .Where(e => e.Estado && e.Nombre.ToLower() == "pendiente")
+                        .Select(e => e.Id)
+                        .FirstOrDefaultAsync();
+                    pago.FechaPago = null;
                 }
 
                 // Actualizar la venta para indicar que ahora está asociada a la transacción de reversión

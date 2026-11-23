@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
+
 using SistemaTienda.Model;
 namespace SistemaTienda.DAL.DBContext;
 
@@ -110,11 +111,19 @@ public partial class TiendaDbContext : DbContext
 
     public virtual DbSet<TbVenDetalleDevolucionVenta> TbVenDetalleDevolucionVenta { get; set; }
 
+    public virtual DbSet<TbVenDetallePago> TbVenDetallePagos { get; set; }
+
     public virtual DbSet<TbVenDetalleVenta> TbVenDetalleVenta { get; set; }
 
     public virtual DbSet<TbVenDevolucionVenta> TbVenDevolucionVenta { get; set; }
 
     public virtual DbSet<TbVenEstadosVenta> TbVenEstadosVentas { get; set; }
+
+    public virtual DbSet<TbVenPagoVenta> TbVenPagoVenta { get; set; }
+
+    public virtual DbSet<TbVenTipoPago> TbVenTipoPagos { get; set; }
+
+    public virtual DbSet<TbVentEstadosPago> TbVentEstadosPagos { get; set; }
 
     public virtual DbSet<TbVenta> TbVentas { get; set; }
 
@@ -532,7 +541,7 @@ public partial class TiendaDbContext : DbContext
 
             entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
             entity.Property(e => e.FechaReversion).HasColumnType("datetime");
-            entity.Property(e => e.Motivo).HasMaxLength(100);
+            entity.Property(e => e.Motivo).HasMaxLength(200);
 
             entity.HasOne(d => d.IdEstadoNavigation).WithMany(p => p.TbInvAjusteInventarios)
                 .HasForeignKey(d => d.IdEstado)
@@ -810,6 +819,26 @@ public partial class TiendaDbContext : DbContext
                 .HasConstraintName("FK_TbVenDetalleDevolucionVenta_TbVenDevolucionVenta");
         });
 
+        modelBuilder.Entity<TbVenDetallePago>(entity =>
+        {
+            entity.ToTable("TbVenDetallePago");
+
+            entity.Property(e => e.FechaPago).HasColumnType("datetime");
+            entity.Property(e => e.Nota).HasMaxLength(500);
+            entity.Property(e => e.NumeroComprobante).HasMaxLength(100);
+            entity.Property(e => e.Valor).HasColumnType("numeric(18, 4)");
+
+            entity.HasOne(d => d.IdPagoVentaNavigation).WithMany(p => p.TbVenDetallePagos)
+                .HasForeignKey(d => d.IdPagoVenta)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbVenDetallePago_TbVenPagoVenta");
+
+            entity.HasOne(d => d.IdTipoPagoNavigation).WithMany(p => p.TbVenDetallePagos)
+                .HasForeignKey(d => d.IdTipoPago)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbVenDetallePago_TbVenTipoPago");
+        });
+
         modelBuilder.Entity<TbVenDetalleVenta>(entity =>
         {
             entity.Property(e => e.Descripcion).HasMaxLength(200);
@@ -847,6 +876,42 @@ public partial class TiendaDbContext : DbContext
         {
             entity.Property(e => e.Descripcion).HasMaxLength(200);
             entity.Property(e => e.Nombre).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<TbVenPagoVenta>(entity =>
+        {
+            entity.HasIndex(e => e.IdVenta, "UQ_TbVenPagoVenta_IdVenta").IsUnique();
+
+            entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+            entity.Property(e => e.FechaPago).HasColumnType("datetime");
+            entity.Property(e => e.Nota).HasMaxLength(500);
+            entity.Property(e => e.SaldoPendiente).HasColumnType("numeric(18, 4)");
+            entity.Property(e => e.TotalPagado).HasColumnType("numeric(18, 4)");
+            entity.Property(e => e.TotalVenta).HasColumnType("numeric(18, 4)");
+
+            entity.HasOne(d => d.IdEstadoPagoNavigation).WithMany(p => p.TbVenPagoVenta)
+                .HasForeignKey(d => d.IdEstadoPago)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbVenPagoVenta_TbVentEstadosPago");
+
+            entity.HasOne(d => d.IdVentaNavigation).WithOne(p => p.TbVenPagoVentum)
+                .HasForeignKey<TbVenPagoVenta>(d => d.IdVenta)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TbVenPagoVenta_TbVentas");
+        });
+
+        modelBuilder.Entity<TbVenTipoPago>(entity =>
+        {
+            entity.ToTable("TbVenTipoPago");
+
+            entity.Property(e => e.Nombre).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<TbVentEstadosPago>(entity =>
+        {
+            entity.ToTable("TbVentEstadosPago");
+
+            entity.Property(e => e.Nombre).HasMaxLength(50);
         });
 
         modelBuilder.Entity<TbVenta>(entity =>
