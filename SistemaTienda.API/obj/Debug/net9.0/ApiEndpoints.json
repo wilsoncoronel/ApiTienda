@@ -1271,6 +1271,111 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SistemaTienda.API.Controllers.PagosController",
+    "Method": "ActualizarComprobantePago",
+    "RelativePath": "api/Pagos/ActualizarComprobantePago",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "comprobanteDto",
+        "Type": "SistemaTienda.DTO.ActualizarComprobantePagoDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.PagosController",
+    "Method": "AnularPago",
+    "RelativePath": "api/Pagos/AnularPago",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idDetallePago",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.PagosController",
+    "Method": "ListaDetallesPagos",
+    "RelativePath": "api/Pagos/ListaDetallesPagos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idPago",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.PagosController",
+    "Method": "ListarEstadosPago",
+    "RelativePath": "api/Pagos/ListarEstadosPago",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.PagosController",
+    "Method": "ListarPagos",
+    "RelativePath": "api/Pagos/ListarPagos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fechaInicial",
+        "Type": "System.DateOnly",
+        "IsRequired": false
+      },
+      {
+        "Name": "fechaFinal",
+        "Type": "System.DateOnly",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.PagosController",
+    "Method": "ListarTiposPago",
+    "RelativePath": "api/Pagos/ListarTiposPago",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.PagosController",
+    "Method": "PagoVenta",
+    "RelativePath": "api/Pagos/PagoVenta",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idVenta",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SistemaTienda.API.Controllers.ProveedorController",
     "Method": "BuscarProveedorCI",
     "RelativePath": "api/Proveedor/BuscarProveedorCI",

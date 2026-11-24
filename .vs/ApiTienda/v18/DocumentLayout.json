@@ -3,39 +3,50 @@
   "WorkspaceRootPath": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\DOOMSLAYER\\.copilot\\plans\\plan-validar-pagos-pendientes-al-registrar-ventas.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|MarkdownSecurePreview"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|c:\\users\\doomslayer\\source\\repos\\apitienda\\sistematienda.dto\\detallepagocreaciondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|solutionrelative:sistematienda.dto\\detallepagocreaciondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|c:\\users\\doomslayer\\source\\repos\\apitienda\\sistematienda.dto\\ventacreaciondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|solutionrelative:sistematienda.dto\\ventacreaciondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{EE7BBF53-EBF1-44C2-B9C4-4F3A20051C10}|SistemaTienda.API\\SistemaTienda.API.csproj|c:\\users\\doomslayer\\source\\repos\\apitienda\\sistematienda.api\\controllers\\pagoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EE7BBF53-EBF1-44C2-B9C4-4F3A20051C10}|SistemaTienda.API\\SistemaTienda.API.csproj|solutionrelative:sistematienda.api\\controllers\\pagoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{92EA695A-2B7A-4742-A3BE-3D12B6914C13}|SistemaTienda.BLL\\SistemaTienda.BLL.csproj|c:\\users\\doomslayer\\source\\repos\\apitienda\\sistematienda.bll\\servicios\\contrato\\ipagoventaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{92EA695A-2B7A-4742-A3BE-3D12B6914C13}|SistemaTienda.BLL\\SistemaTienda.BLL.csproj|solutionrelative:sistematienda.bll\\servicios\\contrato\\ipagoventaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{92EA695A-2B7A-4742-A3BE-3D12B6914C13}|SistemaTienda.BLL\\SistemaTienda.BLL.csproj|c:\\users\\doomslayer\\source\\repos\\apitienda\\sistematienda.bll\\servicios\\pagoventaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{92EA695A-2B7A-4742-A3BE-3D12B6914C13}|SistemaTienda.BLL\\SistemaTienda.BLL.csproj|solutionrelative:sistematienda.bll\\servicios\\pagoventaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{92EA695A-2B7A-4742-A3BE-3D12B6914C13}|SistemaTienda.BLL\\SistemaTienda.BLL.csproj|c:\\users\\doomslayer\\source\\repos\\apitienda\\sistematienda.bll\\servicios\\ventaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{92EA695A-2B7A-4742-A3BE-3D12B6914C13}|SistemaTienda.BLL\\SistemaTienda.BLL.csproj|solutionrelative:sistematienda.bll\\servicios\\ventaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4FBD4E81-F202-4CCB-BF32-B79C9E75A8BB}|SistemaTienda.IOC\\SistemaTienda.IOC.csproj|c:\\users\\doomslayer\\source\\repos\\apitienda\\sistematienda.ioc\\dependencias.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4FBD4E81-F202-4CCB-BF32-B79C9E75A8BB}|SistemaTienda.IOC\\SistemaTienda.IOC.csproj|solutionrelative:sistematienda.ioc\\dependencias.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|c:\\users\\doomslayer\\source\\repos\\apitienda\\sistematienda.dto\\detallepagocreaciondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|solutionrelative:sistematienda.dto\\detallepagocreaciondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|c:\\users\\doomslayer\\source\\repos\\apitienda\\sistematienda.dto\\detallespagodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|solutionrelative:sistematienda.dto\\detallespagodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\DOOMSLAYER\\.copilot\\plans\\plan-crear-endpoints-para-estados-y-tipos-de-pago.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|MardownSecureEdit"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\DOOMSLAYER\\.copilot\\plans\\plan-crear-endpoints-para-estados-y-tipos-de-pago.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|MarkdownSecurePreview"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|c:\\users\\doomslayer\\source\\repos\\apitienda\\sistematienda.dto\\pagoventacreaciondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|solutionrelative:sistematienda.dto\\pagoventacreaciondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4FBD4E81-F202-4CCB-BF32-B79C9E75A8BB}|SistemaTienda.IOC\\SistemaTienda.IOC.csproj|c:\\users\\doomslayer\\source\\repos\\apitienda\\sistematienda.ioc\\dependencias.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4FBD4E81-F202-4CCB-BF32-B79C9E75A8BB}|SistemaTienda.IOC\\SistemaTienda.IOC.csproj|solutionrelative:sistematienda.ioc\\dependencias.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{92EA695A-2B7A-4742-A3BE-3D12B6914C13}|SistemaTienda.BLL\\SistemaTienda.BLL.csproj|c:\\users\\doomslayer\\source\\repos\\apitienda\\sistematienda.bll\\servicios\\ventaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{92EA695A-2B7A-4742-A3BE-3D12B6914C13}|SistemaTienda.BLL\\SistemaTienda.BLL.csproj|solutionrelative:sistematienda.bll\\servicios\\ventaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|c:\\users\\doomslayer\\source\\repos\\apitienda\\sistematienda.dto\\ventacreaciondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|solutionrelative:sistematienda.dto\\ventacreaciondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|c:\\users\\doomslayer\\source\\repos\\apitienda\\sistematienda.dto\\estadospagodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA9367CA-DA25-4A02-BF18-545A48C38DC9}|SistemaTienda.DTO\\SistemaTienda.DTO.csproj|solutionrelative:sistematienda.dto\\estadospagodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C99DA164-F8DF-4217-8803-6239F2F30272}|SistemaTienda.Model\\SistemaTienda.Model.csproj|c:\\users\\doomslayer\\source\\repos\\apitienda\\sistematienda.model\\tbvendetallepago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -65,70 +76,63 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "plan-validar-pagos-pendientes-al-registrar-ventas.md [Versi\u00F3n preliminar]",
-              "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\.copilot\\plans\\plan-validar-pagos-pendientes-al-registrar-ventas.md",
-              "RelativeDocumentMoniker": "..\\..\\..\\.copilot\\plans\\plan-validar-pagos-pendientes-al-registrar-ventas.md",
-              "ToolTip": "C:\\Users\\DOOMSLAYER\\.copilot\\plans\\plan-validar-pagos-pendientes-al-registrar-ventas.md [Versi\u00F3n preliminar]",
-              "RelativeToolTip": "..\\..\\..\\.copilot\\plans\\plan-validar-pagos-pendientes-al-registrar-ventas.md [Versi\u00F3n preliminar]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2026-11-23T02:18:20.759Z",
-              "EditorCaption": " [Versi\u00F3n preliminar]"
-            },
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "IPagoVentaService.cs",
+              "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.BLL\\Servicios\\Contrato\\IPagoVentaService.cs",
+              "RelativeDocumentMoniker": "SistemaTienda.BLL\\Servicios\\Contrato\\IPagoVentaService.cs",
+              "ToolTip": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.BLL\\Servicios\\Contrato\\IPagoVentaService.cs",
+              "RelativeToolTip": "SistemaTienda.BLL\\Servicios\\Contrato\\IPagoVentaService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-23T20:19:03.671Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "DetallePagoCreacionDTO.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.DTO\\DetallePagoCreacionDTO.cs",
               "RelativeDocumentMoniker": "SistemaTienda.DTO\\DetallePagoCreacionDTO.cs",
               "ToolTip": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.DTO\\DetallePagoCreacionDTO.cs",
               "RelativeToolTip": "SistemaTienda.DTO\\DetallePagoCreacionDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-11-22T00:59:15.332Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 10,
               "Title": "VentaCreacionDTO.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.DTO\\VentaCreacionDTO.cs",
               "RelativeDocumentMoniker": "SistemaTienda.DTO\\VentaCreacionDTO.cs",
               "ToolTip": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.DTO\\VentaCreacionDTO.cs",
               "RelativeToolTip": "SistemaTienda.DTO\\VentaCreacionDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAmwBQAAABSAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABAAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-11-21T21:40:21.496Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "PagosController.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.API\\Controllers\\PagosController.cs",
               "RelativeDocumentMoniker": "SistemaTienda.API\\Controllers\\PagosController.cs",
               "ToolTip": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.API\\Controllers\\PagosController.cs",
               "RelativeToolTip": "SistemaTienda.API\\Controllers\\PagosController.cs",
-              "ViewState": "AgIAAC4AAAAAAAAAAAAMwDoAAAAsAAAAAAAAAA==",
+              "ViewState": "AgIAABMAAAAAAAAAAAAwwDoAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-11-22T01:01:19.958Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 9,
               "Title": "VentaService.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.BLL\\Servicios\\VentaService.cs",
               "RelativeDocumentMoniker": "SistemaTienda.BLL\\Servicios\\VentaService.cs",
@@ -141,7 +145,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "Dependencias.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.IOC\\Dependencias.cs",
               "RelativeDocumentMoniker": "SistemaTienda.IOC\\Dependencias.cs",
@@ -149,24 +153,25 @@
               "RelativeToolTip": "SistemaTienda.IOC\\Dependencias.cs",
               "ViewState": "AgIAABkAAAAAAAAAAAAewAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-22T00:59:37.802Z"
+              "WhenOpened": "2026-11-22T00:59:37.802Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "PagoVentaService.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.BLL\\Servicios\\PagoVentaService.cs",
               "RelativeDocumentMoniker": "SistemaTienda.BLL\\Servicios\\PagoVentaService.cs",
               "ToolTip": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.BLL\\Servicios\\PagoVentaService.cs",
               "RelativeToolTip": "SistemaTienda.BLL\\Servicios\\PagoVentaService.cs",
-              "ViewState": "AgIAAFEAAAAAAAAAAAAewMMAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADgAAAAAAAAAAAAkwFIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-11-22T01:00:30.9Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 4,
               "Title": "DetallesPagoDTO.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.DTO\\DetallesPagoDTO.cs",
               "RelativeDocumentMoniker": "SistemaTienda.DTO\\DetallesPagoDTO.cs",
@@ -174,11 +179,50 @@
               "RelativeToolTip": "SistemaTienda.DTO\\DetallesPagoDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-22T00:59:15.391Z"
+              "WhenOpened": "2026-11-22T00:59:15.391Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 6,
+              "Title": "plan-crear-endpoints-para-estados-y-tipos-de-pago.md [Versi\u00F3n preliminar]",
+              "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\.copilot\\plans\\plan-crear-endpoints-para-estados-y-tipos-de-pago.md",
+              "RelativeDocumentMoniker": "..\\..\\..\\.copilot\\plans\\plan-crear-endpoints-para-estados-y-tipos-de-pago.md",
+              "ToolTip": "C:\\Users\\DOOMSLAYER\\.copilot\\plans\\plan-crear-endpoints-para-estados-y-tipos-de-pago.md [Versi\u00F3n preliminar]",
+              "RelativeToolTip": "..\\..\\..\\.copilot\\plans\\plan-crear-endpoints-para-estados-y-tipos-de-pago.md [Versi\u00F3n preliminar]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-23T22:19:08.277Z",
+              "EditorCaption": " [Versi\u00F3n preliminar]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "plan-crear-endpoints-para-estados-y-tipos-de-pago.md",
+              "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\.copilot\\plans\\plan-crear-endpoints-para-estados-y-tipos-de-pago.md",
+              "RelativeDocumentMoniker": "..\\..\\..\\.copilot\\plans\\plan-crear-endpoints-para-estados-y-tipos-de-pago.md",
+              "ToolTip": "C:\\Users\\DOOMSLAYER\\.copilot\\plans\\plan-crear-endpoints-para-estados-y-tipos-de-pago.md",
+              "RelativeToolTip": "..\\..\\..\\.copilot\\plans\\plan-crear-endpoints-para-estados-y-tipos-de-pago.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-23T22:19:08.333Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "EstadosPagoDTO.cs",
+              "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.DTO\\EstadosPagoDTO.cs",
+              "RelativeDocumentMoniker": "SistemaTienda.DTO\\EstadosPagoDTO.cs",
+              "ToolTip": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.DTO\\EstadosPagoDTO.cs",
+              "RelativeToolTip": "SistemaTienda.DTO\\EstadosPagoDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-23T21:58:52.391Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "PagoVentaCreacionDTO.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.DTO\\PagoVentaCreacionDTO.cs",
               "RelativeDocumentMoniker": "SistemaTienda.DTO\\PagoVentaCreacionDTO.cs",
@@ -186,11 +230,12 @@
               "RelativeToolTip": "SistemaTienda.DTO\\PagoVentaCreacionDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-22T00:59:15.447Z"
+              "WhenOpened": "2026-11-22T00:59:15.447Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 16,
               "Title": "Mapeos.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.Utility\\Mapeos.cs",
               "RelativeDocumentMoniker": "SistemaTienda.Utility\\Mapeos.cs",
@@ -202,7 +247,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 12,
               "Title": "TbVenDetallePago.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.Model\\TbVenDetallePago.cs",
               "RelativeDocumentMoniker": "SistemaTienda.Model\\TbVenDetallePago.cs",
@@ -214,7 +259,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 13,
               "Title": "TbVenDetalleVenta.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.Model\\TbVenDetalleVenta.cs",
               "RelativeDocumentMoniker": "SistemaTienda.Model\\TbVenDetalleVenta.cs",
@@ -226,7 +271,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 14,
               "Title": "TbVenPagoVenta.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.Model\\TbVenPagoVenta.cs",
               "RelativeDocumentMoniker": "SistemaTienda.Model\\TbVenPagoVenta.cs",
@@ -238,7 +283,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 15,
               "Title": "VentasController.cs",
               "DocumentMoniker": "C:\\Users\\DOOMSLAYER\\source\\repos\\ApiTienda\\SistemaTienda.API\\Controllers\\VentasController.cs",
               "RelativeDocumentMoniker": "SistemaTienda.API\\Controllers\\VentasController.cs",

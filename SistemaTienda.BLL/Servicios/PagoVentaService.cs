@@ -19,6 +19,95 @@ namespace SistemaTienda.BLL.Servicios
             _mapper = mapper;
         }
 
+        public async Task<PagosVentasDTO> PagoVenta(int idVenta)
+        {
+            var pago = await QueryPagos()
+                .Where(pag => pag.IdVenta == idVenta)
+                .FirstOrDefaultAsync();
+
+            if (pago == null)
+                throw new NotFoundException("Pago de venta no encontrado");
+
+            return MapPago(pago);
+        }
+
+        public async Task<int> CrearDetallePago(DetallePagoCreacionDTO detallePagoCrear)
+        {
+            if (detallePagoCrear.Valor <= 0)
+                throw new ConflictException("El valor del detalle de pago debe ser mayor que cero");
+
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var pago = await _context.TbVenPagoVenta
+                    .FirstOrDefaultAsync(p => p.Id == detallePagoCrear.IdPagoVenta);
+                if (pago == null)
+                    throw new NotFoundException("Pago de venta no encontrado");
+
+                var tipoPagoExiste = await _context.TbVenTipoPagos
+                    .AnyAsync(t => t.Id == detallePagoCrear.IdTipoPago && t.Estado && t.EstadiVisual);
+                if (!tipoPagoExiste)
+                    throw new NotFoundException("Tipo de pago no encontrado o no disponible");
+
+                var totalPagadoActual = await _context.TbVenDetallePagos
+                    .Where(d => d.IdPagoVenta == pago.Id && d.Estado)
+                    .SumAsync(d => (decimal?)d.Valor) ?? 0m;
+                if (totalPagadoActual + detallePagoCrear.Valor > pago.TotalVenta)
+                    throw new ConflictException("El total pagado no puede superar el total de la venta");
+
+                var ahora = DateTime.Now;
+                var detalle = new TbVenDetallePago
+                {
+                    IdPagoVenta = pago.Id,
+                    IdTipoPago = detallePagoCrear.IdTipoPago,
+                    Valor = detallePagoCrear.Valor,
+                    NumeroComprobante = detallePagoCrear.NumeroComprobante,
+                    FechaPago = detallePagoCrear.FechaPago == default ? ahora : detallePagoCrear.FechaPago,
+                    Nota = detallePagoCrear.Nota,
+                    Estado = true
+                };
+
+                _context.TbVenDetallePagos.Add(detalle);
+                await _context.SaveChangesAsync();
+                await RecalcularPagoAsync(pago);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return detalle.Id;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task<List<EstadosPagoDTO>> ListarEstadosPago()
+        {
+            return await _context.TbVentEstadosPagos
+                .Where(e => e.Estado && e.EstadoVisual)
+                .OrderBy(e => e.Nombre)
+                .Select(e => new EstadosPagoDTO
+                {
+                    Id = e.Id,
+                    Nombre = e.Nombre
+                })
+                .ToListAsync();
+        }
+
+        public async Task<List<TipoPagoDTO>> ListarTiposPago()
+        {
+            return await _context.TbVenTipoPagos
+                .Where(t => t.Estado && t.EstadiVisual)
+                .OrderBy(t => t.Nombre)
+                .Select(t => new TipoPagoDTO
+                {
+                    Id = t.Id,
+                    Nombre = t.Nombre
+                })
+                .ToListAsync();
+        }
+
         public async Task<List<PagosVentasDTO>> ListarPagos(DateOnly fechaInicial, DateOnly fechaFinal)
         {
             if (fechaFinal < fechaInicial)
@@ -64,15 +153,7 @@ namespace SistemaTienda.BLL.Servicios
 
                 detalle.Estado = false;
                 var pago = detalle.IdPagoVentaNavigation;
-                var totalPagado = await _context.TbVenDetallePagos
-                    .Where(d => d.IdPagoVenta == pago.Id && d.Estado)
-                    .SumAsync(d => (decimal?)d.Valor) ?? 0m;
-                pago.TotalPagado = totalPagado;
-                pago.SaldoPendiente = pago.TotalVenta - totalPagado;
-                pago.IdEstadoPago = await ObtenerIdEstadoAsync(
-                    totalPagado == 0 ? "pendiente" : totalPagado >= pago.TotalVenta ? "pagado" : "parcial");
-                pago.FechaPago = totalPagado >= pago.TotalVenta ? detalle.FechaPago : null;
-
+                await RecalcularPagoAsync(pago);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
                 return true;
@@ -160,7 +241,7 @@ namespace SistemaTienda.BLL.Servicios
                 },
                 VentaDTO = _mapper.MapeoVentaTbAVentaCompletaDto(pago.IdVentaNavigation),
                 DetallesPago = pago.TbVenDetallePagos.Select(MapDetalle).Cast<DetallePagoCreacionDTO>().ToList()
-            };
+            }; 
         }
 
         private DetallesPagoDTO MapDetalle(TbVenDetallePago detalle)
@@ -190,6 +271,29 @@ namespace SistemaTienda.BLL.Servicios
             if (estado == null)
                 throw new NotFoundException($"No existe el estado de pago '{nombre}'");
             return estado.Id;
+        }
+
+        private async Task RecalcularPagoAsync(TbVenPagoVenta pago)
+        {
+            var detallesActivos = await _context.TbVenDetallePagos
+                .Where(d => d.IdPagoVenta == pago.Id && d.Estado)
+                .OrderByDescending(d => d.FechaPago)
+                .ToListAsync();
+
+            var totalPagado = detallesActivos.Sum(d => d.Valor);
+            pago.TotalPagado = totalPagado;
+            pago.SaldoPendiente = pago.TotalVenta - totalPagado;
+
+            var nombreEstado = totalPagado == 0m
+                ? "pendiente"
+                : totalPagado >= pago.TotalVenta
+                    ? "pagado"
+                    : "parcial";
+
+            pago.IdEstadoPago = await ObtenerIdEstadoAsync(nombreEstado);
+            pago.FechaPago = totalPagado >= pago.TotalVenta
+                ? detallesActivos.FirstOrDefault()?.FechaPago
+                : null;
         }
     }
 }

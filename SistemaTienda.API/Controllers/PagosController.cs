@@ -17,6 +17,58 @@ namespace SistemaTienda.API.Controllers
         }
 
         [HttpGet]
+        [Route("PagoVenta")]
+        public async Task<IActionResult> PagoVenta(int idVenta)
+        {
+            var response = new Response<PagosVentasDTO>
+            {
+                status = true,
+                Value = await _pagoVentaService.PagoVenta(idVenta),
+                msg = "Pago de venta cargado correctamente!!"
+            };
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("CrearDetallePago")]
+        public async Task<IActionResult> CrearDetallePago(DetallePagoCreacionDTO detallePagoCrear)
+        {
+            var response = new Response<int>
+            {
+                status = true,
+                Value = await _pagoVentaService.CrearDetallePago(detallePagoCrear),
+                msg = "Detalle de pago creado correctamente!!"
+            };
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("ListarEstadosPago")]
+        public async Task<IActionResult> ListarEstadosPago()
+        {
+            var response = new Response<List<EstadosPagoDTO>>
+            {
+                status = true,
+                Value = await _pagoVentaService.ListarEstadosPago(),
+                msg = "Estados de pago listados correctamente!!"
+            };
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("ListarTiposPago")]
+        public async Task<IActionResult> ListarTiposPago()
+        {
+            var response = new Response<List<TipoPagoDTO>>
+            {
+                status = true,
+                Value = await _pagoVentaService.ListarTiposPago(),
+                msg = "Tipos de pago listados correctamente!!"
+            };
+            return Ok(response);
+        }
+
+        [HttpGet]
         [Route("ListarPagos")]
         public async Task<IActionResult> ListarPagos(DateOnly fechaInicial, DateOnly fechaFinal)
         {
