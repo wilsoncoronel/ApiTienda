@@ -10,5 +10,6 @@ namespace SistemaTienda.DTO
     {
         public int Id { get; set; }
         public int IdDetalleDevolucionCompra { get; set; }
+        public TipoImpuestoDTO TipoImpuestoDTO { get; set; }
     }
 }

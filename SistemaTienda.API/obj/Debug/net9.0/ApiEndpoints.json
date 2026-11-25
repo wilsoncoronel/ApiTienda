@@ -1304,6 +1304,22 @@
   },
   {
     "ContainingType": "SistemaTienda.API.Controllers.PagosController",
+    "Method": "CrearDetallePago",
+    "RelativePath": "api/Pagos/CrearDetallePago",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "detallePagoCrear",
+        "Type": "SistemaTienda.DTO.DetallePagoCreacionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.PagosController",
     "Method": "ListaDetallesPagos",
     "RelativePath": "api/Pagos/ListaDetallesPagos",
     "HttpMethod": "GET",

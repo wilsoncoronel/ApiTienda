@@ -75,3 +75,8 @@ C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.BLL.pdb
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.BLL.deps.json
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.BLL.dll
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.BLL.pdb
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\bin\Validation\SistemaTienda.DAL.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\bin\Validation\SistemaTienda.DTO.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\bin\Validation\SistemaTienda.Exceptions.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\bin\Validation\SistemaTienda.Model.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\bin\Validation\SistemaTienda.Utility.dll

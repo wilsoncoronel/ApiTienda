@@ -60,7 +60,6 @@ namespace SistemaTienda.Utility
                     EstadoVisual = producto.EstadoVisual,
                     Estado = producto.Estado
                 },
-                
                 Impuestos = detalle.TbComImpuestoDetalleDevolucionCompras.Select(impuesto => new ImpuestoDetalleDevolucionDTO
                 {
                     Id = impuesto.Id,
@@ -68,7 +67,12 @@ namespace SistemaTienda.Utility
                     IdImpuesto = impuesto.IdImpuesto,
                     Nombre = impuesto.Nombre,
                     Estado = impuesto.Estado,
-                    //IdTipoCalculo = impuesto.IdTipoCalculo,
+                    IdTipoCalculo = impuesto.IdTipoCalculo,
+                    TipoImpuestoDTO = new TipoImpuestoDTO
+                    {
+                        Id = impuesto.IdTipoCalculoNavigation.Id,
+                        TipoCalculo = impuesto.IdTipoCalculoNavigation.TipoCalculo
+                    },
                     Valor = impuesto.Valor
                 }).ToList()
             };

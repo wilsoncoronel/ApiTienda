@@ -444,6 +444,11 @@ namespace SistemaTienda.BLL.Servicios
                 .FirstOrDefaultAsync(t => t.Nombre.ToLower() == "reversion venta");
             if (transRev == null) throw new NotFoundException("No existe la transacción 'Reversion Venta'");
 
+            var estadoReversada = await _tiendaDbContext.TbVenEstadosVentas
+                .FirstOrDefaultAsync(e => e.Nombre.ToLower() == "reversada");
+            if (estadoReversada == null)
+                throw new NotFoundException("No existe el estado de venta 'Reversada'");
+
             // Verificar si la venta ya está reversada
             if (tbVenta.IdTransaccion.HasValue && tbVenta.IdTransaccion.Value == transRev.Id)
                 throw new ConflictException("Venta ya reversada");
@@ -507,6 +512,7 @@ namespace SistemaTienda.BLL.Servicios
 
                 // Actualizar la venta para indicar que ahora está asociada a la transacción de reversión
                 tbVenta.IdTransaccion = transRev.Id;
+                tbVenta.IdEstadoVenta = estadoReversada.Id;
                 _tiendaDbContext.TbVentas.Update(tbVenta);
 
                 await _tiendaDbContext.SaveChangesAsync();

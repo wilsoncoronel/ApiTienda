@@ -355,3 +355,4 @@ C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Release\net9.0\
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Release\net9.0\SistemaTienda.API.pdb
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Release\net9.0\SistemaTienda.API.genruntimeconfig.cache
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Release\net9.0\ref\SistemaTienda.API.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.API\obj\Release\net9.0\scopedcss\scopedcss.cache

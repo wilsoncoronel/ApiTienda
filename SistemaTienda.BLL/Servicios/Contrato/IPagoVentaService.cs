@@ -4,7 +4,7 @@ namespace SistemaTienda.BLL.Servicios.Contrato
 {
     public interface IPagoVentaService
     {
-        Task<PagosVentasDTO> PagoVenta(int idVenta);
+        Task<PagoVentaCompletoDTO> PagoVenta(int idVenta);
         Task<int> CrearDetallePago(DetallePagoCreacionDTO detallePagoCrear);
         Task<List<EstadosPagoDTO>> ListarEstadosPago();
         Task<List<TipoPagoDTO>> ListarTiposPago();

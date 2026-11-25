@@ -1,0 +1,240 @@
+﻿## PROCESSES
+Currently debugging:
+- SistemaTienda.API.exe (PID: 37468)
+
+## EXCEPTION
+Exception Type: System.NullReferenceException
+Exception Message: Object reference not set to an instance of an object.
+Piece of code that has the exception:
+```csharp C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Utility\MapeoDevolucionCompra.cs
+44:         public DetalleDevolucionCompraDTO MapeoDetalleDevolucion(TbComDetalleDevolucionCompra detalle)
+45:         {
+46:             var producto = detalle?.IdArticuloNavigation;
+47:             return new DetalleDevolucionCompraDTO
+48:             {
+49:                 Id = detalle.Id,
+50:                 IdArticulo = detalle.IdArticulo,
+51:                 Cantidad = detalle.Cantidad,
+52:                 Estado = detalle.Estado,
+53:                 Valor = detalle.Valor,
+54:                 ArticuloDTO = producto == null ? null! : new ArticuloDTO
+55:                 {
+56:                     Id = producto.Id,
+57:                     Nombre = producto.Nombre,
+58:                     Descripcion = producto.Descripcion,
+59:                     ValorCompra = producto.ValorCompra,
+60:                     EstadoVisual = producto.EstadoVisual,
+61:                     Estado = producto.Estado
+62:                 },
+63:                 Impuestos = detalle.TbComImpuestoDetalleDevolucionCompras.Select(impuesto => new ImpuestoDetalleDevolucionDTO
+64:                 {
+65:                     Id = impuesto.Id,
+66:                     IdDetalleDevolucionCompra = impuesto.IdDetalleDevolucionCompra,
+67:                     IdImpuesto = impuesto.IdImpuesto,
+68:                     Nombre = impuesto.Nombre,
+69:                     Estado = impuesto.Estado,
+70:                     IdTipoCalculo = impuesto.IdTipoCalculo,
+71:                     TipoImpuestoDTO = new TipoImpuestoDTO
+72:                     {
+73:                         Id = impuesto.IdTipoCalculoNavigation.Id,
+74:                         TipoCalculo = impuesto.IdTipoCalculoNavigation.TipoCalculo
+75:                     },
+76:                     Valor = impuesto.Valor
+77:                 }).ToList()
+78:             };
+79:         }
+```
+Exception is on lines 63-77
+The callstack context, if included, corresponds to the thread where this exception occurred. There is no need to identify this thread by other means.
+The top most frame in the callstack context should correspond to the place the exception message was thrown from. Code may or may not have been provided for it but can be requested.
+
+## CALLSTACK
+Thread ID: 34020
+[1] SistemaTienda.Utility.dll!SistemaTienda.Utility.MapeoDevolucionCompra.MapeoDetalleDevolucion.AnonymousMethod__2_0
+This is the current user focused stack frame. The provided locals context corresponds to this stack frame, but you may evaluate expressions and retrieve code for any frame.
+Code for the stack frame:
+```csharp SistemaTienda.Utility\MapeoDevolucionCompra.cs
+44:         public DetalleDevolucionCompraDTO MapeoDetalleDevolucion(TbComDetalleDevolucionCompra detalle)
+45:         {
+46:             var producto = detalle?.IdArticuloNavigation;
+47:             return new DetalleDevolucionCompraDTO
+48:             {
+49:                 Id = detalle.Id,
+50:                 IdArticulo = detalle.IdArticulo,
+51:                 Cantidad = detalle.Cantidad,
+52:                 Estado = detalle.Estado,
+53:                 Valor = detalle.Valor,
+54:                 ArticuloDTO = producto == null ? null! : new ArticuloDTO
+55:                 {
+56:                     Id = producto.Id,
+57:                     Nombre = producto.Nombre,
+58:                     Descripcion = producto.Descripcion,
+59:                     ValorCompra = producto.ValorCompra,
+60:                     EstadoVisual = producto.EstadoVisual,
+61:                     Estado = producto.Estado
+62:                 },
+63:                 Impuestos = detalle.TbComImpuestoDetalleDevolucionCompras.Select(impuesto => new ImpuestoDetalleDevolucionDTO
+64:                 {
+65:                     Id = impuesto.Id,
+66:                     IdDetalleDevolucionCompra = impuesto.IdDetalleDevolucionCompra,
+67:                     IdImpuesto = impuesto.IdImpuesto,
+68:                     Nombre = impuesto.Nombre,
+69:                     Estado = impuesto.Estado,
+70:                     IdTipoCalculo = impuesto.IdTipoCalculo,
+71:                     TipoImpuestoDTO = new TipoImpuestoDTO
+72:                     {
+73:                         Id = impuesto.IdTipoCalculoNavigation.Id,
+74:                         TipoCalculo = impuesto.IdTipoCalculoNavigation.TipoCalculo
+75:                     },
+76:                     Valor = impuesto.Valor
+77:                 }).ToList()
+78:             };
+79:         }
+```
+Current statement: lines 63-77
+[2] [Código externo]
+[3] SistemaTienda.Utility.dll!SistemaTienda.Utility.MapeoDevolucionCompra.MapeoDetalleDevolucion
+Code for the stack frame:
+```csharp SistemaTienda.Utility\MapeoDevolucionCompra.cs
+44:         public DetalleDevolucionCompraDTO MapeoDetalleDevolucion(TbComDetalleDevolucionCompra detalle)
+45:         {
+46:             var producto = detalle?.IdArticuloNavigation;
+47:             return new DetalleDevolucionCompraDTO
+48:             {
+49:                 Id = detalle.Id,
+50:                 IdArticulo = detalle.IdArticulo,
+51:                 Cantidad = detalle.Cantidad,
+52:                 Estado = detalle.Estado,
+53:                 Valor = detalle.Valor,
+54:                 ArticuloDTO = producto == null ? null! : new ArticuloDTO
+55:                 {
+56:                     Id = producto.Id,
+57:                     Nombre = producto.Nombre,
+58:                     Descripcion = producto.Descripcion,
+59:                     ValorCompra = producto.ValorCompra,
+60:                     EstadoVisual = producto.EstadoVisual,
+61:                     Estado = producto.Estado
+62:                 },
+63:                 Impuestos = detalle.TbComImpuestoDetalleDevolucionCompras.Select(impuesto => new ImpuestoDetalleDevolucionDTO
+64:                 {
+65:                     Id = impuesto.Id,
+66:                     IdDetalleDevolucionCompra = impuesto.IdDetalleDevolucionCompra,
+67:                     IdImpuesto = impuesto.IdImpuesto,
+68:                     Nombre = impuesto.Nombre,
+69:                     Estado = impuesto.Estado,
+70:                     IdTipoCalculo = impuesto.IdTipoCalculo,
+71:                     TipoImpuestoDTO = new TipoImpuestoDTO
+72:                     {
+73:                         Id = impuesto.IdTipoCalculoNavigation.Id,
+74:                         TipoCalculo = impuesto.IdTipoCalculoNavigation.TipoCalculo
+75:                     },
+76:                     Valor = impuesto.Valor
+77:                 }).ToList()
+78:             };
+79:         }
+```
+Current statement: lines 47-78
+[4] [Código externo]
+[5] SistemaTienda.Utility.dll!SistemaTienda.Utility.MapeoDevolucionCompra.MapeoDevolucionCompraTbADto
+Code for the stack frame:
+```csharp SistemaTienda.Utility\MapeoDevolucionCompra.cs
+81:         public DevolucionCompraDTO MapeoDevolucionCompraTbADto(TbComDevolucionCompra devolucion)
+82:         {
+83:             return new DevolucionCompraDTO
+84:             {
+85:                 Id = devolucion.Id,
+86:                 IdTipoDevolucion = devolucion.IdTipoDevolucion,
+87:                 TipoDevolucionDTO = devolucion.IdTipoDevolucionNavigation == null ? null! : new TipoDevolucionDTO
+88:                 {
+89:                     Id = devolucion.IdTipoDevolucionNavigation.Id,
+90:                     Nombre = devolucion.IdTipoDevolucionNavigation.Nombre
+91:                 },
+92:                 IdProveedor = devolucion.IdProveedor,
+93:                 ProveedorDTO = devolucion.IdProveedorNavigation == null ? null! : new ProveedorDTO
+94:                 {
+95:                     Id = devolucion.IdProveedorNavigation.Id,
+96:                     Nombres = devolucion.IdProveedorNavigation.IdPersonaNavigation?.Nombres,
+97:                     Apellidos = devolucion.IdProveedorNavigation.IdPersonaNavigation?.Apellidos,
+98:                     Mail = devolucion.IdProveedorNavigation.IdPersonaNavigation?.Mail,
+99:                     Identificacion = devolucion.IdProveedorNavigation.IdPersonaNavigation?.Identificacion,
+100:                     Telefono = devolucion.IdProveedorNavigation.IdPersonaNavigation?.Telefono,
+101:                     RazonSocial = devolucion.IdProveedorNavigation.RazonSocial,
+102:                     Descripcion = devolucion.IdProveedorNavigation.Descripcion,
+103:                     EstadoVisual = devolucion.IdProveedorNavigation.EstadoVisual,
+104:                     Estado = devolucion.IdProveedorNavigation.Estado,
+105:                     FechaCreacion = devolucion.IdProveedorNavigation.IdPersonaNavigation?.FechaCreacion,
+106:                     FechaModificacion = devolucion.IdProveedorNavigation.IdPersonaNavigation?.FechaModificacion
+107:                 },
+108:                 FechaCreacion = devolucion.FechaCreacion,
+109:                 Estado = devolucion.Estado,
+110:                 Motivo = devolucion.Motivo,
+111:                 Detalles = devolucion.TbComDetalleDevolucionCompras
+112:                     .Select(MapeoDetalleDevolucion)
+113:                     .ToList()
+114:             };
+115:         }
+```
+Current statement: lines 83-114
+[6] [Código externo]
+[7] SistemaTienda.Utility.dll!SistemaTienda.Utility.MapeoDevolucionCompra.MapeoListaDevolucionesCompraTbADto
+Code for the stack frame:
+```csharp SistemaTienda.Utility\MapeoDevolucionCompra.cs
+117:         public List<DevolucionCompraDTO> MapeoListaDevolucionesCompraTbADto(List<TbComDevolucionCompra> devoluciones)
+118:         {
+119:             return devoluciones.Select(MapeoDevolucionCompraTbADto).ToList();
+120:         }
+```
+Current statement: line 119
+[8] SistemaTienda.BLL.dll!SistemaTienda.BLL.Servicios.DevolucionCompraService.ListarDevolucionesFechas
+Code for the stack frame:
+```csharp SistemaTienda.BLL\Servicios\DevolucionCompraService.cs
+382:         public async Task<List<DevolucionCompraDTO>> ListarDevolucionesFechas(DateOnly fechaInicio, DateOnly fechaFin)
+383:         {
+384:             if (fechaInicio > fechaFin)
+385:                 throw new BadRequestException("La fecha inicial no puede ser mayor que la fecha final");
+386: 
+387:             var inicio = fechaInicio.ToDateTime(TimeOnly.MinValue);
+388:             var fin = fechaFin.ToDateTime(TimeOnly.MaxValue);
+389: 
+390:             var devoluciones = await _tiendaDbContext.TbComDevolucionCompras
+391:                 .AsNoTracking()
+392:                 .Where(d => d.FechaCreacion >= inicio && d.FechaCreacion <= fin)
+393:                 .Include(d => d.IdTipoDevolucionNavigation)
+394:                 .Include(d => d.IdProveedorNavigation)
+395:                     .ThenInclude(p => p.IdPersonaNavigation)
+396:                 .Include(d => d.TbComDetalleDevolucionCompras)
+397:                     .ThenInclude(detalle => detalle.IdArticuloNavigation)
+398:                 .OrderByDescending(d => d.FechaCreacion)
+399:                 .ToListAsync();
+400: 
+401:             await CargarImpuestosAsync(devoluciones.SelectMany(d => d.TbComDetalleDevolucionCompras));
+402:             return _mapeo.MapeoListaDevolucionesCompraTbADto(devoluciones);
+403:         }
+```
+Current statement: line 402
+[9] [Pila de llamadas asincrónicas]
+[10] [Asincrónico] SistemaTienda.API.dll!SistemaTienda.API.Controllers.DevolucionCompraController.ListarDevolucionesFechas
+Code for the stack frame:
+```csharp SistemaTienda.API\Controllers\DevolucionCompraController.cs
+79:         [HttpGet("ListarDevolucionesFechas")]
+80:         public async Task<IActionResult> ListarDevolucionesFechas(
+81:             [FromQuery] DateOnly fechaInicio,
+82:             [FromQuery] DateOnly fechaFin)
+83:         {
+84:             var devoluciones = await _devolucionService.ListarDevolucionesFechas(fechaInicio, fechaFin);
+85:             return Ok(new Response<List<DevolucionCompraDTO>>
+86:             {
+87:                 status = true,
+88:                 Value = devoluciones,
+89:                 msg = "Devoluciones listadas correctamente"
+90:             });
+91:         }
+```
+Current statement: line 84
+........3 more stack frames omitted.
+
+## LOCALS
+| Name | Type | Value |
+| --- | --- | --- |
+| impuesto | SistemaTienda.Model.TbComImpuestoDetalleDevolucionCompra | {SistemaTienda.Model.TbComImpuestoDetalleDevolucionCompra} |
+

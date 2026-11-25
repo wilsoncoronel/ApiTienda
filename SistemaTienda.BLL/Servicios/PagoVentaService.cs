@@ -19,7 +19,7 @@ namespace SistemaTienda.BLL.Servicios
             _mapper = mapper;
         }
 
-        public async Task<PagosVentasDTO> PagoVenta(int idVenta)
+        public async Task<PagoVentaCompletoDTO> PagoVenta(int idVenta)
         {
             var pago = await QueryPagos()
                 .Where(pag => pag.IdVenta == idVenta)
@@ -28,7 +28,7 @@ namespace SistemaTienda.BLL.Servicios
             if (pago == null)
                 throw new NotFoundException("Pago de venta no encontrado");
 
-            return MapPago(pago);
+            return MapPagoCompleto(pago);
         }
 
         public async Task<int> CrearDetallePago(DetallePagoCreacionDTO detallePagoCrear)
@@ -244,9 +244,50 @@ namespace SistemaTienda.BLL.Servicios
             }; 
         }
 
+        private PagoVentaCompletoDTO MapPagoCompleto(TbVenPagoVenta pago)
+        {
+            return new PagoVentaCompletoDTO
+            {
+                Id = pago.Id,
+                TotalVenta = pago.TotalVenta,
+                TotalPagado = pago.TotalPagado,
+                SaldoPendiente = pago.SaldoPendiente,
+                IdEstadoPago = pago.IdEstadoPago,
+                Nota = pago.Nota,
+                FechaCreacion = pago.FechaCreacion,
+                FechaPago = pago.FechaPago,
+                EstadosPagoDTO = new EstadosPagoDTO
+                {
+                    Id = pago.IdEstadoPagoNavigation.Id,
+                    Nombre = pago.IdEstadoPagoNavigation.Nombre
+                },
+                DetallesPago = pago.TbVenDetallePagos.Select(MapDetallePagoCompleto).ToList()
+            };
+        }
+
         private DetallesPagoDTO MapDetalle(TbVenDetallePago detalle)
         {
             return new DetallesPagoDTO
+            {
+                Id = detalle.Id,
+                IdPagoVenta = detalle.IdPagoVenta,
+                IdTipoPago = detalle.IdTipoPago,
+                Valor = detalle.Valor,
+                NumeroComprobante = detalle.NumeroComprobante,
+                FechaPago = detalle.FechaPago,
+                Nota = detalle.Nota,
+                Estado = detalle.Estado,
+                TipoPagoDTO = new TipoPagoDTO
+                {
+                    Id = detalle.IdTipoPagoNavigation.Id,
+                    Nombre = detalle.IdTipoPagoNavigation.Nombre
+                }
+            };
+        }
+
+        private DetallesPagoVentaCompletoDTO MapDetallePagoCompleto(TbVenDetallePago detalle)
+        {
+            return new DetallesPagoVentaCompletoDTO
             {
                 Id = detalle.Id,
                 IdPagoVenta = detalle.IdPagoVenta,

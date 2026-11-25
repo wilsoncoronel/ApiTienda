@@ -20,7 +20,7 @@ namespace SistemaTienda.API.Controllers
         [Route("PagoVenta")]
         public async Task<IActionResult> PagoVenta(int idVenta)
         {
-            var response = new Response<PagosVentasDTO>
+            var response = new Response<PagoVentaCompletoDTO>
             {
                 status = true,
                 Value = await _pagoVentaService.PagoVenta(idVenta),

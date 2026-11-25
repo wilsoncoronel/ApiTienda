@@ -477,6 +477,7 @@ namespace SistemaTienda.BLL.Servicios
 
             var impuestos = await _tiendaDbContext.TbComImpuestoDetalleDevolucionCompras
                 .AsNoTracking()
+                .Include(i => i.IdTipoCalculoNavigation)
                 .Where(i => idsDetalle.Contains(i.IdDetalleDevolucionCompra))
                 .ToListAsync();
 
@@ -500,11 +501,13 @@ namespace SistemaTienda.BLL.Servicios
                     .ThenInclude(p => p.IdPersonaNavigation)
                 .Include(d => d.TbComDetalleDevolucionCompras)
                     .ThenInclude(detalle => detalle.IdArticuloNavigation)
+                .Include(d => d.TbComDetalleDevolucionCompras)
+                    .ThenInclude(detalle => detalle.TbComImpuestoDetalleDevolucionCompras)
+                        .ThenInclude(impuesto => impuesto.IdTipoCalculoNavigation)
                 .FirstOrDefaultAsync(d => d.Id == idDevolucion);
             if (devolucion == null)
                 throw new NotFoundException("No se encontró la devolución indicada");
 
-            await CargarImpuestosAsync(devolucion.TbComDetalleDevolucionCompras);
             return _mapeo.MapeoDevolucionCompraTbADto(devolucion);
         }
     }
