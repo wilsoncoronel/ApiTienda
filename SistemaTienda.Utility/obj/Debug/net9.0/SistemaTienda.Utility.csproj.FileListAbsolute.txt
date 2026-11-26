@@ -61,3 +61,10 @@ C:\Temp\ApiTiendaBuildCredito\Debug\net9.0\SistemaTienda.Utility.pdb
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.Utility.deps.json
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.Utility.dll
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.Utility.pdb
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Utility\build\Debug\net9.0\SistemaTienda.Utility.deps.json
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Utility\build\Debug\net9.0\SistemaTienda.Utility.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Utility\build\Debug\net9.0\SistemaTienda.Utility.pdb
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Utility\build\Debug\net9.0\SistemaTienda.DTO.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Utility\build\Debug\net9.0\SistemaTienda.Model.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Utility\build\Debug\net9.0\SistemaTienda.DTO.pdb
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.Utility\build\Debug\net9.0\SistemaTienda.Model.pdb

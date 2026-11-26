@@ -218,10 +218,10 @@ namespace SistemaTienda.BLL.Servicios
             return resultado;
         }
 
-        public async Task<List<ResumenVentasDiarioDTO>> ResumenVentasDiario(DateOnly fecha)
+        public async Task<List<ResumenVentasDiarioDTO>> ResumenVentasDiario(DateOnly fechaInicial, DateOnly fechaFinal)
         {
-            DateTime desde = fecha.ToDateTime(TimeOnly.MinValue);
-            DateTime hasta = desde.AddDays(1);
+            DateTime desde = fechaInicial.ToDateTime(TimeOnly.MinValue);
+            DateTime hasta = fechaFinal.ToDateTime(TimeOnly.MaxValue);
 
             var consumos = await this._inventarioRepo.Consultar(mov =>
                 mov.Fecha >= desde &&
@@ -229,20 +229,29 @@ namespace SistemaTienda.BLL.Servicios
                 mov.IdTransaccionInventario == 2);
 
             var tbConsumos = await consumos
+                .Include(con => con.IdTransaccionInventarioNavigation)
                 .Include(con => con.TbInvConsumoLotes)
                     .ThenInclude(det => det.IdDetalleVentaNavigation)
                         .ThenInclude(art => art.IdArticuloNavigation)
+                .Include(con => con.TbInvConsumoLotes)
+                    .ThenInclude(det => det.IdLoteNavigation)
+                        .ThenInclude(lote => lote.IdDetalleCompraNavigation)
+                            .ThenInclude(detalle => detalle.TbComImpuestoDetalles)
                 .ToListAsync();
 
             if (!tbConsumos.Any())
                 return new List<ResumenVentasDiarioDTO>();
 
             return tbConsumos
-                .SelectMany(mov => mov.TbInvConsumoLotes)
-                .GroupBy(det => new
+                .SelectMany(mov => mov.TbInvConsumoLotes.Select(det => new
                 {
-                    det.IdDetalleVentaNavigation.IdArticuloNavigation.Id,
-                    det.IdDetalleVentaNavigation.IdArticuloNavigation.Nombre
+                    Movimiento = mov,
+                    Detalle = det
+                }))
+                .GroupBy(item => new
+                {
+                    item.Detalle.IdDetalleVentaNavigation.IdArticuloNavigation.Id,
+                    item.Detalle.IdDetalleVentaNavigation.IdArticuloNavigation.Nombre
                 })
                 .Select(res => new ResumenVentasDiarioDTO
                 {
@@ -252,17 +261,36 @@ namespace SistemaTienda.BLL.Servicios
                         Nombre = res.Key.Nombre
                     },
 
-                    CantidadVendida = res.Sum(d => d.Cantidad),
+                    TransaccionesDTO = new TransaccionInventarioDTO
+                    {
+                        Id = res.First().Movimiento.IdTransaccionInventarioNavigation.Id,
+                        Nombre = res.First().Movimiento.IdTransaccionInventarioNavigation.Nombre,
+                        Signo = res.First().Movimiento.IdTransaccionInventarioNavigation.Signo,
+                        Estado = res.First().Movimiento.IdTransaccionInventarioNavigation.Estado
+                    },
+
+                    CantidadVendida = res.Sum(d => d.Detalle.Cantidad),
 
                     ValorCompra = res.Sum(d =>
-                        d.Cantidad * d.PrecioUnitario),
+                        d.Detalle.Cantidad * d.Detalle.PrecioUnitario),
 
                     ValorVenta = res.Sum(d =>
-                        d.Cantidad * d.IdDetalleVentaNavigation.ValorVenta),
+                        d.Detalle.Cantidad * d.Detalle.IdDetalleVentaNavigation.ValorVenta),
 
-                    UtilidadBruta = res.Sum(d =>
-                        (d.Cantidad * d.IdDetalleVentaNavigation.ValorVenta) -
-                        (d.Cantidad * d.PrecioUnitario))
+                    Impuestos = res
+                        .SelectMany(d => d.Detalle.IdLoteNavigation.IdDetalleCompraNavigation.TbComImpuestoDetalles)
+                        .GroupBy(impuesto => impuesto.Id)
+                        .Select(grupo => grupo.First())
+                        .Select(impuesto => new DetalleImpuestoDTO
+                        {
+                            Id = impuesto.Id,
+                            IdDetalleCompra = impuesto.IdDetalleCompra,
+                            IdArticulo = res.Key.Id,
+                            Nombre = impuesto.Nombre,
+                            IdTipoCalculo = impuesto.IdTipoCalculo,
+                            Valor = impuesto.Valor
+                        })
+                        .ToList()
                 })
                 .OrderBy(r => r.Articulo.Nombre)
                 .ToList();

@@ -80,3 +80,16 @@ C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\bin\Validation\Sist
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\bin\Validation\SistemaTienda.Exceptions.dll
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\bin\Validation\SistemaTienda.Model.dll
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\bin\Validation\SistemaTienda.Utility.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\build\Debug\net9.0\SistemaTienda.BLL.deps.json
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\build\Debug\net9.0\SistemaTienda.BLL.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\build\Debug\net9.0\SistemaTienda.BLL.pdb
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\build\Debug\net9.0\SistemaTienda.DAL.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\build\Debug\net9.0\SistemaTienda.DTO.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\build\Debug\net9.0\SistemaTienda.Exceptions.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\build\Debug\net9.0\SistemaTienda.Model.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\build\Debug\net9.0\SistemaTienda.Utility.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\build\Debug\net9.0\SistemaTienda.DAL.pdb
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\build\Debug\net9.0\SistemaTienda.DTO.pdb
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\build\Debug\net9.0\SistemaTienda.Exceptions.pdb
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\build\Debug\net9.0\SistemaTienda.Model.pdb
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.BLL\build\Debug\net9.0\SistemaTienda.Utility.pdb

@@ -1194,7 +1194,12 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "fechaResumen",
+        "Name": "fechaInicio",
+        "Type": "System.DateOnly",
+        "IsRequired": false
+      },
+      {
+        "Name": "fechaFinal",
         "Type": "System.DateOnly",
         "IsRequired": false
       }
@@ -1360,6 +1365,32 @@
       {
         "Name": "fechaFinal",
         "Type": "System.DateOnly",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemaTienda.API.Controllers.PagosController",
+    "Method": "ListarPagosConCliente",
+    "RelativePath": "api/Pagos/ListarPagosConCliente",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fechaInicial",
+        "Type": "System.DateOnly",
+        "IsRequired": false
+      },
+      {
+        "Name": "fechaFinal",
+        "Type": "System.DateOnly",
+        "IsRequired": false
+      },
+      {
+        "Name": "idCliente",
+        "Type": "System.Int32",
         "IsRequired": false
       }
     ],

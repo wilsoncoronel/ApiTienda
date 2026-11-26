@@ -77,6 +77,7 @@ public class CreditoProveedorService : ICreditoProveedorService
                 .Include(c => c.IdEstadoCompraNavigation)
                 .Include(c => c.TbComDetallesCompras)
                     .ThenInclude(d => d.TbComImpuestoDetalles)
+                        .ThenInclude(i => i.IdTipoCalculoNavigation)
                 .FirstOrDefaultAsync(c => c.Id == dto.IdCompra);
             if (compra == null)
                 throw new NotFoundException("No existe la compra indicada");

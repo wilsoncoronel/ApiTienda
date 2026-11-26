@@ -69,11 +69,11 @@ namespace SistemaTienda.API.Controllers
 
         [HttpGet]
         [Route("ResumenVentasDiario")]
-        public async Task<IActionResult> ResumenVentasDiario(DateOnly fechaResumen)
+        public async Task<IActionResult> ResumenVentasDiario(DateOnly fechaInicio, DateOnly fechaFinal)
         {
             var resp = new Response<List<ResumenVentasDiarioDTO>>();
             resp.status = true;
-            resp.Value = await this._inventarioService.ResumenVentasDiario(fechaResumen);
+            resp.Value = await this._inventarioService.ResumenVentasDiario(fechaInicio, fechaFinal);
             resp.msg = "Resuemn de ventas diario cargado!!";
             return Ok(resp);
         }

@@ -123,6 +123,58 @@ namespace SistemaTienda.BLL.Servicios
             return pagos.Select(MapPago).ToList();
         }
 
+        public async Task<List<PagosVentasDTO>> ListarPagosConCliente(DateOnly fechaInicial, DateOnly fechaFinal, int idCliente)
+        {
+            if (idCliente <= 0)
+                throw new ConflictException("El cliente indicado no es válido");
+
+            if (fechaFinal < fechaInicial)
+                throw new ConflictException("El rango de fechas no es válido");
+
+            var inicio = fechaInicial.ToDateTime(TimeOnly.MinValue);
+            var fin = fechaFinal.ToDateTime(TimeOnly.MaxValue);
+
+            return await _context.TbVenPagoVenta
+                .AsNoTracking()
+                .Where(p => p.IdVentaNavigation.IdCliente == idCliente &&
+                            p.FechaCreacion >= inicio &&
+                            p.FechaCreacion <= fin)
+                .OrderByDescending(p => p.FechaCreacion)
+                .Select(p => new PagosVentasDTO
+                {
+                    Id = p.Id,
+                    TotalVenta = p.TotalVenta,
+                    TotalPagado = p.TotalPagado,
+                    SaldoPendiente = p.SaldoPendiente,
+                    IdEstadoPago = p.IdEstadoPago,
+                    Nota = p.Nota,
+                    FechaCreacion = p.FechaCreacion,
+                    FechaPago = p.FechaPago,
+                    EstadosPagoDTO = new EstadosPagoDTO
+                    {
+                        Id = p.IdEstadoPagoNavigation.Id,
+                        Nombre = p.IdEstadoPagoNavigation.Nombre
+                    },
+                    VentaDTO = new VentaDTO
+                    {
+                        Id = p.IdVentaNavigation.Id,
+                        IdCliente = p.IdVentaNavigation.IdCliente,
+                        Cliente = new ClienteDTO
+                        {
+                            Id = p.IdVentaNavigation.IdClienteNavigation.Id,
+                            Nombres = p.IdVentaNavigation.IdClienteNavigation.IdPersonaNavigation.Nombres,
+                            Apellidos = p.IdVentaNavigation.IdClienteNavigation.IdPersonaNavigation.Apellidos,
+                            Mail = p.IdVentaNavigation.IdClienteNavigation.IdPersonaNavigation.Mail,
+                            Identificacion = p.IdVentaNavigation.IdClienteNavigation.IdPersonaNavigation.Identificacion,
+                            Telefono = p.IdVentaNavigation.IdClienteNavigation.IdPersonaNavigation.Telefono,
+                            Estado = p.IdVentaNavigation.IdClienteNavigation.Estado,
+                            EstadoVisual = p.IdVentaNavigation.IdClienteNavigation.EstadoVisual
+                        }
+                    },
+                    DetallesPago = new List<DetallePagoCreacionDTO>()
+                })
+                .ToListAsync();
+        }
         public async Task<List<DetallesPagoDTO>> ListaDetallesPagos(int idPago)
         {
             var existe = await _context.TbVenPagoVenta.AnyAsync(p => p.Id == idPago);

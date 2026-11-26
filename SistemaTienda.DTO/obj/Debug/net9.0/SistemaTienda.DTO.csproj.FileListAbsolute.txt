@@ -44,3 +44,6 @@ C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaT
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.DTO.dll
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\artifacts\build\Debug\net9.0\SistemaTienda.DTO.pdb
 C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.DTO\obj\Debug\net9.0\SistemaT.40C3DF83.Up2Date
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.DTO\build\Debug\net9.0\SistemaTienda.DTO.deps.json
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.DTO\build\Debug\net9.0\SistemaTienda.DTO.dll
+C:\Users\DOOMSLAYER\source\repos\ApiTienda\SistemaTienda.DTO\build\Debug\net9.0\SistemaTienda.DTO.pdb

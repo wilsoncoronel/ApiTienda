@@ -82,6 +82,19 @@ namespace SistemaTienda.API.Controllers
         }
 
         [HttpGet]
+        [Route("ListarPagosConCliente")]
+        public async Task<IActionResult> ListarPagosConCliente(DateOnly fechaInicial, DateOnly fechaFinal, int idCliente)
+        {
+            var response = new Response<List<PagosVentasDTO>>
+            {
+                status = true,
+                Value = await _pagoVentaService.ListarPagosConCliente(fechaInicial, fechaFinal, idCliente),
+                msg = "Pagos con cliente listados correctamente!!"
+            };
+            return Ok(response);
+        }
+
+        [HttpGet]
         [Route("ListaDetallesPagos")]
         public async Task<IActionResult> ListaDetallesPagos(int idPago)
         {
