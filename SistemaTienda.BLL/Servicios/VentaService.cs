@@ -431,9 +431,9 @@ namespace SistemaTienda.BLL.Servicios
 
         public async Task<bool> ReversarVenta(int id, string documento)
         {
-            // Cargar venta por id
+            //Cargar venta por id
             var tbVenta = await _tiendaDbContext.TbVentas
-                .Include(v => v.TbVenPagoVentum)
+                .Include(v => v.TbVenPagoVenta)
                     .ThenInclude(p => p.TbVenDetallePagos)
                 .FirstOrDefaultAsync(v => v.Id == id && v.Documento == documento);
             if (tbVenta == null) throw new NotFoundException("Venta no encontrada");
@@ -495,9 +495,9 @@ namespace SistemaTienda.BLL.Servicios
                     _tiendaDbContext.TbInvConsumoLotes.Update(consumo);
                 }
 
-                if (tbVenta.TbVenPagoVentum != null)
+                var pago = tbVenta.TbVenPagoVenta.FirstOrDefault();
+                if (pago != null)
                 {
-                    var pago = tbVenta.TbVenPagoVentum;
                     foreach (var detallePago in pago.TbVenDetallePagos.Where(d => d.Estado))
                         detallePago.Estado = false;
 

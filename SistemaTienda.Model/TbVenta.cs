@@ -39,5 +39,5 @@ public partial class TbVenta
 
     public virtual ICollection<TbVenDevolucionVenta> TbVenDevolucionVenta { get; set; } = new List<TbVenDevolucionVenta>();
 
-    public virtual TbVenPagoVenta? TbVenPagoVentum { get; set; }
+    public virtual ICollection<TbVenPagoVenta> TbVenPagoVenta { get; set; } = new List<TbVenPagoVenta>();
 }

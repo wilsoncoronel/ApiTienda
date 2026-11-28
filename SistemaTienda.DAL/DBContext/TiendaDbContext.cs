@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-
 using SistemaTienda.Model;
 namespace SistemaTienda.DAL.DBContext;
 
@@ -880,8 +879,6 @@ public partial class TiendaDbContext : DbContext
 
         modelBuilder.Entity<TbVenPagoVenta>(entity =>
         {
-            entity.HasIndex(e => e.IdVenta, "UQ_TbVenPagoVenta_IdVenta").IsUnique();
-
             entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
             entity.Property(e => e.FechaPago).HasColumnType("datetime");
             entity.Property(e => e.Nota).HasMaxLength(500);
@@ -894,8 +891,8 @@ public partial class TiendaDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbVenPagoVenta_TbVentEstadosPago");
 
-            entity.HasOne(d => d.IdVentaNavigation).WithOne(p => p.TbVenPagoVentum)
-                .HasForeignKey<TbVenPagoVenta>(d => d.IdVenta)
+            entity.HasOne(d => d.IdVentaNavigation).WithMany(p => p.TbVenPagoVenta)
+                .HasForeignKey(d => d.IdVenta)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TbVenPagoVenta_TbVentas");
         });

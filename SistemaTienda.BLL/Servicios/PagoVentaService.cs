@@ -215,6 +215,8 @@ namespace SistemaTienda.BLL.Servicios
                 await transaction.RollbackAsync();
                 throw;
             }
+
+            return true;
         }
 
         public async Task<bool> ActualizarComprobantePago(ActualizarComprobantePagoDTO comprobanteDto)
@@ -246,32 +248,32 @@ namespace SistemaTienda.BLL.Servicios
 
         private IQueryable<TbVenPagoVenta> QueryPagos()
         {
-            return _context.TbVenPagoVenta
-                .Include(p => p.IdEstadoPagoNavigation)
-                .Include(p => p.TbVenDetallePagos)
-                    .ThenInclude(d => d.IdTipoPagoNavigation)
-                .Include(p => p.IdVentaNavigation)
-                    .ThenInclude(v => v.IdEstadoVentaNavigation)
-                .Include(p => p.IdVentaNavigation)
-                    .ThenInclude(v => v.IdClienteNavigation)
-                        .ThenInclude(c => c.IdPersonaNavigation)
-                            .ThenInclude(persona => persona.TbGrlDireccione)
-                                .ThenInclude(direccion => direccion.IdCiudadNavigation)
-                .Include(p => p.IdVentaNavigation)
-                    .ThenInclude(v => v.IdUsuarioCreadorNavigation)
-                        .ThenInclude(usuario => usuario.IdPersonaNavigation)
-                .Include(p => p.IdVentaNavigation)
-                    .ThenInclude(v => v.TbVenDetalleVenta)
-                        .ThenInclude(d => d.IdArticuloNavigation)
-                            .ThenInclude(a => a.IdUnidadNavigation)
-                .Include(p => p.IdVentaNavigation)
-                    .ThenInclude(v => v.TbVenDetalleVenta)
-                        .ThenInclude(d => d.IdArticuloNavigation)
-                            .ThenInclude(a => a.IdTipoArticuloNavigation)
-                .Include(p => p.IdVentaNavigation)
-                    .ThenInclude(v => v.TbVenDetalleVenta)
-                        .ThenInclude(d => d.IdArticuloNavigation)
-                            .ThenInclude(a => a.IdMarcaNavigation);
+             return _context.TbVenPagoVenta
+                 .Include(p => p.IdEstadoPagoNavigation)
+                 .Include(p => p.TbVenDetallePagos)
+                     .ThenInclude(d => d.IdTipoPagoNavigation)
+                 .Include(p => p.IdVentaNavigation)
+                     .ThenInclude(v => v.IdEstadoVentaNavigation)
+                 .Include(p => p.IdVentaNavigation)
+                     .ThenInclude(v => v.IdClienteNavigation)
+                         .ThenInclude(c => c.IdPersonaNavigation)
+                             .ThenInclude(persona => persona.TbGrlDireccione)
+                                 .ThenInclude(direccion => direccion.IdCiudadNavigation)
+                 .Include(p => p.IdVentaNavigation)
+                     .ThenInclude(v => v.IdUsuarioCreadorNavigation)
+                         .ThenInclude(usuario => usuario.IdPersonaNavigation)
+                 .Include(p => p.IdVentaNavigation)
+                     .ThenInclude(v => v.TbVenDetalleVenta)
+                         .ThenInclude(d => d.IdArticuloNavigation)
+                             .ThenInclude(a => a.IdUnidadNavigation)
+                 .Include(p => p.IdVentaNavigation)
+                     .ThenInclude(v => v.TbVenDetalleVenta)
+                         .ThenInclude(d => d.IdArticuloNavigation)
+                             .ThenInclude(a => a.IdTipoArticuloNavigation)
+                 .Include(p => p.IdVentaNavigation)
+                     .ThenInclude(v => v.TbVenDetalleVenta)
+                         .ThenInclude(d => d.IdArticuloNavigation)
+                             .ThenInclude(a => a.IdMarcaNavigation);
         }
 
         private PagosVentasDTO MapPago(TbVenPagoVenta pago)
